@@ -51,7 +51,7 @@
             </li>
             <li><a href="/contact">Contact</a></li>
             <li class="menu-divider visible-lg">&nbsp;</li>
-            <li><a href="/login">Login</a></li>
+            <li><a href="{{ route('login') }}">Login</a></li>
             <li class="visible-lg">&nbsp;</li>
             <li class="dropdown"><a class="dropdown-toggle" href="#"><i class="fa fa-globe fa-lg"></i> En<span class="caret"></span></a>
               <ul class="dropdown-menu">

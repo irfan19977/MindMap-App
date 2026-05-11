@@ -6,7 +6,7 @@
         <div class="overlay"></div>
         <div class="container text-left">
           <div class="row">
-            <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo2.png') }}" alt=""></div>
+            <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo.png') }}" alt=""></div>
             <div class="col-md-6">
               <h1 class="no-pad bold">MindMap <span class="label classic">Pembelajaran</span><br>Inter<span class="light">aktif</span>
               </h1>
@@ -17,7 +17,7 @@
       </div>
     </header>
     <!-- Teaser-->
-    <div class="container text-center box-shadow showcase">
+    <div class="container text-center box-shadow showcase"  id="about">
       <div class="row">
         <div class="col-lg-4">
           <h3><i class="ion-ios-analytics-outline icon-big"></i> Alur Pembelajaran</h3>
@@ -36,7 +36,7 @@
       </div>
     </div>
     <!-- About Section-->
-    <section class="showcase section-small" id="about">
+    <section class="showcase section-small">
       <div class="container">
         <div class="row v-center">
           <div class="col-lg-6">
