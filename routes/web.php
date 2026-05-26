@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\CategoriesController;
+use App\Http\Controllers\Backend\SubcategoriesController;
 use App\Http\Controllers\Backend\MateriController;
+use App\Http\Controllers\Backend\MindmapController;
 use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\ThemeController;
 
@@ -46,7 +48,13 @@ Route::middleware('auth')->group(function () {
    Route::resource('dashboard', DashboardController::class);
 
    Route::resource('categories', CategoriesController::class);
+   Route::resource('subcategories', SubcategoriesController::class);
    Route::resource('materis', MateriController::class);
+
+   // Mind map routes
+   Route::get('/mindmap-creator', [MindmapController::class, 'index'])->name('mindmap.index');
+   Route::get('/mindmap-creator/materials', [MindmapController::class, 'getMaterials'])->name('mindmap.materials');
+   Route::post('/mindmap-creator/save', [MindmapController::class, 'saveMindmap'])->name('mindmap.save');
 
    // AJAX route for materi status update
    Route::patch('/materis/{materi}/status', [MateriController::class, 'updateStatus'])->name('materis.updateStatus');

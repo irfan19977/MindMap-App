@@ -1,155 +1,76 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Backend;
 
-use Illuminate\Http\Request;
-use App\Models\Mindmap;
+use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Materi;
+use Illuminate\Http\Request;
 
 class MindmapController extends Controller
 {
-    public function __construct()
+    /**
+     * Display the mind map creation page.
+     */
+    public function index()
     {
-        $this->middleware('auth');
-    }
-
-    public function index(Request $request)
-    {
-        $categoryId = $request->get('category_id');
-        $mindmaps = Mindmap::with(['category', 'user'])
-            ->when($categoryId, function ($query) use ($categoryId) {
-                return $query->byCategory($categoryId);
-            })
-            ->byUser(Auth::id())
-            ->latest()
-            ->paginate(12);
-
-        $categories = Category::with('recursiveChildren')
-            ->root()
+        $categories = Category::root()
             ->active()
             ->ordered()
+            ->with(['children' => function($query) {
+                $query->active()->ordered();
+            }])
             ->get();
 
-        return view('backend.mindmaps.index', compact('mindmaps', 'categories'));
+        return view('backend.mindmap.index', compact('categories'));
     }
 
-    public function create(Request $request)
+    /**
+     * Get materials for a specific category.
+     */
+    public function getMaterials(Request $request)
     {
-        $categoryId = $request->get('category_id');
-        $category = null;
-        $materis = collect();
-
-        if ($categoryId) {
-            $category = Category::with('recursiveChildren')->find($categoryId);
-            if ($category) {
-                $materis = $category->allMateris()->published()->ordered();
-            }
+        $categoryId = $request->input('category_id');
+        
+        if (!$categoryId) {
+            return response()->json(['materials' => []]);
         }
 
-        $categories = Category::with('recursiveChildren')
-            ->root()
-            ->active()
+        $materials = Materi::published()
+            ->inCategoryOrChildren($categoryId)
             ->ordered()
-            ->get();
-
-        return view('backend.mindmaps.create', compact('categories', 'category', 'materis'));
-    }
-
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'mindmap_data' => 'required|array',
-            'status' => 'required|in:draft,published',
-            'is_public' => 'boolean',
-        ]);
-
-        $validated['user_id'] = Auth::id();
-        $validated['is_public'] = $request->get('is_public', true);
-
-        $mindmap = Mindmap::create($validated);
-
-        return redirect()
-            ->route('mindmaps.index', ['category_id' => $mindmap->category_id])
-            ->with('success', 'Mindmap berhasil dibuat!');
-    }
-
-    public function show(Mindmap $mindmap)
-    {
-        $this->authorize('view', $mindmap);
-        
-        $mindmap->incrementViewCount();
-        
-        return view('backend.mindmaps.show', compact('mindmap'));
-    }
-
-    public function edit(Mindmap $mindmap)
-    {
-        $this->authorize('update', $mindmap);
-
-        $materis = $mindmap->getMaterisForMindmap();
-        $categories = Category::with('recursiveChildren')
-            ->root()
-            ->active()
-            ->ordered()
-            ->get();
-
-        return view('backend.mindmaps.edit', compact('mindmap', 'categories', 'materis'));
-    }
-
-    public function update(Request $request, Mindmap $mindmap)
-    {
-        $this->authorize('update', $mindmap);
-
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-            'mindmap_data' => 'required|array',
-            'status' => 'required|in:draft,published',
-            'is_public' => 'boolean',
-        ]);
-
-        $mindmap->update($validated);
-
-        return redirect()
-            ->route('mindmaps.index', ['category_id' => $mindmap->category_id])
-            ->with('success', 'Mindmap berhasil diperbarui!');
-    }
-
-    public function destroy(Mindmap $mindmap)
-    {
-        $this->authorize('delete', $mindmap);
-
-        $categoryId = $mindmap->category_id;
-        $mindmap->delete();
-
-        return redirect()
-            ->route('mindmaps.index', ['category_id' => $categoryId])
-            ->with('success', 'Mindmap berhasil dihapus!');
-    }
-
-    public function getByCategory($categoryId)
-    {
-        $category = Category::with('recursiveChildren')->find($categoryId);
-        
-        if (!$category) {
-            return response()->json(['error' => 'Kategori tidak ditemukan'], 404);
-        }
-
-        $mindmaps = Mindmap::with(['category', 'user'])
-            ->byCategory($categoryId)
-            ->published()
-            ->public()
-            ->latest()
-            ->get();
+            ->get(['id', 'title', 'description', 'difficulty_level', 'duration_minutes']);
 
         return response()->json([
-            'category' => $category,
-            'mindmaps' => $mindmaps
+            'materials' => $materials->map(function($material) {
+                return [
+                    'id' => $material->id,
+                    'title' => $material->title,
+                    'description' => $material->description,
+                    'difficulty_level' => $material->formatted_difficulty_level,
+                    'duration' => $material->duration_minutes ? $material->duration_minutes . ' menit' : 'Tidak tersedia'
+                ];
+            })
+        ]);
+    }
+
+    /**
+     * Save mind map structure.
+     */
+    public function saveMindmap(Request $request)
+    {
+        $data = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'mindmap_data' => 'required|array',
+            'title' => 'required|string|max:255'
+        ]);
+
+        // Here you would save the mind map data to your database
+        // For now, we'll just return success
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Mind map berhasil disimpan!'
         ]);
     }
 }

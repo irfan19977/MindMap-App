@@ -56,8 +56,8 @@
                                 <!-- Tabs Navigation -->
                                 <ul class="nav nav-tabs mb-4" id="materiTabs" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
-                                            <i class="feather-info me-2"></i>Overview
+                                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">
+                                            <i class="feather-info me-2"></i>Informasi Dasar
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -79,10 +79,10 @@
 
                                 <!-- Tabs Content -->
                                 <div class="tab-content" id="materiTabContent">
-                                    <!-- Tab 1: Overview -->
-                                    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                                    <!-- Tab 1: Informasi Dasar -->
+                                    <div class="tab-pane fade show active" id="info" role="tabpanel">
                                         <div class="row">
-                                            <div class="col-md-8">
+                                            <div class="col-md-12">
                                                 <div class="mb-3">
                                                     <label for="title" class="form-label">Judul Materi <span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control @error('title') is-invalid @enderror" 
@@ -94,24 +94,46 @@
                                                     @enderror
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-md-4">
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="difficulty_level" class="form-label">Tingkat Kesulitan <span class="text-danger">*</span></label>
-                                                    <select class="form-control @error('difficulty_level') is-invalid @enderror" 
-                                                            id="difficulty_level" name="difficulty_level" required>
-                                                        <option value="">Pilih Tingkat</option>
-                                                        <option value="beginner" {{ (old('difficulty_level') ?? (isset($materi) ? $materi->difficulty_level : '')) == 'beginner' ? 'selected' : '' }}>
-                                                            Pemula
-                                                        </option>
-                                                        <option value="intermediate" {{ (old('difficulty_level') ?? (isset($materi) ? $materi->difficulty_level : '')) == 'intermediate' ? 'selected' : '' }}>
-                                                            Menengah
-                                                        </option>
-                                                        <option value="advanced" {{ (old('difficulty_level') ?? (isset($materi) ? $materi->difficulty_level : '')) == 'advanced' ? 'selected' : '' }}>
-                                                            Lanjutan
-                                                        </option>
+                                                    <label for="category_filter" class="form-label">Kategori</label>
+                                                    <select class="form-control" data-select2-selector="icon" id="category_filter">
+                                                        <option value="">Semua Kategori</option>
+                                                        @if(isset($categories))
+                                                            @foreach($categories as $category)
+                                                                <option value="{{ $category->id }}" 
+                                                                        data-subcategories="{{ json_encode($category->subcategories ?? []) }}">
+                                                                    {{ $category->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        @endif
                                                     </select>
-                                                    @error('difficulty_level')
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="subcategory_id" class="form-label">Subkategori <span class="text-danger">*</span></label>
+                                                    <select class="form-control @error('subcategory_id') is-invalid @enderror" 
+                                                            data-select2-selector="icon" id="subcategory_id" name="subcategory_id" required>
+                                                        <option value="">Pilih Subkategori</option>
+                                                        @if(isset($subcategories))
+                                                            @foreach($subcategories as $subcategory)
+                                                                <option value="{{ $subcategory->id }}" 
+                                                                        data-category-id="{{ $subcategory->category_id }}"
+                                                                        {{ (old('subcategory_id') ?? (isset($materi) ? $materi->subcategory_id : '')) == $subcategory->id ? 'selected' : '' }}>
+                                                                    {{ $subcategory->name }}
+                                                                    @if($subcategory->category)
+                                                                        ({{ $subcategory->category->name }})
+                                                                    @endif
+                                                                </option>
+                                                            @endforeach
+                                                        @endif
+                                                    </select>
+                                                    @error('subcategory_id')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
@@ -121,54 +143,17 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="category_id" class="form-label">Kategori</label>
-                                                    <select class="form-control @error('category_id') is-invalid @enderror" 
-                                                            id="category_id" name="category_id">
-                                                        <option value="">Pilih Kategori</option>
-                                                        @if(isset($categories))
-                                                            @foreach($categories as $category)
-                                                                <option value="{{ $category->id }}" 
-                                                                        {{ (old('category_id') ?? (isset($materi) ? $materi->category_id : '')) == $category->id ? 'selected' : '' }}>
-                                                                    {{ $category->name }}
-                                                                    @if($category->parent)
-                                                                        ({{ $category->parent->name }})
-                                                                    @endif
-                                                                </option>
-                                                            @endforeach
-                                                        @endif
-                                                    </select>
-                                                    @error('category_id')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-3">
-                                                <div class="mb-3">
-                                                    <label for="duration_minutes" class="form-label">Durasi (menit)</label>
-                                                    <input type="number" class="form-control @error('duration_minutes') is-invalid @enderror" 
-                                                           id="duration_minutes" name="duration_minutes" 
-                                                           value="{{ old('duration_minutes') ?? (isset($materi) ? $materi->duration_minutes : '') }}" 
-                                                           placeholder="Contoh: 60" min="1">
-                                                    @error('duration_minutes')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-3">
-                                                <div class="mb-3">
                                                     <label for="status" class="form-label">Status</label>
                                                     <select class="form-control @error('status') is-invalid @enderror" 
-                                                            id="status" name="status">
+                                                            data-select2-selector="icon" id="status" name="status">
                                                         <option value="draft" {{ (old('status') ?? (isset($materi) ? $materi->status : 'draft')) == 'draft' ? 'selected' : '' }}>
                                                             Draft
                                                         </option>
-                                                        <option value="published" {{ (old('status') ?? (isset($materi) ? $materi->status : '')) == 'published' ? 'selected' : '' }}>
+                                                        <option value="publish" {{ (old('status') ?? (isset($materi) ? $materi->status : '')) == 'publish' ? 'selected' : '' }}>
                                                             Diterbitkan
                                                         </option>
-                                                        <option value="archived" {{ (old('status') ?? (isset($materi) ? $materi->status : '')) == 'archived' ? 'selected' : '' }}>
-                                                            Diarsipkan
+                                                        <option value="inactive" {{ (old('status') ?? (isset($materi) ? $materi->status : '')) == 'inactive' ? 'selected' : '' }}>
+                                                            Tidak Aktif
                                                         </option>
                                                     </select>
                                                     @error('status')
@@ -193,36 +178,13 @@
                                         </div>
                                         
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="mb-3">
-                                                    <label for="video_url" class="form-label">URL Video (Opsional)</label>
-                                                    <input type="url" class="form-control @error('video_url') is-invalid @enderror" 
-                                                           id="video_url" name="video_url" 
-                                                           value="{{ old('video_url') ?? (isset($materi) ? $materi->video_url : '') }}" 
-                                                           placeholder="https://youtube.com/watch?v=...">
-                                                    @error('video_url')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label for="file_path" class="form-label">File Materi (PDF, DOC, PPT)</label>
-                                                    <input type="file" class="form-control @error('file_path') is-invalid @enderror" 
-                                                           id="file_path" name="file_path" 
-                                                           accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
-                                                    @if(isset($materi) && $materi->file_path)
-                                                        <div class="mt-2">
-                                                            <small class="text-muted">File saat ini:</small><br>
-                                                            <a href="{{ $materi->file_url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                                <i class="feather-download me-1"></i>
-                                                                Download File
-                                                            </a>
-                                                        </div>
-                                                    @endif
-                                                    <small class="text-muted d-block mt-1">Format: PDF, DOC, DOCX, PPT, PPTX, TXT. Maksimal: 10MB</small>
-                                                    @error('file_path')
+                                                    <label for="learning_objectives" class="form-label">Tujuan Pembelajaran</label>
+                                                    <textarea class="form-control @error('learning_objectives') is-invalid @enderror" 
+                                                              id="learning_objectives" name="learning_objectives" rows="3" 
+                                                              placeholder="Apa yang akan dipelajari dari materi ini...">{{ old('learning_objectives') ?? (isset($materi) ? $materi->learning_objectives : '') }}</textarea>
+                                                    @error('learning_objectives')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
@@ -231,55 +193,6 @@
                                         
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="mb-3">
-                                                    <label for="thumbnail" class="form-label">Thumbnail/Gambar Cover</label>
-                                                    <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" 
-                                                           id="thumbnail" name="thumbnail" 
-                                                           accept="image/*">
-                                                    @if(isset($materi) && $materi->thumbnail)
-                                                        <div class="mt-2">
-                                                            <small class="text-muted">Thumbnail saat ini:</small><br>
-                                                            <img src="{{ asset('storage/' . $materi->thumbnail) }}" alt="Thumbnail" class="img-thumbnail" style="max-width: 150px; max-height: 100px;">
-                                                        </div>
-                                                    @endif
-                                                    <small class="text-muted d-block mt-1">Format: JPG, PNG, WebP. Maksimal: 2MB</small>
-                                                    @error('thumbnail')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="mb-3">
-                                                    <label for="tags" class="form-label">Tags</label>
-                                                    <input type="text" class="form-control @error('tags') is-invalid @enderror" 
-                                                           id="tags" name="tags[]" 
-                                                           value="{{ old('tags') ? implode(', ', old('tags')) : (isset($materi) && $materi->tags ? implode(', ', $materi->tags) : '') }}" 
-                                                           placeholder="matematika, dasar, kelas 1">
-                                                    <small class="text-muted d-block">Pisahkan tags dengan koma</small>
-                                                    @error('tags')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-check mb-2">
-                                                    <input class="form-check-input @error('is_featured') is-invalid @enderror" 
-                                                           type="checkbox" id="is_featured" name="is_featured" value="1"
-                                                           {{ (old('is_featured') ?? (isset($materi) ? $materi->is_featured : 0)) == 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label" for="is_featured">
-                                                        Tampilkan di Halaman Utama (Featured)
-                                                    </label>
-                                                    @error('is_featured')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-                                                
                                                 <div class="form-check mb-3">
                                                     <input class="form-check-input @error('is_free') is-invalid @enderror" 
                                                            type="checkbox" id="is_free" name="is_free" value="1"
@@ -297,85 +210,176 @@
 
                                     <!-- Tab 2: Konten Materi -->
                                     <div class="tab-pane fade" id="konten" role="tabpanel">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6>Konten Materi Pembelajaran</h6>
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="addKontenMateri()">
-                                                <i class="feather-plus me-1"></i>Tambah Konten
-                                            </button>
-                                        </div>
-                                        
-                                        <div id="kontenMateriContainer">
-                                            <!-- Konten materi akan ditambahkan di sini dengan JavaScript -->
-                                        </div>
-                                        
-                                        <div class="mt-3">
-                                            <small class="text-muted">
-                                                <i class="feather-info me-1"></i>
-                                                Tambahkan beberapa konten materi untuk pembelajaran yang lebih terstruktur. Setiap konten bisa memiliki teks, gambar, atau video.
-                                            </small>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label for="content" class="form-label">Konten Materi</label>
+                                                    <div id="editor-container" style="height: 400px; border: 1px solid #ced4da; border-radius: 0.375rem;"></div>
+                                                    <input type="hidden" id="content" name="content" value="{{ old('content') ?? (isset($materi) ? $materi->content : '') }}">
+                                                    @error('content')
+                                                        <div class="invalid-feedback d-block mt-1">{{ $message }}</div>
+                                                    @enderror
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <!-- Tab 3: Latihan -->
                                     <div class="tab-pane fade" id="latihan" role="tabpanel">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6>Soal Latihan</h6>
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="addLatihan()">
-                                                <i class="feather-plus me-1"></i>Tambah Soal
-                                            </button>
-                                        </div>
-                                        
-                                        <div id="latihanContainer">
-                                            <!-- Soal latihan akan ditambahkan di sini dengan JavaScript -->
-                                        </div>
-                                        
-                                        <div class="mt-3">
-                                            <small class="text-muted">
-                                                <i class="feather-info me-1"></i>
-                                                Buat soal latihan untuk membantu peserta memahami materi lebih baik.
-                                            </small>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Latihan Soal</label>
+                                                    <div id="latihan-container">
+                                                        @if(isset($materi))
+                                                            @foreach($materi->practiceQuestions as $index => $latihan)
+                                                                <div class="card mb-3 latihan-item" data-index="{{ $index }}">
+                                                                    <div class="card-body">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                            <h6 class="card-title mb-0">Soal #{{ $index + 1 }}</h6>
+                                                                            <button type="button" class="btn btn-sm btn-danger remove-latihan">
+                                                                                <i class="feather-trash-2"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">Pertanyaan</label>
+                                                                            <textarea class="form-control latihan-question" rows="2" required>{{ $latihan->question }}</textarea>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">Jawaban Benar</label>
+                                                                            <input type="text" class="form-control latihan-answer" value="{{ $latihan->correct_answer }}" required>
+                                                                        </div>
+                                                                        <div class="mb-0">
+                                                                            <label class="form-label">Penjelasan (Opsional)</label>
+                                                                            <textarea class="form-control latihan-explanation" rows="2">{{ $latihan->explanation }}</textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="add-latihan">
+                                                        <i class="feather-plus me-1"></i> Tambah Soal
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <!-- Tab 4: Quiz -->
                                     <div class="tab-pane fade" id="quiz" role="tabpanel">
-                                        <div class="row mb-3">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <!-- Quiz Header -->
+                                                <div class="card mb-4" style="background-color: #f5f9fd; border: 1px solid #dbeafe; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);">
+                                                    <div class="card-body p-4">
+                                                        <!-- Header dengan Ikon Kombinasi -->
+                                                        <div class="d-flex align-items-center mb-4 pb-2" style="border-bottom: 1px solid #f1f5f9;">
+                                                            <div class="position-relative me-3" style="width: 32px; height: 32px;">
+                                                                <i class="feather-clock" style="color: #2563eb; font-size: 24px; position: absolute; left: 0; top: 0;"></i>
+                                                                <i class="feather-settings" style="color: #2563eb; font-size: 14px; position: absolute; right: -2px; bottom: -2px; background: #fff; border-radius: 50%; padding: 1px;"></i>
+                                                            </div>
+                                                            <h5 class="card-title mb-0" style="font-weight: 700; font-size: 16px; letter-spacing: 0.5px; color: #1e293b;">PENGATURAN QUIZ</h5>
+                                                        </div>
+
+                                                        <!-- Baris 1: Judul Quiz & Status Quiz -->
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label" style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px;">Judul Quiz</label>
+                                                                <input type="text" class="form-control" name="quiz_title" value="{{ isset($materi) && $materi->quizzes->first() ? $materi->quizzes->first()->title : '' }}" placeholder="test Quiz" style="border-color: #cbd5e1; border-radius: 6px; padding: 10px 12px;">
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label" style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px;">Status Quiz</label>
+                                                                <select class="form-select" name="quiz_status" style="border-color: #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px;">
+                                                                    <option value="draft" {{ isset($materi) && $materi->quizzes->first() && $materi->quizzes->first()->status == 'draft' ? 'selected' : '' }}>Draft</option>
+                                                                    <option value="publish" {{ isset($materi) && $materi->quizzes->first() && $materi->quizzes->first()->status == 'publish' ? 'selected' : '' }}>Publish</option>
+                                                                    <option value="inactive" {{ isset($materi) && $materi->quizzes->first() && $materi->quizzes->first()->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Baris 2: Nilai Lulus Minimal & Batas Waktu -->
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label" style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px;">Nilai Lulus Minimal</label>
+                                                                <input type="number" class="form-control" name="quiz_passing_score" value="{{ isset($materi) && $materi->quizzes->first() ? $materi->quizzes->first()->passing_score : 60 }}" min="0" max="100" style="border-color: #cbd5e1; border-radius: 6px; padding: 10px 12px;">
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <label class="form-label" style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px;">Batas Waktu (menit)</label>
+                                                                <input type="number" class="form-control" name="quiz_time_limit" value="{{ isset($materi) && $materi->quizzes->first() ? $materi->quizzes->first()->time_limit : '' }}" placeholder="Opsional" style="border-color: #cbd5e1; border-radius: 6px; padding: 10px 12px;">
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Baris 3: Deskripsi Quiz -->
+                                                        <div class="mb-0">
+                                                            <label class="form-label" style="font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px;">Deskripsi Quiz (Opsional)</label>
+                                                            <textarea class="form-control" name="quiz_description" rows="3" placeholder="Sebutkan deskripsi quiz..." style="border-color: #cbd5e1; border-radius: 6px; padding: 10px 12px;">{{ isset($materi) && $materi->quizzes->first() ? $materi->quizzes->first()->description : '' }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Quiz Questions -->
+                                                <div class="mb-3">
+                                                    <label class="form-label">Pertanyaan Quiz</label>
+                                                    <div id="quiz-container" style="background-color: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
+                                                        @if(isset($materi) && $materi->quizzes->first())
+                                                            @php
+                                                                $quiz = $materi->quizzes->first();
+                                                                $quizQuestions = $quiz->quizQuestions;
+                                                            @endphp
+                                                            @foreach($quizQuestions as $index => $quizItem)
+                                                                <div class="card mb-3 quiz-item" data-index="{{ $index }}">
+                                                                    <div class="card-body">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                            <h6 class="card-title mb-0">Pertanyaan #{{ $index + 1 }}</h6>
+                                                                            <button type="button" class="btn btn-sm btn-danger remove-quiz">
+                                                                                <i class="feather-trash-2"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <label class="form-label">Pertanyaan</label>
+                                                                            <textarea class="form-control quiz-question" rows="2" required>{{ $quizItem->question }}</textarea>
+                                                                        </div>
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-md-6">
+                                                <label class="form-label">Pilihan A</label>
+                                                <input type="text" class="form-control quiz-option-a" value="{{ $quizItem->options['a'] ?? '' }}" required>
+                                            </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Judul Quiz</label>
-                                                <input type="text" class="form-control" name="quiz_title" 
-                                                       value="{{ old('quiz_title') ?? (isset($materi) && $materi->quiz_data ? json_decode($materi->quiz_data, true)['title'] ?? '' : '') }}" 
-                                                       placeholder="Quiz Akhir Materi">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Durasi (menit)</label>
-                                                <input type="number" class="form-control" name="quiz_duration" 
-                                                       value="{{ old('quiz_duration') ?? (isset($materi) && $materi->quiz_data ? json_decode($materi->quiz_data, true)['duration'] ?? 30 : 30) }}" 
-                                                       placeholder="30" min="1">
-                                            </div>
-                                            <div class="col-md-3">
-                                                <label class="form-label">Nilai Minimum</label>
-                                                <input type="number" class="form-control" name="quiz_passing_score" 
-                                                       value="{{ old('quiz_passing_score') ?? (isset($materi) && $materi->quiz_data ? json_decode($materi->quiz_data, true)['passing_score'] ?? 70 : 70) }}" 
-                                                       placeholder="70" min="0" max="100">
+                                                <label class="form-label">Pilihan B</label>
+                                                <input type="text" class="form-control quiz-option-b" value="{{ $quizItem->options['b'] ?? '' }}" required>
                                             </div>
                                         </div>
-                                        
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <h6>Soal Quiz</h6>
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="addQuiz()">
-                                                <i class="feather-plus me-1"></i>Tambah Soal
-                                            </button>
+                                        <div class="row mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Pilihan C</label>
+                                                <input type="text" class="form-control quiz-option-c" value="{{ $quizItem->options['c'] ?? '' }}" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Pilihan D</label>
+                                                <input type="text" class="form-control quiz-option-d" value="{{ $quizItem->options['d'] ?? '' }}" required>
+                                            </div>
                                         </div>
-                                        
-                                        <div id="quizContainer">
-                                            <!-- Soal quiz akan ditambahkan di sini dengan JavaScript -->
+                                        <div class="mb-0">
+                                            <label class="form-label">Jawaban Benar</label>
+                                            <select class="form-control quiz-correct-answer" required>
+                                                <option value="">Pilih Jawaban</option>
+                                                <option value="a" {{ $quizItem->correct_answer == 'a' ? 'selected' : '' }}>A</option>
+                                                <option value="b" {{ $quizItem->correct_answer == 'b' ? 'selected' : '' }}>B</option>
+                                                <option value="c" {{ $quizItem->correct_answer == 'c' ? 'selected' : '' }}>C</option>
+                                                <option value="d" {{ $quizItem->correct_answer == 'd' ? 'selected' : '' }}>D</option>
+                                            </select>
                                         </div>
-                                        
-                                        <div class="mt-3">
-                                            <small class="text-muted">
-                                                <i class="feather-info me-1"></i>
-                                                Quiz untuk menguji pemahaman peserta. Peserta harus mencapai nilai minimum untuk lulus.
-                                            </small>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="add-quiz">
+                                                        <i class="feather-plus me-1"></i> Tambah Pertanyaan
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -394,6 +398,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Hidden inputs for latihan and quiz data -->
+                                <input type="hidden" id="latihan_data" name="latihan_data">
+                                <input type="hidden" id="quiz_data" name="quiz_data">
                             </form>
                         </div>
                     </div>
@@ -405,389 +413,218 @@
 @endsection
 
 @push('styles')
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('backend/assets/vendors/css/quill.min.css') }}">
 @endpush
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    @include('backend.layouts.scriptcustom-minimal')
+    <script src="{{ asset('backend/assets/vendors/js/quill.min.js') }}"></script>
     
     <script>
-        let kontenCount = 0;
-        let latihanCount = 0;
-        let quizCount = 0;
+        // Initialize Quill Editor
+        var quill;
+        var contentInput = document.getElementById('content');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            quill = new Quill('#editor-container', {
+                theme: 'snow',
+                placeholder: 'Tuliskan konten materi pembelajaran secara lengkap...',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['link', 'image', 'video'],
+                        ['clean'],
+                        ['code-block']
+                    ]
+                }
+            });
+
+            // Load existing content if editing
+            if (contentInput.value) {
+                quill.root.innerHTML = contentInput.value;
+            }
+        });
 
         // Initialize existing data if editing
         document.addEventListener('DOMContentLoaded', function() {
-            @if(isset($materi))
-                // Load existing konten materi
-                const existingKonten = @json(isset($materi) && $materi->konten_materi ? json_decode($materi->konten_materi, true) : []);
-                existingKonten.forEach(konten => {
-                    addKontenMateri(konten);
-                });
-
-                // Load existing latihan
-                const existingLatihan = @json(isset($materi) && $materi->latihan_data ? json_decode($materi->latihan_data, true) : []);
-                existingLatihan.forEach(latihan => {
-                    addLatihan(latihan);
-                });
-
-                // Load existing quiz
-                const existingQuiz = @json(isset($materi) && $materi->quiz_data ? json_decode($materi->quiz_data, true) : []);
-                if (existingQuiz.questions) {
-                    existingQuiz.questions.forEach(quiz => {
-                        addQuiz(quiz);
+            // Filter subcategories based on selected category
+            const categoryFilter = document.getElementById('category_filter');
+            const subcategorySelect = document.getElementById('subcategory_id');
+            
+            if (categoryFilter && subcategorySelect) {
+                categoryFilter.addEventListener('change', function() {
+                    const selectedCategoryId = this.value;
+                    const options = subcategorySelect.querySelectorAll('option');
+                    
+                    options.forEach(option => {
+                        if (option.value === '') {
+                            option.style.display = 'block';
+                            return;
+                        }
+                        
+                        const optionCategoryId = option.getAttribute('data-category-id');
+                        if (selectedCategoryId === '' || optionCategoryId === selectedCategoryId) {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = 'none';
+                        }
                     });
-                }
-            @else
-                // Add default empty konten for new materi
-                addKontenMateri();
-            @endif
-
-            // Initialize tags
-            const tagsInput = document.getElementById('tags');
-            if (tagsInput.value) {
-                updateTagsInput(tagsInput.value);
-            }
-        });
-
-        // Preview thumbnail
-        document.getElementById('thumbnail').addEventListener('change', function(e) {
-            var file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    var existingPreview = document.getElementById('imagePreview');
-                    if (existingPreview) {
-                        existingPreview.remove();
+                    
+                    // Reset subcategory selection if it's no longer visible
+                    const selectedOption = subcategorySelect.querySelector('option:checked');
+                    if (selectedOption && selectedOption.value !== '' && selectedOption.style.display === 'none') {
+                        subcategorySelect.value = '';
                     }
-                    
-                    var preview = document.createElement('img');
-                    preview.id = 'imagePreview';
-                    preview.className = 'img-thumbnail mt-2';
-                    preview.style.maxWidth = '200px';
-                    preview.style.maxHeight = '150px';
-                    preview.src = e.target.result;
-                    
-                    e.target.parentNode.appendChild(preview);
-                };
-                reader.readAsDataURL(file);
+                });
+                
+                // Initialize filter based on currently selected subcategory
+                if (subcategorySelect.value) {
+                    const selectedOption = subcategorySelect.querySelector('option:checked');
+                    if (selectedOption) {
+                        const categoryId = selectedOption.getAttribute('data-category-id');
+                        categoryFilter.value = categoryId;
+                        categoryFilter.dispatchEvent(new Event('change'));
+                    }
+                }
             }
         });
 
-        // Konten Materi Functions
-        function addKontenMateri(data = null) {
-            kontenCount++;
-            const container = document.getElementById('kontenMateriContainer');
-            
-            const kontenHtml = `
-                <div class="card mb-3" id="konten-${kontenCount}">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Konten ${kontenCount}</h6>
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeKonten(${kontenCount})">
-                            <i class="feather-trash-2"></i>
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Judul Konten</label>
-                                    <input type="text" class="form-control" name="konten_materi[${kontenCount}][title]" 
-                                           value="${data ? data.title || '' : ''}" placeholder="Judul konten pembelajaran">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Isi Konten</label>
-                                    <textarea class="form-control summernote-konten" name="konten_materi[${kontenCount}][content]" 
-                                              rows="6" placeholder="Tuliskan konten pembelajaran...">${data ? data.content || '' : ''}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Tipe Konten</label>
-                                    <select class="form-control" name="konten_materi[${kontenCount}][type]">
-                                        <option value="text" ${data && data.type === 'text' ? 'selected' : ''}>Teks</option>
-                                        <option value="video" ${data && data.type === 'video' ? 'selected' : ''}>Video</option>
-                                        <option value="image" ${data && data.type === 'image' ? 'selected' : ''}>Gambar</option>
-                                        <option value="document" ${data && data.type === 'document' ? 'selected' : ''}>Dokumen</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Media URL (jika ada)</label>
-                                    <input type="url" class="form-control" name="konten_materi[${kontenCount}][media_url]" 
-                                           value="${data ? data.media_url || '' : ''}" placeholder="URL video/gambar/dokumen">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            container.insertAdjacentHTML('beforeend', kontenHtml);
-            
-            // Initialize Summernote for new content
-            $('.summernote-konten').summernote({
-                height: 150,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture']],
-                    ['view', ['fullscreen', 'codeview']]
-                ]
-            });
-        }
-
-        function removeKonten(id) {
-            document.getElementById(`konten-${id}`).remove();
-        }
-
-        // Latihan Functions
-        function addLatihan(data = null) {
-            latihanCount++;
-            const container = document.getElementById('latihanContainer');
-            
+        // Latihan functionality
+        let latihanIndex = document.querySelectorAll('.latihan-item').length;
+        
+        document.getElementById('add-latihan').addEventListener('click', function() {
+            latihanIndex++;
             const latihanHtml = `
-                <div class="card mb-3" id="latihan-${latihanCount}">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Soal Latihan ${latihanCount}</h6>
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeLatihan(${latihanCount})">
-                            <i class="feather-trash-2"></i>
-                        </button>
-                    </div>
+                <div class="card mb-3 latihan-item" data-index="${latihanIndex}">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Pertanyaan</label>
-                                    <textarea class="form-control" name="latihan[${latihanCount}][question]" 
-                                              rows="3" placeholder="Tuliskan pertanyaan...">${data ? data.question || '' : ''}</textarea>
-                                </div>
-                            </div>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="card-title mb-0">Soal #${latihanIndex}</h6>
+                            <button type="button" class="btn btn-sm btn-danger remove-latihan">
+                                <i class="feather-trash-2"></i>
+                            </button>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Jawaban Benar</label>
-                                    <input type="text" class="form-control" name="latihan[${latihanCount}][correct_answer]" 
-                                           value="${data ? data.correct_answer || '' : ''}" placeholder="Jawaban yang benar">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Tipe Soal</label>
-                                    <select class="form-control" name="latihan[${latihanCount}][type]">
-                                        <option value="essay" ${data && data.type === 'essay' ? 'selected' : ''}>Essay</option>
-                                        <option value="short_answer" ${data && data.type === 'short_answer' ? 'selected' : ''}>Jawaban Singkat</option>
-                                        <option value="multiple_choice" ${data && data.type === 'multiple_choice' ? 'selected' : ''}>Pilihan Ganda</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="mb-2">
+                            <label class="form-label">Pertanyaan</label>
+                            <textarea class="form-control latihan-question" rows="2" required></textarea>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Pembahasan</label>
-                                    <textarea class="form-control" name="latihan[${latihanCount}][explanation]" 
-                                              rows="3" placeholder="Jelaskan pembahasan jawaban...">${data ? data.explanation || '' : ''}</textarea>
-                                </div>
-                            </div>
+                        <div class="mb-2">
+                            <label class="form-label">Jawaban Benar</label>
+                            <input type="text" class="form-control latihan-answer" required>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label">Penjelasan (Opsional)</label>
+                            <textarea class="form-control latihan-explanation" rows="2"></textarea>
                         </div>
                     </div>
                 </div>
             `;
-            
-            container.insertAdjacentHTML('beforeend', latihanHtml);
-        }
-
-        function removeLatihan(id) {
-            document.getElementById(`latihan-${id}`).remove();
-        }
-
-        // Quiz Functions
-        function addQuiz(data = null) {
-            quizCount++;
-            const container = document.getElementById('quizContainer');
-            
-            const quizHtml = `
-                <div class="card mb-3" id="quiz-${quizCount}">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">Soal Quiz ${quizCount}</h6>
-                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeQuiz(${quizCount})">
-                            <i class="feather-trash-2"></i>
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="mb-3">
-                                    <label class="form-label">Pertanyaan</label>
-                                    <textarea class="form-control" name="quiz[${quizCount}][question]" 
-                                              rows="3" placeholder="Tuliskan pertanyaan...">${data ? data.question || '' : ''}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Pilihan A</label>
-                                    <input type="text" class="form-control" name="quiz[${quizCount}][options][A]" 
-                                           value="${data && data.options ? data.options.A || '' : ''}" placeholder="Pilihan A">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Pilihan B</label>
-                                    <input type="text" class="form-control" name="quiz[${quizCount}][options][B]" 
-                                           value="${data && data.options ? data.options.B || '' : ''}" placeholder="Pilihan B">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Pilihan C</label>
-                                    <input type="text" class="form-control" name="quiz[${quizCount}][options][C]" 
-                                           value="${data && data.options ? data.options.C || '' : ''}" placeholder="Pilihan C">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Pilihan D</label>
-                                    <input type="text" class="form-control" name="quiz[${quizCount}][options][D]" 
-                                           value="${data && data.options ? data.options.D || '' : ''}" placeholder="Pilihan D">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Jawaban Benar</label>
-                                    <select class="form-control" name="quiz[${quizCount}][correct_answer]">
-                                        <option value="">Pilih Jawaban</option>
-                                        <option value="A" ${data && data.correct_answer === 'A' ? 'selected' : ''}>A</option>
-                                        <option value="B" ${data && data.correct_answer === 'B' ? 'selected' : ''}>B</option>
-                                        <option value="C" ${data && data.correct_answer === 'C' ? 'selected' : ''}>C</option>
-                                        <option value="D" ${data && data.correct_answer === 'D' ? 'selected' : ''}>D</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label class="form-label">Bobot Nilai</label>
-                                    <input type="number" class="form-control" name="quiz[${quizCount}][points]" 
-                                           value="${data ? data.points || 10 : 10}" placeholder="10" min="1">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            container.insertAdjacentHTML('beforeend', quizHtml);
-        }
-
-        function removeQuiz(id) {
-            document.getElementById(`quiz-${id}`).remove();
-        }
-
-        // Handle tags input
-        function updateTagsInput(tagsValue) {
-            const tagsArray = tagsValue.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-            const container = document.getElementById('tags').parentNode;
-            const existingInputs = container.querySelectorAll('input[name="tags[]"]');
-            existingInputs.forEach(input => input.remove());
-            
-            tagsArray.forEach(tag => {
-                const hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'tags[]';
-                hiddenInput.value = tag;
-                container.appendChild(hiddenInput);
-            });
-        }
-
-        document.getElementById('tags').addEventListener('change', function(e) {
-            updateTagsInput(e.target.value);
+            document.getElementById('latihan-container').insertAdjacentHTML('beforeend', latihanHtml);
         });
 
-        // Form submission
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-latihan')) {
+                e.target.closest('.latihan-item').remove();
+            }
+        });
+
+        // Quiz functionality
+        let quizIndex = document.querySelectorAll('.quiz-item').length;
+        
+        document.getElementById('add-quiz').addEventListener('click', function() {
+            quizIndex++;
+            const quizHtml = `
+                <div class="card mb-3 quiz-item" data-index="${quizIndex}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="card-title mb-0">Pertanyaan #${quizIndex}</h6>
+                            <button type="button" class="btn btn-sm btn-danger remove-quiz">
+                                <i class="feather-trash-2"></i>
+                            </button>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Pertanyaan</label>
+                            <textarea class="form-control quiz-question" rows="2" required></textarea>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Pilihan A</label>
+                                <input type="text" class="form-control quiz-option-a" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Pilihan B</label>
+                                <input type="text" class="form-control quiz-option-b" required>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-6">
+                                <label class="form-label">Pilihan C</label>
+                                <input type="text" class="form-control quiz-option-c" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Pilihan D</label>
+                                <input type="text" class="form-control quiz-option-d" required>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label">Jawaban Benar</label>
+                            <select class="form-control quiz-correct-answer" required>
+                                <option value="">Pilih Jawaban</option>
+                                <option value="a">A</option>
+                                <option value="b">B</option>
+                                <option value="c">C</option>
+                                <option value="d">D</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('quiz-container').insertAdjacentHTML('beforeend', quizHtml);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.remove-quiz')) {
+                e.target.closest('.quiz-item').remove();
+            }
+        });
+
+        // Collect latihan and quiz data on form submit
         document.getElementById('materiForm').addEventListener('submit', function(e) {
-            // Collect all konten materi data
-            const kontenData = {};
-            const latihanData = {};
-            const quizData = {
-                title: document.querySelector('input[name="quiz_title"]').value,
-                duration: document.querySelector('input[name="quiz_duration"]').value,
-                passing_score: document.querySelector('input[name="quiz_passing_score"]').value,
-                questions: []
-            };
+            // Update Quill content
+            var contentInput = document.getElementById('content');
+            if (quill) {
+                contentInput.value = quill.root.innerHTML;
+            }
 
-            // Collect konten materi
-            document.querySelectorAll('[id^="konten-"]').forEach(element => {
-                const id = element.id.replace('konten-', '');
-                const title = element.querySelector(`[name="konten_materi[${id}][title]"]`).value;
-                const content = element.querySelector(`[name="konten_materi[${id}][content]"]`).value;
-                const type = element.querySelector(`[name="konten_materi[${id}][type]"]`).value;
-                const mediaUrl = element.querySelector(`[name="konten_materi[${id}][media_url]"]`).value;
-                
-                kontenData[id] = { title, content, type, media_url };
+            // Collect latihan data
+            const latihanData = [];
+            document.querySelectorAll('.latihan-item').forEach(function(item) {
+                latihanData.push({
+                    question: item.querySelector('.latihan-question').value,
+                    answer: item.querySelector('.latihan-answer').value,
+                    explanation: item.querySelector('.latihan-explanation').value
+                });
             });
+            document.getElementById('latihan_data').value = JSON.stringify(latihanData);
 
-            // Collect latihan
-            document.querySelectorAll('[id^="latihan-"]').forEach(element => {
-                const id = element.id.replace('latihan-', '');
-                const question = element.querySelector(`[name="latihan[${id}][question]"]`).value;
-                const correctAnswer = element.querySelector(`[name="latihan[${id}][correct_answer]"]`).value;
-                const type = element.querySelector(`[name="latihan[${id}][type]"]`).value;
-                const explanation = element.querySelector(`[name="latihan[${id}][explanation]"]`).value;
-                
-                latihanData[id] = { question, correct_answer: correctAnswer, type, explanation };
+            // Collect quiz data
+            const quizData = [];
+            document.querySelectorAll('.quiz-item').forEach(function(item) {
+                quizData.push({
+                    question: item.querySelector('.quiz-question').value,
+                    options: {
+                        a: item.querySelector('.quiz-option-a').value,
+                        b: item.querySelector('.quiz-option-b').value,
+                        c: item.querySelector('.quiz-option-c').value,
+                        d: item.querySelector('.quiz-option-d').value
+                    },
+                    correct_answer: item.querySelector('.quiz-correct-answer').value
+                });
             });
-
-            // Collect quiz
-            document.querySelectorAll('[id^="quiz-"]').forEach(element => {
-                const id = element.id.replace('quiz-', '');
-                const question = element.querySelector(`[name="quiz[${id}][question]"]`).value;
-                const correctAnswer = element.querySelector(`[name="quiz[${id}][correct_answer]"]`).value;
-                const points = element.querySelector(`[name="quiz[${id}][points]"]`).value;
-                const options = {
-                    A: element.querySelector(`[name="quiz[${id}][options][A]"]`).value,
-                    B: element.querySelector(`[name="quiz[${id}][options][B]"]`).value,
-                    C: element.querySelector(`[name="quiz[${id}][options][C]"]`).value,
-                    D: element.querySelector(`[name="quiz[${id}][options][D]"]`).value
-                };
-                
-                quizData.questions.push({ question, correct_answer: correctAnswer, points, options });
-            });
-
-            // Add hidden fields for form submission
-            const kontenInput = document.createElement('input');
-            kontenInput.type = 'hidden';
-            kontenInput.name = 'konten_materi_data';
-            kontenInput.value = JSON.stringify(kontenData);
-            this.appendChild(kontenInput);
-
-            const latihanInput = document.createElement('input');
-            latihanInput.type = 'hidden';
-            latihanInput.name = 'latihan_data';
-            latihanInput.value = JSON.stringify(latihanData);
-            this.appendChild(latihanInput);
-
-            const quizInput = document.createElement('input');
-            quizInput.type = 'hidden';
-            quizInput.name = 'quiz_data';
-            quizInput.value = JSON.stringify(quizData);
-            this.appendChild(quizInput);
+            document.getElementById('quiz_data').value = JSON.stringify(quizData);
         });
     </script>
 @endpush

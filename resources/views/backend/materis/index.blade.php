@@ -119,15 +119,15 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="avatar-text avatar-xl rounded">
-                                                <i class="feather-eye"></i>
+                                                <i class="feather-check-circle"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Total Views</span>
-                                                <span class="fs-24 fw-bolder d-block">{{ $materis->sum('view_count') }}</span>
+                                                <span class="d-block">Diterbitkan</span>
+                                                <span class="fs-24 fw-bolder d-block">{{ $materis->where('status', 'publish')->count() }}</span>
                                             </a>
                                         </div>
                                         <div class="badge bg-soft-success text-success">
-                                            <i class="feather-arrow-up fs-10 me-1"></i>
+                                            <i class="feather-check-circle fs-10 me-1"></i>
                                             <span>Active</span>
                                         </div>
                                     </div>
@@ -140,16 +140,16 @@
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="avatar-text avatar-xl rounded">
-                                                <i class="feather-star"></i>
+                                                <i class="feather-file-text"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Featured</span>
-                                                <span class="fs-24 fw-bolder d-block">{{ $materis->where('is_featured', true)->count() }}</span>
+                                                <span class="d-block">Draft</span>
+                                                <span class="fs-24 fw-bolder d-block">{{ $materis->where('status', 'draft')->count() }}</span>
                                             </a>
                                         </div>
-                                        <div class="badge bg-soft-warning text-warning">
-                                            <i class="feather-star fs-10 me-1"></i>
-                                            <span>Special</span>
+                                        <div class="badge bg-soft-secondary text-secondary">
+                                            <i class="feather-file-text fs-10 me-1"></i>
+                                            <span>Draft</span>
                                         </div>
                                     </div>
                                 </div>
@@ -199,13 +199,10 @@
                                                     </div>
                                                 </th>
                                                 <th class="text-center">Judul Materi</th>
-                                                <th class="text-center">Kategori</th>
-                                                <th class="text-center">Tingkat Kesulitan</th>
+                                                <th class="text-center">Subkategori</th>
                                                 <th class="text-center">Deskripsi</th>
-                                                <th class="text-center">Durasi</th>
                                                 <th class="text-center">Status</th>
                                                 <th class="text-center">Gratis</th>
-                                                <th class="text-center">Views</th>
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
@@ -221,40 +218,22 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ route('materis.edit', $materi->id) }}" class="hstack gap-3">
-                                                            @if($materi->thumbnail)
-                                                                <div class="avatar-image avatar-md">
-                                                                    <img src="{{ $materi->thumbnail_url }}" alt="{{ $materi->title }}" class="img-fluid">
-                                                                </div>
-                                                            @else
-                                                                <div class="avatar-text avatar-md bg-info">
-                                                                    <i class="feather-book-open"></i>
-                                                                </div>
-                                                            @endif
                                                             <div>
                                                                 <span class="text-truncate-1-line">{{ $materi->title }}</span>
-                                                                @if($materi->is_featured)
-                                                                    <span class="badge bg-warning text-dark ms-1">Featured</span>
-                                                                @endif
                                                             </div>
-                                                        </a>
+
                                                     </td>
                                                     <td>
-                                                        @if($materi->category)
+                                                        @if($materi->subcategory)
                                                             <div>
-                                                                <span class="badge bg-soft-primary text-primary">{{ $materi->category->name }}</span>
-                                                                @if($materi->parentCategory)
-                                                                    <br><small class="text-muted">{{ $materi->parentCategory->name }}</small>
+                                                                <span class="badge bg-soft-primary text-primary">{{ $materi->subcategory->name }}</span>
+                                                                @if($materi->subcategory->category)
+                                                                    <br><small class="text-muted">{{ $materi->subcategory->category->name }}</small>
                                                                 @endif
                                                             </div>
                                                         @else
                                                             <span class="text-muted">-</span>
                                                         @endif
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge bg-{{ $materi->difficulty_level == 'beginner' ? 'success' : ($materi->difficulty_level == 'intermediate' ? 'warning' : 'danger') }} text-white">
-                                                            {{ $materi->formatted_difficulty_level }}
-                                                        </span>
                                                     </td>
                                                     <td>
                                                         <span class="text-truncate-1-line d-block" style="max-width: 200px;">
@@ -262,19 +241,10 @@
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        @if($materi->duration_minutes)
-                                                            <span class="badge bg-soft-info text-info">
-                                                                {{ $materi->duration_minutes }} menit
-                                                            </span>
-                                                        @else
-                                                            <span class="text-muted">-</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
                                                         <select class="form-control" data-select2-selector="status" data-materi-id="{{ $materi->id }}">
                                                             <option value="draft" {{ $materi->status == 'draft' ? 'selected' : '' }} data-bg="bg-secondary">Draft</option>
-                                                            <option value="published" {{ $materi->status == 'published' ? 'selected' : '' }} data-bg="bg-success">Diterbitkan</option>
-                                                            <option value="archived" {{ $materi->status == 'archived' ? 'selected' : '' }} data-bg="bg-warning">Diarsipkan</option>
+                                                            <option value="publish" {{ $materi->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">Diterbitkan</option>
+                                                            <option value="inactive" {{ $materi->status == 'inactive' ? 'selected' : '' }} data-bg="bg-warning">Tidak Aktif</option>
                                                         </select>
                                                     </td>
                                                     <td>
@@ -283,12 +253,6 @@
                                                         @else
                                                             <span class="badge bg-soft-warning text-warning">Berbayar</span>
                                                         @endif
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge bg-soft-info text-info">
-                                                            <i class="feather-eye me-1"></i>
-                                                            {{ $materi->view_count }}
-                                                        </span>
                                                     </td>
                                                     <td>
                                                         <div class="hstack gap-2 justify-content-end">
@@ -332,7 +296,7 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="10" class="text-center py-4">
+                                                    <td colspan="7" class="text-center py-4">
                                                         <div class="text-muted">
                                                             <i class="feather-inbox fs-24 d-block mb-2"></i>
                                                             Belum ada data materi

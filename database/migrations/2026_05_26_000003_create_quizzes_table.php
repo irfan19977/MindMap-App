@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('quizzes', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name');
-            $table->string('slug')->unique();
+            $table->uuid('material_id');
+            $table->foreign('material_id')->references('id')->on('materials')->onDelete('cascade');
+            $table->string('title');
             $table->text('description')->nullable();
-            $table->string('cover_image')->nullable();
+            $table->integer('time_limit')->nullable();
+            $table->integer('passing_score')->default(60);
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
-            $table->boolean('is_featured')->default(false);
             $table->timestamps();
             
             // Indexes untuk performance
-            $table->index('slug');
-            $table->index('status');
+            $table->index('material_id');
         });
     }
 
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('quizzes');
     }
 };

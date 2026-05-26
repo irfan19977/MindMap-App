@@ -1,14 +1,14 @@
 @extends('frontend.layouts.app')
 
-@section('title', $category->name . ' - MindMap')
+@section('title', 'MindMap - Visualisasi Pembelajaran')
 
 @section('content')
     <!-- Header-->
     <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
       <div class="overlay"></div>
       <div class="intro-body">
-        <h1>MindMap {{ $category->name }}</h1>
-        <h4>Visualisasikan alur pembelajaran {{ $category->name }}</h4><a class="page-scroll" href="#mindmap-content"><span class="mouse"><span><i class="icon ion-ios-arrow-down"></i></span></span></a>
+        <h1>MindMap Pembelajaran</h1>
+        <h4>Visualisasikan alur pembelajaran interaktif</h4><a class="page-scroll" href="#mindmap-content"><span class="mouse"><span><i class="icon ion-ios-arrow-down"></i></span></span></a>
       </div>
     </header>
     

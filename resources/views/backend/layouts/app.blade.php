@@ -57,6 +57,33 @@
     
     @include('backend.layouts.theme')
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Check for session messages and show SweetAlert
+        @if(session('success'))
+            Swal.fire({
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                icon: 'success',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                icon: 'error',
+                timer: 3000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        @endif
+    </script>
+    
     @stack('scripts')
 </body>
 </html>

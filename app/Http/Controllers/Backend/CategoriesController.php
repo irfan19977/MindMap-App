@@ -15,9 +15,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('parent')
-            ->ordered()
-            ->get();
+        $categories = Category::orderBy('created_at', 'desc')->get();
             
         return view('backend.categories.index', compact('categories'));
     }
@@ -27,12 +25,7 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        $parentCategories = Category::active()
-            ->root()
-            ->ordered()
-            ->get();
-            
-        return view('backend.categories.addedit', compact('parentCategories'));
+        return view('backend.categories.addedit');
     }
 
     /**
@@ -42,15 +35,10 @@ class CategoriesController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'grade_level' => 'required|in:sd,smp,sma,umum',
-            'parent_id' => 'nullable|exists:categories,id',
-            'description' => 'nullable|string',
-            'curriculum' => 'nullable|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'status' => 'required|in:active,inactive',
-            'order_number' => 'nullable|integer|min:0',
+            'description' => 'required|string',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'status' => 'required|in:publish,draft,inactive',
             'is_featured' => 'nullable|boolean',
-            'is_free' => 'nullable|boolean',
         ]);
 
         // Handle file upload
@@ -59,9 +47,8 @@ class CategoriesController extends Controller
             $validated['cover_image'] = $imagePath;
         }
 
-        // Convert checkboxes to boolean
+        // Convert checkbox to boolean
         $validated['is_featured'] = $request->has('is_featured');
-        $validated['is_free'] = $request->has('is_free');
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
@@ -69,7 +56,7 @@ class CategoriesController extends Controller
         Category::create($validated);
 
         return redirect()->route('categories.index')
-            ->with('success', 'Kelas berhasil ditambahkan!');
+            ->with('success', 'Kategori berhasil ditambahkan!');
     }
 
     /**
@@ -85,16 +72,7 @@ class CategoriesController extends Controller
      */
     public function edit(Category $category)
     {
-        $parentCategories = Category::where('id', '!=', $category->id)
-            ->where(function($query) use ($category) {
-                $query->whereNull('parent_id')
-                      ->orWhere('parent_id', '!=', $category->id);
-            })
-            ->active()
-            ->ordered()
-            ->get();
-
-        return view('backend.categories.addedit', compact('category', 'parentCategories'));
+        return view('backend.categories.addedit', compact('category'));
     }
 
     /**
@@ -104,15 +82,10 @@ class CategoriesController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'grade_level' => 'required|in:sd,smp,sma,umum',
-            'parent_id' => 'nullable|exists:categories,id',
-            'description' => 'nullable|string',
-            'curriculum' => 'nullable|string',
+            'description' => 'required|string',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'status' => 'required|in:active,inactive',
-            'order_number' => 'nullable|integer|min:0',
+            'status' => 'required|in:publish,draft,inactive',
             'is_featured' => 'nullable|boolean',
-            'is_free' => 'nullable|boolean',
         ]);
 
         // Handle file upload
@@ -126,9 +99,8 @@ class CategoriesController extends Controller
             $validated['cover_image'] = $imagePath;
         }
 
-        // Convert checkboxes to boolean
+        // Convert checkbox to boolean
         $validated['is_featured'] = $request->has('is_featured');
-        $validated['is_free'] = $request->has('is_free');
 
         // Update slug if name changed
         if ($category->name !== $validated['name']) {
@@ -138,14 +110,33 @@ class CategoriesController extends Controller
         $category->update($validated);
 
         return redirect()->route('categories.index')
-            ->with('success', 'Kelas berhasil diperbarui!');
+            ->with('success', 'Kategori berhasil diperbarui!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        try {
+            // Check if category has subcategories
+            if ($category->subcategories()->count() > 0) {
+                return redirect()->route('categories.index')
+                    ->with('error', 'Tidak dapat menghapus kategori yang memiliki sub kategori. Hapus sub kategori terlebih dahulu.');
+            }
+
+            // Delete cover image if exists
+            if ($category->cover_image) {
+                Storage::disk('public')->delete($category->cover_image);
+            }
+
+            $category->delete();
+
+            return redirect()->route('categories.index')
+                ->with('success', 'Kategori berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('categories.index')
+                ->with('error', 'Gagal menghapus kategori: ' . $e->getMessage());
+        }
     }
 }

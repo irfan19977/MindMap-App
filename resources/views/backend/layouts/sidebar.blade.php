@@ -34,6 +34,16 @@
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-layers"></i></span>
+                            <span class="nxl-mtext">Sub Kategori</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.index') }}">Semua Sub Kategori</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.create') }}">Tambah Sub Kategori</a></li>
+                        </ul>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-book-open"></i></span>
                             <span class="nxl-mtext">Materi</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
@@ -42,16 +52,11 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.create') }}">Tambah Materi</a></li>
                         </ul>
                     </li>
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
+                    <li class="nxl-item">
+                        <a class="nxl-link" href="{{ route('mindmap.index') }}">
                             <span class="nxl-micon"><i class="feather-git-branch"></i></span>
-                            <span class="nxl-mtext">MindMap</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">MindMap</span>
                         </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="mindmaps.html">Semua MindMap</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="mindmaps-create.html">Buat MindMap</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="mindmaps-editor.html">Editor MindMap</a></li>
-                        </ul>
                     </li>
                     <li class="nxl-item nxl-caption">
                         <label>Laporan & Analitik</label>

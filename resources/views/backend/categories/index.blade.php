@@ -6,11 +6,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Kelas</h5>
+                        <h5 class="m-b-10">Kategori Utama</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Kelas</li>
+                        <li class="breadcrumb-item">Kategori Utama</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -103,7 +103,7 @@
                             </div>
                             <a href="{{ route('categories.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Tambah Kelas</span>
+                                <span>Tambah Kategori Utama</span>
                             </a>
                         </div>
                     </div>
@@ -223,13 +223,9 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th class="text-center">Nama Kelas</th>
-                                                <th class="text-center">Level</th>
-                                                <th class="text-center">Kategory</th>
+                                                <th class="text-center">Nama Kategori</th>
                                                 <th class="text-center">Deskripsi</th>
-                                                <th class="text-center">Kurikulum</th>
                                                 <th class="text-center">Status</th>
-                                                <th class="text-center">Gratis</th>
                                                 <th class="text-end">Actions</th>
                                             </tr>
                                         </thead>
@@ -261,41 +257,16 @@
                                                         </a>
                                                     </td>
                                                     <td>
-                                                        <span class="badge bg-soft-primary text-primary">{{ $category->formatted_grade_level }}</span>
-                                                    </td>
-                                                    <td>
-                                                        @if($category->parent)
-                                                            <a href="javascript:void(0);" class="text-muted">{{ $category->parent->name }}</a>
-                                                        @else
-                                                            <span class="text-muted">-</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <span class="text-truncate-1-line d-block" style="max-width: 200px;">
-                                                            {{ Str::limit($category->description, 50) ?? '-' }}
+                                                        <span class="text-truncate-1-line d-block" style="max-width: 300px;">
+                                                            {{ Str::limit($category->description, 100) ?? '-' }}
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <div class="text-truncate-2-line" style="max-width: 150px; max-height: 40px; overflow: hidden;">
-                                                            @if($category->curriculum)
-                                                                {!! Str::limit(strip_tags($category->curriculum), 50) !!}
-                                                            @else
-                                                                <span class="text-muted">-</span>
-                                                            @endif
-                                                        </div>
-                                                    </td>
-                                                    <td>
                                                         <select class="form-control" data-select2-selector="status" data-category-id="{{ $category->id }}">
-                                                            <option value="active" {{ $category->status == 'active' ? 'selected' : '' }} data-bg="bg-success">Aktif</option>
+                                                            <option value="publish" {{ $category->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">Publish</option>
+                                                            <option value="draft" {{ $category->status == 'draft' ? 'selected' : '' }} data-bg="bg-warning">Draft</option>
                                                             <option value="inactive" {{ $category->status == 'inactive' ? 'selected' : '' }} data-bg="bg-danger">Tidak Aktif</option>
                                                         </select>
-                                                    </td>
-                                                    <td>
-                                                        @if($category->is_free)
-                                                            <span class="badge bg-soft-success text-success">Gratis</span>
-                                                        @else
-                                                            <span class="badge bg-soft-warning text-warning">Berbayar</span>
-                                                        @endif
                                                     </td>
                                                     <td>
                                                         <div class="hstack gap-2 justify-content-end">
@@ -323,10 +294,10 @@
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="text-center py-4">
+                                                    <td colspan="5" class="text-center py-4">
                                                         <div class="text-muted">
                                                             <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                            Belum ada data kelas
+                                                            Belum ada data kategori
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -344,7 +315,19 @@
 @endsection
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
+    <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/select2-active.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .swal2-cancel {
+            background-color: #d33 !important;
+        }
+    </style>
     
     <script>
         // Initialize DataTable for categories
@@ -364,37 +347,43 @@
                     emptyTable: "Tidak ada data tersedia",
                     zeroRecords: "Tidak ditemukan data yang cocok"
                 },
-                order: [[1, 'asc']] // Sort by Nama Kelas column by default
+                order: [] // Use backend ordering (created_at desc)
             });
         });
         
         function deleteCategory(id, name) {
-            if (confirm('Apakah Anda yakin ingin menghapus kelas "' + name + '"?')) {
-                // You can implement the actual delete functionality here
-                // For now, just show an alert
-                alert('Delete functionality will be implemented in the controller.');
-                
-                // Uncomment below when you implement the destroy method in controller
-                // fetch('/categories/' + id, {
-                //     method: 'DELETE',
-                //     headers: {
-                //         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                //         'Content-Type': 'application/json',
-                //     },
-                // })
-                // .then(response => response.json())
-                // .then(data => {
-                //     if (data.success) {
-                //         location.reload();
-                //     } else {
-                //         alert('Error: ' + data.message);
-                //     }
-                // })
-                // .catch(error => {
-                //     console.error('Error:', error);
-                //     alert('Terjadi kesalahan saat menghapus data.');
-                // });
-            }
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: 'Anda tidak akan dapat mengembalikan data ini!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Create form and submit
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/categories/' + id;
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+                    
+                    const methodInput = document.createElement('input');
+                    methodInput.type = 'hidden';
+                    methodInput.name = '_method';
+                    methodInput.value = 'DELETE';
+                    form.appendChild(methodInput);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
         }
         
         // Handle status change

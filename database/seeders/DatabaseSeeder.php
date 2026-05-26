@@ -22,5 +22,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'irfanadiprasetyo27@gmail.com',
             'password' => bcrypt('password'),
         ]);
+
+        $this->call([
+            CategorySeeder::class,
+            SubcategorySeeder::class,
+            MateriSeeder::class,
+            MindmapSeeder::class,
+        ]);
     }
 }

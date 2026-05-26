@@ -11,18 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('subcategories', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('name');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
-            $table->string('cover_image')->nullable();
+            $table->enum('grade_level', ['sd', 'smp', 'sma', 'umum']);
+            $table->longText('curriculum')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
+            $table->string('cover_image')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->timestamps();
             
             // Indexes untuk performance
             $table->index('slug');
+            $table->index('category_id');
             $table->index('status');
         });
     }
@@ -32,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('subcategories');
     }
 };

@@ -1110,5 +1110,5 @@
 @endsection
 
 @push('scripts')
-    @include('backend.layouts.homepage-script')
+    @include('backend.layouts.scriptcustom')
 @endpush
