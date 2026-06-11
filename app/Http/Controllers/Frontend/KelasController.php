@@ -5,45 +5,29 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Material;
 
 class KelasController extends Controller
 {
     public function index()
     {
-        // Get main categories (parent categories) with active children
-        $mainCategories = Category::with(['children' => function($query) {
-                $query->active()->ordered();
-            }])
-            ->whereNull('parent_id')
-            ->active()
+        // Get all published categories
+        $categories = Category::published()
             ->ordered()
             ->get();
             
-        return view('frontend.kelas', ['categories' => $mainCategories]);
+        return view('frontend.kelas', ['categories' => $categories]);
     }
     
     public function show($slug)
     {
         $category = Category::where('slug', $slug)
-            ->with(['children', 'parent'])
+            ->with('children')
             ->firstOrFail();
             
-        // Get related categories (same level or similar categories)
+        // Get related categories (excluding current category)
         $relatedCategories = Category::where('id', '!=', $category->id)
-            ->where(function($query) use ($category) {
-                // First try: same parent (siblings)
-                if ($category->parent_id) {
-                    $query->where('parent_id', $category->parent_id);
-                } else {
-                    $query->whereNull('parent_id');
-                }
-            })
-            ->orWhere(function($query) use ($category) {
-                // Second try: same grade level
-                $query->where('grade_level', $category->grade_level)
-                      ->where('id', '!=', $category->id);
-            })
-            ->active()
+            ->published()
             ->limit(6)
             ->get();
             
@@ -58,13 +42,11 @@ class KelasController extends Controller
         // Find specific sub-category by level (create slug for sub-category)
         $subSlug = $slug . '-' . $level;
         $category = Category::where('slug', $subSlug)
-            ->with(['children', 'parent'])
             ->firstOrFail();
             
-        // Get related categories (same parent)
-        $relatedCategories = Category::where('parent_id', $category->parent_id)
-            ->where('id', '!=', $category->id)
-            ->active()
+        // Get related categories (excluding current category)
+        $relatedCategories = Category::where('id', '!=', $category->id)
+            ->published()
             ->limit(6)
             ->get();
             
@@ -78,13 +60,11 @@ class KelasController extends Controller
         
         // Find specific sub-category
         $subCategory = Category::where('slug', $slug)
-            ->with(['children', 'parent'])
             ->firstOrFail();
             
-        // Get related categories (same parent)
-        $relatedCategories = Category::where('parent_id', $subCategory->parent_id)
-            ->where('id', '!=', $subCategory->id)
-            ->active()
+        // Get related categories (excluding current category)
+        $relatedCategories = Category::where('id', '!=', $subCategory->id)
+            ->published()
             ->limit(6)
             ->get();
             
@@ -97,10 +77,41 @@ class KelasController extends Controller
     
     public function showMindmap($slug)
     {
+        // Cek apakah slug ada di subcategories
+        $subcategory = \App\Models\Subcategory::where('slug', $slug)
+            ->with('category')
+            ->first();
+
+        if ($subcategory) {
+            // Jika subcategory, ambil materials
+            $subcategory->load('materials');
+            return view('frontend.mindmap', compact('subcategory'));
+        }
+
+        // Jika tidak ada di subcategories, cek di categories
         $category = Category::where('slug', $slug)
-            ->with(['parent', 'children'])
+            ->with('children')
             ->firstOrFail();
-            
+
         return view('frontend.mindmap', compact('category'));
+    }
+
+    public function showMateri($slug)
+    {
+        $material = Material::where('slug', $slug)
+            ->with(['subcategory', 'subcategory.category'])
+            ->firstOrFail();
+
+        // Decode konten materi dari JSON
+        $kontenMateri = json_decode($material->content, true) ?? [];
+
+        // Get related materials from same subcategory
+        $relatedMaterials = Material::where('subcategory_id', $material->subcategory_id)
+            ->where('id', '!=', $material->id)
+            ->published()
+            ->limit(4)
+            ->get();
+
+        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials'));
     }
 }

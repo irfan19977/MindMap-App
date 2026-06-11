@@ -12,6 +12,7 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Smalot\PdfParser\Parser as PdfParser;
 
 class MateriController extends Controller
 {
@@ -255,5 +256,173 @@ class MateriController extends Controller
             'success' => true,
             'message' => 'Status berhasil diperbarui!'
         ]);
+    }
+
+    /**
+     * Convert PDF to text with formatting detection
+     */
+    public function convertPdf(Request $request)
+    {
+        $request->validate([
+            'pdf_file' => 'required|file|mimes:pdf|max:10240',
+        ]);
+
+        try {
+            $file = $request->file('pdf_file');
+            $parser = new PdfParser();
+            $pdf = $parser->parseFile($file->getPathname());
+            $text = $pdf->getText();
+
+            // Normalize line endings but preserve structure
+            $text = preg_replace('/\r\n|\r/', "\n", $text);
+            $text = trim($text);
+
+            // Split by newlines and preserve empty lines for paragraph detection
+            $lines = preg_split('/\n/', $text);
+
+            // Detect formatting patterns with better paragraph detection
+            $htmlContent = $this->convertTextWithFormatting($lines);
+
+            return response()->json([
+                'success' => true,
+                'text' => $htmlContent,
+                'message' => 'PDF berhasil diconvert ke teks!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengconvert PDF: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Convert text lines to HTML with formatting detection
+     */
+    private function convertTextWithFormatting($lines)
+    {
+        $htmlContent = '';
+        $lines = array_values($lines); // Re-index array
+
+        if (empty($lines)) {
+            return '<p>No content found in PDF</p>';
+        }
+
+        // Detect base indentation (minimum leading spaces across all lines)
+        $minIndent = PHP_INT_MAX;
+        foreach ($lines as $line) {
+            $leadingSpaces = strlen($line) - strlen(ltrim($line));
+            if ($leadingSpaces < $minIndent && trim($line) !== '') {
+                $minIndent = $leadingSpaces;
+            }
+        }
+        $minIndent = max(0, $minIndent);
+
+        // Group lines into paragraphs
+        $paragraphs = [];
+        $currentParagraph = [];
+        $previousIndent = 0;
+        $previousLineEndsWithPunctuation = false;
+
+        foreach ($lines as $line) {
+            $trimmedLine = trim($line);
+            
+            // Empty line indicates paragraph break
+            if (empty($trimmedLine)) {
+                if (!empty($currentParagraph)) {
+                    $paragraphs[] = [
+                        'lines' => $currentParagraph,
+                        'indent' => $previousIndent
+                    ];
+                    $currentParagraph = [];
+                }
+                $previousLineEndsWithPunctuation = false;
+                continue;
+            }
+
+            // Detect indentation
+            $leadingSpaces = strlen($line) - strlen(ltrim($line));
+            $indent = max(0, $leadingSpaces - $minIndent);
+
+            // Check if current line starts with uppercase (potential new sentence/paragraph)
+            $startsWithUppercase = preg_match('/^[A-Z]/', $trimmedLine);
+            
+            // Check if line is all uppercase (likely heading)
+            $isAllUppercase = $trimmedLine === strtoupper($trimmedLine) && strlen($trimmedLine) > 3;
+            
+            // Check if line is numbered (e.g., "1.1", "2.", etc.)
+            $isNumbered = preg_match('/^\d+\./', $trimmedLine);
+            
+            // Check if previous line ends with sentence-ending punctuation
+            $lastChar = !empty($currentParagraph) ? substr(end($currentParagraph), -1) : '';
+            $endsWithPunctuation = in_array($lastChar, ['.', '!', '?']);
+
+            // Detect paragraph break:
+            // 1. Empty line (already handled above)
+            // 2. Significant indentation change (> 2 spaces)
+            // 3. Previous line ends with punctuation AND current line starts with uppercase
+            // 4. Current line is all uppercase (heading)
+            // 5. Current line is numbered (list item)
+            $isParagraphBreak = false;
+            
+            if (!empty($currentParagraph)) {
+                if (abs($indent - $previousIndent) > 2) {
+                    $isParagraphBreak = true;
+                } elseif ($endsWithPunctuation && $startsWithUppercase) {
+                    $isParagraphBreak = true;
+                } elseif ($isAllUppercase) {
+                    $isParagraphBreak = true;
+                } elseif ($isNumbered) {
+                    $isParagraphBreak = true;
+                }
+            }
+
+            if ($isParagraphBreak) {
+                $paragraphs[] = [
+                    'lines' => $currentParagraph,
+                    'indent' => $previousIndent
+                ];
+                $currentParagraph = [];
+            }
+
+            $currentParagraph[] = $trimmedLine;
+            $previousIndent = $indent;
+        }
+
+        // Don't forget the last paragraph
+        if (!empty($currentParagraph)) {
+            $paragraphs[] = [
+                'lines' => $currentParagraph,
+                'indent' => $previousIndent
+            ];
+        }
+
+        // Convert paragraphs to HTML
+        foreach ($paragraphs as $index => $paragraph) {
+            $indentEm = $paragraph['indent'] / 4; // Convert spaces to em (4 spaces = 1em)
+            
+            // Merge lines within paragraph with single space
+            $mergedText = implode(' ', $paragraph['lines']);
+            
+            // Preserve multiple spaces within text
+            $displayLine = htmlspecialchars($mergedText);
+            $displayLine = str_replace('  ', '&nbsp;&nbsp;', $displayLine);
+            
+            // Build HTML with formatting
+            $style = "margin-bottom: 0.5em; line-height: 1.6; word-wrap: break-word; overflow-wrap: break-word; max-width: 100%;";
+            
+            if ($indentEm > 0.5) {
+                $style .= " margin-left: " . number_format($indentEm, 2) . "em;";
+            }
+
+            $htmlContent .= '<p style="' . $style . '">' . $displayLine . '</p>';
+            
+            // Add empty paragraph for spacing (except for last paragraph)
+            if ($index < count($paragraphs) - 1) {
+                $htmlContent .= '<p style="margin-bottom: 1em;">&nbsp;</p>';
+            }
+        }
+
+        return $htmlContent;
     }
 }

@@ -22,7 +22,7 @@
                     </a>
                 </div>
                 <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                    <button onclick="saveMindmap()" class="btn btn-primary">
+                    <button id="save-mindmap-btn" class="btn btn-primary">
                         <i class="feather-save me-2"></i>Simpan Mind Map
                     </button>
                 </div>
@@ -104,16 +104,16 @@
                                                 <i class="feather-folder"></i>
                                             </span>
                                             <span class="category-text">{{ $category->name }}</span>
-                                            @if($category->children->count() > 0)
+                                            @if($category->subcategories->count() > 0)
                                                 <span class="category-arrow ms-auto">
                                                     <i class="feather-chevron-down"></i>
                                                 </span>
                                             @endif
                                         </button>
-                                        
-                                        @if($category->children->count() > 0)
+
+                                        @if($category->subcategories->count() > 0)
                                             <div class="category-children" id="category-children-{{ $category->id }}">
-                                                @foreach($category->children as $child)
+                                                @foreach($category->subcategories as $child)
                                                     <button 
                                                         onclick="selectCategory('{{ $child->id }}', '{{ $category->name }} > {{ $child->name }}')"
                                                         class="category-btn category-child w-full text-start d-flex align-items-center"
@@ -142,9 +142,9 @@
                         <div id="mindmap-canvas" class="canvas-container" style="width: 3000px; height: 3000px;">
                             <svg id="connections-svg" class="connections-layer"></svg>
 
-                            <div id="root-node" class="mindmap-node root" style="left: 1500px; top: 1500px;">
-                                <span class="node-badge"><i class="feather-target"></i></span>
-                                <span class="node-label" id="root-text">Start</span>
+                            <!-- Root node removed - start with empty canvas -->
+                            <!-- <div id="root-node" class="mindmap-node root" style="left: 1500px; top: 1500px;">
+                                <span class="node-label" id="root-text">Operating System</span>
                                 <div class="connection-anchor anchor-tl" data-anchor="tl" data-node-id="root-node"></div>
                                 <div class="connection-anchor anchor-t" data-anchor="t" data-node-id="root-node"></div>
                                 <div class="connection-anchor anchor-tr" data-anchor="tr" data-node-id="root-node"></div>
@@ -153,7 +153,7 @@
                                 <div class="connection-anchor anchor-b" data-anchor="b" data-node-id="root-node"></div>
                                 <div class="connection-anchor anchor-bl" data-anchor="bl" data-node-id="root-node"></div>
                                 <div class="connection-anchor anchor-l" data-anchor="l" data-node-id="root-node"></div>
-                            </div>
+                            </div> -->
 
                             <input type="hidden" id="connection-style" value="solid">
                         </div>
@@ -210,7 +210,7 @@
 
                         <div class="mm-tab-pane" id="tab-connections" role="tabpanel">
                             <div class="mm-tab-pane__header">
-                                <p class="mm-tab-pane__hint mb-0">Pilih gaya garis, lalu hubungkan dua node</p>
+                                <p class="mm-tab-pane__hint mb-0">Klik garis untuk memilih, lalu pilih gaya garis untuk mengubahnya</p>
                             </div>
                             <div class="panel-body panel-body--connections">
                             <div class="connection-hint" id="connection-hint">
@@ -321,22 +321,6 @@
     <!-- [ Main Content ] end -->
 </div>
 
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body text-center">
-                <div class="mb-4">
-                    <i class="feather-check-circle text-success" style="font-size: 48px;"></i>
-                </div>
-                <h5 class="modal-title mb-3">Berhasil!</h5>
-                <p class="text-muted" id="success-message">Mind map berhasil disimpan</p>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <style>
     :root {
         --mm-primary: var(--bs-primary, #3454d1);
@@ -357,29 +341,50 @@
 
     .mindmap-node {
         position: absolute;
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        border: 2px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 12px 18px;
-        cursor: grab;
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        border: 2px solid #cbd5e1;
+        border-radius: 16px;
+        padding: 14px 20px;
+        cursor: default;
         user-select: none;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.06);
+        transition: none !important;
         z-index: 10;
-        min-width: 120px;
+        min-width: 130px;
         white-space: nowrap;
         text-align: center;
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 1.4;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.5;
         color: #1e293b;
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(12px);
+        pointer-events: auto;
+    }
+
+    .mindmap-node:hover,
+    .mindmap-node:active,
+    .mindmap-node:focus {
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
+        border: 2px solid #cbd5e1 !important;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.06) !important;
+        transform: none !important;
+        color: #1e293b !important;
+        text-shadow: none !important;
+    }
+
+    .mindmap-node:hover *,
+    .mindmap-node:active *,
+    .mindmap-node:focus * {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        transform: none !important;
+        color: inherit !important;
+        text-shadow: none !important;
     }
 
     .mindmap-node:hover:not(.root) {
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.08);
-        transform: translateY(-2px);
-        border-color: #cbd5e1;
+        /* Hover effect disabled */
     }
 
     .mindmap-node.root {
@@ -399,8 +404,7 @@
     }
 
     .mindmap-node.root:hover {
-        box-shadow: 0 12px 40px rgba(102, 126, 234, 0.5), 0 6px 20px rgba(102, 126, 234, 0.4);
-        transform: translate(-50%, -50%) translateY(-3px);
+        /* Hover effect disabled */
     }
 
     .mindmap-node.root .node-badge {
@@ -420,8 +424,9 @@
     }
 
     .mindmap-node.selected {
-        border-color: #667eea;
-        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), 0 8px 24px rgba(15, 23, 42, 0.12);
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 12px 32px rgba(59, 130, 246, 0.25);
+        transform: none !important;
     }
 
     .mindmap-node.connection-source {
@@ -449,13 +454,34 @@
         color: white;
         border: none;
         box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        transition: none;
+    }
+
+    .mindmap-node.subcategory:hover {
+        /* Hover effect disabled */
     }
 
     .mindmap-node.material {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
         color: white;
         border: none;
-        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35), 0 3px 10px rgba(255, 107, 53, 0.2);
+        backdrop-filter: blur(10px);
+        transition: none !important;
+    }
+
+    .mindmap-node.material:hover,
+    .mindmap-node.material:active,
+    .mindmap-node.material:focus,
+    .mindmap-node.material:hover *,
+    .mindmap-node.material:active *,
+    .mindmap-node.material:focus * {
+        background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35), 0 3px 10px rgba(255, 107, 53, 0.2) !important;
+        transform: none !important;
+        text-shadow: none !important;
     }
 
     .mindmap-node.completed {
@@ -487,6 +513,11 @@
         border-color: #f59e0b;
         font-size: 13px;
         box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+        transition: none;
+    }
+
+    .mindmap-node.sub-topic:hover {
+        /* Hover effect disabled */
     }
 
     .mindmap-node.main-topic {
@@ -496,6 +527,11 @@
         font-weight: bold;
         font-size: 15px;
         box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+        transition: none;
+    }
+
+    .mindmap-node.main-topic:hover {
+        /* Hover effect disabled */
     }
 
     .completion-toggle {
@@ -519,9 +555,7 @@
     }
 
     .completion-toggle:hover {
-        background: #e2e8f0;
-        transform: scale(1.15);
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        /* Hover effect disabled */
     }
 
     .completion-toggle.completed {
@@ -656,8 +690,7 @@
     }
 
     .resize-handle:hover {
-        background: #2563eb;
-        transform: scale(1.2);
+        /* Hover effect disabled */
     }
 
     .resize-handle.nw { top: -5px; left: -5px; cursor: nw-resize; }
@@ -672,28 +705,26 @@
     /* Connection anchor points */
     .connection-anchor {
         position: absolute;
-        width: 12px;
-        height: 12px;
-        background: #3b82f6;
+        width: 10px;
+        height: 10px;
+        background: rgba(59, 130, 246, 0.9);
         border: 2px solid white;
         border-radius: 50%;
         cursor: crosshair;
         z-index: 25;
         opacity: 0;
-        transition: all 0.2s ease;
+        transition: all 0.25s ease;
         pointer-events: none;
+        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
     }
 
     .mindmap-node:hover .connection-anchor,
     .mindmap-node.show-anchors .connection-anchor {
-        opacity: 1;
-        pointer-events: all;
+        /* Anchor visibility disabled */
     }
 
     .connection-anchor:hover {
-        background: #2563eb;
-        transform: scale(1.3);
-        box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        /* Hover effect disabled */
     }
 
     .connection-anchor.active {
@@ -773,8 +804,7 @@
     }
 
     .category-btn:hover {
-        border-color: var(--mm-primary);
-        background: var(--mm-primary-light);
+        /* Hover effect disabled */
     }
 
     .category-btn.active {
@@ -926,8 +956,8 @@
     }
 
     .material-item {
-        cursor: grab;
-        transition: all 0.18s ease;
+        cursor: default;
+        transition: none;
         border: 1px solid var(--mm-border);
         border-radius: var(--mm-radius);
         padding: 8px 10px;
@@ -973,14 +1003,12 @@
     }
 
     .material-item:hover {
-        background: var(--mm-primary-light);
-        border-color: var(--mm-primary);
-        box-shadow: var(--mm-shadow);
+        /* Hover effect disabled */
     }
 
     .material-item:active {
-        cursor: grabbing;
-        opacity: 0.85;
+        cursor: default;
+        opacity: 1;
     }
 
     .panel-search {
@@ -1233,8 +1261,7 @@
     }
 
     .mm-panel-tab:hover {
-        color: var(--mm-primary);
-        background: #f8fafc;
+        /* Hover effect disabled */
     }
 
     .mm-panel-tab.active {
@@ -1329,8 +1356,7 @@
     }
 
     .line-style-item:hover {
-        border-color: var(--mm-primary);
-        background: var(--mm-primary-light);
+        /* Hover effect disabled */
     }
 
     .line-style-item.selected {
@@ -1475,8 +1501,7 @@
     }
 
     .zoom-btn:hover {
-        background: #f1f5f9;
-        color: var(--mm-primary);
+        /* Hover effect disabled */
     }
 
     .zoom-level {
@@ -1493,8 +1518,7 @@
     }
 
     .zoom-level:hover {
-        background: var(--mm-primary-light);
-        color: var(--mm-primary);
+        /* Hover effect disabled */
     }
 
     /* Keyboard shortcut styling */
@@ -1591,27 +1615,138 @@
         
         // Initialize drag and drop
         initializeDragDrop();
-        
+
         // Initialize line style selection
         setLineStyle('solid');
         setTool('pan');
         updateNodeCount();
 
-        // Add click listener to root node
-        const rootNode = document.getElementById('root-node');
-        if (rootNode) {
-            rootNode.addEventListener('click', function(e) {
-                e.stopPropagation();
-                selectNode('root-node');
-            });
-
-            // Add event listeners to root node anchors
-            const rootAnchors = rootNode.querySelectorAll('.connection-anchor');
-            rootAnchors.forEach(anchor => {
-                const anchorPos = anchor.dataset.anchor;
-                anchor.addEventListener('mousedown', (e) => handleAnchorMouseDown(e, 'root-node', anchorPos));
-            });
+        // Add event listener to save button
+        const saveBtn = document.getElementById('save-mindmap-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', saveMindmap);
         }
+
+        // Add click listener to root node (disabled - no root node)
+        // const rootNode = document.getElementById('root-node');
+        // if (rootNode) {
+        //     rootNode.addEventListener('click', function(e) {
+        //         e.stopPropagation();
+        //         selectNode('root-node');
+        //     });
+
+        //     // Add event listeners to root node anchors
+        //     const rootAnchors = rootNode.querySelectorAll('.connection-anchor');
+        //     rootAnchors.forEach(anchor => {
+        //         const anchorPos = anchor.dataset.anchor;
+        //         anchor.addEventListener('mousedown', (e) => handleAnchorMouseDown(e, 'root-node', anchorPos));
+        //     });
+        // }
+
+        // Initialize the Operating System mind map structure (disabled - start with empty canvas)
+        // setTimeout(() => {
+        //     initializeOperatingSystemMindmap();
+        // }, 100);
+    }
+
+    // Initialize mind map with Operating System structure
+    function initializeOperatingSystemMindmap() {
+        // Clear existing nodes and connections
+        const existingNodes = document.querySelectorAll('.mindmap-node:not(.root)');
+        existingNodes.forEach(node => node.remove());
+        nodes.length = 0;
+        connections.length = 0;
+        updateConnections();
+
+        const centerX = 1500;
+        const centerY = 1500;
+
+        // Main topic nodes
+        const windowsNode = addMaterialNode('windows', 'Windows', '', centerX - 400, centerY - 300, 'main-topic');
+        const unixLinuxNode = addMaterialNode('unix-linux', 'Unix/Linux', '', centerX - 400, centerY, 'main-topic');
+        const programmingNode = addMaterialNode('programming', 'Learn a Programming Language', '', centerX - 400, centerY + 300, 'main-topic');
+        const terminalNode = addMaterialNode('terminal', 'Terminal Knowledge', '', centerX + 400, centerY - 300, 'main-topic');
+        const processNode = addMaterialNode('process', 'Process Monitoring', '', centerX + 400, centerY, 'main-topic');
+        const performanceNode = addMaterialNode('performance', 'Performance Monitoring', '', centerX + 400, centerY + 300, 'main-topic');
+        const networkingNode = addMaterialNode('networking', 'Networking Tools', '', centerX, centerY - 400, 'main-topic');
+        const textNode = addMaterialNode('text', 'Text Manipulation', '', centerX, centerY + 400, 'main-topic');
+
+        // Unix/Linux sub-topics
+        const freebsdNode = addMaterialNode('freebsd', 'FreeBSD', '', centerX - 600, centerY - 100, 'sub-topic');
+        const openbsdNode = addMaterialNode('openbsd', 'OpenBSD', '', centerX - 600, centerY - 50, 'sub-topic');
+        const netbsdNode = addMaterialNode('netbsd', 'NetBSD', '', centerX - 600, centerY, 'sub-topic');
+        const ubuntuNode = addMaterialNode('ubuntu', 'Ubuntu / Debian', '', centerX - 600, centerY + 50, 'sub-topic');
+        const suseNode = addMaterialNode('suse', 'SUSE Linux', '', centerX - 600, centerY + 100, 'sub-topic');
+        const rhelNode = addMaterialNode('rhel', 'RHEL / Derivatives', '', centerX - 600, centerY + 150, 'sub-topic');
+
+        // Programming sub-topics
+        const pythonNode = addMaterialNode('python', 'Python', '', centerX - 600, centerY + 350, 'sub-topic');
+        const rubyNode = addMaterialNode('ruby', 'Ruby', '', centerX - 600, centerY + 400, 'sub-topic');
+        const goNode = addMaterialNode('go', 'Go', '', centerX - 600, centerY + 450, 'sub-topic');
+        const rustNode = addMaterialNode('rust', 'Rust', '', centerX - 600, centerY + 500, 'sub-topic');
+        const jsNode = addMaterialNode('js', 'JavaScript / Node.js', '', centerX - 600, centerY + 550, 'sub-topic');
+
+        // Terminal Knowledge sub-topics
+        const scriptingNode = addMaterialNode('scripting', 'Scripting', '', centerX + 600, centerY - 350, 'main-topic');
+        const editorsNode = addMaterialNode('editors', 'Editors', '', centerX + 600, centerY - 250, 'main-topic');
+
+        // Scripting sub-topics
+        const bashNode = addMaterialNode('bash', 'Bash', '', centerX + 800, centerY - 380, 'sub-topic');
+        const powershellNode = addMaterialNode('powershell', 'PowerShell', '', centerX + 800, centerY - 330, 'sub-topic');
+
+        // Editors sub-topics
+        const vimNode = addMaterialNode('vim', 'Vim / Nano / Emacs', '', centerX + 800, centerY - 280, 'sub-topic');
+
+        // Connect root to main topics
+        connectNodesWithAnchors('root-node', 'l', windowsNode.id, 'r', 'hierarchy');
+        connectNodesWithAnchors('root-node', 'l', unixLinuxNode.id, 'r', 'hierarchy');
+        connectNodesWithAnchors('root-node', 'l', programmingNode.id, 'r', 'hierarchy');
+        connectNodesWithAnchors('root-node', 'r', terminalNode.id, 'l', 'hierarchy');
+        connectNodesWithAnchors('root-node', 'r', processNode.id, 'l', 'hierarchy');
+        connectNodesWithAnchors('root-node', 'r', performanceNode.id, 'l', 'hierarchy');
+        connectNodesWithAnchors('root-node', 't', networkingNode.id, 'b', 'hierarchy');
+        connectNodesWithAnchors('root-node', 'b', textNode.id, 't', 'hierarchy');
+
+        // Connect Unix/Linux to sub-topics
+        connectNodesWithAnchors(unixLinuxNode.id, 'l', freebsdNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(unixLinuxNode.id, 'l', openbsdNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(unixLinuxNode.id, 'l', netbsdNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(unixLinuxNode.id, 'l', ubuntuNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(unixLinuxNode.id, 'l', suseNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(unixLinuxNode.id, 'l', rhelNode.id, 'r', 'sub-topic');
+
+        // Connect Programming to sub-topics
+        connectNodesWithAnchors(programmingNode.id, 'l', pythonNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(programmingNode.id, 'l', rubyNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(programmingNode.id, 'l', goNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(programmingNode.id, 'l', rustNode.id, 'r', 'sub-topic');
+        connectNodesWithAnchors(programmingNode.id, 'l', jsNode.id, 'r', 'sub-topic');
+
+        // Connect Terminal Knowledge to sub-topics
+        connectNodesWithAnchors(terminalNode.id, 'r', scriptingNode.id, 'l', 'hierarchy');
+        connectNodesWithAnchors(terminalNode.id, 'r', editorsNode.id, 'l', 'hierarchy');
+
+        // Connect Scripting to sub-topics
+        connectNodesWithAnchors(scriptingNode.id, 'r', bashNode.id, 'l', 'sub-topic');
+        connectNodesWithAnchors(scriptingNode.id, 'r', powershellNode.id, 'l', 'sub-topic');
+
+        // Connect Editors to sub-topics
+        connectNodesWithAnchors(editorsNode.id, 'r', vimNode.id, 'l', 'sub-topic');
+
+        // Mark some nodes as completed (simulating the checkmarks in the image)
+        setTimeout(() => {
+            const completedNodes = [pythonNode.id, bashNode.id, vimNode.id, ubuntuNode.id];
+            completedNodes.forEach(nodeId => {
+                const node = document.getElementById(nodeId);
+                const nodeData = nodes.find(n => n.id === nodeId);
+                if (node && nodeData) {
+                    nodeData.completed = true;
+                    node.classList.add('completed');
+                    const toggle = node.querySelector('.completion-toggle');
+                    if (toggle) toggle.classList.add('completed');
+                }
+            });
+        }, 100);
     }
 
     // Grid snapping function (draw.io style)
@@ -1782,15 +1917,15 @@
             // Check if hovering over a node (not the start node)
             const hoveredNode = e.target.closest('.mindmap-node');
             if (hoveredNode && hoveredNode.id !== dragConnectionStartNode) {
-                // Show anchors on the hovered node
+                // Show anchors on the hovered node (disabled)
                 if (dragConnectionCurrentTarget !== hoveredNode.id) {
                     // Hide anchors on previous target
                     if (dragConnectionCurrentTarget) {
                         const prevTarget = document.getElementById(dragConnectionCurrentTarget);
                         if (prevTarget) prevTarget.classList.remove('show-anchors');
                     }
-                    // Show anchors on new target
-                    hoveredNode.classList.add('show-anchors');
+                    // Show anchors on new target (disabled)
+                    // hoveredNode.classList.add('show-anchors');
                     dragConnectionCurrentTarget = hoveredNode.id;
                 }
             } else {
@@ -2079,6 +2214,17 @@
         // Update root node
         document.getElementById('root-text').textContent = categoryName;
         
+        // Clear canvas and materials when parent category is selected
+        resetCanvas();
+        document.getElementById('materials-list').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state__icon"><i class="feather-inbox"></i></div>
+                <p class="empty-state__title">Belum ada materi</p>
+                <p class="empty-state__hint">Pilih subkategori untuk memuat daftar materi</p>
+            </div>
+        `;
+        document.getElementById('materials-count').textContent = '0';
+        
         // Don't load materials for parent categories - only for subcategories
         // Materials are stored in subcategories, not parent categories
     }
@@ -2109,7 +2255,7 @@
         const selectedBtn = document.querySelector(`[data-category-id="${categoryId}"]`);
         const parentGroup = selectedBtn.closest('.category-group');
         const childrenContainer = parentGroup.querySelector('.category-children');
-        
+
         if (childrenContainer) {
             childrenContainer.classList.add('show');
             // Rotate the arrow
@@ -2118,13 +2264,150 @@
                 arrow.style.transform = 'rotate(180deg)';
             }
         }
-        
-        // Update root node
-        document.getElementById('root-text').textContent = categoryName;
-        
+
+        // Update root node (disabled - no root node)
+        // const rootText = document.getElementById('root-text');
+        // if (rootText) {
+        //     rootText.textContent = categoryName;
+        // }
+
         // Load materials
         switchRightPanelTab('materials');
         loadMaterials(categoryId);
+
+        // Load mindmap data from database
+        loadMindmapData(categoryId);
+    }
+
+    function loadMindmapData(categoryId) {
+        console.log('Loading mindmap for category:', categoryId);
+        fetch(`/mindmap-creator/load?reference_id=${categoryId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => {
+            console.log('Load response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Load response data:', data);
+            if (data.success && data.data && data.data.structure) {
+                console.log('Rendering mindmap structure:', data.data.structure);
+                renderMindmap(data.data.structure);
+            } else {
+                console.log('No mindmap data found or invalid structure');
+                // Clear canvas when no mindmap exists for this category
+                resetCanvas();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading mindmap:', error);
+        });
+    }
+
+    function renderMindmap(structure) {
+        // Clear existing nodes and connections
+        resetCanvas();
+
+        const canvas = document.getElementById('mindmap-canvas');
+        if (!canvas) {
+            console.error('Canvas element not found');
+            return;
+        }
+
+        if (structure.nodes) {
+            structure.nodes.forEach(nodeData => {
+                // Create node element
+                const node = document.createElement('div');
+                node.className = `mindmap-node ${nodeData.type || 'material'}`;
+                node.id = nodeData.id;
+                node.style.left = nodeData.x + 'px';
+                node.style.top = nodeData.y + 'px';
+
+                // Choose icon based on node type
+                let icon = 'feather-book-open';
+                if (nodeData.type === 'main-topic') icon = 'feather-layers';
+                else if (nodeData.type === 'sub-topic') icon = 'feather-file-text';
+
+                node.innerHTML = `
+                    <i class="feather-${icon} me-2"></i>
+                    <span>${nodeData.title}</span>
+                `;
+
+                // Add 8 connection anchor points
+                const anchorPositions = ['tl', 't', 'tr', 'r', 'br', 'b', 'bl', 'l'];
+                anchorPositions.forEach(pos => {
+                    const anchor = document.createElement('div');
+                    anchor.className = `connection-anchor anchor-${pos}`;
+                    anchor.dataset.anchor = pos;
+                    anchor.dataset.nodeId = nodeData.id;
+                    anchor.addEventListener('mousedown', (e) => handleAnchorMouseDown(e, nodeData.id, pos));
+                    node.appendChild(anchor);
+                });
+
+                // Add click listener
+                node.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    selectNode(nodeData.id);
+                });
+
+                // Add drag functionality
+                node.addEventListener('mousedown', function(e) {
+                    if (e.target.classList.contains('connection-anchor')) return;
+                    e.stopPropagation(); // Prevent event bubbling to canvas
+                    handleMouseDown(e);
+                });
+
+                canvas.appendChild(node);
+
+                // Add to nodes array
+                nodes.push({
+                    id: nodeData.id,
+                    materialId: nodeData.materialId,
+                    title: nodeData.title,
+                    x: nodeData.x,
+                    y: nodeData.y,
+                    type: nodeData.type || 'material',
+                    completed: nodeData.completed || false,
+                    style: nodeData.style || {}
+                });
+            });
+        }
+
+        if (structure.connections) {
+            structure.connections.forEach(connData => {
+                connections.push(connData);
+            });
+            updateConnections();
+        }
+
+        updateNodeCount();
+        refreshMaterialsList();
+    }
+
+    function resetCanvas() {
+        // Remove all nodes from canvas
+        const canvas = document.getElementById('mindmap-canvas');
+        if (canvas) {
+            canvas.querySelectorAll('.mindmap-node').forEach(node => {
+                node.remove();
+            });
+        }
+
+        // Remove all connections
+        document.querySelectorAll('.connection-line').forEach(line => {
+            line.remove();
+        });
+
+        // Clear arrays
+        nodes.length = 0;
+        connections.length = 0;
+        selectedNode = null;
+        selectedConnection = null;
+        selectedNodeForConnection = null;
     }
 
     function switchRightPanelTab(tabName) {
@@ -2300,27 +2583,20 @@
 
     function addMaterialNode(materialId, title, description, x, y, nodeType = 'material') {
         console.log('Adding material node:', { materialId, title, x, y, nodeType });
-        
+
         const nodeId = 'node-' + nodeIdCounter++;
         const node = document.createElement('div');
         node.className = `mindmap-node ${nodeType}`;
         node.id = nodeId;
         node.style.left = x + 'px';
         node.style.top = y + 'px';
-        
-        // Add completion toggle for sub-topic nodes
-        const completionToggle = nodeType === 'sub-topic' ? 
-            `<div class="completion-toggle" onclick="toggleNodeCompletion('${nodeId}', event)" title="Toggle completion">
-                <i class="feather-check"></i>
-            </div>` : '';
-        
+
         // Choose icon based on node type
         let icon = 'feather-book-open';
         if (nodeType === 'main-topic') icon = 'feather-layers';
         else if (nodeType === 'sub-topic') icon = 'feather-file-text';
-        
+
         node.innerHTML = `
-            ${completionToggle}
             <i class="feather-${icon} me-2"></i>
             <span>${title}</span>
         `;
@@ -2339,6 +2615,13 @@
         node.addEventListener('click', function(e) {
             e.stopPropagation(); // Prevent event bubbling
             selectNode(nodeId);
+        });
+        
+        // Add drag functionality
+        node.addEventListener('mousedown', function(e) {
+            if (e.target.classList.contains('connection-anchor')) return;
+            e.stopPropagation(); // Prevent event bubbling to canvas
+            handleMouseDown(e);
         });
         
         const canvas = document.getElementById('mindmap-canvas');
@@ -2456,12 +2739,12 @@
             n.classList.remove('selected', 'connection-source');
             removeResizeHandles(n);
         });
-        
+
         // Clear connection selections
         document.querySelectorAll('.connection-line').forEach(line => {
             line.classList.remove('selected');
         });
-        
+
         // Clear selection variables
         selectedNode = null;
         selectedConnection = null;
@@ -2659,7 +2942,6 @@
                 node.classList.remove('selected');
                 removeResizeHandles(node);
                 selectedNode = null;
-                document.getElementById('properties-panel').innerHTML = '<p class="text-muted">Select an element to edit properties</p>';
             } else {
                 // Clear all selections first
                 clearAllSelections();
@@ -2670,11 +2952,77 @@
 
                 // Add resize handles
                 addResizeHandles(node);
-
-                // Update properties panel
-                updatePropertiesPanel(nodeId);
             }
         }
+    }
+
+    // Double-click to edit node text
+    document.addEventListener('dblclick', function(e) {
+        const node = e.target.closest('.mindmap-node');
+        if (node && !connectionMode && !manualDrawingMode) {
+            const nodeId = node.id;
+            const label = node.querySelector('.node-label');
+            if (label) {
+                enableInlineEdit(nodeId, label);
+            }
+        }
+    });
+
+    function enableInlineEdit(nodeId, labelElement) {
+        const currentText = labelElement.textContent;
+        const node = document.getElementById(nodeId);
+
+        // Create input element
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+        input.className = 'inline-edit-input';
+
+        // Copy styles from label
+        const computedStyle = window.getComputedStyle(labelElement);
+        input.style.fontSize = computedStyle.fontSize;
+        input.style.fontWeight = computedStyle.fontWeight;
+        input.style.color = computedStyle.color;
+        input.style.textAlign = computedStyle.textAlign;
+        input.style.background = 'transparent';
+        input.style.border = 'none';
+        input.style.outline = 'none';
+        input.style.width = '100%';
+        input.style.minWidth = '100px';
+
+        // Replace label with input
+        labelElement.style.display = 'none';
+        labelElement.parentNode.insertBefore(input, labelElement);
+        input.focus();
+        input.select();
+
+        // Save on blur or Enter key
+        function saveEdit() {
+            const newText = input.value.trim() || currentText;
+            labelElement.textContent = newText;
+            labelElement.style.display = '';
+            input.remove();
+
+            // Update node data
+            const nodeData = nodes.find(n => n.id === nodeId);
+            if (nodeData) {
+                nodeData.title = newText;
+            }
+
+            // Update connections if node size changed
+            updateConnections();
+        }
+
+        input.addEventListener('blur', saveEdit);
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                input.blur();
+            } else if (e.key === 'Escape') {
+                input.value = currentText;
+                input.blur();
+            }
+        });
     }
 
     function handleCanvasClick(e) {
@@ -2852,6 +3200,16 @@
         }
 
         updateLineStyleStatus(style);
+
+        // Update selected connection style if one is selected
+        if (selectedConnection) {
+            const connection = connections.find(c => c.id === selectedConnection);
+            if (connection) {
+                connection.style = style;
+                updateConnections();
+                console.log('Updated selected connection style to:', style);
+            }
+        }
 
         if (style === 'manual') {
             if (!manualDrawingMode) toggleManualDrawingMode();
@@ -3179,45 +3537,48 @@
         const node = document.getElementById(nodeId);
         const nodeData = nodes.find(n => n.id === nodeId);
         if (!node || !nodeData) return { x: 0, y: 0 };
-        
+
         const width = node.offsetWidth;
         const height = node.offsetHeight;
         const x = nodeData.x;
         const y = nodeData.y;
-        
+
+        // Anchor offset (anchors are positioned 6px outside the node)
+        const ANCHOR_OFFSET = 6;
+
         // Calculate anchor position based on anchor position
         let anchorX, anchorY;
         switch(anchorPos) {
             case 'tl':
-                anchorX = x;
-                anchorY = y;
+                anchorX = x - ANCHOR_OFFSET;
+                anchorY = y - ANCHOR_OFFSET;
                 break;
             case 't':
                 anchorX = x + width / 2;
-                anchorY = y;
+                anchorY = y - ANCHOR_OFFSET;
                 break;
             case 'tr':
-                anchorX = x + width;
-                anchorY = y;
+                anchorX = x + width + ANCHOR_OFFSET;
+                anchorY = y - ANCHOR_OFFSET;
                 break;
             case 'r':
-                anchorX = x + width;
+                anchorX = x + width + ANCHOR_OFFSET;
                 anchorY = y + height / 2;
                 break;
             case 'br':
-                anchorX = x + width;
-                anchorY = y + height;
+                anchorX = x + width + ANCHOR_OFFSET;
+                anchorY = y + height + ANCHOR_OFFSET;
                 break;
             case 'b':
                 anchorX = x + width / 2;
-                anchorY = y + height;
+                anchorY = y + height + ANCHOR_OFFSET;
                 break;
             case 'bl':
-                anchorX = x;
-                anchorY = y + height;
+                anchorX = x - ANCHOR_OFFSET;
+                anchorY = y + height + ANCHOR_OFFSET;
                 break;
             case 'l':
-                anchorX = x;
+                anchorX = x - ANCHOR_OFFSET;
                 anchorY = y + height / 2;
                 break;
             default:
@@ -3274,13 +3635,16 @@
                     x2 = toNodeData.x + toWidth / 2;
                     y2 = toNodeData.y + toHeight / 2;
                 }
-                
-                // Snap coordinates to grid lines (20px grid)
-                const GRID_SIZE = 20;
-                x1 = Math.round(x1 / GRID_SIZE) * GRID_SIZE;
-                y1 = Math.round(y1 / GRID_SIZE) * GRID_SIZE;
-                x2 = Math.round(x2 / GRID_SIZE) * GRID_SIZE;
-                y2 = Math.round(y2 / GRID_SIZE) * GRID_SIZE;
+
+                // Only snap to grid for manual paths, not for anchor-based connections
+                // Anchor-based connections should be precise
+                if (!conn.fromAnchor && !conn.toAnchor) {
+                    const GRID_SIZE = 20;
+                    x1 = Math.round(x1 / GRID_SIZE) * GRID_SIZE;
+                    y1 = Math.round(y1 / GRID_SIZE) * GRID_SIZE;
+                    x2 = Math.round(x2 / GRID_SIZE) * GRID_SIZE;
+                    y2 = Math.round(y2 / GRID_SIZE) * GRID_SIZE;
+                }
                 
                 let line;
                 const style = conn.style || 'solid';
@@ -3675,52 +4039,87 @@
     }
 
     function saveMindmap() {
+        console.log('saveMindmap called');
+        console.log('selectedCategory:', selectedCategory);
+        console.log('nodes:', nodes);
+        console.log('connections:', connections);
+
         if (!selectedCategory) {
             alert('Pilih kategori terlebih dahulu');
             return;
         }
-        
+
         const mindmapData = {
             nodes: nodes.map(node => ({
                 id: node.id,
                 materialId: node.materialId,
                 title: node.title,
                 x: node.x,
-                y: node.y
+                y: node.y,
+                type: node.type,
+                completed: node.completed || false,
+                style: node.style || {}
             })),
             connections: connections
         };
-        
-        const rootText = document.getElementById('root-text').textContent;
-        
+
+        console.log('mindmapData:', mindmapData);
+
+        // Get title from selected category (no root node)
+        const categoryBtn = document.querySelector(`[data-category-id="${selectedCategory}"]`);
+        const title = categoryBtn ? categoryBtn.querySelector('.category-text').textContent : 'Mind Map';
+
+        console.log('title:', title);
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        console.log('csrfToken:', csrfToken ? csrfToken.getAttribute('content') : 'not found');
+
         fetch('/mindmap-creator/save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                'X-CSRF-TOKEN': csrfToken ? csrfToken.getAttribute('content') : ''
             },
             body: JSON.stringify({
                 category_id: selectedCategory,
-                title: rootText,
+                title: title,
                 mindmap_data: mindmapData
             })
         })
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Response data:', data);
             if (data.success) {
-                showSuccessModal(data.message);
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Gagal!',
+                    text: data.message || 'Unknown error',
+                    icon: 'error',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'OK'
+                });
             }
         })
         .catch(error => {
             console.error('Error saving mindmap:', error);
-            alert('Terjadi kesalahan saat menyimpan mind map');
+            Swal.fire({
+                title: 'Error!',
+                text: 'Terjadi kesalahan saat menyimpan mind map: ' + error.message,
+                icon: 'error',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
         });
-    }
-
-    function showSuccessModal(message) {
-        document.getElementById('success-message').textContent = message;
-        const modal = new bootstrap.Modal(document.getElementById('successModal'));
-        modal.show();
     }
 </script>
 @endsection
@@ -3728,6 +4127,7 @@
 
 @push('scripts')
     @include('backend.layouts.scriptcustom')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function () {
             const MENU_KEY = 'nexel-classic-dashboard-menu-mini-theme';

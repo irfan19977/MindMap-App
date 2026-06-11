@@ -213,6 +213,18 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="mb-3">
+                                                    <label for="pdf_file" class="form-label">Upload PDF (Opsional)</label>
+                                                    <input type="file" class="form-control" id="pdf_file" name="pdf_file" accept="application/pdf">
+                                                    <small class="text-muted d-block mt-1">Upload PDF untuk otomatis convert ke konten materi. Format: PDF saja.</small>
+                                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="convert-pdf">
+                                                        <i class="feather-file-text me-1"></i> Convert PDF ke Konten
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
                                                     <label for="content" class="form-label">Konten Materi</label>
                                                     <div id="editor-container" style="height: 400px; border: 1px solid #ced4da; border-radius: 0.375rem;"></div>
                                                     <input type="hidden" id="content" name="content" value="{{ old('content') ?? (isset($materi) ? $materi->content : '') }}">
@@ -414,6 +426,27 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/css/quill.min.css') }}">
+    <style>
+        #editor-container div {
+            margin: 1rem 0 !important;
+            line-height: 1.5 !important;
+        }
+        #editor-container {
+            overflow: hidden !important;
+        }
+        #editor-container .ql-editor {
+            overflow-wrap: break-word !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            max-width: 100% !important;
+        }
+        #editor-container .ql-editor p {
+            overflow-wrap: break-word !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            max-width: 100% !important;
+        }
+    </style>
 @endpush
 
 @push('scripts')
@@ -591,6 +624,95 @@
             }
         });
 
+        // PDF to text conversion - using server-side for reliability
+        document.getElementById('convert-pdf').addEventListener('click', function() {
+            const pdfInput = document.getElementById('pdf_file');
+            const file = pdfInput.files[0];
+
+            if (!file) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Peringatan',
+                    text: 'Silakan pilih file PDF terlebih dahulu!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('pdf_file', file);
+
+            // Get CSRF token from hidden input
+            const csrfToken = document.querySelector('input[name="_token"]')?.value;
+
+            // Show loading state
+            this.innerHTML = '<i class="feather-loader me-1"></i> Converting...';
+            this.disabled = true;
+
+            fetch('{{ route("materis.convertPdf") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Server response:', data);
+                    console.log('Content length:', data.text ? data.text.length : 0);
+                    console.log('Content preview:', data.text ? data.text.substring(0, 200) : 'empty');
+
+                    // Insert into Quill editor
+                    if (quill) {
+                        quill.setText('');
+                        quill.clipboard.dangerouslyPasteHTML(data.text);
+                        console.log('Content inserted into Quill');
+                    } else {
+                        console.error('Quill editor not found!');
+                        // Fallback: try to find editor container
+                        const editorContainer = document.querySelector('#editor-container');
+                        if (editorContainer) {
+                            editorContainer.innerHTML = data.text;
+                        }
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: 'PDF berhasil diconvert!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Gagal mengconvert PDF: ' + data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Conversion error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Terjadi kesalahan: ' + error.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            })
+            .finally(() => {
+                // Reset button state
+                this.innerHTML = '<i class="feather-file-text me-1"></i> Convert PDF ke Konten';
+                this.disabled = false;
+            });
+        });
+
         // Collect latihan and quiz data on form submit
         document.getElementById('materiForm').addEventListener('submit', function(e) {
             // Update Quill content
@@ -627,4 +749,5 @@
             document.getElementById('quiz_data').value = JSON.stringify(quizData);
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush

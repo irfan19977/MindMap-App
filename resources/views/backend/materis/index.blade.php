@@ -317,7 +317,19 @@
 @endsection
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
+     <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/select2-active.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .swal2-cancel {
+            background-color: #d33 !important;
+        }
+    </style>
     <script>
         // Initialize DataTable for materis
         $(document).ready(function() {

@@ -7,6 +7,7 @@
     <meta name="description" content="" />
     <meta name="keyword" content="" />
     <meta name="author" content="maryinparis" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--! The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags !-->
     <!--! BEGIN: Apps Title-->
     <title>MindMap || Dashboard</title>

@@ -93,8 +93,8 @@
                             <span class="nxl-mtext">Manajemen User</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="users.html">Semua User</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="users-create.html">Tambah User</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.index') }}">Semua User</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.create') }}">Tambah User</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -103,8 +103,8 @@
                             <span class="nxl-mtext">Manajemen Role</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="roles.html">Semua Role</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="roles-create.html">Tambah Role</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.index') }}">Semua Role</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.create') }}">Tambah Role</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -113,8 +113,8 @@
                             <span class="nxl-mtext">Manajemen Permission</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="permissions.html">Semua Permission</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="permissions-create.html">Tambah Permission</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.index') }}">Semua Permission</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.create') }}">Tambah Permission</a></li>
                         </ul>
                     </li>
                     

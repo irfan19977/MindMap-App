@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Materi;
+use App\Models\Material;
+use App\Models\Subcategory;
 use Illuminate\Http\Request;
 
 class MindmapController extends Controller
@@ -14,11 +15,10 @@ class MindmapController extends Controller
      */
     public function index()
     {
-        $categories = Category::root()
-            ->active()
+        $categories = Category::published()
             ->ordered()
-            ->with(['children' => function($query) {
-                $query->active()->ordered();
+            ->with(['subcategories' => function($query) {
+                $query->where('status', 'publish')->orderBy('name', 'asc');
             }])
             ->get();
 
@@ -26,7 +26,7 @@ class MindmapController extends Controller
     }
 
     /**
-     * Get materials for a specific category.
+     * Get materials for a specific category or subcategory.
      */
     public function getMaterials(Request $request)
     {
@@ -36,10 +36,24 @@ class MindmapController extends Controller
             return response()->json(['materials' => []]);
         }
 
-        $materials = Materi::published()
-            ->inCategoryOrChildren($categoryId)
-            ->ordered()
-            ->get(['id', 'title', 'description', 'difficulty_level', 'duration_minutes']);
+        // Check if the ID is a subcategory or a category
+        $subcategory = Subcategory::find($categoryId);
+        
+        if ($subcategory) {
+            // If it's a subcategory, get materials for this subcategory
+            $materials = Material::published()
+                ->where('subcategory_id', $categoryId)
+                ->orderBy('title', 'asc')
+                ->get(['id', 'title', 'description']);
+        } else {
+            // If it's a category, get materials for all its subcategories
+            $materials = Material::published()
+                ->whereHas('subcategory', function($query) use ($categoryId) {
+                    $query->where('category_id', $categoryId);
+                })
+                ->orderBy('title', 'asc')
+                ->get(['id', 'title', 'description']);
+        }
 
         return response()->json([
             'materials' => $materials->map(function($material) {
@@ -47,8 +61,8 @@ class MindmapController extends Controller
                     'id' => $material->id,
                     'title' => $material->title,
                     'description' => $material->description,
-                    'difficulty_level' => $material->formatted_difficulty_level,
-                    'duration' => $material->duration_minutes ? $material->duration_minutes . ' menit' : 'Tidak tersedia'
+                    'difficulty_level' => '-',
+                    'duration' => '-'
                 ];
             })
         ]);
@@ -59,18 +73,80 @@ class MindmapController extends Controller
      */
     public function saveMindmap(Request $request)
     {
-        $data = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'mindmap_data' => 'required|array',
-            'title' => 'required|string|max:255'
-        ]);
+        try {
+            $data = $request->validate([
+                'category_id' => 'required',
+                'mindmap_data' => 'required|array',
+                'title' => 'required|string|max:255'
+            ]);
 
-        // Here you would save the mind map data to your database
-        // For now, we'll just return success
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Mind map berhasil disimpan!'
-        ]);
+            // Save the mind map data to the database
+            $mindmap = \App\Models\Mindmap::updateOrCreate(
+                [
+                    'reference_id' => $data['category_id']
+                ],
+                [
+                    'title' => $data['title'],
+                    'structure' => $data['mindmap_data'],
+                    'status' => 'publish'
+                ]
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Mind map berhasil disimpan!'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal: ' . implode(', ', $e->errors())
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Load mind map structure for a category.
+     */
+    public function loadMindmap(Request $request)
+    {
+        try {
+            $referenceId = $request->input('reference_id');
+
+            if (!$referenceId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Reference ID is required'
+                ], 400);
+            }
+
+            $mindmap = \App\Models\Mindmap::where('reference_id', $referenceId)->first();
+
+            if (!$mindmap) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mind map not found'
+                ], 404);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'id' => $mindmap->id,
+                    'title' => $mindmap->title,
+                    'structure' => $mindmap->structure,
+                    'status' => $mindmap->status
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

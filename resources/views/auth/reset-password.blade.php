@@ -1,164 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="{{ asset('frontend/img/misc/favicon.png') }}">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>MindMap - Reset Password</title>
-    <!-- Bootstrap Core CSS-->
-    <link href="{{ asset('frontend/css/bootstrap.min.css') }}" rel="stylesheet">
-    <!-- Custom CSS-->
-    <link href="{{ asset('frontend/css/main.css') }}" rel="stylesheet">
-  </head>
-  <body class="top" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
-    <!-- Preloader (Optional)-->
-    <div id="preloader">
-      <div id="status"></div>
-    </div>
-    <!-- Navigation-->
-    <nav class="navbar navbar-Concept navbar-custom navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand page-scroll" href="#page-top">
-            <!-- Text or Image logo--><img class="logo" src="{{ asset('frontend/img/logo.png') }}" alt="Logo"><img class="logodark" src="{{ asset('frontend/img/logodark.png') }}" alt="Logo"></a>
-        </div>
-        <div class="collapse navbar-collapse navbar-main-collapse">
-          <ul class="nav navbar-nav navbar-left">
-            <li class="hidden"><a href="#page-top"></a></li>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="#">Kelas <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><strong class="text-muted">Akademik</strong></li>
-                <li><a href="/kelas/matematika">Matematika</a></li>
-                <li><a href="/kelas/fisika">Fisika</a></li>
-                <li><a href="/kelas/kimia">Kimia</a></li>
-                <li><strong class="text-muted">Digital</strong></li>
-                <li><a href="/kelas/programming">Programming</a></li>
-                <li><a href="/kelas/web-design">Web Design</a></li>
-                <li><strong class="text-muted">Bisnis</strong></li>
-                <li><a href="/kelas/akuntansi">Akuntansi</a></li>
-                <li class="divider"></li>
-                <li><a href="/kelas"><i class="ion-ios-grid-outline"></i> Lihat Semua Kelas</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Program <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><strong class="text-muted">Program Reguler</strong></li>
-                <li><a href="/program/pelajar">Program Pelajar</a></li>
-                <li><a href="/program/mahasiswa">Program Mahasiswa</a></li>
-                <li><a href="/program/profesional">Program Profesional</a></li>
-                <li><strong class="text-muted">Program Intensif</strong></li>
-                <li><a href="/program/bootcamp">Bootcamp</a></li>
-                <li><a href="/program/workshop">Workshop</a></li>
-                <li><a href="/program/private-lesson">Private Lesson</a></li>
-                <li><strong class="text-muted">Sertifikasi</strong></li>
-                <li><a href="/program/sertifikasi-kompetensi">Sertifikasi Kompetensi</a></li>
-                <li><a href="/program/sertifikasi-internasional">Sertifikasi Internasional</a></li>
-              </ul>
-            </li>
-            <li><a href="#">Layanan <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="/layanan/konsultasi-akademik"><i class="fa fa-users fa-lg fa-fw"></i> Konsultasi Akademik</a></li>
-                <li><a href="/layanan/tutor-private"><i class="fa fa-user-graduate fa-lg fa-fw"></i> Tutor Private</a></li>
-                <li><a href="/layanan/materi-custom"><i class="fa fa-book fa-lg fa-fw"></i> Materi Custom</a></li>
-                <li><a href="/layanan/assessment-test"><i class="fa fa-clipboard-check fa-lg fa-fw"></i> Assessment Test</a></li>
-                <li><a href="/layanan/progress-tracking"><i class="fa fa-chart-line fa-lg fa-fw"></i> Progress Tracking</a></li>
-                <li><a href="/layanan/sertifikat"><i class="fa fa-certificate fa-lg fa-fw"></i> Sertifikat</a></li>
-              </ul>
-            </li>
-            <li><a href="/contact">Contact</a></li>
-            <li class="menu-divider visible-lg">&nbsp;</li>
-            <li><a href="{{ route('login') }}">Login</a></li>
-            <li class="visible-lg">&nbsp;</li>
-            <li class="dropdown"><a class="dropdown-toggle" href="#"><i class="fa fa-globe fa-lg"></i> En<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="/">English</a></li>
-                <li><a href="/">Español</a></li>
-                <li><a href="/">Deutsch</a></li>
-                <li><a href="/">Français</a></li>
-                <li><a href="/">Русский</a></li>
-                <li><a href="/">日本語</a></li>
-                <li><a href="/">中文(简体)</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <!-- Header-->
-    <header class="intro intro-fullscreen" data-background="{{ asset('frontend/img/main/34.jpg') }}">
-      <div class="overlay"></div>
-      <div class="intro-body">
-        <!-- Reset Password-->
-        <h2>Reset Password</h2>
-        <div class="container">
-          <div class="row wow fadeIn">
-            <div class="col-md-4 col-md-offset-4">
-              <div class="text-center mb-4">
-                <i class="ion-ios-locked-outline" style="font-size: 64px; color: #007bff;"></i>
-              </div>
-              
-              <form method="POST" action="{{ route('password.store') }}" class="form-signin">
-                @csrf
+<html lang="zxx">
 
-                <!-- Password Reset Token -->
-                <input type="hidden" name="token" value="{{ $request->route('token') }}">
+@include('backend.layouts.head')
 
-                <!-- Email Address -->
-                <div class="form-group">
-                  <label class="sr-only" for="email">Email address</label>
-                  <input class="form-control input-lg" id="email" type="email" name="email" :value="old('email', $request->email)" placeholder="Email address" required autofocus autocomplete="username">
-                  @error('email')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                  @enderror
+<body>
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
+    <main class="auth-minimal-wrapper">
+        <div class="auth-minimal-inner">
+            <div class="minimal-card-wrapper">
+                <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
+                    <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
+                        <img src="{{ asset('backend/assets/images/logo-abbr.png') }}" alt="" class="img-fluid">
+                    </div>
+                    <div class="card-body p-sm-5">
+                        <h2 class="fs-20 fw-bolder mb-4">Reset Password</h2>
+                        <h4 class="fs-13 fw-bold mb-2">Set a new password</h4>
+                        <p class="fs-12 fw-medium text-muted">Enter your new password below to reset your account password.</p>
+                        <form method="POST" action="{{ route('password.store') }}" class="w-100 mt-4 pt-2">
+                            @csrf
+                            
+                            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                            
+                            <div class="mb-4">
+                                <input type="email" class="form-control" name="email" placeholder="Email address" value="{{ old('email', $request->email) }}" required autofocus autocomplete="username">
+                                @error('email')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="New Password" required autocomplete="new-password">
+                                    <div class="input-group-text c-pointer" onclick="togglePassword('password')">
+                                        <i id="passwordIcon" class="feather feather-eye"></i>
+                                    </div>
+                                </div>
+                                @error('password')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm New Password" required autocomplete="new-password">
+                                    <div class="input-group-text c-pointer" onclick="togglePassword('password_confirmation')">
+                                        <i id="password_confirmationIcon" class="feather feather-eye"></i>
+                                    </div>
+                                </div>
+                                @error('password_confirmation')
+                                    <div class="text-danger small mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mt-5">
+                                <button type="submit" class="btn btn-lg btn-primary w-100">Reset Password</button>
+                            </div>
+                        </form>
+                        <div class="mt-5 text-muted">
+                            <a href="{{ route('login') }}" class="fw-bold">Back to login</a>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Password -->
-                <div class="form-group">
-                  <label class="sr-only" for="password">New Password</label>
-                  <input class="form-control input-lg" id="password" type="password" name="password" placeholder="New Password" required autocomplete="new-password">
-                  @error('password')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                  @enderror
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="form-group">
-                  <label class="sr-only" for="password_confirmation">Confirm New Password</label>
-                  <input class="form-control input-lg" id="password_confirmation" type="password" name="password_confirmation" placeholder="Confirm New Password" required autocomplete="new-password">
-                  @error('password_confirmation')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                  @enderror
-                </div>
-
-                <button class="btn btn-lg btn-dark btn-block" type="submit">
-                  <i class="ion-ios-refresh-outline"></i> Reset Password
-                </button>
-              </form>
-              
-              <div class="text-center mt-3">
-                <p><a href="{{ route('login') }}" class="text-primary">Back to login</a></p>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
-    </header><a class="topbtn page-scroll" href="#page-top"></a>
-    
-    <!-- jQuery-->
-    <script src="{{ asset('frontend/js/jquery-3.3.1.min.js') }}"></script>
-    <!-- Bootstrap Core JavaScript-->
-    <script src="{{ asset('frontend/js/bootstrap.min.js') }}"></script>
-    <!-- Plugin JavaScript-->
-    <script src="{{ asset('frontend/js/jquery.easing.min.js') }}"></script>
-    <script src="{{ asset('frontend/js/wow.min.js') }}"></script>
-    <script src="{{ asset('frontend/js/jquery.smartmenus.js') }}"></script>
-    <!-- Custom Theme JavaScript-->
-    <script src="{{ asset('frontend/js/main.js') }}"></script>
+    </main>
+    <!--! ================================================================ !-->
+    <!--! [End] Main Content !-->
+    <!--! ================================================================ !-->
+  @include('backend.layouts.scriptcustom')
+  <script>
+    function togglePassword(fieldId) {
+        const passwordInput = document.getElementById(fieldId);
+        const passwordIcon = document.getElementById(fieldId + 'Icon');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            passwordIcon.classList.remove('feather-eye');
+            passwordIcon.classList.add('feather-eye-off');
+        } else {
+            passwordInput.type = 'password';
+            passwordIcon.classList.remove('feather-eye-off');
+            passwordIcon.classList.add('feather-eye');
+        }
+    }
+  </script>
+</body>
 
-  </body>
 </html>

@@ -218,13 +218,131 @@ class MateriSeeder extends Seeder
 
                 if ($subcategory && isset($materialsData[$subject][$level])) {
                     foreach ($materialsData[$subject][$level] as $index => $title) {
+                        // Generate sample konten materi data
+                        $kontenMateri = [
+                            [
+                                'type' => 'heading',
+                                'content' => 'Pengenalan ' . $title
+                            ],
+                            [
+                                'type' => 'paragraph',
+                                'content' => 'Pada materi ini, kita akan mempelajari tentang ' . $title . '. Materi ini dirancang untuk membantu siswa memahami konsep dasar secara mendalam.'
+                            ],
+                            [
+                                'type' => 'heading',
+                                'content' => 'Konsep Dasar'
+                            ],
+                            [
+                                'type' => 'paragraph',
+                                'content' => 'Berikut adalah penjelasan detail tentang konsep-konsep penting dalam ' . $title . '.'
+                            ],
+                            [
+                                'type' => 'list',
+                                'content' => [
+                                    'Konsep pertama yang perlu dipahami',
+                                    'Konsep kedua yang berkaitan',
+                                    'Konsep ketiga sebagai penerapan'
+                                ]
+                            ],
+                            [
+                                'type' => 'heading',
+                                'content' => 'Contoh Soal'
+                            ],
+                            [
+                                'type' => 'paragraph',
+                                'content' => 'Mari kita lihat contoh penerapan konsep ini dalam soal.'
+                            ]
+                        ];
+
+                        // Generate sample latihan data
+                        $latihanData = [
+                            [
+                                'question' => 'Apa yang dimaksud dengan ' . $title . '?',
+                                'type' => 'essay',
+                                'points' => 10
+                            ],
+                            [
+                                'question' => 'Jelaskan perbedaan antara konsep A dan konsep B dalam ' . $title,
+                                'type' => 'essay',
+                                'points' => 15
+                            ],
+                            [
+                                'question' => 'Sebutkan 3 karakteristik utama dari ' . $title,
+                                'type' => 'short_answer',
+                                'points' => 10
+                            ]
+                        ];
+
+                        // Generate sample quiz data
+                        $quizData = [
+                            'title' => 'Quiz ' . $title,
+                            'status' => 'publish',
+                            'passing_score' => 60,
+                            'time_limit' => 30,
+                            'description' => 'Quiz untuk menguji pemahaman tentang ' . $title,
+                            'questions' => [
+                                [
+                                    'question' => 'Manakah pernyataan yang benar tentang ' . $title . '?',
+                                    'options' => [
+                                        'a' => 'Pilihan jawaban A yang salah',
+                                        'b' => 'Pilihan jawaban B yang benar',
+                                        'c' => 'Pilihan jawaban C yang salah',
+                                        'd' => 'Pilihan jawaban D yang salah'
+                                    ],
+                                    'correct_answer' => 'b'
+                                ],
+                                [
+                                    'question' => 'Apa fungsi utama dari ' . $title . '?',
+                                    'options' => [
+                                        'a' => 'Fungsi pertama',
+                                        'b' => 'Fungsi kedua yang benar',
+                                        'c' => 'Fungsi ketiga',
+                                        'd' => 'Fungsi keempat'
+                                    ],
+                                    'correct_answer' => 'b'
+                                ],
+                                [
+                                    'question' => 'Kapan ' . $title . ' pertama kali ditemukan?',
+                                    'options' => [
+                                        'a' => 'Tahun 1800',
+                                        'b' => 'Tahun 1900 yang benar',
+                                        'c' => 'Tahun 2000',
+                                        'd' => 'Tahun 2020'
+                                    ],
+                                    'correct_answer' => 'b'
+                                ],
+                                [
+                                    'question' => 'Siapa tokoh yang berkontribusi dalam pengembangan ' . $title . '?',
+                                    'options' => [
+                                        'a' => 'Tokoh A',
+                                        'b' => 'Tokoh B yang benar',
+                                        'c' => 'Tokoh C',
+                                        'd' => 'Tokoh D'
+                                    ],
+                                    'correct_answer' => 'b'
+                                ],
+                                [
+                                    'question' => 'Apa manfaat mempelajari ' . $title . '?',
+                                    'options' => [
+                                        'a' => 'Manfaat A',
+                                        'b' => 'Manfaat B yang benar',
+                                        'c' => 'Manfaat C',
+                                        'd' => 'Manfaat D'
+                                    ],
+                                    'correct_answer' => 'b'
+                                ]
+                            ]
+                        ];
+
                         Material::create([
                             'subcategory_id' => $subcategory->id,
                             'title' => $title,
                             'slug' => strtolower(str_replace(' ', '-', $title)) . '-' . $index,
                             'description' => 'Materi pembelajaran ' . $title . ' untuk tingkat ' . strtoupper($level),
                             'learning_objectives' => 'Memahami konsep dasar ' . $title . ' dan dapat menerapkannya dalam soal latihan',
-                            'content' => '<p>Konten materi pembelajaran tentang ' . $title . '</p>',
+                            'content' => json_encode($kontenMateri),
+                            'latihan_data' => $latihanData,
+                            'quiz_data' => $quizData,
                             'status' => 'publish',
                             'is_free' => true,
                         ]);

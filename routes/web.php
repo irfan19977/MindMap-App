@@ -7,8 +7,12 @@ use App\Http\Controllers\Backend\CategoriesController;
 use App\Http\Controllers\Backend\SubcategoriesController;
 use App\Http\Controllers\Backend\MateriController;
 use App\Http\Controllers\Backend\MindmapController;
+use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\PermissionController;
+use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\AIController;
 
 Route::get('/', function () {
     return view('frontend.index');
@@ -35,13 +39,15 @@ Route::get('/mindmap', function () {
 
 Route::get('/mindmap/{slug}', [KelasController::class, 'showMindmap'])->name('mindmap.show');
 
-Route::get('/materi/{slug}', function ($slug) {
-    return view('frontend.materi-detail', ['slug' => $slug]);
-});
+Route::get('/materi/{slug}', [KelasController::class, 'showMateri'])->name('materi.show');
 
 Route::get('/contact', function () {
     return view('frontend.contact');
 });
+
+// AI Chat endpoint
+Route::post('/api/ai/chat', [AIController::class, 'chat'])->name('ai.chat');
+Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.history');
 
 
 Route::middleware('auth')->group(function () {
@@ -51,13 +57,22 @@ Route::middleware('auth')->group(function () {
    Route::resource('subcategories', SubcategoriesController::class);
    Route::resource('materis', MateriController::class);
 
+   // Role, Permission, and User management routes
+   Route::resource('roles', RoleController::class);
+   Route::resource('permissions', PermissionController::class);
+   Route::resource('users', UserController::class);
+
    // Mind map routes
    Route::get('/mindmap-creator', [MindmapController::class, 'index'])->name('mindmap.index');
    Route::get('/mindmap-creator/materials', [MindmapController::class, 'getMaterials'])->name('mindmap.materials');
+   Route::get('/mindmap-creator/load', [MindmapController::class, 'loadMindmap'])->name('mindmap.load');
    Route::post('/mindmap-creator/save', [MindmapController::class, 'saveMindmap'])->name('mindmap.save');
 
    // AJAX route for materi status update
    Route::patch('/materis/{materi}/status', [MateriController::class, 'updateStatus'])->name('materis.updateStatus');
+
+   // AJAX route for PDF to text conversion
+   Route::post('/materis/convert-pdf', [MateriController::class, 'convertPdf'])->name('materis.convertPdf');
 
    // Theme preferences routes
    Route::get('/theme/preferences', [ThemeController::class, 'getPreferences'])->name('theme.getPreferences');

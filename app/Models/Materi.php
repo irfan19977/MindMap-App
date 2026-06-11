@@ -78,7 +78,7 @@ class Materi extends Model
      */
     public function getParentCategoryAttribute()
     {
-        return $this->category?->parent;
+        return null; // Categories don't have parent relationship in this structure
     }
 
     /**
@@ -89,8 +89,8 @@ class Materi extends Model
         if (!$this->category) {
             return null;
         }
-        
-        return $this->category->breadcrumb;
+
+        return [$this->category->name];
     }
 
     /**
@@ -98,26 +98,15 @@ class Materi extends Model
      */
     public function getRootCategoryAttribute()
     {
-        if (!$this->category) {
-            return null;
-        }
-        
-        $breadcrumb = $this->category->breadcrumb;
-        return $breadcrumb[0] ?? null;
+        return $this->category;
     }
 
     /**
-     * Scope a query to only include materis from specific category or its children.
+     * Scope a query to only include materis from specific category.
      */
     public function scopeInCategoryOrChildren($query, $categoryId)
     {
-        $category = Category::find($categoryId);
-        if (!$category) {
-            return $query;
-        }
-        
-        $categoryIds = $category->recursiveChildren()->pluck('id')->push($categoryId);
-        return $query->whereIn('category_id', $categoryIds);
+        return $query->where('category_id', $categoryId);
     }
 
     /**

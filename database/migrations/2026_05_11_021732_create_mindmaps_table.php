@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('mindmaps', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('material_id');
-            $table->foreign('material_id')->references('id')->on('materials')->onDelete('cascade');
+            $table->uuid('reference_id'); // Can be category_id or subcategory_id
             $table->string('title');
             $table->json('structure')->nullable();
             $table->string('thumbnail')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
             $table->timestamps();
-            
+
             // Indexes untuk performance
-            $table->index('material_id');
+            $table->index('reference_id');
         });
     }
 

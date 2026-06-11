@@ -14,27 +14,31 @@
     <section class="section-small" id="materi-content">
       <div class="container">
         <div class="row">
-          <!-- Konten Materi (Full Width) -->
-          <div class="col-md-12">
+          <!-- Konten Materi -->
+          <div class="col-md-8">
             <div class="materi-container">
               <!-- Breadcrumb -->
               <nav class="breadcrumb-nav">
                 <ol class="breadcrumb">
                   <li><a href="/mindmap">MindMap</a></li>
-                  <li><a href="#">Front-End Development</a></li>
-                  <li class="active">HTML</li>
+                  @if($material->subcategory && $material->subcategory->category)
+                    <li><a href="/mindmap/{{ $material->subcategory->category->slug }}">{{ $material->subcategory->category->name }}</a></li>
+                  @endif
+                  @if($material->subcategory)
+                    <li><a href="/mindmap/{{ $material->subcategory->slug }}">{{ $material->subcategory->name }}</a></li>
+                  @endif
+                  <li class="active">{{ $material->title }}</li>
                 </ol>
               </nav>
-              
+
               <!-- Header Materi -->
               <div class="materi-header">
                 <div class="row">
                   <div class="col-md-8">
-                    <h2>HTML - HyperText Markup Language</h2>
+                    <h2>{{ $material->title }}</h2>
                     <div class="materi-meta">
-                      <span class="level-badge beginner">Pemula</span>
-                      <span class="duration"><i class="ion-ios-clock-outline"></i> 2 jam</span>
-                      <span class="lessons"><i class="ion-ios-book-outline"></i> 8 materi</span>
+                      <span class="level-badge beginner">{{ $material->status == 'publish' ? 'Diterbitkan' : 'Draft' }}</span>
+                      <span class="duration"><i class="ion-ios-clock-outline"></i> {{ $material->is_free ? 'Gratis' : 'Berbayar' }}</span>
                     </div>
                   </div>
                   <div class="col-md-4 text-right">
@@ -69,101 +73,39 @@
                 <!-- Overview Tab -->
                 <div role="tabpanel" class="tab-pane active" id="overview">
                   <div class="materi-section">
-                    <h3>Tentang HTML</h3>
-                    <p>HTML (HyperText Markup Language) adalah bahasa markup standar yang digunakan untuk membuat halaman web. HTML mendeskripsikan struktur dan konten semantik dari halaman web secara struktur.</p>
-                    
+                    <h3>Tentang {{ $material->title }}</h3>
+                    <p>{{ $material->description }}</p>
+
+                    @if($material->learning_objectives)
                     <h4>Apa yang akan Anda pelajari:</h4>
                     <ul class="learning-objectives">
-                      <li>Struktur dasar dokumen HTML</li>
-                      <li>Tag-tag HTML umum dan penggunaannya</li>
-                      <li>Semantic HTML untuk aksesibilitas</li>
-                      <li>Form dan input elements</li>
-                      <li>HTML5 dan fitur-fitur modern</li>
+                      <li>{{ $material->learning_objectives }}</li>
                     </ul>
-                    
-                    <h4>Prasyarat:</h4>
-                    <p>Tidak ada prasyarat khusus. Materi ini cocok untuk pemula yang ingin memulai belajar pengembangan web.</p>
+                    @endif
                   </div>
                 </div>
                 
                 <!-- Materi Tab -->
                 <div role="tabpanel" class="tab-pane" id="materi">
                   <div class="materi-section">
-                    <div class="materi-list">
-                      <div class="materi-item">
-                        <div class="materi-item-header">
-                          <h4>1. Pengenalan HTML</h4>
-                          <span class="materi-duration">15 menit</span>
-                        </div>
-                        <div class="materi-item-content">
-                          <p>Pengenalan dasar tentang HTML, sejarah, dan peran dalam pengembangan web modern.</p>
-                          <div class="materi-topics">
-                            <span class="topic-tag">Apa itu HTML</span>
-                            <span class="topic-tag">Sejarah HTML</span>
-                            <span class="topic-tag">HTML vs HTML5</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="materi-item">
-                        <div class="materi-item-header">
-                          <h4>2. Struktur Dasar HTML</h4>
-                          <span class="materi-duration">20 menit</span>
-                        </div>
-                        <div class="materi-item-content">
-                          <p>Memahami struktur dasar dokumen HTML, tag-tag penting, dan organisasi konten.</p>
-                          <div class="materi-topics">
-                            <span class="topic-tag">DOCTYPE</span>
-                            <span class="topic-tag">HTML, Head, Body</span>
-                            <span class="topic-tag">Meta tags</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="materi-item">
-                        <div class="materi-item-header">
-                          <h4>3. Text Formatting</h4>
-                          <span class="materi-duration">25 menit</span>
-                        </div>
-                        <div class="materi-item-content">
-                          <p>Berbagai cara untuk memformat teks dalam HTML untuk meningkatkan readability.</p>
-                          <div class="materi-topics">
-                            <span class="topic-tag">Heading tags</span>
-                            <span class="topic-tag">Paragraph</span>
-                            <span class="topic-tag">Bold & Italic</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="materi-item">
-                        <div class="materi-item-header">
-                          <h4>4. Links dan Navigasi</h4>
-                          <span class="materi-duration">20 menit</span>
-                        </div>
-                        <div class="materi-item-content">
-                          <p>Membuat link internal dan eksternal untuk navigasi antar halaman.</p>
-                          <div class="materi-topics">
-                            <span class="topic-tag">Anchor tags</span>
-                            <span class="topic-tag">Relative vs Absolute</span>
-                            <span class="topic-tag">Navigation menus</span>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div class="materi-item">
-                        <div class="materi-item-header">
-                          <h4>5. Images dan Media</h4>
-                          <span class="materi-duration">15 menit</span>
-                        </div>
-                        <div class="materi-item-content">
-                          <p>Menambahkan gambar dan elemen media lainnya ke halaman web.</p>
-                          <div class="materi-topics">
-                            <span class="topic-tag">Img tag</span>
-                            <span class="topic-tag">Alt text</span>
-                            <span class="topic-tag">Responsive images</span>
-                          </div>
-                        </div>
-                      </div>
+                    <div class="materi-content">
+                      @if($kontenMateri && is_array($kontenMateri))
+                        @foreach($kontenMateri as $item)
+                          @if($item['type'] == 'heading')
+                            <h{{ $item['level'] ?? '2' }}>{{ $item['content'] }}</h{{ $item['level'] ?? '2' }}>
+                          @elseif($item['type'] == 'paragraph')
+                            <p>{{ $item['content'] }}</p>
+                          @elseif($item['type'] == 'list' && is_array($item['content']))
+                            <ul>
+                              @foreach($item['content'] as $listItem)
+                                <li>{{ $listItem }}</li>
+                              @endforeach
+                            </ul>
+                          @endif
+                        @endforeach
+                      @else
+                        <p>{{ $material->content }}</p>
+                      @endif
                     </div>
                   </div>
                 </div>
@@ -236,125 +178,109 @@
                 <div role="tabpanel" class="tab-pane" id="latihan">
                   <div class="materi-section">
                     <h3>Latihan Praktik</h3>
-                    
-                    <div class="exercise-item">
-                      <h4>Latihan 1: Buat Halaman Profil</h4>
-                      <p>Buat halaman profil pribadi dengan struktur HTML yang baik dan semantic.</p>
-                      <div class="exercise-requirements">
-                        <h5>Requirements:</h5>
-                        <ul>
-                          <li>Gunakan semantic HTML5 tags (header, main, section, footer)</li>
-                          <li>Tambahkan foto profil dengan alt text yang deskriptif</li>
-                          <li>Buat navigasi dengan link internal</li>
-                          <li>Gunakan heading tags dengan hierarki yang benar</li>
-                        </ul>
-                      </div>
-                      <button class="btn btn-primary">Mulai Latihan</button>
-                    </div>
-                    
-                    <div class="exercise-item">
-                      <h4>Latihan 2: Form Kontak</h4>
-                      <p>Buat form kontak lengkap dengan berbagai jenis input.</p>
-                      <div class="exercise-requirements">
-                        <h5>Requirements:</h5>
-                        <ul>
-                          <li>Input untuk nama, email, dan pesan</li>
-                          <li>Gunakan label yang proper untuk aksesibilitas</li>
-                          <li>Tambahkan validasi HTML5</li>
-                          <li>Include submit dan reset buttons</li>
-                        </ul>
-                      </div>
-                      <button class="btn btn-primary">Mulai Latihan</button>
-                    </div>
+
+                    @if($material->latihan_data && is_array($material->latihan_data))
+                      @foreach($material->latihan_data as $index => $latihan)
+                        <div class="exercise-item">
+                          <h4>Latihan {{ $index + 1 }}: {{ $latihan['question'] ?? 'Soal Latihan' }}</h4>
+                          @if(isset($latihan['type']))
+                            <p>Tipe: {{ $latihan['type'] }}</p>
+                          @endif
+                          @if(isset($latihan['points']))
+                            <p>Poin: {{ $latihan['points'] }}</p>
+                          @endif
+                          @if(isset($latihan['correct_answer']))
+                            <p>Jawaban Benar: {{ $latihan['correct_answer'] }}</p>
+                          @endif
+                          @if(isset($latihan['explanation']))
+                            <p>Penjelasan: {{ $latihan['explanation'] }}</p>
+                          @endif
+                        </div>
+                      @endforeach
+                    @else
+                      <p>Belum ada latihan untuk materi ini.</p>
+                    @endif
                   </div>
                 </div>
                 
                 <!-- Quiz Tab -->
                 <div role="tabpanel" class="tab-pane" id="quiz">
                   <div class="materi-section">
-                    <h3>Quiz HTML</h3>
-                    
-                    <div class="quiz-container">
-                      <div class="quiz-question">
-                        <h4>1. Apa kepanjangan dari HTML?</h4>
-                        <div class="quiz-options">
-                          <label class="quiz-option">
-                            <input type="radio" name="q1" value="a">
-                            <span>HyperText Markup Language</span>
-                          </label>
-                          <label class="quiz-option">
-                            <input type="radio" name="q1" value="b">
-                            <span>High Tech Modern Language</span>
-                          </label>
-                          <label class="quiz-option">
-                            <input type="radio" name="q1" value="c">
-                            <span>Home Tool Markup Language</span>
-                          </label>
-                        </div>
+                    <h3>Quiz {{ $material->title }}</h3>
+
+                    @if($material->quiz_data && is_array($material->quiz_data))
+                      @if(isset($material->quiz_data['title']))
+                        <h4>{{ $material->quiz_data['title'] }}</h4>
+                      @endif
+                      @if(isset($material->quiz_data['description']))
+                        <p>{{ $material->quiz_data['description'] }}</p>
+                      @endif
+                      @if(isset($material->quiz_data['passing_score']))
+                        <p>Nilai Lulus Minimal: {{ $material->quiz_data['passing_score'] }}</p>
+                      @endif
+                      @if(isset($material->quiz_data['time_limit']))
+                        <p>Batas Waktu: {{ $material->quiz_data['time_limit'] }} menit</p>
+                      @endif
+
+                      <div class="quiz-container">
+                        @if(isset($material->quiz_data['questions']) && is_array($material->quiz_data['questions']))
+                          @foreach($material->quiz_data['questions'] as $index => $question)
+                            <div class="quiz-question">
+                              <h4>{{ $index + 1 }}. {{ $question['question'] ?? 'Pertanyaan' }}</h4>
+                              @if(isset($question['options']) && is_array($question['options']))
+                                <div class="quiz-options">
+                                  @foreach($question['options'] as $optionKey => $optionValue)
+                                    <label class="quiz-option">
+                                      <input type="radio" name="q{{ $index }}" value="{{ $optionKey }}">
+                                      <span>{{ $optionValue }}</span>
+                                    </label>
+                                  @endforeach
+                                </div>
+                              @endif
+                            </div>
+                          @endforeach
+                        @endif
+                        <button class="btn btn-success btn-lg">Submit Quiz</button>
                       </div>
-                      
-                      <div class="quiz-question">
-                        <h4>2. Tag mana yang digunakan untuk membuat link?</h4>
-                        <div class="quiz-options">
-                          <label class="quiz-option">
-                            <input type="radio" name="q2" value="a">
-                            <span>&lt;link&gt;</span>
-                          </label>
-                          <label class="quiz-option">
-                            <input type="radio" name="q2" value="b">
-                            <span>&lt;a&gt;</span>
-                          </label>
-                          <label class="quiz-option">
-                            <input type="radio" name="q2" value="c">
-                            <span>&lt;href&gt;</span>
-                          </label>
-                        </div>
-                      </div>
-                      
-                      <button class="btn btn-success btn-lg">Submit Quiz</button>
-                    </div>
+                    @else
+                      <p>Belum ada quiz untuk materi ini.</p>
+                    @endif
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Floating Chat Button -->
-    <div class="floating-chat-button" id="floatingChatBtn" onclick="toggleChat()">
-      <i class="ion-ios-chatboxes-outline"></i>
-      <span class="chat-badge">1</span>
-    </div>
-    
-    <!-- Floating Chatbox -->
-    <div class="floating-chatbox" id="floatingChatbox">
-      <div class="chatbox-header">
-        <h4><i class="ion-ios-chatboxes-outline"></i> AI Assistant</h4>
-        <div class="chatbox-controls">
-          <div class="chatbox-status">
-            <span class="status-indicator online"></span>
-            <span>Online</span>
-          </div>
-          <button class="close-btn" onclick="toggleChat()">
-            <i class="ion-ios-close-outline"></i>
-          </button>
-        </div>
-      </div>
-      
-      <div class="chatbox-messages" id="chatMessages">
-        <div class="message ai-message">
-          <div class="message-avatar">
-            <i class="ion-ios-robot-outline"></i>
-          </div>
-          <div class="message-content">
-            <p>Halo! Saya AI Assistant Anda. Saya siap membantu Anda memahami materi HTML. Ada yang bisa saya bantu?</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="chatbox-input">
+
+          <!-- Sidebar AI -->
+          <div class="col-md-4">
+            <!-- Mobile chat toggle button -->
+            <button class="chat-toggle-btn" onclick="toggleChat()">
+                <i class="ion-ios-chatboxes-outline"></i>
+            </button>
+
+            <div class="sidebar-chatbox">
+              <div class="chatbox-header">
+                <h4><i class="ion-ios-chatboxes-outline"></i> AI Assistant</h4>
+                <div class="chatbox-controls">
+                  <div class="chatbox-status">
+                    <span class="status-indicator online"></span>
+                    <span>Online</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chatbox-messages" id="chatMessages">
+                <div class="message ai-message">
+                  <div class="message-avatar">
+                    <i class="ion-ios-robot-outline"></i>
+                  </div>
+                  <div class="message-content">
+                    <p>Halo! Saya AI Assistant Anda. Saya siap membantu Anda memahami materi HTML. Ada yang bisa saya bantu?</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chatbox-input">
                 <div class="input-group">
                   <input type="text" id="messageInput" class="form-control" placeholder="Ketik pertanyaan Anda...">
                   <span class="input-group-btn">
@@ -363,21 +289,12 @@
                     </button>
                   </span>
                 </div>
-        
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-          <button class="btn btn-sm btn-default" onclick="askQuestion('Apa itu HTML?')">
-            Apa itu HTML?
-          </button>
-          <button class="btn btn-sm btn-default" onclick="askQuestion('Beri contoh kode')">
-            Beri contoh kode
-          </button>
-          <button class="btn btn-sm btn-default" onclick="askQuestion('Tips belajar')">
-            Tips belajar
-          </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <style>
         .materi-container {
@@ -558,85 +475,16 @@
             margin-right: 10px;
         }
         
-        /* Floating Chat Button */
-        .floating-chat-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: #007bff;
-            border-radius: 50%;
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-            transition: all 0.3s ease;
-            z-index: 9999;
-            border: 3px solid white;
-        }
-        
-        .floating-chat-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(0,123,255,0.4);
-        }
-        
-        .chat-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        
-        /* Floating Chatbox */
-        .floating-chatbox {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
-            height: 500px;
+        /* Sidebar Chatbox */
+        .sidebar-chatbox {
             background: white;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            display: none !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
             flex-direction: column;
-            z-index: 9998;
-            animation: slideUp 0.3s ease;
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
-        }
-        
-        .floating-chatbox.show {
-            display: flex !important;
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
-        }
-        
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            height: calc(100vh - 120px);
+            position: sticky;
+            top: 100px;
         }
         
         .chatbox-header {
@@ -694,48 +542,109 @@
             padding: 15px;
             overflow-y: auto;
             background: #f8f9fa;
+            scroll-behavior: smooth;
         }
         
         .message {
             display: flex;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
-        
+
         .message-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #007bff;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 8px;
-            flex-shrink: 0;
-            font-size: 14px;
+            display: none; /* Hide avatar like WhatsApp */
         }
-        
+
         .message-content {
             background: white;
-            padding: 10px 14px;
-            border-radius: 18px;
-            max-width: 70%;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            max-width: 75%;
+            box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+            font-size: 14.2px;
+            line-height: 19px;
+            position: relative;
+            word-wrap: break-word;
         }
-        
+
+        .message-content p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .message-content ul, .message-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .message-content li {
+            margin: 4px 0;
+            line-height: 1.5;
+        }
+
+        .message-content h1, .message-content h2, .message-content h3 {
+            margin: 12px 0 8px 0;
+            font-weight: 600;
+        }
+
+        .message-content h1 {
+            font-size: 1.3em;
+        }
+
+        .message-content h2 {
+            font-size: 1.2em;
+        }
+
+        .message-content h3 {
+            font-size: 1.1em;
+        }
+
+        .message-content strong {
+            font-weight: 600;
+        }
+
+        .message-content em {
+            font-style: italic;
+        }
+
+        .message-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .message-content pre {
+            background: #f4f4f4;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .message-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        /* AI message (received) - left side with white */
+        .ai-message {
+            justify-content: flex-start;
+        }
+
+        .ai-message .message-content {
+            background: white;
+            border-top-left-radius: 0;
+        }
+
+        /* User message (sent) - right side with blue */
         .user-message {
-            flex-direction: row-reverse;
+            justify-content: flex-end;
         }
-        
-        .user-message .message-avatar {
-            margin-right: 0;
-            margin-left: 8px;
-            background: #6c757d;
-        }
-        
+
         .user-message .message-content {
             background: #007bff;
+            border-top-right-radius: 0;
             color: white;
         }
         
@@ -789,129 +698,191 @@
             background: #0056b3;
             border-color: #0056b3;
         }
-        
-        .quick-actions {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-        
-        .quick-actions .btn {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 15px;
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            color: #6c757d;
-            transition: all 0.3s ease;
-        }
-        
-        .quick-actions .btn:hover {
-            background: #e9ecef;
-            color: #495057;
-        }
-        
+
         @media (max-width: 768px) {
             .materi-container {
                 padding: 20px;
             }
-            
-            .floating-chat-button {
-                width: 50px;
-                height: 50px;
-                bottom: 20px;
-                right: 20px;
-                font-size: 20px;
-            }
-            
-            .floating-chatbox {
-                width: 90%;
-                right: 5%;
-                left: 5%;
-                height: 400px;
+
+            .sidebar-chatbox {
+                position: fixed;
                 bottom: 80px;
+                right: 20px;
+                width: 90%;
+                max-width: 350px;
+                height: 500px;
+                max-height: 70vh;
+                z-index: 9999;
+                display: none;
+                border-radius: 15px;
+                box-shadow: 0 5px 25px rgba(0,0,0,0.3);
             }
-            
+
+            .sidebar-chatbox.active {
+                display: flex;
+            }
+
             .chatbox-input .form-control {
                 padding: 10px 15px;
                 font-size: 16px; /* Prevent zoom on iOS */
             }
-            
+
             .chatbox-input .input-group-btn .btn {
                 padding: 10px 15px;
                 min-width: 50px;
             }
-            
+
             .materi-item-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
-            
+
             .materi-duration {
                 margin-top: 5px;
+            }
+        }
+
+        /* Chat toggle button for mobile */
+        .chat-toggle-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #007bff;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 10000;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-toggle-btn:hover {
+            background: #0056b3;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .chat-toggle-btn {
+                display: flex;
             }
         }
     </style>
 
     <script>
-        // Ensure chatbox is hidden when page loads
+        // Toggle chat popup on mobile
+        function toggleChat() {
+            const chatbox = document.querySelector('.sidebar-chatbox');
+            if (chatbox) {
+                chatbox.classList.toggle('active');
+            }
+        }
+
+        // Get or create session ID
+        function getSessionId() {
+            let sessionId = localStorage.getItem('ai_chat_session_id');
+            if (!sessionId) {
+                sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('ai_chat_session_id', sessionId);
+            }
+            return sessionId;
+        }
+
+        // Load chat history on page load
+        function loadChatHistory() {
+            const sessionId = getSessionId();
+
+            fetch('/api/ai/history?session_id=' + sessionId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.history && data.history.length > 0) {
+                        const messagesContainer = document.getElementById('chatMessages');
+                        if (messagesContainer) {
+                            messagesContainer.innerHTML = ''; // Clear default message
+
+                            data.history.forEach(msg => {
+                                if (msg.role === 'user' || msg.role === 'assistant') {
+                                    addMessage(msg.message, msg.role === 'assistant' ? 'ai' : 'user');
+                                }
+                            });
+
+                            // Scroll to bottom
+                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading chat history:', error);
+                });
+        }
+
+        // Load chat history when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            const chatbox = document.getElementById('floatingChatbox');
-            const chatBtn = document.getElementById('floatingChatBtn');
-            
-            // Force hide chatbox
-            chatbox.classList.remove('show');
-            chatbox.style.display = 'none';
-            
-            // Ensure chat button is visible
-            chatBtn.style.display = 'flex';
+            loadChatHistory();
         });
         
         function startLearning() {
             // Switch to materi tab
             $('a[href="#materi"]').tab('show');
         }
-        
-        function toggleChat() {
-            const chatbox = document.getElementById('floatingChatbox');
-            const chatBtn = document.getElementById('floatingChatBtn');
-            
-            if (chatbox.classList.contains('show')) {
-                chatbox.classList.remove('show');
-                chatBtn.style.display = 'flex';
-            } else {
-                chatbox.classList.add('show');
-                chatBtn.style.display = 'none';
-                // Focus on input when chat opens
-                setTimeout(() => {
-                    document.getElementById('messageInput').focus();
-                }, 300);
-            }
-        }
-        
+
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
-            
+
             if (message === '') return;
-            
+
             // Add user message
             addMessage(message, 'user');
-            
+
             // Clear input
             input.value = '';
-            
+
             // Hide badge after first message
             const badge = document.querySelector('.chat-badge');
             if (badge) {
                 badge.style.display = 'none';
             }
-            
-            // Simulate AI response
-            setTimeout(() => {
-                const aiResponse = generateAIResponse(message);
-                addMessage(aiResponse, 'ai');
-            }, 1000);
+
+            // Get material content
+            const materialContentElement = document.querySelector('.materi-content');
+            const materialContent = materialContentElement ? materialContentElement.innerText : '';
+
+            // Get session ID
+            const sessionId = getSessionId();
+
+            // Send to backend API
+            fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    message: message,
+                    material_content: materialContent,
+                    session_id: sessionId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('AI Response:', data);
+                if (data.message) {
+                    addMessage(data.message, 'ai');
+                } else if (data.error) {
+                    addMessage('Maaf, terjadi kesalahan: ' + data.error, 'ai');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage('Maaf, terjadi kesalahan koneksi. Silakan coba lagi.', 'ai');
+            });
         }
         
         function askQuestion(question) {
@@ -930,14 +901,79 @@
             
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-            contentDiv.innerHTML = `<p>${text}</p>`;
+            
+            // Parse markdown for AI messages
+            if (sender === 'ai') {
+                contentDiv.innerHTML = parseMarkdown(text);
+            } else {
+                contentDiv.innerHTML = `<p>${text}</p>`;
+            }
             
             messageDiv.appendChild(avatarDiv);
             messageDiv.appendChild(contentDiv);
             messagesContainer.appendChild(messageDiv);
+
+            // Smart scroll behavior - only scroll within chat container
+            if (sender === 'user') {
+                // Scroll ke pertanyaan user agar terlihat di tengah container
+                const containerHeight = messagesContainer.clientHeight;
+                const messageOffsetTop = messageDiv.offsetTop;
+                const messageHeight = messageDiv.offsetHeight;
+
+                // Hitung posisi scroll agar pesan user di tengah container
+                const scrollPosition = messageOffsetTop - (containerHeight / 2) + (messageHeight / 2);
+                messagesContainer.scrollTo({
+                    top: scrollPosition,
+                    behavior: 'smooth'
+                });
+            } else {
+                // Scroll ke awal respon AI agar user mulai membaca dari awal
+                // Hanya scroll dalam container, bukan seluruh halaman
+                messagesContainer.scrollTo({
+                    top: messageDiv.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+        
+        function parseMarkdown(text) {
+            // Escape HTML to prevent XSS
+            let html = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
             
-            // Scroll to bottom
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            // Parse headers
+            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            
+            // Parse bold
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Parse italic
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Parse code (inline)
+            html = html.replace(/`(.*?)`/g, '<code>$1</code>');
+            
+            // Parse code blocks
+            html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            
+            // Parse numbered lists (1., 2., 3., etc.)
+            html = html.replace(/^\d+\.\s+(.*$)/gim, '<li>$1</li>');
+            
+            // Parse bullet points (- or *)
+            html = html.replace(/^[-*]\s+(.*$)/gim, '<li>$1</li>');
+            
+            // Wrap list items in ul/ol tags
+            html = html.replace(/(<li>.*<\/li>)/g, '<ul>$1</ul>');
+            html = html.replace(/<\/ul>\s*<ul>/g, '');
+            
+            // Parse line breaks
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
         }
         
         function generateAIResponse(message) {
@@ -969,10 +1005,12 @@
         document.addEventListener('click', function(event) {
             const chatbox = document.getElementById('floatingChatbox');
             const chatBtn = document.getElementById('floatingChatBtn');
-            
-            if (!chatbox.contains(event.target) && !chatBtn.contains(event.target)) {
-                if (chatbox.classList.contains('show')) {
-                    toggleChat();
+
+            if (chatbox && chatBtn) {
+                if (!chatbox.contains(event.target) && !chatBtn.contains(event.target)) {
+                    if (chatbox.classList.contains('show')) {
+                        toggleChat();
+                    }
                 }
             }
         });

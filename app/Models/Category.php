@@ -53,6 +53,14 @@ class Category extends Model
     }
 
     /**
+     * Get the children for this category (alias for subcategories).
+     */
+    public function children()
+    {
+        return $this->hasMany(Subcategory::class);
+    }
+
+    /**
      * Scope a query to only include published categories.
      */
     public function scopePublished($query)
@@ -69,11 +77,44 @@ class Category extends Model
     }
 
     /**
-     * Scope a query to order by order number and name.
+     * Scope a query to order by name.
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('order_number', 'asc')->orderBy('name', 'asc');
+        return $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Get formatted grade level (from first subcategory if exists).
+     */
+    public function getFormattedGradeLevelAttribute(): string
+    {
+        if ($this->children && $this->children->first()) {
+            return $this->children->first()->formatted_grade_level;
+        }
+        return 'Umum';
+    }
+
+    /**
+     * Get grade level (from first subcategory if exists).
+     */
+    public function getGradeLevelAttribute(): string
+    {
+        if ($this->children && $this->children->first()) {
+            return $this->children->first()->grade_level;
+        }
+        return 'umum';
+    }
+
+    /**
+     * Get curriculum (from first subcategory if exists).
+     */
+    public function getCurriculumAttribute()
+    {
+        if ($this->children && $this->children->first()) {
+            return $this->children->first()->curriculum;
+        }
+        return null;
     }
 
     /**

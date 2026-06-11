@@ -68,11 +68,11 @@ class Subcategory extends Model
     }
 
     /**
-     * Scope a query to order by order_number.
+     * Scope a query to order by name.
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('order_number');
+        return $query->orderBy('name', 'asc');
     }
 
     /**

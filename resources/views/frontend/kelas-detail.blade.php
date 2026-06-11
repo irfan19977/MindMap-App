@@ -71,28 +71,36 @@
                             @if($category->children && $category->children->count() > 0)
                                 <h4>Pilih Tingkatan:</h4>
                                 <div class="row">
-                                    @foreach($category->children as $child)
-                                        <div class="col-sm-6" style="margin-bottom: 15px;">
-                                            <div class="panel panel-{{ $child->grade_level == 'sd' ? 'primary' : ($child->grade_level == 'smp' ? 'info' : ($child->grade_level == 'sma' ? 'warning' : 'success')) }}">
-                                                <div class="panel-heading text-center">
-                                                    <h4>
-                                                        @if($child->grade_level == 'sd')
-                                                            <i class="fa fa-child"></i> SD
-                                                        @elseif($child->grade_level == 'smp')
-                                                            <i class="fa fa-users"></i> SMP
-                                                        @elseif($child->grade_level == 'sma')
-                                                            <i class="fa fa-graduation-cap"></i> SMA
-                                                        @else
-                                                            <i class="fa fa-globe"></i> Umum
-                                                        @endif
-                                                    </h4>
-                                                </div>
-                                                <div class="panel-body text-center">
-                                                    <p>{{ $child->name }}</p>
-                                                    <a href="{{ route('mindmap.show', $child->slug) }}" class="btn btn-{{ $child->grade_level == 'sd' ? 'primary' : ($child->grade_level == 'smp' ? 'info' : ($child->grade_level == 'sma' ? 'warning' : 'success')) }}">Pilih {{ strtoupper($child->grade_level) }}</a>
+                                    @php
+                                        $groupedChildren = $category->children->groupBy('grade_level');
+                                        $gradeLabels = [
+                                            'sd' => ['SD', 'fa-child', 'primary'],
+                                            'smp' => ['SMP', 'fa-users', 'info'],
+                                            'sma' => ['SMA', 'fa fa-graduation-cap', 'warning'],
+                                            'umum' => ['Umum', 'fa-globe', 'success']
+                                        ];
+                                    @endphp
+                                    @foreach($gradeLabels as $level => $labelInfo)
+                                        @if(isset($groupedChildren[$level]))
+                                            <div class="col-sm-6" style="margin-bottom: 15px;">
+                                                <div class="panel panel-{{ $labelInfo[2] }}">
+                                                    <div class="panel-heading text-center">
+                                                        <h4><i class="{{ $labelInfo[1] }}"></i> {{ $labelInfo[0] }}</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <ul class="list-unstyled">
+                                                            @foreach($groupedChildren[$level] as $child)
+                                                                <li style="margin-bottom: 10px;">
+                                                                    <a href="{{ route('mindmap.show', $child->slug) }}" class="text-{{ $labelInfo[2] }}">
+                                                                        <strong>{{ $child->name }}</strong>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             @elseif($category->parent && $category->parent->children->count() > 1)
@@ -147,15 +155,15 @@
                                         <div class="panel panel-{{ $child->grade_level == 'sd' ? 'primary' : ($child->grade_level == 'smp' ? 'info' : ($child->grade_level == 'sma' ? 'warning' : 'success')) }}">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
-                                                    <a data-toggle="collapse" data-parent="#curriculum-accordion" href="#curriculum-{{ $child->id }}">
+                                                    <a data-toggle="collapse" data-parent="#curriculum-accordion" href="#curriculum-{{ $child->id }}" class="text-{{ $child->grade_level == 'sd' ? 'primary' : ($child->grade_level == 'smp' ? 'info' : ($child->grade_level == 'sma' ? 'warning' : 'success')) }}" style="text-decoration: none;">
                                                         @if($child->grade_level == 'sd')
-                                                            <i class="fa fa-child"></i> 
+                                                            <i class="fa fa-child"></i>
                                                         @elseif($child->grade_level == 'smp')
-                                                            <i class="fa fa-users"></i> 
+                                                            <i class="fa fa-users"></i>
                                                         @elseif($child->grade_level == 'sma')
-                                                            <i class="fa fa-graduation-cap"></i> 
+                                                            <i class="fa fa-graduation-cap"></i>
                                                         @else
-                                                            <i class="fa fa-globe"></i> 
+                                                            <i class="fa fa-globe"></i>
                                                         @endif
                                                         {{ $child->name }}
                                                     </a>
