@@ -238,43 +238,63 @@
 
                                     <!-- Tab 3: Latihan -->
                                     <div class="tab-pane fade" id="latihan" role="tabpanel">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Latihan Soal</label>
-                                                    <div id="latihan-container">
-                                                        @if(isset($materi))
-                                                            @foreach($materi->practiceQuestions as $index => $latihan)
-                                                                <div class="card mb-3 latihan-item" data-index="{{ $index }}">
-                                                                    <div class="card-body">
-                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                                                            <h6 class="card-title mb-0">Soal #{{ $index + 1 }}</h6>
-                                                                            <button type="button" class="btn btn-sm btn-danger remove-latihan">
-                                                                                <i class="feather-trash-2"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="mb-2">
-                                                                            <label class="form-label">Pertanyaan</label>
-                                                                            <textarea class="form-control latihan-question" rows="2" required>{{ $latihan->question }}</textarea>
-                                                                        </div>
-                                                                        <div class="mb-2">
-                                                                            <label class="form-label">Jawaban Benar</label>
-                                                                            <input type="text" class="form-control latihan-answer" value="{{ $latihan->correct_answer }}" required>
-                                                                        </div>
-                                                                        <div class="mb-0">
-                                                                            <label class="form-label">Penjelasan (Opsional)</label>
-                                                                            <textarea class="form-control latihan-explanation" rows="2">{{ $latihan->explanation }}</textarea>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-                                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="add-latihan">
-                                                        <i class="feather-plus me-1"></i> Tambah Soal
-                                                    </button>
+                                        <div class="latihan-tab-header mb-4">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="tab-icon-box" style="background:#e8f5e9;color:#2e7d32">
+                                                    <i class="feather-edit-3"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold">Soal Latihan</h6>
+                                                    <small class="text-muted">Tambahkan soal latihan untuk menguji pemahaman siswa</small>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div id="latihan-container" class="latihan-container">
+                                            @if(isset($materi))
+                                                @foreach($materi->practiceQuestions as $index => $latihan)
+                                                    <div class="soal-card latihan-item" data-index="{{ $index }}">
+                                                        <div class="soal-card-header">
+                                                            <div class="soal-num">{{ $index + 1 }}</div>
+                                                            <span class="soal-card-label">Soal Latihan</span>
+                                                            <button type="button" class="btn btn-sm btn-outline-danger remove-latihan ms-auto">
+                                                                <i class="feather-trash-2"></i> Hapus
+                                                            </button>
+                                                        </div>
+                                                        <div class="soal-card-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-semibold">Pertanyaan <span class="text-danger">*</span></label>
+                                                                <textarea class="form-control latihan-question" rows="2" placeholder="Tulis pertanyaan latihan..." required>{{ $latihan->question }}</textarea>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label fw-semibold">Tipe Soal</label>
+                                                                    <select class="form-select latihan-type">
+                                                                        <option value="essay" {{ ($latihan->type ?? 'essay') == 'essay' ? 'selected' : '' }}>Essay</option>
+                                                                        <option value="short_answer" {{ ($latihan->type ?? '') == 'short_answer' ? 'selected' : '' }}>Jawaban Singkat</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <label class="form-label fw-semibold">Poin</label>
+                                                                    <input type="number" class="form-control latihan-points" value="{{ $latihan->points ?? 10 }}" min="1" placeholder="10">
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label class="form-label fw-semibold">Jawaban Benar <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control latihan-answer" value="{{ $latihan->correct_answer }}" placeholder="Kunci jawaban..." required>
+                                                            </div>
+                                                            <div class="mb-0">
+                                                                <label class="form-label fw-semibold">Penjelasan <span class="text-muted fw-normal">(Opsional)</span></label>
+                                                                <textarea class="form-control latihan-explanation" rows="2" placeholder="Penjelasan mengapa jawaban ini benar...">{{ $latihan->explanation }}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                        <div class="mt-3">
+                                            <button type="button" class="btn btn-outline-success" id="add-latihan">
+                                                <i class="feather-plus-circle me-1"></i> Tambah Soal Latihan
+                                            </button>
                                         </div>
                                     </div>
 
@@ -331,64 +351,74 @@
                                                 </div>
 
                                                 <!-- Quiz Questions -->
-                                                <div class="mb-3">
-                                                    <label class="form-label">Pertanyaan Quiz</label>
-                                                    <div id="quiz-container" style="background-color: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
-                                                        @if(isset($materi) && $materi->quizzes->first())
-                                                            @php
-                                                                $quiz = $materi->quizzes->first();
-                                                                $quizQuestions = $quiz->quizQuestions;
-                                                            @endphp
-                                                            @foreach($quizQuestions as $index => $quizItem)
-                                                                <div class="card mb-3 quiz-item" data-index="{{ $index }}">
-                                                                    <div class="card-body">
-                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                                                            <h6 class="card-title mb-0">Pertanyaan #{{ $index + 1 }}</h6>
-                                                                            <button type="button" class="btn btn-sm btn-danger remove-quiz">
-                                                                                <i class="feather-trash-2"></i>
-                                                                            </button>
+                                                <div class="latihan-tab-header mb-3 mt-2">
+                                                    <div class="d-flex align-items-center gap-3">
+                                                        <div class="tab-icon-box" style="background:#e3f2fd;color:#1565c0">
+                                                            <i class="feather-list"></i>
+                                                        </div>
+                                                        <div>
+                                                            <h6 class="mb-0 fw-bold">Daftar Pertanyaan</h6>
+                                                            <small class="text-muted">Tambahkan soal pilihan ganda untuk quiz</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="quiz-container" class="latihan-container">
+                                                    @if(isset($materi) && $materi->quizzes->first())
+                                                        @php
+                                                            $quiz = $materi->quizzes->first();
+                                                            $quizQuestions = $quiz->quizQuestions;
+                                                        @endphp
+                                                        @foreach($quizQuestions as $index => $quizItem)
+                                                            <div class="soal-card quiz-item" data-index="{{ $index }}">
+                                                                <div class="soal-card-header">
+                                                                    <div class="soal-num">{{ $index + 1 }}</div>
+                                                                    <span class="soal-card-label">Pertanyaan Quiz</span>
+                                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-quiz ms-auto">
+                                                                        <i class="feather-trash-2"></i> Hapus
+                                                                    </button>
+                                                                </div>
+                                                                <div class="soal-card-body">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label fw-semibold">Pertanyaan <span class="text-danger">*</span></label>
+                                                                        <textarea class="form-control quiz-question" rows="2" placeholder="Tulis pertanyaan quiz..." required>{{ $quizItem->question }}</textarea>
+                                                                    </div>
+                                                                    <div class="soal-options-grid mb-3">
+                                                                        <div class="soal-option-item">
+                                                                            <span class="option-key">A</span>
+                                                                            <input type="text" class="form-control quiz-option-a" value="{{ $quizItem->options['a'] ?? '' }}" placeholder="Pilihan A" required>
                                                                         </div>
-                                                                        <div class="mb-2">
-                                                                            <label class="form-label">Pertanyaan</label>
-                                                                            <textarea class="form-control quiz-question" rows="2" required>{{ $quizItem->question }}</textarea>
+                                                                        <div class="soal-option-item">
+                                                                            <span class="option-key">B</span>
+                                                                            <input type="text" class="form-control quiz-option-b" value="{{ $quizItem->options['b'] ?? '' }}" placeholder="Pilihan B" required>
                                                                         </div>
-                                                                        <div class="row mb-2">
-                                                                            <div class="col-md-6">
-                                                <label class="form-label">Pilihan A</label>
-                                                <input type="text" class="form-control quiz-option-a" value="{{ $quizItem->options['a'] ?? '' }}" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Pilihan B</label>
-                                                <input type="text" class="form-control quiz-option-b" value="{{ $quizItem->options['b'] ?? '' }}" required>
-                                            </div>
-                                        </div>
-                                        <div class="row mb-2">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Pilihan C</label>
-                                                <input type="text" class="form-control quiz-option-c" value="{{ $quizItem->options['c'] ?? '' }}" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Pilihan D</label>
-                                                <input type="text" class="form-control quiz-option-d" value="{{ $quizItem->options['d'] ?? '' }}" required>
-                                            </div>
-                                        </div>
-                                        <div class="mb-0">
-                                            <label class="form-label">Jawaban Benar</label>
-                                            <select class="form-control quiz-correct-answer" required>
-                                                <option value="">Pilih Jawaban</option>
-                                                <option value="a" {{ $quizItem->correct_answer == 'a' ? 'selected' : '' }}>A</option>
-                                                <option value="b" {{ $quizItem->correct_answer == 'b' ? 'selected' : '' }}>B</option>
-                                                <option value="c" {{ $quizItem->correct_answer == 'c' ? 'selected' : '' }}>C</option>
-                                                <option value="d" {{ $quizItem->correct_answer == 'd' ? 'selected' : '' }}>D</option>
-                                            </select>
-                                        </div>
+                                                                        <div class="soal-option-item">
+                                                                            <span class="option-key">C</span>
+                                                                            <input type="text" class="form-control quiz-option-c" value="{{ $quizItem->options['c'] ?? '' }}" placeholder="Pilihan C" required>
+                                                                        </div>
+                                                                        <div class="soal-option-item">
+                                                                            <span class="option-key">D</span>
+                                                                            <input type="text" class="form-control quiz-option-d" value="{{ $quizItem->options['d'] ?? '' }}" placeholder="Pilihan D" required>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="soal-answer-row">
+                                                                        <label class="form-label fw-semibold mb-1">Jawaban Benar</label>
+                                                                        <div class="answer-choices">
+                                                                            @foreach(['a','b','c','d'] as $opt)
+                                                                                <label class="answer-choice {{ $quizItem->correct_answer == $opt ? 'active' : '' }}">
+                                                                                    <input type="radio" name="correct_{{ $index }}" value="{{ $opt }}" class="quiz-correct-answer" {{ $quizItem->correct_answer == $opt ? 'checked' : '' }} required>
+                                                                                    {{ strtoupper($opt) }}
+                                                                                </label>
+                                                                            @endforeach
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-                                                    <button type="button" class="btn btn-sm btn-primary mt-2" id="add-quiz">
-                                                        <i class="feather-plus me-1"></i> Tambah Pertanyaan
+                                                            </div>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                                <div class="mt-3">
+                                                    <button type="button" class="btn btn-outline-primary" id="add-quiz">
+                                                        <i class="feather-plus-circle me-1"></i> Tambah Pertanyaan
                                                     </button>
                                                 </div>
                                             </div>
@@ -427,6 +457,76 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('backend/assets/vendors/css/quill.min.css') }}">
     <style>
+        /* Soal Card */
+        .latihan-container { display: flex; flex-direction: column; gap: 14px; }
+        .soal-card {
+            border: 1.5px solid #e8ecf0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .soal-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e8ecf0;
+        }
+        .soal-num {
+            width: 28px; height: 28px;
+            background: #1a73e8;
+            color: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; flex-shrink: 0;
+        }
+        .soal-card-label { font-size: 13px; font-weight: 600; color: #475569; }
+        .soal-card-body { padding: 16px; }
+
+        /* Options grid */
+        .soal-options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .soal-option-item { display: flex; align-items: center; gap: 8px; }
+        .option-key {
+            width: 30px; height: 30px;
+            background: #f1f5f9; border: 1.5px solid #cbd5e1;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 700; color: #475569;
+            flex-shrink: 0;
+        }
+
+        /* Answer choices */
+        .answer-choices { display: flex; gap: 8px; flex-wrap: wrap; }
+        .answer-choice {
+            display: flex; align-items: center; justify-content: center;
+            width: 42px; height: 38px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700; font-size: 14px; color: #475569;
+            transition: all 0.15s;
+            user-select: none;
+        }
+        .answer-choice input[type="radio"] { display: none; }
+        .answer-choice.active,
+        .answer-choice:has(input:checked) {
+            background: #1a73e8; color: #fff; border-color: #1a73e8;
+        }
+        .answer-choice:hover { border-color: #1a73e8; color: #1a73e8; }
+
+        .tab-icon-box {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0;
+        }
+
         #editor-container div {
             margin: 1rem 0 !important;
             line-height: 1.5 !important;
@@ -532,25 +632,39 @@
         document.getElementById('add-latihan').addEventListener('click', function() {
             latihanIndex++;
             const latihanHtml = `
-                <div class="card mb-3 latihan-item" data-index="${latihanIndex}">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="card-title mb-0">Soal #${latihanIndex}</h6>
-                            <button type="button" class="btn btn-sm btn-danger remove-latihan">
-                                <i class="feather-trash-2"></i>
-                            </button>
+                <div class="soal-card latihan-item" data-index="${latihanIndex}">
+                    <div class="soal-card-header">
+                        <div class="soal-num">${latihanIndex}</div>
+                        <span class="soal-card-label">Soal Latihan</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-latihan ms-auto">
+                            <i class="feather-trash-2"></i> Hapus
+                        </button>
+                    </div>
+                    <div class="soal-card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Pertanyaan <span class="text-danger">*</span></label>
+                            <textarea class="form-control latihan-question" rows="2" placeholder="Tulis pertanyaan latihan..." required></textarea>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">Pertanyaan</label>
-                            <textarea class="form-control latihan-question" rows="2" required></textarea>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Tipe Soal</label>
+                                <select class="form-select latihan-type">
+                                    <option value="essay">Essay</option>
+                                    <option value="short_answer">Jawaban Singkat</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Poin</label>
+                                <input type="number" class="form-control latihan-points" value="10" min="1" placeholder="10">
+                            </div>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">Jawaban Benar</label>
-                            <input type="text" class="form-control latihan-answer" required>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Jawaban Benar <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control latihan-answer" placeholder="Kunci jawaban..." required>
                         </div>
                         <div class="mb-0">
-                            <label class="form-label">Penjelasan (Opsional)</label>
-                            <textarea class="form-control latihan-explanation" rows="2"></textarea>
+                            <label class="form-label fw-semibold">Penjelasan <span class="text-muted fw-normal">(Opsional)</span></label>
+                            <textarea class="form-control latihan-explanation" rows="2" placeholder="Penjelasan mengapa jawaban ini benar..."></textarea>
                         </div>
                     </div>
                 </div>
@@ -562,6 +676,15 @@
             if (e.target.closest('.remove-latihan')) {
                 e.target.closest('.latihan-item').remove();
             }
+            // Answer choice active state
+            if (e.target.closest('.answer-choice')) {
+                const choice = e.target.closest('.answer-choice');
+                const group = choice.closest('.answer-choices');
+                group.querySelectorAll('.answer-choice').forEach(c => c.classList.remove('active'));
+                choice.classList.add('active');
+                const radio = choice.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+            }
         });
 
         // Quiz functionality
@@ -570,47 +693,45 @@
         document.getElementById('add-quiz').addEventListener('click', function() {
             quizIndex++;
             const quizHtml = `
-                <div class="card mb-3 quiz-item" data-index="${quizIndex}">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h6 class="card-title mb-0">Pertanyaan #${quizIndex}</h6>
-                            <button type="button" class="btn btn-sm btn-danger remove-quiz">
-                                <i class="feather-trash-2"></i>
-                            </button>
+                <div class="soal-card quiz-item" data-index="${quizIndex}">
+                    <div class="soal-card-header">
+                        <div class="soal-num">${quizIndex}</div>
+                        <span class="soal-card-label">Pertanyaan Quiz</span>
+                        <button type="button" class="btn btn-sm btn-outline-danger remove-quiz ms-auto">
+                            <i class="feather-trash-2"></i> Hapus
+                        </button>
+                    </div>
+                    <div class="soal-card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Pertanyaan <span class="text-danger">*</span></label>
+                            <textarea class="form-control quiz-question" rows="2" placeholder="Tulis pertanyaan quiz..." required></textarea>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">Pertanyaan</label>
-                            <textarea class="form-control quiz-question" rows="2" required></textarea>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <label class="form-label">Pilihan A</label>
-                                <input type="text" class="form-control quiz-option-a" required>
+                        <div class="soal-options-grid mb-3">
+                            <div class="soal-option-item">
+                                <span class="option-key">A</span>
+                                <input type="text" class="form-control quiz-option-a" placeholder="Pilihan A" required>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Pilihan B</label>
-                                <input type="text" class="form-control quiz-option-b" required>
+                            <div class="soal-option-item">
+                                <span class="option-key">B</span>
+                                <input type="text" class="form-control quiz-option-b" placeholder="Pilihan B" required>
                             </div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-6">
-                                <label class="form-label">Pilihan C</label>
-                                <input type="text" class="form-control quiz-option-c" required>
+                            <div class="soal-option-item">
+                                <span class="option-key">C</span>
+                                <input type="text" class="form-control quiz-option-c" placeholder="Pilihan C" required>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Pilihan D</label>
-                                <input type="text" class="form-control quiz-option-d" required>
+                            <div class="soal-option-item">
+                                <span class="option-key">D</span>
+                                <input type="text" class="form-control quiz-option-d" placeholder="Pilihan D" required>
                             </div>
                         </div>
-                        <div class="mb-0">
-                            <label class="form-label">Jawaban Benar</label>
-                            <select class="form-control quiz-correct-answer" required>
-                                <option value="">Pilih Jawaban</option>
-                                <option value="a">A</option>
-                                <option value="b">B</option>
-                                <option value="c">C</option>
-                                <option value="d">D</option>
-                            </select>
+                        <div class="soal-answer-row">
+                            <label class="form-label fw-semibold mb-1">Jawaban Benar</label>
+                            <div class="answer-choices">
+                                <label class="answer-choice"><input type="radio" name="correct_${quizIndex}" value="a" class="quiz-correct-answer" required> A</label>
+                                <label class="answer-choice"><input type="radio" name="correct_${quizIndex}" value="b" class="quiz-correct-answer"> B</label>
+                                <label class="answer-choice"><input type="radio" name="correct_${quizIndex}" value="c" class="quiz-correct-answer"> C</label>
+                                <label class="answer-choice"><input type="radio" name="correct_${quizIndex}" value="d" class="quiz-correct-answer"> D</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -721,20 +842,24 @@
                 contentInput.value = quill.root.innerHTML;
             }
 
-            // Collect latihan data
-            const latihanData = [];
+            // Collect latihan data (with type & points)
+            const latihanDataFull = [];
             document.querySelectorAll('.latihan-item').forEach(function(item) {
-                latihanData.push({
+                latihanDataFull.push({
                     question: item.querySelector('.latihan-question').value,
+                    type: item.querySelector('.latihan-type') ? item.querySelector('.latihan-type').value : 'essay',
+                    points: item.querySelector('.latihan-points') ? parseInt(item.querySelector('.latihan-points').value) || 10 : 10,
                     answer: item.querySelector('.latihan-answer').value,
+                    correct_answer: item.querySelector('.latihan-answer').value,
                     explanation: item.querySelector('.latihan-explanation').value
                 });
             });
-            document.getElementById('latihan_data').value = JSON.stringify(latihanData);
+            document.getElementById('latihan_data').value = JSON.stringify(latihanDataFull);
 
             // Collect quiz data
             const quizData = [];
             document.querySelectorAll('.quiz-item').forEach(function(item) {
+                const checkedAnswer = item.querySelector('.quiz-correct-answer:checked');
                 quizData.push({
                     question: item.querySelector('.quiz-question').value,
                     options: {
@@ -743,7 +868,7 @@
                         c: item.querySelector('.quiz-option-c').value,
                         d: item.querySelector('.quiz-option-d').value
                     },
-                    correct_answer: item.querySelector('.quiz-correct-answer').value
+                    correct_answer: checkedAnswer ? checkedAnswer.value : ''
                 });
             });
             document.getElementById('quiz_data').value = JSON.stringify(quizData);

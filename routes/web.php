@@ -40,6 +40,7 @@ Route::get('/mindmap', function () {
 Route::get('/mindmap/{slug}', [KelasController::class, 'showMindmap'])->name('mindmap.show');
 
 Route::get('/materi/{slug}', [KelasController::class, 'showMateri'])->name('materi.show');
+Route::get('/api/user-progress', [KelasController::class, 'getUserProgress'])->name('api.user-progress');
 
 Route::get('/contact', function () {
     return view('frontend.contact');
