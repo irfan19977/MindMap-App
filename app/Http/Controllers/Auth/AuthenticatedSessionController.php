@@ -28,6 +28,13 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Check if there's an intended URL from the form
+        $intendedUrl = $request->input('intended');
+        
+        if ($intendedUrl && !str_contains($intendedUrl, '/login') && !str_contains($intendedUrl, '/register')) {
+            return redirect()->to($intendedUrl);
+        }
+
         return redirect()->intended(route('dashboard.index', absolute: false));
     }
 

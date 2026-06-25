@@ -1,7 +1,7 @@
  <nav class="navbar navbar-Concept navbar-custom navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand page-scroll" href="#page-top">
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand page-scroll" href="/">
             <!-- Text or Image logo--><img class="logo" src="{{ asset('frontend/img/logo.png') }}" alt="Logo"><img class="logodark" src="{{ asset('frontend/img/logodark.png') }}" alt="Logo"></a>
         </div>
         <div class="collapse navbar-collapse navbar-main-collapse">
@@ -49,6 +49,7 @@
                 <li><a href="/layanan/sertifikat"><i class="fa fa-certificate fa-lg fa-fw"></i> Sertifikat</a></li>
               </ul>
             </li>
+            <li><a href="{{ route('quiz.index') }}">Quiz</a></li>
             <li><a href="/contact">Contact</a></li>
             <li class="menu-divider visible-lg">&nbsp;</li>
             <li><a href="{{ route('login') }}">Login</a></li>

@@ -50,8 +50,8 @@
                                             <th class="text-center">No</th>
                                             <th class="text-center">Nama</th>
                                             <th class="text-center">Email</th>
-                                            <th class="text-center">Roles</th>
-                                            <th class="text-center">Email Verified</th>
+                                            <th class="text-center">Tipe User</th>
+                                            <th class="text-center">Status</th>
                                             <th class="text-end">Actions</th>
                                         </tr>
                                     </thead>
@@ -72,25 +72,23 @@
                                                 <td>
                                                     <span>{{ $user->email }}</span>
                                                 </td>
-                                                <td>
-                                                    @if($user->roles->count() > 0)
-                                                        <div class="d-flex flex-wrap gap-1">
-                                                            @foreach($user->roles as $role)
-                                                                <span class="badge bg-soft-info text-info">{{ $role->name }}</span>
-                                                            @endforeach
-                                                        </div>
+                                                <td class="text-center">
+                                                    @if($user->user_type === 'admin')
+                                                        <span class="badge bg-soft-danger text-danger">Admin</span>
+                                                    @elseif($user->user_type === 'teacher')
+                                                        <span class="badge bg-soft-primary text-primary">Guru</span>
                                                     @else
-                                                        <span class="text-muted">-</span>
+                                                        <span class="badge bg-soft-success text-success">Siswa</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @if($user->email_verified_at)
+                                                    @if($user->is_active)
                                                         <span class="badge bg-soft-success text-success">
-                                                            <i class="feather-check-circle me-1"></i>Verified
+                                                            <i class="feather-check-circle me-1"></i>Aktif
                                                         </span>
                                                     @else
-                                                        <span class="badge bg-soft-warning text-warning">
-                                                            <i class="feather-clock me-1"></i>Pending
+                                                        <span class="badge bg-soft-secondary text-secondary">
+                                                            <i class="feather-x-circle me-1"></i>Non-Aktif
                                                         </span>
                                                     @endif
                                                 </td>

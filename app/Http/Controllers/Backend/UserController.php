@@ -39,6 +39,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'user_type' => 'required|in:admin,teacher,student',
+            'is_active' => 'boolean',
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
         ]);
@@ -47,6 +49,8 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'user_type' => $validated['user_type'],
+            'is_active' => $validated['is_active'] ?? true,
         ]);
 
         if (isset($validated['roles'])) {
@@ -85,6 +89,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
+            'user_type' => 'required|in:admin,teacher,student',
+            'is_active' => 'boolean',
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
         ]);
@@ -92,6 +98,8 @@ class UserController extends Controller
         $userData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'user_type' => $validated['user_type'],
+            'is_active' => $validated['is_active'] ?? true,
         ];
 
         if (!empty($validated['password'])) {
