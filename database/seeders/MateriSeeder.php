@@ -334,18 +334,21 @@ class MateriSeeder extends Seeder
                             ]
                         ];
 
-                        Material::create([
-                            'subcategory_id' => $subcategory->id,
-                            'title' => $title,
-                            'slug' => strtolower(str_replace(' ', '-', $title)) . '-' . $index,
-                            'description' => 'Materi pembelajaran ' . $title . ' untuk tingkat ' . strtoupper($level),
-                            'learning_objectives' => 'Memahami konsep dasar ' . $title . ' dan dapat menerapkannya dalam soal latihan',
-                            'content' => json_encode($kontenMateri),
-                            'latihan_data' => $latihanData,
-                            'quiz_data' => $quizData,
-                            'status' => 'publish',
-                            'is_free' => true,
-                        ]);
+                        $slug = strtolower(str_replace(' ', '-', $title)) . '-' . $index;
+                        Material::firstOrCreate(
+                            ['slug' => $slug],
+                            [
+                                'subcategory_id' => $subcategory->id,
+                                'title' => $title,
+                                'description' => 'Materi pembelajaran ' . $title . ' untuk tingkat ' . strtoupper($level),
+                                'learning_objectives' => 'Memahami konsep dasar ' . $title . ' dan dapat menerapkannya dalam soal latihan',
+                                'content' => json_encode($kontenMateri),
+                                'latihan_data' => $latihanData,
+                                'quiz_data' => $quizData,
+                                'status' => 'publish',
+                                'is_free' => true,
+                            ]
+                        );
                     }
                 }
             }

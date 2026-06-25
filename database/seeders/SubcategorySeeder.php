@@ -30,15 +30,17 @@ class SubcategorySeeder extends Seeder
 
             if ($category) {
                 foreach ($levels as $level) {
-                    Subcategory::create([
-                        'category_id' => $category->id,
-                        'name' => $name . ' ' . strtoupper($level),
-                        'slug' => $slug . '-' . $level,
-                        'grade_level' => $level,
-                        'curriculum' => $curriculum,
-                        'status' => 'publish',
-                        'is_featured' => false,
-                    ]);
+                    Subcategory::firstOrCreate(
+                        ['slug' => $slug . '-' . $level],
+                        [
+                            'category_id' => $category->id,
+                            'name' => $name . ' ' . strtoupper($level),
+                            'grade_level' => $level,
+                            'curriculum' => $curriculum,
+                            'status' => 'publish',
+                            'is_featured' => false,
+                        ]
+                    );
                 }
             }
         }

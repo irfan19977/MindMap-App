@@ -21,6 +21,7 @@ class Subcategory extends Model
         'status',
         'cover_image',
         'is_featured',
+        'created_by',
     ];
 
     protected $casts = [

@@ -15,15 +15,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Irfan Adi',
-            'email' => 'irfanadiprasetyo27@gmail.com',
-            'password' => bcrypt('password'),
-        ]);
+        // Create base admin user (Irfan)
+        User::firstOrCreate(
+            ['email' => 'irfanadiprasetyo27@gmail.com'],
+            [
+                'name'     => 'Irfan Adi',
+                'password' => bcrypt('password'),
+            ]
+        );
 
         $this->call([
+            RoleAndUserSeeder::class,
             CategorySeeder::class,
             SubcategorySeeder::class,
             MateriSeeder::class,

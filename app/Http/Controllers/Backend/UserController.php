@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('users.index');
         $users = User::with('roles')->orderBy('created_at', 'desc')->get();
         
         return view('backend.users.index', compact('users'));
@@ -25,6 +28,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->authorize('users.create');
         $roles = Role::all();
         
         return view('backend.users.addedit', compact('roles'));
@@ -70,6 +74,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('users.edit');
         $roles = Role::all();
         $userRoles = $user->roles->pluck('id')->toArray();
         
@@ -115,6 +120,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->authorize('users.delete');
         try {
             // Prevent deleting the currently authenticated user
             if (auth()->id() === $user->id) {

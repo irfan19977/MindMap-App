@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('permissions.index');
         $permissions = Permission::orderBy('created_at', 'desc')->get();
         
         return view('backend.permissions.index', compact('permissions'));
@@ -23,6 +26,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
+        $this->authorize('permissions.create');
         return view('backend.permissions.addedit');
     }
 
@@ -54,6 +58,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
+        $this->authorize('permissions.edit');
         return view('backend.permissions.addedit', compact('permission'));
     }
 
@@ -77,6 +82,7 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
+        $this->authorize('permissions.delete');
         try {
             // Check if permission has roles
             if ($permission->roles()->count() > 0) {

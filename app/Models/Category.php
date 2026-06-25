@@ -18,6 +18,7 @@ class Category extends Model
         'cover_image',
         'status',
         'is_featured',
+        'created_by',
     ];
 
     protected $casts = [

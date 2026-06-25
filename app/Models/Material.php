@@ -25,6 +25,7 @@ class Material extends Model
         'cover_image',
         'latihan_data',
         'quiz_data',
+        'created_by',
     ];
 
     protected $casts = [

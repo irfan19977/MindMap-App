@@ -6,21 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Material;
 use App\Models\Subcategory;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class MindmapController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display the mind map creation page.
      */
     public function index()
     {
-        $categories = Category::published()
-            ->ordered()
+        $this->authorize('mindmap.index');
+        $query = Category::published()->ordered()
             ->with(['subcategories' => function($query) {
                 $query->where('status', 'publish')->orderBy('name', 'asc');
-            }])
-            ->get();
+            }]);
+
+        if (auth()->user()->hasRole('teacher')) {
+            $query->where('created_by', auth()->id());
+        }
+
+        $categories = $query->get();
 
         return view('backend.mindmap.index', compact('categories'));
     }
@@ -88,7 +95,8 @@ class MindmapController extends Controller
                 [
                     'title' => $data['title'],
                     'structure' => $data['mindmap_data'],
-                    'status' => 'publish'
+                    'status' => 'publish',
+                    'created_by' => auth()->id(),
                 ]
             );
 

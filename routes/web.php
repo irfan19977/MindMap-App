@@ -51,7 +51,7 @@ Route::post('/api/ai/chat', [AIController::class, 'chat'])->name('ai.chat');
 Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.history');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
    Route::resource('dashboard', DashboardController::class);
 
    Route::resource('categories', CategoriesController::class);
@@ -79,7 +79,9 @@ Route::middleware('auth')->group(function () {
    Route::get('/theme/preferences', [ThemeController::class, 'getPreferences'])->name('theme.getPreferences');
    Route::post('/theme/preferences', [ThemeController::class, 'savePreferences'])->name('theme.savePreferences');
    Route::post('/theme/apply', [ThemeController::class, 'applyPreferences'])->name('theme.applyPreferences');
+});
 
+Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

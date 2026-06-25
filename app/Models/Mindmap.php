@@ -16,6 +16,7 @@ class Mindmap extends Model
         'structure',
         'thumbnail',
         'status',
+        'created_by',
     ];
 
     protected $casts = [
