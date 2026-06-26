@@ -95,6 +95,14 @@ class Material extends Model
     }
 
     /**
+     * Get the user progress for the material.
+     */
+    public function userProgresses(): HasMany
+    {
+        return $this->hasMany(UserProgress::class);
+    }
+
+    /**
      * Scope a query to only include published materials.
      */
     public function scopePublished($query)

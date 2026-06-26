@@ -20,7 +20,7 @@
               <!-- Breadcrumb -->
               <nav class="breadcrumb-nav">
                 <ol class="breadcrumb">
-                  <li><a href="/mindmap">MindMap</a></li>
+                  <li><a href="/kelas">MindMap</a></li>
                   @if($material->subcategory && $material->subcategory->category)
                     <li><a href="/mindmap/{{ $material->subcategory->category->slug }}">{{ $material->subcategory->category->name }}</a></li>
                   @endif
@@ -69,7 +69,7 @@
                   <a href="#latihan" aria-controls="latihan" role="tab" data-toggle="tab">Latihan</a>
                 </li>
                 <li role="presentation">
-                  <a href="#quiz" aria-controls="quiz" role="tab" id="quizTabLink" onclick="handleQuizTabClick(event)">Quiz</a>
+                  <a href="#quiz" aria-controls="quiz" role="tab" id="quizTabLink" @if(!$passedQuizAttempt) onclick="handleQuizTabClick(event)" @else data-toggle="tab" @endif>Quiz</a>
                 </li>
               </ul>
               
@@ -260,58 +260,122 @@
                 <div role="tabpanel" class="tab-pane" id="quiz">
                   <div class="tab-section">
 
-                    @if($material->quiz_data && is_array($material->quiz_data))
-                      {{-- Info bar --}}
-                      <div class="quiz-info-bar">
-                        <div class="quiz-info-main">
-                          <div class="tab-section-icon" style="background:#e3f2fd;color:#1565c0">
-                            <i class="ion-ios-help-outline"></i>
+                    @php $quiz = $material->quizzes()->where('status', 'publish')->with('quizQuestions')->first(); @endphp
+                    @if($quiz && $quiz->quizQuestions->count() > 0)
+                      {{-- Show passed result if user already passed --}}
+                      @if($passedQuizAttempt)
+                        <div class="quiz-info-bar">
+                          <div class="quiz-info-main">
+                            <div class="tab-section-icon" style="background:#dcfce7;color:#16a34a">
+                              <i class="ion-ios-checkmark-outline"></i>
+                            </div>
+                            <div>
+                              <h3 class="tab-section-title" style="margin-bottom:2px">{{ $quiz->title }}</h3>
+                              <p class="tab-section-sub">Kamu sudah lulus quiz ini!</p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 class="tab-section-title" style="margin-bottom:2px">
-                              {{ $material->quiz_data['title'] ?? 'Quiz ' . $material->title }}
-                            </h3>
-                            @if(isset($material->quiz_data['description']))
-                              <p class="tab-section-sub">{{ $material->quiz_data['description'] }}</p>
+                          <div class="quiz-info-stats">
+                            <div class="quiz-stat">
+                              <span class="quiz-stat-val">{{ round($passedQuizAttempt->score) }}%</span>
+                              <span class="quiz-stat-lbl">Nilai Kamu</span>
+                            </div>
+                            <div class="quiz-stat">
+                              <span class="quiz-stat-val">{{ $passedQuizAttempt->quizAnswers->where('is_correct', true)->count() }}/{{ $passedQuizAttempt->quizAnswers->count() }}</span>
+                              <span class="quiz-stat-lbl">Benar</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="quiz-result passed" style="display:block">
+                          <div class="result-score">{{ round($passedQuizAttempt->score) }}</div>
+                          <div class="result-label">🎉 Kamu sudah lulus!</div>
+                          <div class="result-detail">Nilai kamu: {{ round($passedQuizAttempt->score) }}% &nbsp;·&nbsp; Selesai pada {{ $passedQuizAttempt->completed_at->format('d M Y, H:i') }}</div>
+                        </div>
+
+                        {{-- Show answers from previous attempt --}}
+                        <div class="quiz-answers-review">
+                          <h4 style="margin:20px 0 15px 0;color:#374151">Jawaban Kamu:</h4>
+                          @foreach($passedQuizAttempt->quizAnswers as $answer)
+                            @php $question = $answer->quizQuestion; @endphp
+                            @if($question)
+                              <div class="quiz-card" style="margin-bottom:15px">
+                                <div class="quiz-card-header">
+                                  <span class="quiz-num">{{ $loop->index + 1 }}</span>
+                                  <p class="quiz-question-text">{{ $question->question }}</p>
+                                </div>
+                                @php $options = is_array($question->options) ? $question->options : json_decode($question->options, true); @endphp
+                                @if($options)
+                                  <div class="quiz-options">
+                                    @foreach($options as $optionKey => $optionValue)
+                                      <label class="quiz-option" style="pointer-events:none;opacity:1">
+                                        <input type="radio" disabled 
+                                          @if($answer->user_answer === $optionKey) checked @endif
+                                          @if($question->correct_answer === $optionKey) style="accent-color:#16a34a" @endif
+                                        >
+                                        <span class="quiz-option-key" 
+                                          @if($answer->user_answer === $optionKey && $answer->is_correct) style="background:#16a34a;color:#fff;border-color:#16a34a" 
+                                          @elseif($answer->user_answer === $optionKey && !$answer->is_correct) style="background:#dc2626;color:#fff;border-color:#dc2626"
+                                          @elseif($question->correct_answer === $optionKey) style="background:#16a34a;color:#fff;border-color:#16a34a"
+                                          @endif
+                                        >{{ strtoupper($optionKey) }}</span>
+                                        <span class="quiz-option-text">{{ $optionValue }}</span>
+                                      </label>
+                                    @endforeach
+                                  </div>
+                                @endif
+                              </div>
+                            @endif
+                          @endforeach
+                        </div>
+
+                      @else
+                        {{-- Info bar --}}
+                        <div class="quiz-info-bar">
+                          <div class="quiz-info-main">
+                            <div class="tab-section-icon" style="background:#e3f2fd;color:#1565c0">
+                              <i class="ion-ios-help-outline"></i>
+                            </div>
+                            <div>
+                              <h3 class="tab-section-title" style="margin-bottom:2px">{{ $quiz->title }}</h3>
+                              @if($quiz->description)
+                                <p class="tab-section-sub">{{ $quiz->description }}</p>
+                              @endif
+                            </div>
+                          </div>
+                          <div class="quiz-info-stats">
+                            <div class="quiz-stat">
+                              <span class="quiz-stat-val">{{ $quiz->quizQuestions->count() }}</span>
+                              <span class="quiz-stat-lbl">Soal</span>
+                            </div>
+                            @if($quiz->passing_score)
+                              <div class="quiz-stat">
+                                <span class="quiz-stat-val">{{ $quiz->passing_score }}</span>
+                                <span class="quiz-stat-lbl">Nilai Lulus</span>
+                              </div>
+                            @endif
+                            @if($quiz->time_limit)
+                              <div class="quiz-stat">
+                                <span class="quiz-stat-val">{{ $quiz->time_limit }}'</span>
+                                <span class="quiz-stat-lbl">Menit</span>
+                              </div>
                             @endif
                           </div>
                         </div>
-                        <div class="quiz-info-stats">
-                          @if(isset($material->quiz_data['questions']))
-                            <div class="quiz-stat">
-                              <span class="quiz-stat-val">{{ count($material->quiz_data['questions']) }}</span>
-                              <span class="quiz-stat-lbl">Soal</span>
-                            </div>
-                          @endif
-                          @if(isset($material->quiz_data['passing_score']))
-                            <div class="quiz-stat">
-                              <span class="quiz-stat-val">{{ $material->quiz_data['passing_score'] }}</span>
-                              <span class="quiz-stat-lbl">Nilai Lulus</span>
-                            </div>
-                          @endif
-                          @if(isset($material->quiz_data['time_limit']))
-                            <div class="quiz-stat">
-                              <span class="quiz-stat-val">{{ $material->quiz_data['time_limit'] }}'</span>
-                              <span class="quiz-stat-lbl">Menit</span>
-                            </div>
-                          @endif
-                        </div>
-                      </div>
 
-                      {{-- Questions --}}
-                      @if(isset($material->quiz_data['questions']) && is_array($material->quiz_data['questions']))
+                        {{-- Questions --}}
                         <form id="quizForm" class="quiz-form">
-                          @foreach($material->quiz_data['questions'] as $index => $question)
-                            <div class="quiz-card" id="qcard-{{ $index }}">
+                          @foreach($quiz->quizQuestions->sortBy('order_number') as $index => $question)
+                            <div class="quiz-card" id="qcard-{{ $index }}" data-question-id="{{ $question->id }}">
                               <div class="quiz-card-header">
                                 <span class="quiz-num">{{ $index + 1 }}</span>
-                                <p class="quiz-question-text">{{ $question['question'] ?? 'Pertanyaan' }}</p>
+                                <p class="quiz-question-text">{{ $question->question }}</p>
                               </div>
-                              @if(isset($question['options']) && is_array($question['options']))
+                              @php $options = is_array($question->options) ? $question->options : json_decode($question->options, true); @endphp
+                              @if($options)
                                 <div class="quiz-options">
-                                  @foreach($question['options'] as $optionKey => $optionValue)
+                                  @foreach($options as $optionKey => $optionValue)
                                     <label class="quiz-option" for="q{{ $index }}_{{ $optionKey }}">
-                                      <input type="radio" id="q{{ $index }}_{{ $optionKey }}" name="q{{ $index }}" value="{{ $optionKey }}">
+                                      <input type="radio" id="q{{ $index }}_{{ $optionKey }}" name="q{{ $index }}" value="{{ $optionKey }}" data-question-id="{{ $question->id }}" data-correct="{{ $question->correct_answer }}">
                                       <span class="quiz-option-key">{{ strtoupper($optionKey) }}</span>
                                       <span class="quiz-option-text">{{ $optionValue }}</span>
                                     </label>
@@ -357,14 +421,14 @@
           Timer akan langsung berjalan dan kamu harus menyelesaikannya.
         </p>
         <div class="qmodal-stats">
-          @if(isset($material->quiz_data['questions']))
-            <div class="qmodal-stat"><span>{{ count($material->quiz_data['questions']) }}</span> Soal</div>
-          @endif
-          @if(isset($material->quiz_data['time_limit']))
-            <div class="qmodal-stat"><span>{{ $material->quiz_data['time_limit'] }}</span> Menit</div>
-          @endif
-          @if(isset($material->quiz_data['passing_score']))
-            <div class="qmodal-stat"><span>{{ $material->quiz_data['passing_score'] }}</span> Nilai Lulus</div>
+          @if(isset($quiz) && $quiz)
+            <div class="qmodal-stat"><span>{{ $quiz->quizQuestions->count() }}</span> Soal</div>
+            @if($quiz->time_limit)
+              <div class="qmodal-stat"><span>{{ $quiz->time_limit }}</span> Menit</div>
+            @endif
+            @if($quiz->passing_score)
+              <div class="qmodal-stat"><span>{{ $quiz->passing_score }}</span> Nilai Lulus</div>
+            @endif
           @endif
         </div>
         <div class="qmodal-actions">
@@ -1376,6 +1440,15 @@
         }
         .chat-toggle-btn:hover { background: #0056b3; transform: scale(1.08); }
 
+        /* Quiz Answers Review */
+        .quiz-answers-review {
+            margin-top: 20px;
+        }
+        .quiz-answers-review h4 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
         /* ============================================================
            Responsive
         ============================================================ */
@@ -1424,51 +1497,105 @@
         let quizTimerInterval = null;
         let quizSecondsLeft   = 0;
         let quizActive        = false;
-        const QUIZ_TIME_LIMIT = {{ $material->quiz_data['time_limit'] ?? 30 }};
+        let currentQuizAttempt = null;
+        const QUIZ_ALREADY_PASSED = {{ $passedQuizAttempt ? 'true' : 'false' }};
+        const QUIZ_TIME_LIMIT = {{ $quiz->time_limit ?? 30 }};
+        const QUIZ_ID = '{{ $quiz->id ?? '' }}';
+        const QUIZ_PASSING_SCORE = {{ $quiz->passing_score ?? 60 }};
+        const SUBCATEGORY_SLUG = '{{ $material->subcategory ? $material->subcategory->slug : ($material->subcategory_id ? \App\Models\Subcategory::find($material->subcategory_id)?->slug : '') }}';
+        console.log('SUBCATEGORY_SLUG initialized:', SUBCATEGORY_SLUG);
+        console.log('QUIZ_ALREADY_PASSED:', QUIZ_ALREADY_PASSED);
 
         function handleQuizTabClick(e) {
             if (quizActive) return; // already in quiz, allow
+            if (QUIZ_ALREADY_PASSED) {
+                // Already passed, manually switch to quiz tab
+                e.preventDefault();
+                document.querySelectorAll('.nav-tabs a').forEach(tab => tab.classList.remove('active'));
+                document.getElementById('quizTabLink').classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                document.getElementById('quiz').classList.add('active');
+                return;
+            }
+            // Not passed, show confirmation modal
             e.preventDefault();
             e.stopPropagation();
+            // Store the current active tab to revert if cancelled
+            window.previousActiveTab = document.querySelector('.nav-tabs li.active a');
+            window.previousActivePane = document.querySelector('.tab-pane.active');
             document.getElementById('quizConfirmModal').style.display = 'flex';
         }
 
         function cancelQuiz() {
             document.getElementById('quizConfirmModal').style.display = 'none';
+            // Revert to previous tab
+            if (window.previousActiveTab && window.previousActivePane) {
+                document.querySelectorAll('.nav-tabs a').forEach(tab => tab.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                window.previousActiveTab.classList.add('active');
+                window.previousActivePane.classList.add('active');
+            }
         }
 
-        function startQuiz() {
+        async function startQuiz() {
             // Hide modal
             document.getElementById('quizConfirmModal').style.display = 'none';
 
-            // Switch to quiz tab
-            quizActive = true;
-            $('#quizTabLink').tab('show');
+            try {
+                // Call API to start quiz
+                const response = await fetch('/api/quiz/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        quiz_id: QUIZ_ID
+                    })
+                });
 
-            // Activate lockdown
-            document.body.classList.add('quiz-active');
-            document.getElementById('quizLockOverlay').style.display = 'block';
+                const data = await response.json();
 
-            // Enter fullscreen — hides browser tab bar
-            const el = document.documentElement;
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-            else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+                if (!data.success) {
+                    alert('Gagal memulai quiz: ' + data.message);
+                    return;
+                }
 
-            // Start timer
-            quizSecondsLeft = QUIZ_TIME_LIMIT * 60;
-            updateTimerDisplay();
-            quizTimerInterval = setInterval(function() {
-                quizSecondsLeft--;
+                currentQuizAttempt = data.attempt;
+
+                // Switch to quiz tab
+                quizActive = true;
+                $('#quizTabLink').tab('show');
+
+                // Activate lockdown
+                document.body.classList.add('quiz-active');
+                document.getElementById('quizLockOverlay').style.display = 'block';
+
+                // Enter fullscreen — hides browser tab bar
+                const el = document.documentElement;
+                if (el.requestFullscreen) el.requestFullscreen();
+                else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+                else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+
+                // Start timer
+                quizSecondsLeft = QUIZ_TIME_LIMIT * 60;
                 updateTimerDisplay();
-                if (quizSecondsLeft <= 60) {
-                    document.getElementById('quizTimerDisplay').classList.add('urgent');
-                }
-                if (quizSecondsLeft <= 0) {
-                    clearInterval(quizTimerInterval);
-                    autoSubmitQuiz();
-                }
-            }, 1000);
+                quizTimerInterval = setInterval(function() {
+                    quizSecondsLeft--;
+                    updateTimerDisplay();
+                    if (quizSecondsLeft <= 60) {
+                        document.getElementById('quizTimerDisplay').classList.add('urgent');
+                    }
+                    if (quizSecondsLeft <= 0) {
+                        clearInterval(quizTimerInterval);
+                        autoSubmitQuiz();
+                    }
+                }, 1000);
+
+            } catch (error) {
+                console.error('Error starting quiz:', error);
+                alert('Terjadi kesalahan saat memulai quiz');
+            }
         }
 
         function updateTimerDisplay() {
@@ -1643,88 +1770,148 @@
         }
 
         // Submit Quiz & show result
-        function submitQuiz() {
+        async function submitQuiz() {
             const form = document.getElementById('quizForm');
             const resultPanel = document.getElementById('quizResult');
             if (!form || !resultPanel) return;
 
-            const cards = form.querySelectorAll('.quiz-card');
-            const passingScore = {{ $material->quiz_data['passing_score'] ?? 60 }};
-            const questions = @json($material->quiz_data['questions'] ?? []);
+            if (!currentQuizAttempt) {
+                alert('Quiz belum dimulai. Silakan mulai quiz terlebih dahulu.');
+                return;
+            }
 
-            let answered = 0;
-            let correct = 0;
+            const cards = form.querySelectorAll('.quiz-card');
+            const answers = [];
 
             cards.forEach((card, index) => {
                 const selected = card.querySelector('input[type="radio"]:checked');
-                const allOptions = card.querySelectorAll('.quiz-option');
-
-                // Reset styles
-                allOptions.forEach(opt => {
-                    opt.style.borderColor = '';
-                    opt.style.background = '';
-                    const key = opt.querySelector('.quiz-option-key');
-                    if (key) { key.style.background = ''; key.style.color = ''; key.style.borderColor = ''; }
-                });
-
-                const correctAnswer = questions[index] ? questions[index].correct_answer : null;
+                const questionId = card.dataset.questionId || '';
 
                 if (selected) {
-                    answered++;
-                    const isCorrect = selected.value === correctAnswer;
-                    if (isCorrect) correct++;
-
-                    // Highlight selected
-                    const selectedLabel = selected.closest('.quiz-option');
-                    if (selectedLabel) {
-                        selectedLabel.style.borderColor = isCorrect ? '#16a34a' : '#dc2626';
-                        selectedLabel.style.background  = isCorrect ? '#f0fdf4' : '#fff1f2';
-                        const key = selectedLabel.querySelector('.quiz-option-key');
-                        if (key) {
-                            key.style.background   = isCorrect ? '#16a34a' : '#dc2626';
-                            key.style.color        = '#fff';
-                            key.style.borderColor  = isCorrect ? '#16a34a' : '#dc2626';
-                        }
-                    }
-                }
-
-                // Show correct answer if wrong or unanswered
-                if (correctAnswer && (!selected || selected.value !== correctAnswer)) {
-                    allOptions.forEach(opt => {
-                        const input = opt.querySelector('input[type="radio"]');
-                        if (input && input.value === correctAnswer) {
-                            opt.style.borderColor = '#16a34a';
-                            opt.style.background  = '#f0fdf4';
-                            const key = opt.querySelector('.quiz-option-key');
-                            if (key) { key.style.background = '#16a34a'; key.style.color = '#fff'; key.style.borderColor = '#16a34a'; }
-                        }
+                    answers.push({
+                        quiz_question_id: questionId,
+                        user_answer: selected.value
                     });
                 }
             });
 
-            const total = cards.length;
-            const score = total > 0 ? Math.round((correct / total) * 100) : 0;
-            const passed = score >= passingScore;
+            try {
+                const response = await fetch('/api/quiz/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        quiz_attempt_id: currentQuizAttempt.id,
+                        answers: answers
+                    })
+                });
 
-            resultPanel.className = 'quiz-result ' + (passed ? 'passed' : 'failed');
-            resultPanel.innerHTML = `
-                <div class="result-score">${score}</div>
-                <div class="result-label">${passed ? '🎉 Selamat, kamu lulus!' : '😔 Belum lulus, coba lagi'}</div>
-                <div class="result-detail">${correct} dari ${total} jawaban benar &nbsp;·&nbsp; Nilai lulus minimal ${passingScore}</div>
-            `;
-            resultPanel.style.display = 'block';
+                const data = await response.json();
 
-            // Disable submit
-            const submitBtn = form.querySelector('.quiz-submit-btn');
-            if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; submitBtn.style.cursor = 'default'; }
+                if (!data.success) {
+                    alert('Gagal submit quiz: ' + data.message);
+                    return;
+                }
 
-            // End quiz lockdown (only if manually submitted, not auto-submit)
-            if (quizActive) endQuiz();
+                // Display results from backend
+                const score = data.score_percentage;
+                const passed = data.passed;
+                const passingScore = data.passing_score;
 
-            // Scroll to result
-            setTimeout(() => {
-                resultPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
+                // Highlight correct/incorrect answers
+                cards.forEach((card, index) => {
+                    const selected = card.querySelector('input[type="radio"]:checked');
+                    const allOptions = card.querySelectorAll('.quiz-option');
+
+                    // Reset styles
+                    allOptions.forEach(opt => {
+                        opt.style.borderColor = '';
+                        opt.style.background = '';
+                        const key = opt.querySelector('.quiz-option-key');
+                        if (key) { key.style.background = ''; key.style.color = ''; key.style.borderColor = ''; }
+                    });
+
+                    const correctAnswer = card.querySelector('input[type="radio"]')?.dataset.correct || null;
+
+                    if (selected) {
+                        const isCorrect = selected.value === correctAnswer;
+
+                        // Highlight selected
+                        const selectedLabel = selected.closest('.quiz-option');
+                        if (selectedLabel) {
+                            selectedLabel.style.borderColor = isCorrect ? '#16a34a' : '#dc2626';
+                            selectedLabel.style.background  = isCorrect ? '#f0fdf4' : '#fff1f2';
+                            const key = selectedLabel.querySelector('.quiz-option-key');
+                            if (key) {
+                                key.style.background   = isCorrect ? '#16a34a' : '#dc2626';
+                                key.style.color        = '#fff';
+                                key.style.borderColor  = isCorrect ? '#16a34a' : '#dc2626';
+                            }
+                        }
+                    }
+
+                    // Show correct answer if wrong or unanswered
+                    if (correctAnswer && (!selected || selected.value !== correctAnswer)) {
+                        allOptions.forEach(opt => {
+                            const input = opt.querySelector('input[type="radio"]');
+                            if (input && input.value === correctAnswer) {
+                                opt.style.borderColor = '#16a34a';
+                                opt.style.background  = '#f0fdf4';
+                                const key = opt.querySelector('.quiz-option-key');
+                                if (key) { key.style.background = '#16a34a'; key.style.color = '#fff'; key.style.borderColor = '#16a34a'; }
+                            }
+                        });
+                    }
+                });
+
+                const total = cards.length;
+                const correct = answers.filter(a => a.is_correct).length;
+
+                resultPanel.className = 'quiz-result ' + (passed ? 'passed' : 'failed');
+                resultPanel.innerHTML = `
+                    <div class="result-score">${score}</div>
+                    <div class="result-label">${passed ? '🎉 Selamat, kamu lulus!' : '😔 Belum lulus, coba lagi'}</div>
+                    <div class="result-detail">Nilai kamu: ${score}% &nbsp;·&nbsp; Nilai lulus minimal ${passingScore}%</div>
+                    ${passed && data.unlocked_next_material ? '<div class="result-detail" style="color:#16a34a;margin-top:8px">✨ Materi berikutnya telah terbuka!</div>' : ''}
+                `;
+                resultPanel.style.display = 'block';
+
+                // End quiz lockdown (only if manually submitted, not auto-submit)
+                if (quizActive) endQuiz();
+
+                // If passed and saved to database, redirect to mindmap
+                if (passed && data.saved) {
+                    // Disable submit button
+                    const submitBtn = form.querySelector('.quiz-submit-btn');
+                    if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; submitBtn.style.cursor = 'default'; }
+
+                    setTimeout(() => {
+                        console.log('SUBCATEGORY_SLUG:', SUBCATEGORY_SLUG);
+                        console.log('Redirecting to:', SUBCATEGORY_SLUG ? '/mindmap/' + SUBCATEGORY_SLUG : '/kelas');
+                        window.location.href = SUBCATEGORY_SLUG ? '/mindmap/' + SUBCATEGORY_SLUG : '/kelas';
+                    }, 3000);
+                } else if (!passed) {
+                    // If failed, allow retry by re-enabling submit button
+                    const submitBtn = form.querySelector('.quiz-submit-btn');
+                    if (submitBtn) { 
+                        submitBtn.disabled = false; 
+                        submitBtn.style.opacity = '1'; 
+                        submitBtn.style.cursor = 'pointer';
+                        submitBtn.textContent = 'Coba Lagi';
+                    }
+
+                    // Scroll to result for failed quiz
+                    setTimeout(() => {
+                        resultPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+
+            } catch (error) {
+                console.error('Error submitting quiz:', error);
+                alert('Terjadi kesalahan saat submit quiz');
+            }
         }
 
         // Toggle chat popup on mobile

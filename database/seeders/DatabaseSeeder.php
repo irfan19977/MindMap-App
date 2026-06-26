@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             SubcategorySeeder::class,
             MateriSeeder::class,
+            MindmapSeeder::class,
         ]);
     }
 }

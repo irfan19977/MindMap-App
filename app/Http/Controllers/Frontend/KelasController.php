@@ -176,7 +176,21 @@ class KelasController extends Controller
             ->limit(4)
             ->get();
 
-        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials'));
+        // Check if user has passed this quiz
+        $passedQuizAttempt = null;
+        if (Auth::check()) {
+            $quiz = $material->quizzes()->where('status', 'publish')->first();
+            if ($quiz) {
+                $passedQuizAttempt = \App\Models\QuizAttempt::where('user_id', Auth::id())
+                    ->where('quiz_id', $quiz->id)
+                    ->where('status', 'passed')
+                    ->with('quizAnswers.quizQuestion')
+                    ->latest()
+                    ->first();
+            }
+        }
+
+        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials', 'passedQuizAttempt'));
     }
 
     /**
@@ -189,10 +203,33 @@ class KelasController extends Controller
         }
 
         $user = Auth::user();
-        $completedMaterials = UserProgress::where('user_id', $user->id)
+
+        // Materi dianggap selesai/unlock jika quiz-nya lulus (status = passed)
+        $passedMaterialIds = \App\Models\QuizAttempt::where('user_id', $user->id)
+            ->where('status', 'passed')
+            ->with('quiz:id,material_id')
+            ->get()
+            ->pluck('quiz.material_id')
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        // Juga sertakan materi yang tidak punya quiz (langsung dianggap selesai jika pernah dibuka)
+        $progressedMaterials = UserProgress::where('user_id', $user->id)
             ->whereNotNull('completed_at')
             ->pluck('material_id')
             ->toArray();
+
+        // Material tanpa quiz yang sudah dibuka dianggap selesai
+        $materialsWithoutQuiz = \App\Models\Material::whereIn('id', $progressedMaterials)
+            ->whereDoesntHave('quizzes', function($q) {
+                $q->where('status', 'publish');
+            })
+            ->pluck('id')
+            ->toArray();
+
+        $completedMaterials = array_unique(array_merge($passedMaterialIds, $materialsWithoutQuiz));
 
         return response()->json(['completed_materials' => $completedMaterials]);
     }

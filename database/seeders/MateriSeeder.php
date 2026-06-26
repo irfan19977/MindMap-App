@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Subcategory;
 use App\Models\Material;
+use App\Models\Quiz;
+use App\Models\QuizQuestion;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -335,7 +337,7 @@ class MateriSeeder extends Seeder
                         ];
 
                         $slug = strtolower(str_replace(' ', '-', $title)) . '-' . $index;
-                        Material::firstOrCreate(
+                        $material = Material::firstOrCreate(
                             ['slug' => $slug],
                             [
                                 'subcategory_id' => $subcategory->id,
@@ -344,11 +346,32 @@ class MateriSeeder extends Seeder
                                 'learning_objectives' => 'Memahami konsep dasar ' . $title . ' dan dapat menerapkannya dalam soal latihan',
                                 'content' => json_encode($kontenMateri),
                                 'latihan_data' => $latihanData,
-                                'quiz_data' => $quizData,
                                 'status' => 'publish',
                                 'is_free' => true,
                             ]
                         );
+
+                        // Insert quiz ke tabel quizzes jika belum ada
+                        if ($material->wasRecentlyCreated && !$material->quizzes()->exists()) {
+                            $quiz = Quiz::create([
+                                'material_id' => $material->id,
+                                'title' => $quizData['title'],
+                                'description' => $quizData['description'],
+                                'time_limit' => $quizData['time_limit'],
+                                'passing_score' => $quizData['passing_score'],
+                                'status' => $quizData['status'],
+                            ]);
+
+                            foreach ($quizData['questions'] as $qIndex => $question) {
+                                QuizQuestion::create([
+                                    'quiz_id' => $quiz->id,
+                                    'question' => $question['question'],
+                                    'options' => $question['options'],
+                                    'correct_answer' => $question['correct_answer'],
+                                    'order_number' => $qIndex + 1,
+                                ]);
+                            }
+                        }
                     }
                 }
             }

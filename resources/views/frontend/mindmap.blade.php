@@ -167,24 +167,20 @@
     .mindmap-node.main-topic { background: #60a5fa; border-color: #1d4ed8; color: #fff; }
     .mindmap-node.sub-topic  { background: #86efac; border-color: #15803d; color: #1a1a1a; }
 
-    .mindmap-node.completed {
-        position: relative;
-    }
-
     .mindmap-node.completed::after {
         content: '✓';
         position: absolute;
-        top: -10px;
-        right: -10px;
+        top: -8px;
+        right: -8px;
         background: #3454d1;
         color: white;
-        width: 22px;
-        height: 22px;
+        width: 18px;
+        height: 18px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 12px;
+        font-size: 10px;
         font-weight: bold;
         border: 2px solid white;
         box-shadow: 0 2px 6px rgba(52,84,209,0.4);
@@ -1072,6 +1068,11 @@
                 // Add locked class if node is locked
                 if (lockedNodes.has(nodeData.id)) {
                     nodeClass += ' locked';
+                }
+                
+                // Add completed class if material is completed
+                if (nodeData.materialId && userCompletedMaterials.includes(nodeData.materialId)) {
+                    nodeClass += ' completed';
                 }
                 
                 node.className = nodeClass;

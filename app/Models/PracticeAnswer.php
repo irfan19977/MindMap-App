@@ -16,10 +16,12 @@ class PracticeAnswer extends Model
         'practice_question_id',
         'user_answer',
         'is_correct',
+        'points_earned',
     ];
 
     protected $casts = [
         'is_correct' => 'boolean',
+        'points_earned' => 'integer',
     ];
 
     /**
