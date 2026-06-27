@@ -69,16 +69,9 @@ DB_PASSWORD=your_password
 Jalankan migrasi database untuk membuat tabel yang diperlukan:
 
 ```bash
-php artisan migrate
+php artisan migrate:fresh --seed
 ```
 
-### 6. Seed Database (Opsional)
-
-Jika Anda ingin mengisi database dengan data contoh:
-
-```bash
-php artisan db:seed
-```
 
 ### 7. Kompilasi Aset Frontend
 
