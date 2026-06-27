@@ -13,6 +13,8 @@ use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\AIController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\CourseController;
 
 Route::get('/', function () {
     return view('frontend.index');
@@ -21,6 +23,11 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('frontend.about');
 });
+
+Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
+Route::get('/teacher/{slug}', [TeacherController::class, 'show'])->name('teacher.show');
+Route::get('/course/{slug}', [CourseController::class, 'show'])->name('course.show');
+
 Route::get('/detailk', function () {
     return view('frontend.kelas-detail');
 });
