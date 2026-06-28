@@ -1,0 +1,174 @@
+// DBML Schema for MindMap Education Platform
+
+Table users {
+  id uuid [pk]
+  name varchar
+  email varchar [unique]
+  email_verified_at timestamp
+  password varchar
+  remember_token varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table categories {
+  id uuid [pk]
+  name varchar
+  slug varchar [unique]
+  description text
+  status enum [default: 'draft'] // enum: publish, draft, inactive
+  cover_image varchar
+  order_number integer [default: 0]
+  is_featured boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table subcategories {
+  id uuid [pk]
+  category_id uuid [ref: > categories.id]
+  name varchar
+  slug varchar [unique]
+  grade_level enum // enum: sd, smp, sma, umum
+  curriculum longtext
+  status enum [default: 'draft'] // enum: publish, draft, inactive
+  cover_image varchar
+  order_number integer [default: 0]
+  is_featured boolean [default: false]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table materials {
+  id uuid [pk]
+  subcategory_id uuid [ref: > subcategories.id]
+  title varchar
+  slug varchar [unique]
+  description text // tentang materi tersebut
+  learning_objectives text // apa yang akan dipelajari
+  content longtext // detail materi (long text)
+  status enum [default: 'draft'] // enum: publish, draft, inactive
+  is_free boolean [default: true]
+  cover_image varchar
+  order_number integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table practice_questions {
+  id uuid [pk]
+  material_id uuid [ref: > materials.id]
+  question text
+  question_type enum [default: 'essay'] // enum: essay, multiple_choice
+  options json // untuk multiple choice: {"A": "option A", "B": "option B", "C": "option C", "D": "option D"}
+  correct_answer text
+  explanation text // pembahasan
+  points integer [default: 1]
+  order_number integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table quizzes {
+  id uuid [pk]
+  material_id uuid [ref: > materials.id]
+  title varchar
+  description text
+  time_limit integer // dalam menit
+  passing_score integer [default: 60]
+  status enum [default: 'draft'] // enum: publish, draft, inactive
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table quiz_questions {
+  id uuid [pk]
+  quiz_id uuid [ref: > quizzes.id]
+  question text
+  options json // {"A": "option A", "B": "option B", "C": "option C", "D": "option D"}
+  correct_answer varchar // A, B, C, or D
+  explanation text // pembahasan
+  points integer [default: 1]
+  order_number integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table mindmaps {
+  id uuid [pk]
+  material_id uuid [ref: > materials.id]
+  title varchar
+  structure json // struktur mindmap dalam format JSON
+  thumbnail varchar
+  status enum [default: 'draft'] // enum: publish, draft, inactive
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table user_progress {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  material_id uuid [ref: > materials.id]
+  progress_percentage decimal [default: 0]
+  completed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table quiz_attempts {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  quiz_id uuid [ref: > quizzes.id]
+  score decimal
+  total_points integer
+  earned_points integer
+  status enum // enum: passed, failed, in_progress
+  started_at timestamp
+  completed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table quiz_answers {
+  id uuid [pk]
+  quiz_attempt_id uuid [ref: > quiz_attempts.id]
+  quiz_question_id uuid [ref: > quiz_questions.id]
+  user_answer varchar
+  is_correct boolean
+  points_earned integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table practice_answers {
+  id uuid [pk]
+  user_id uuid [ref: > users.id]
+  practice_question_id uuid [ref: > practice_questions.id]
+  user_answer text
+  is_correct boolean
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Indexes
+Indexes {
+  categories.slug [unique]
+  categories.status
+  subcategories.slug [unique]
+  subcategories.category_id
+  subcategories.status
+  materials.slug [unique]
+  materials.subcategory_id
+  materials.status
+  practice_questions.material_id
+  quizzes.material_id
+  quiz_questions.quiz_id
+  mindmaps.material_id
+  user_progress.user_id
+  user_progress.material_id
+  quiz_attempts.user_id
+  quiz_attempts.quiz_id
+  quiz_answers.quiz_attempt_id
+  practice_answers.user_id
+  practice_answers.practice_question_id
+}
