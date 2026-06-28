@@ -140,29 +140,40 @@
                     </div>
                     <div class="canvas-viewport">
                         <div id="mindmap-canvas" class="canvas-container" style="width: 3000px; height: 3000px;">
-                            <svg id="connections-svg" class="connections-layer"></svg>
-
-                            <!-- Root node removed - start with empty canvas -->
-                            <!-- <div id="root-node" class="mindmap-node root" style="left: 1500px; top: 1500px;">
-                                <span class="node-label" id="root-text">Operating System</span>
-                                <div class="connection-anchor anchor-tl" data-anchor="tl" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-t" data-anchor="t" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-tr" data-anchor="tr" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-r" data-anchor="r" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-br" data-anchor="br" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-b" data-anchor="b" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-bl" data-anchor="bl" data-node-id="root-node"></div>
-                                <div class="connection-anchor anchor-l" data-anchor="l" data-node-id="root-node"></div>
-                            </div> -->
+                            <svg id="connections-svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:5;">
+                                <defs>
+                                    <marker id="arrow-solid" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto">
+                                        <polygon points="0 0, 12 4.5, 0 9" fill="#475569"/>
+                                    </marker>
+                                    <marker id="arrow-dashed" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto">
+                                        <polygon points="0 0, 12 4.5, 0 9" fill="#3b82f6"/>
+                                    </marker>
+                                    <marker id="arrow-preview" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto">
+                                        <polygon points="0 0, 12 4.5, 0 9" fill="#6366f1"/>
+                                    </marker>
+                                    <marker id="arrow-dotted" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto">
+                                        <polygon points="0 0, 12 4.5, 0 9" fill="#10b981"/>
+                                    </marker>
+                                    <marker id="arrow-thick" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto">
+                                        <polygon points="0 0, 12 4.5, 0 9" fill="#7c3aed"/>
+                                    </marker>
+                                    <marker id="arrow-selected" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="9" refX="11" refY="4.5" orient="auto">
+                                        <polygon points="0 0, 12 4.5, 0 9" fill="#f59e0b"/>
+                                    </marker>
+                                </defs>
+                            </svg>
+                            <!-- Separate overlay for handles, above nodes -->
+                            <svg id="handles-svg" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:100;"></svg>
 
                             <input type="hidden" id="connection-style" value="solid">
+                            <input type="hidden" id="connection-line-type" value="straight">
                         </div>
                     </div>
 
                     <div class="canvas-statusbar">
                         <span class="canvas-statusbar__item" id="status-tool"><i class="feather-move"></i> Pan</span>
                         <span class="canvas-statusbar__divider"></span>
-                        <span class="canvas-statusbar__item" id="status-line-style">Garis: Solid</span>
+                        <span class="canvas-statusbar__item" id="status-line-style">Garis: Dashed</span>
                         <span class="canvas-statusbar__divider"></span>
                         <span class="canvas-statusbar__item" id="status-nodes">0 node</span>
                     </div>
@@ -218,7 +229,29 @@
                                 <span>Pilih gaya garis, seret dari titik node sumber ke titik node tujuan</span>
                             </div>
 
-                            <p class="line-group-label">Dasar</p>
+                            <p class="line-group-label">Tipe Garis</p>
+                            <div class="line-style-grid line-style-grid--single">
+                                <div class="line-style-item" data-line-type="curved" onclick="setLineType('curved')" title="Garis Melengkung">
+                                    <div class="line-preview">
+                                        <svg width="40" height="30">
+                                            <path d="M5 15 Q20 5 35 15" stroke="#3b82f6" stroke-width="2" fill="none"/>
+                                        </svg>
+                                    </div>
+                                    <span class="line-label">Melengkung</span>
+                                </div>
+                                <div class="line-style-item selected" data-line-type="straight" onclick="setLineType('straight')" title="Garis Lurus">
+                                    <div class="line-preview">
+                                        <svg width="40" height="30">
+                                            <line x1="5" y1="15" x2="35" y2="15" stroke="#3b82f6" stroke-width="2"/>
+                                        </svg>
+                                    </div>
+                                    <span class="line-label">Lurus</span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="connection-line-type" value="straight">
+
+                            <p class="line-group-label">Gaya Garis</p>
                             <div class="line-style-grid">
                                 <div class="line-style-item selected" data-line-style="solid" onclick="setLineStyle('solid')" title="Garis Solid">
                                     <div class="line-preview">
@@ -339,200 +372,6 @@
         --mm-panel-width: 236px;
     }
 
-    .mindmap-node {
-        position: absolute;
-        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-        border: 2px solid #cbd5e1;
-        border-radius: 16px;
-        padding: 14px 20px;
-        cursor: default;
-        user-select: none;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.06);
-        transition: none !important;
-        z-index: 10;
-        min-width: 130px;
-        white-space: nowrap;
-        text-align: center;
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.5;
-        color: #1e293b;
-        backdrop-filter: blur(12px);
-        pointer-events: auto;
-    }
-
-    .mindmap-node:hover,
-    .mindmap-node:active,
-    .mindmap-node:focus {
-        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
-        border: 2px solid #cbd5e1 !important;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1), 0 2px 4px rgba(15, 23, 42, 0.06) !important;
-        transform: none !important;
-        color: #1e293b !important;
-        text-shadow: none !important;
-    }
-
-    .mindmap-node:hover *,
-    .mindmap-node:active *,
-    .mindmap-node:focus * {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        transform: none !important;
-        color: inherit !important;
-        text-shadow: none !important;
-    }
-
-    .mindmap-node:hover:not(.root) {
-        /* Hover effect disabled */
-    }
-
-    .mindmap-node.root {
-        transform: translate(-50%, -50%);
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #fff;
-        border: none;
-        font-weight: 600;
-        font-size: 15px;
-        padding: 16px 24px;
-        min-width: 160px;
-        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4), 0 4px 16px rgba(102, 126, 234, 0.3);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .mindmap-node.root:hover {
-        /* Hover effect disabled */
-    }
-
-    .mindmap-node.root .node-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 28px;
-        height: 28px;
-        background: rgba(255, 255, 255, 0.25);
-        border-radius: 8px;
-        font-size: 14px;
-        backdrop-filter: blur(4px);
-    }
-
-    .mindmap-node.root .node-label {
-        flex: 1;
-    }
-
-    .mindmap-node.selected {
-        border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 12px 32px rgba(59, 130, 246, 0.25);
-        transform: none !important;
-    }
-
-    .mindmap-node.connection-source {
-        border-color: #10b981;
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
-        animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
-        }
-        50% {
-            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0.4);
-        }
-        100% {
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25);
-        }
-    }
-
-    .mindmap-node.subcategory {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-        color: white;
-        border: none;
-        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
-        transition: none;
-    }
-
-    .mindmap-node.subcategory:hover {
-        /* Hover effect disabled */
-    }
-
-    .mindmap-node.material {
-        background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
-        color: white;
-        border: none;
-        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35), 0 3px 10px rgba(255, 107, 53, 0.2);
-        backdrop-filter: blur(10px);
-        transition: none !important;
-    }
-
-    .mindmap-node.material:hover,
-    .mindmap-node.material:active,
-    .mindmap-node.material:focus,
-    .mindmap-node.material:hover *,
-    .mindmap-node.material:active *,
-    .mindmap-node.material:focus * {
-        background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%) !important;
-        color: white !important;
-        border: none !important;
-        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35), 0 3px 10px rgba(255, 107, 53, 0.2) !important;
-        transform: none !important;
-        text-shadow: none !important;
-    }
-
-    .mindmap-node.completed {
-        position: relative;
-    }
-
-    .mindmap-node.completed::after {
-        content: '✓';
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: bold;
-        border: 3px solid white;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-    }
-
-    .mindmap-node.sub-topic {
-        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-        color: #92400e;
-        border-color: #f59e0b;
-        font-size: 13px;
-        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
-        transition: none;
-    }
-
-    .mindmap-node.sub-topic:hover {
-        /* Hover effect disabled */
-    }
-
-    .mindmap-node.main-topic {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-        color: white;
-        border: none;
-        font-weight: bold;
-        font-size: 15px;
-        box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-        transition: none;
-    }
-
-    .mindmap-node.main-topic:hover {
-        /* Hover effect disabled */
-    }
 
     .completion-toggle {
         position: absolute;
@@ -644,8 +483,6 @@
 
     .connection-line:hover {
         cursor: pointer;
-        stroke-width: 3;
-        filter: drop-shadow(0 0 3px rgba(59, 130, 246, 0.3));
     }
 
     .connection-line.manual-temp-line {
@@ -661,6 +498,20 @@
             stroke-dashoffset: -10;
         }
     }
+
+
+    /* Selected connection styling */
+    .jtk-connector.selected {
+        stroke: #10b981 !important;
+        stroke-width: 4 !important;
+        filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
+    }
+
+    #mindmap-canvas {
+        position: relative;
+        transform-origin: 0 0;
+    }
+
 
     .control-point {
         transition: all 0.2s ease;
@@ -702,54 +553,6 @@
     .resize-handle.sw { bottom: -5px; left: -5px; cursor: sw-resize; }
     .resize-handle.w { top: 50%; left: -5px; transform: translateY(-50%); cursor: w-resize; }
 
-    /* Connection anchor points */
-    .connection-anchor {
-        position: absolute;
-        width: 10px;
-        height: 10px;
-        background: rgba(59, 130, 246, 0.9);
-        border: 2px solid white;
-        border-radius: 50%;
-        cursor: crosshair;
-        z-index: 25;
-        opacity: 0;
-        transition: all 0.25s ease;
-        pointer-events: none;
-        box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
-    }
-
-    .mindmap-node:hover .connection-anchor,
-    .mindmap-node.show-anchors .connection-anchor {
-        /* Anchor visibility disabled */
-    }
-
-    .connection-anchor:hover {
-        /* Hover effect disabled */
-    }
-
-    .connection-anchor.active {
-        background: #10b981;
-        animation: anchor-pulse 1s infinite;
-    }
-
-    @keyframes anchor-pulse {
-        0%, 100% {
-            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-        }
-        50% {
-            box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
-        }
-    }
-
-    /* Anchor positions */
-    .anchor-tl { top: -6px; left: -6px; }
-    .anchor-t { top: -6px; left: 50%; transform: translateX(-50%); }
-    .anchor-tr { top: -6px; right: -6px; }
-    .anchor-r { top: 50%; right: -6px; transform: translateY(-50%); }
-    .anchor-br { bottom: -6px; right: -6px; }
-    .anchor-b { bottom: -6px; left: 50%; transform: translateX(-50%); }
-    .anchor-bl { bottom: -6px; left: -6px; }
-    .anchor-l { top: 50%; left: -6px; transform: translateY(-50%); }
 
     /* Temporary connection line */
     .temp-connection-line {
@@ -1532,595 +1335,414 @@
         box-shadow: 0 1px 0 rgba(0,0,0,0.1);
     }
 
+    /* ─── Mind Map Node — roadmap.sh style ─── */
+    .mindmap-node {
+        position: absolute;
+        min-width: 150px;
+        max-width: 240px;
+        padding: 10px 18px;
+        border-radius: 8px;
+        border: 2px solid transparent;
+        cursor: move;
+        user-select: none;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        box-shadow: 3px 3px 0 rgba(0,0,0,0.25);
+        transition: box-shadow 0.15s ease, transform 0.1s ease, filter 0.15s ease;
+    }
+
+    .mindmap-node:hover {
+        filter: brightness(1.06);
+        box-shadow: 4px 4px 0 rgba(0,0,0,0.3);
+    }
+
+    .mindmap-node.selected {
+        box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--mm-primary), 3px 3px 0 rgba(0,0,0,0.25);
+    }
+
+    /* Fill colors per type */
+    .mindmap-node.material  { background: #fde047; border-color: #ca8a04; color: #1a1a1a; }
+    .mindmap-node.main-topic { background: #60a5fa; border-color: #1d4ed8; color: #fff; }
+    .mindmap-node.sub-topic  { background: #86efac; border-color: #15803d; color: #1a1a1a; }
+
+    .node-label {
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.3;
+        word-break: break-word;
+        pointer-events: none;
+    }
+
+    /* Connection anchors on each side */
+    .connection-anchor {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border: 2px solid #64748b;
+        border-radius: 50%;
+        cursor: crosshair;
+        z-index: 15;
+        opacity: 0;
+        transition: opacity 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .mindmap-node:hover .connection-anchor,
+    .mindmap-node.selected .connection-anchor {
+        opacity: 1;
+    }
+
+    .endpoint-drag-active .connection-anchor {
+        opacity: 1 !important;
+        background: #fef3c7;
+        border-color: #f59e0b;
+    }
+
+    .mindmap-node.endpoint-drag-hover {
+        outline: 2px dashed #f59e0b;
+        outline-offset: 2px;
+    }
+
+    .connection-anchor:hover {
+        background: var(--mm-primary);
+        border-color: var(--mm-primary);
+        opacity: 1 !important;
+        transform: scale(1.3);
+    }
+
+    .anchor-t  { top: -6px;  left: 50%;  transform: translateX(-50%); }
+    .anchor-b  { bottom: -6px; left: 50%; transform: translateX(-50%); }
+    .anchor-l  { left: -6px; top: 50%;   transform: translateY(-50%); }
+    .anchor-r  { right: -6px; top: 50%;  transform: translateY(-50%); }
+    .anchor-t:hover  { transform: translateX(-50%) scale(1.3); }
+    .anchor-b:hover  { transform: translateX(-50%) scale(1.3); }
+    .anchor-l:hover  { transform: translateY(-50%) scale(1.3); }
+    .anchor-r:hover  { transform: translateY(-50%) scale(1.3); }
+
 </style>
 
 <script>
+    // UI State
     let selectedCategory = null;
-    let selectedNode = null;
-    let selectedNodeForConnection = null;
-    let selectedConnection = null;
     let nodeIdCounter = 1;
-    let connections = [];
-    let nodes = [];
-    let isDragging = false;
-    let draggedNode = null;
-    let dragOffset = { x: 0, y: 0 };
+    let selectedNode = null;
+    let selectedConnection = null;
+    let selectedNodeForConnection = null;
     let connectionMode = false;
     let manualDrawingMode = false;
-    let currentDrawingPath = [];
-    let drawingStartNode = null;
-    let tempConnectionLine = null;
-    let controlPoints = [];
-    let draggedControlPoint = null;
+    let isRestoringConnections = false;
+    const GRID_SIZE = 20;
 
-    // Drag-to-connect state
-    let isDraggingConnection = false;
-    let dragConnectionStartNode = null;
-    let dragConnectionStartAnchor = null;
-    let dragConnectionTempLine = null;
-    let dragConnectionCurrentTarget = null;
+    // Data storage for manual coordinate system
+    let nodes = [];
+    let connections = [];
 
-    // Draw.io features
-    let currentTool = 'pan';
+    // Zoom and Pan state
     let zoomLevel = 1;
     let panOffset = { x: 0, y: 0 };
     let isPanning = false;
     let panStart = { x: 0, y: 0 };
-    let selectedShape = null;
-
-    // Grid and canvas settings (draw.io style)
-    const GRID_SIZE = 10; // 10px grid
-    let gridEnabled = true;
+    let currentTool = 'select';
     let spacePressed = false;
 
-    // Initialize canvas
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeCanvas();
-    });
+    // Node dragging state
+    let isDraggingNode = false;
+    let draggedNode = null;
+    let dragOffset = { x: 0, y: 0 };
 
-    function initializeCanvas() {
-        const canvas = document.getElementById('mindmap-canvas');
-        const canvasArea = document.querySelector('.drawio-canvas-area');
-        
-        // Center canvas horizontally at 100% zoom
-        const canvasWidth = 3000; // Canvas width from HTML
-        const viewportWidth = canvasArea.clientWidth;
-        const centerOffset = (viewportWidth - canvasWidth) / 2;
-        panOffset.x = centerOffset;
-        panOffset.y = 0; // Keep at top
-        
-        // Apply initial positioning
-        updateZoom();
-        
-        // Mouse events for dragging nodes
-        canvas.addEventListener('mousedown', handleMouseDown);
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        
-        // Canvas click for manual drawing
-        canvas.addEventListener('click', handleCanvasClick);
-        
-        // Prevent context menu on canvas
-        canvas.addEventListener('contextmenu', e => e.preventDefault());
-        
-        // Mouse wheel for zoom (draw.io style)
-        canvasArea.addEventListener('wheel', handleWheel, { passive: false });
-        
-        // Spacebar for pan mode (draw.io style)
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('keyup', handleKeyUp);
-        
-        // Pan with middle mouse button
-        canvasArea.addEventListener('mousedown', handleMiddleMousePan);
-        
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Mindmap initialized');
+
         // Initialize drag and drop
         initializeDragDrop();
 
-        // Initialize line style selection
-        setLineStyle('solid');
-        setTool('pan');
-        updateNodeCount();
+        // Setup zoom and pan event listeners
+        const canvasArea = document.querySelector('.drawio-canvas-area');
+        const canvasViewport = document.querySelector('.canvas-viewport');
 
-        // Add event listener to save button
-        const saveBtn = document.getElementById('save-mindmap-btn');
-        if (saveBtn) {
-            saveBtn.addEventListener('click', saveMindmap);
-        }
-
-        // Add click listener to root node (disabled - no root node)
-        // const rootNode = document.getElementById('root-node');
-        // if (rootNode) {
-        //     rootNode.addEventListener('click', function(e) {
-        //         e.stopPropagation();
-        //         selectNode('root-node');
-        //     });
-
-        //     // Add event listeners to root node anchors
-        //     const rootAnchors = rootNode.querySelectorAll('.connection-anchor');
-        //     rootAnchors.forEach(anchor => {
-        //         const anchorPos = anchor.dataset.anchor;
-        //         anchor.addEventListener('mousedown', (e) => handleAnchorMouseDown(e, 'root-node', anchorPos));
-        //     });
-        // }
-
-        // Initialize the Operating System mind map structure (disabled - start with empty canvas)
-        // setTimeout(() => {
-        //     initializeOperatingSystemMindmap();
-        // }, 100);
-    }
-
-    // Initialize mind map with Operating System structure
-    function initializeOperatingSystemMindmap() {
-        // Clear existing nodes and connections
-        const existingNodes = document.querySelectorAll('.mindmap-node:not(.root)');
-        existingNodes.forEach(node => node.remove());
-        nodes.length = 0;
-        connections.length = 0;
-        updateConnections();
-
-        const centerX = 1500;
-        const centerY = 1500;
-
-        // Main topic nodes
-        const windowsNode = addMaterialNode('windows', 'Windows', '', centerX - 400, centerY - 300, 'main-topic');
-        const unixLinuxNode = addMaterialNode('unix-linux', 'Unix/Linux', '', centerX - 400, centerY, 'main-topic');
-        const programmingNode = addMaterialNode('programming', 'Learn a Programming Language', '', centerX - 400, centerY + 300, 'main-topic');
-        const terminalNode = addMaterialNode('terminal', 'Terminal Knowledge', '', centerX + 400, centerY - 300, 'main-topic');
-        const processNode = addMaterialNode('process', 'Process Monitoring', '', centerX + 400, centerY, 'main-topic');
-        const performanceNode = addMaterialNode('performance', 'Performance Monitoring', '', centerX + 400, centerY + 300, 'main-topic');
-        const networkingNode = addMaterialNode('networking', 'Networking Tools', '', centerX, centerY - 400, 'main-topic');
-        const textNode = addMaterialNode('text', 'Text Manipulation', '', centerX, centerY + 400, 'main-topic');
-
-        // Unix/Linux sub-topics
-        const freebsdNode = addMaterialNode('freebsd', 'FreeBSD', '', centerX - 600, centerY - 100, 'sub-topic');
-        const openbsdNode = addMaterialNode('openbsd', 'OpenBSD', '', centerX - 600, centerY - 50, 'sub-topic');
-        const netbsdNode = addMaterialNode('netbsd', 'NetBSD', '', centerX - 600, centerY, 'sub-topic');
-        const ubuntuNode = addMaterialNode('ubuntu', 'Ubuntu / Debian', '', centerX - 600, centerY + 50, 'sub-topic');
-        const suseNode = addMaterialNode('suse', 'SUSE Linux', '', centerX - 600, centerY + 100, 'sub-topic');
-        const rhelNode = addMaterialNode('rhel', 'RHEL / Derivatives', '', centerX - 600, centerY + 150, 'sub-topic');
-
-        // Programming sub-topics
-        const pythonNode = addMaterialNode('python', 'Python', '', centerX - 600, centerY + 350, 'sub-topic');
-        const rubyNode = addMaterialNode('ruby', 'Ruby', '', centerX - 600, centerY + 400, 'sub-topic');
-        const goNode = addMaterialNode('go', 'Go', '', centerX - 600, centerY + 450, 'sub-topic');
-        const rustNode = addMaterialNode('rust', 'Rust', '', centerX - 600, centerY + 500, 'sub-topic');
-        const jsNode = addMaterialNode('js', 'JavaScript / Node.js', '', centerX - 600, centerY + 550, 'sub-topic');
-
-        // Terminal Knowledge sub-topics
-        const scriptingNode = addMaterialNode('scripting', 'Scripting', '', centerX + 600, centerY - 350, 'main-topic');
-        const editorsNode = addMaterialNode('editors', 'Editors', '', centerX + 600, centerY - 250, 'main-topic');
-
-        // Scripting sub-topics
-        const bashNode = addMaterialNode('bash', 'Bash', '', centerX + 800, centerY - 380, 'sub-topic');
-        const powershellNode = addMaterialNode('powershell', 'PowerShell', '', centerX + 800, centerY - 330, 'sub-topic');
-
-        // Editors sub-topics
-        const vimNode = addMaterialNode('vim', 'Vim / Nano / Emacs', '', centerX + 800, centerY - 280, 'sub-topic');
-
-        // Connect root to main topics
-        connectNodesWithAnchors('root-node', 'l', windowsNode.id, 'r', 'hierarchy');
-        connectNodesWithAnchors('root-node', 'l', unixLinuxNode.id, 'r', 'hierarchy');
-        connectNodesWithAnchors('root-node', 'l', programmingNode.id, 'r', 'hierarchy');
-        connectNodesWithAnchors('root-node', 'r', terminalNode.id, 'l', 'hierarchy');
-        connectNodesWithAnchors('root-node', 'r', processNode.id, 'l', 'hierarchy');
-        connectNodesWithAnchors('root-node', 'r', performanceNode.id, 'l', 'hierarchy');
-        connectNodesWithAnchors('root-node', 't', networkingNode.id, 'b', 'hierarchy');
-        connectNodesWithAnchors('root-node', 'b', textNode.id, 't', 'hierarchy');
-
-        // Connect Unix/Linux to sub-topics
-        connectNodesWithAnchors(unixLinuxNode.id, 'l', freebsdNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(unixLinuxNode.id, 'l', openbsdNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(unixLinuxNode.id, 'l', netbsdNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(unixLinuxNode.id, 'l', ubuntuNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(unixLinuxNode.id, 'l', suseNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(unixLinuxNode.id, 'l', rhelNode.id, 'r', 'sub-topic');
-
-        // Connect Programming to sub-topics
-        connectNodesWithAnchors(programmingNode.id, 'l', pythonNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(programmingNode.id, 'l', rubyNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(programmingNode.id, 'l', goNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(programmingNode.id, 'l', rustNode.id, 'r', 'sub-topic');
-        connectNodesWithAnchors(programmingNode.id, 'l', jsNode.id, 'r', 'sub-topic');
-
-        // Connect Terminal Knowledge to sub-topics
-        connectNodesWithAnchors(terminalNode.id, 'r', scriptingNode.id, 'l', 'hierarchy');
-        connectNodesWithAnchors(terminalNode.id, 'r', editorsNode.id, 'l', 'hierarchy');
-
-        // Connect Scripting to sub-topics
-        connectNodesWithAnchors(scriptingNode.id, 'r', bashNode.id, 'l', 'sub-topic');
-        connectNodesWithAnchors(scriptingNode.id, 'r', powershellNode.id, 'l', 'sub-topic');
-
-        // Connect Editors to sub-topics
-        connectNodesWithAnchors(editorsNode.id, 'r', vimNode.id, 'l', 'sub-topic');
-
-        // Mark some nodes as completed (simulating the checkmarks in the image)
-        setTimeout(() => {
-            const completedNodes = [pythonNode.id, bashNode.id, vimNode.id, ubuntuNode.id];
-            completedNodes.forEach(nodeId => {
-                const node = document.getElementById(nodeId);
-                const nodeData = nodes.find(n => n.id === nodeId);
-                if (node && nodeData) {
-                    nodeData.completed = true;
-                    node.classList.add('completed');
-                    const toggle = node.querySelector('.completion-toggle');
-                    if (toggle) toggle.classList.add('completed');
+        // Wheel: Ctrl+scroll = zoom around cursor, plain scroll = pan canvas
+        canvasViewport.addEventListener('wheel', function(e) {
+            e.preventDefault();
+            if (e.ctrlKey) {
+                const rect = canvasViewport.getBoundingClientRect();
+                const mx = e.clientX - rect.left;
+                const my = e.clientY - rect.top;
+                if (e.deltaY < 0) {
+                    zoomAroundPoint(zoomLevel * 1.1, mx, my);
+                } else {
+                    zoomAroundPoint(zoomLevel / 1.1, mx, my);
                 }
-            });
-        }, 100);
-    }
+            } else {
+                // Plain scroll pans the canvas
+                panOffset.x -= e.deltaX;
+                panOffset.y -= e.deltaY;
+                updateZoom();
+            }
+        }, { passive: false });
 
-    // Grid snapping function (draw.io style)
+        // Mouse events for panning
+        canvasViewport.addEventListener('mousedown', startPan);
+        document.addEventListener('mousemove', doPan);
+        document.addEventListener('mouseup', endPan);
+
+        // Mouse events for node dragging
+        document.addEventListener('mousemove', function(e) {
+            if (isDraggingNode && draggedNode) {
+                e.preventDefault();
+                
+                const canvas = document.getElementById('mindmap-canvas');
+                const canvasRect = canvas.getBoundingClientRect();
+                
+                // Calculate new position relative to canvas, accounting for zoom
+                const x = (e.clientX - canvasRect.left - dragOffset.x) / zoomLevel;
+                const y = (e.clientY - canvasRect.top - dragOffset.y) / zoomLevel;
+                
+                // Snap to grid
+                const snappedX = snapToGrid(x);
+                const snappedY = snapToGrid(y);
+                
+                // Update node position
+                draggedNode.style.left = snappedX + 'px';
+                draggedNode.style.top = snappedY + 'px';
+                
+                // Update node data
+                const nodeData = nodes.find(n => n.id === draggedNode.id);
+                if (nodeData) {
+                    nodeData.x = snappedX;
+                    nodeData.y = snappedY;
+                }
+                
+                // Update connections
+                updateConnections();
+            }
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            if (isDraggingNode && draggedNode) {
+                draggedNode.style.cursor = 'move';
+                isDraggingNode = false;
+                draggedNode = null;
+            }
+        });
+
+        // Keyboard events for spacebar panning
+        // Delete key: remove selected connection or node
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && !e.target.matches('input, textarea')) {
+                e.preventDefault();
+                spacePressed = true;
+                canvasViewport.style.cursor = 'grab';
+            }
+            if ((e.key === 'Delete' || e.key === 'Backspace') && !e.target.matches('input, textarea')) {
+                if (selectedConnectionId) {
+                    deleteConnection(selectedConnectionId);
+                } else if (selectedNode && selectedNode !== 'root-node') {
+                    const node = document.getElementById(selectedNode);
+                    if (node) removeNode(node);
+                }
+            }
+        });
+
+        document.addEventListener('keyup', function(e) {
+            if (e.code === 'Space') {
+                spacePressed = false;
+                canvasViewport.style.cursor = '';
+            }
+        });
+    });
+
+
+    // ============================================
+    // UI FUNCTIONS (Category & Materials)
+    // ============================================
+
     function snapToGrid(value) {
-        if (!gridEnabled) return value;
         return Math.round(value / GRID_SIZE) * GRID_SIZE;
     }
 
-    // Mouse wheel zoom handler
-    function handleWheel(e) {
-        if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? 0.99 : 1.01;
-            zoomLevel = Math.max(0.1, Math.min(5, zoomLevel * delta));
-            updateZoom();
-        }
+    function filterCategories(query) {
+        const q = (query || '').trim().toLowerCase();
+        document.querySelectorAll('.category-group').forEach(group => {
+            const buttons = group.querySelectorAll('.category-btn');
+            let visible = false;
+            buttons.forEach(btn => {
+                const text = btn.querySelector('.category-text')?.textContent.toLowerCase() || '';
+                const match = !q || text.includes(q);
+                btn.style.display = match ? '' : 'none';
+                if (match) visible = true;
+            });
+            group.classList.toggle('is-hidden', !visible);
+        });
     }
 
-    function isTypingInField() {
-        const el = document.activeElement;
-        if (!el) return false;
-        const tag = el.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return true;
-        return el.isContentEditable;
-    }
-
-    // Spacebar handlers for pan mode
-    function handleKeyDown(e) {
-        if (isTypingInField()) return;
-
-        if (e.code === 'Space' && !spacePressed) {
-            e.preventDefault();
-            spacePressed = true;
-            document.getElementById('mindmap-canvas').style.cursor = 'grab';
-        } else if (e.key === 'Delete' || e.key === 'Backspace') {
-            e.preventDefault();
-            deleteSelectedElement();
-        }
-    }
-
-    function handleKeyUp(e) {
-        if (isTypingInField()) return;
-
-        if (e.code === 'Space') {
-            spacePressed = false;
-            document.getElementById('mindmap-canvas').style.cursor = 'default';
-        }
-    }
-
-    // Middle mouse pan handler
-    function handleMiddleMousePan(e) {
-        if (e.button === 1) { // Middle mouse button
-            e.preventDefault();
-            startPan(e);
-        }
-    }
-
-    function handleControlPointMouseDown(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        
-        const connectionId = e.target.getAttribute('data-connection-id');
-        const type = e.target.getAttribute('data-type');
-        const index = e.target.getAttribute('data-index');
-        
-        draggedControlPoint = {
-            element: e.target,
-            connectionId: connectionId,
-            type: type,
-            index: index ? parseInt(index) : null,
-            startX: parseFloat(e.target.getAttribute('cx')),
-            startY: parseFloat(e.target.getAttribute('cy'))
-        };
-        
-        console.log('Started dragging control point:', draggedControlPoint);
-    }
-
-    function handleAnchorMouseDown(e, nodeId, anchorPos) {
-        e.stopPropagation();
-        e.preventDefault();
-        
-        console.log('Started dragging connection from anchor:', nodeId, anchorPos);
-        
-        isDraggingConnection = true;
-        dragConnectionStartNode = nodeId;
-        dragConnectionStartAnchor = anchorPos;
-        
-        // Get anchor position
-        const node = document.getElementById(nodeId);
-        const anchor = node.querySelector(`.connection-anchor[data-anchor="${anchorPos}"]`);
-        const canvas = document.getElementById('mindmap-canvas');
-        const canvasRect = canvas.getBoundingClientRect();
-        const anchorRect = anchor.getBoundingClientRect();
-        
-        const startX = (anchorRect.left + anchorRect.width / 2 - canvasRect.left) / zoomLevel;
-        const startY = (anchorRect.top + anchorRect.height / 2 - canvasRect.top) / zoomLevel;
-        
-        // Create temporary line
-        const svg = document.getElementById('connections-svg');
-        dragConnectionTempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        dragConnectionTempLine.setAttribute('x1', startX);
-        dragConnectionTempLine.setAttribute('y1', startY);
-        dragConnectionTempLine.setAttribute('x2', startX);
-        dragConnectionTempLine.setAttribute('y2', startY);
-        dragConnectionTempLine.setAttribute('class', 'temp-connection-line');
-        svg.appendChild(dragConnectionTempLine);
-        
-        // Mark the anchor as active
-        anchor.classList.add('active');
-        
-        // Switch to connections tab to show line styles
-        switchRightPanelTab('connections');
-    }
-
-    function handleMouseDown(e) {
-        // Find the closest mindmap-node parent
-        const node = e.target.closest('.mindmap-node');
-        
-        if (node) {
-            if (e.button === 0) { // Left click
-                e.preventDefault(); // Prevent text selection
-                isDragging = true;
-                draggedNode = node;
-                
-                // Get current position of the node
-                const nodeStyle = window.getComputedStyle(node);
-                const currentLeft = parseInt(nodeStyle.left) || 0;
-                const currentTop = parseInt(nodeStyle.top) || 0;
-                
-                // Calculate offset from mouse to node position
-                const canvasRect = document.getElementById('mindmap-canvas').getBoundingClientRect();
-                dragOffset.x = e.clientX - canvasRect.left - currentLeft;
-                dragOffset.y = e.clientY - canvasRect.top - currentTop;
-                
-                draggedNode.style.zIndex = 1000;
-                draggedNode.style.cursor = 'grabbing';
-                console.log('Started dragging node:', node.id);
-                console.log('Current position:', { left: currentLeft, top: currentTop });
-                console.log('Drag offset:', dragOffset);
-            }
+    function updateCategoryChip(name) {
+        const chip = document.getElementById('selected-category-label');
+        const text = document.getElementById('selected-category-text');
+        if (!chip || !text) return;
+        if (name) {
+            text.textContent = name;
+            chip.classList.remove('d-none');
         } else {
-            // No node clicked - check for pan (spacebar or pan tool)
-            if (e.button === 0 && (spacePressed || currentTool === 'pan')) {
-                e.preventDefault();
-                startPan(e);
-            }
+            chip.classList.add('d-none');
         }
     }
 
-    function handleMouseMove(e) {
-        if (isPanning) {
-            // Handle panning
-            doPan(e);
-            return;
-        }
-        
-        if (isDraggingConnection && dragConnectionTempLine) {
-            // Handle dragging connection line
-            const canvas = document.getElementById('mindmap-canvas');
-            const canvasRect = canvas.getBoundingClientRect();
-            const x = (e.clientX - canvasRect.left) / zoomLevel;
-            const y = (e.clientY - canvasRect.top) / zoomLevel;
-            
-            // Update temporary line end position
-            dragConnectionTempLine.setAttribute('x2', x);
-            dragConnectionTempLine.setAttribute('y2', y);
-            
-            // Check if hovering over a node (not the start node)
-            const hoveredNode = e.target.closest('.mindmap-node');
-            if (hoveredNode && hoveredNode.id !== dragConnectionStartNode) {
-                // Show anchors on the hovered node (disabled)
-                if (dragConnectionCurrentTarget !== hoveredNode.id) {
-                    // Hide anchors on previous target
-                    if (dragConnectionCurrentTarget) {
-                        const prevTarget = document.getElementById(dragConnectionCurrentTarget);
-                        if (prevTarget) prevTarget.classList.remove('show-anchors');
-                    }
-                    // Show anchors on new target (disabled)
-                    // hoveredNode.classList.add('show-anchors');
-                    dragConnectionCurrentTarget = hoveredNode.id;
-                }
-            } else {
-                // Hide anchors if not hovering over a valid target
-                if (dragConnectionCurrentTarget) {
-                    const prevTarget = document.getElementById(dragConnectionCurrentTarget);
-                    if (prevTarget) prevTarget.classList.remove('show-anchors');
-                    dragConnectionCurrentTarget = null;
-                }
+    function toggleCategory(categoryId, categoryName) {
+        selectedCategory = categoryId;
+        updateCategoryChip(categoryName);
+
+        // Update UI - remove active class from all buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Add active class to selected button
+        document.querySelector(`[data-category-id="${categoryId}"]`).classList.add('active');
+
+        // Hide all category children first
+        document.querySelectorAll('.category-children').forEach(children => {
+            children.classList.remove('show');
+        });
+
+        // Reset all arrows
+        document.querySelectorAll('.category-arrow').forEach(arrow => {
+            arrow.style.transform = 'rotate(0deg)';
+        });
+
+        // Show children of the selected category
+        const childrenContainer = document.getElementById(`category-children-${categoryId}`);
+        if (childrenContainer) {
+            childrenContainer.classList.add('show');
+            // Rotate the arrow
+            const arrow = document.querySelector(`[data-category-id="${categoryId}"] .category-arrow`);
+            if (arrow) {
+                arrow.style.transform = 'rotate(180deg)';
             }
-            
-        } else if (draggedControlPoint) {
-            // Handle control point dragging
-            const canvas = document.getElementById('mindmap-canvas');
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Update control point position
-            draggedControlPoint.element.setAttribute('cx', x);
-            draggedControlPoint.element.setAttribute('cy', y);
-            
-            // Update connection data
-            updateConnectionFromControlPoint(draggedControlPoint, x, y);
-            
-        } else if (isDragging && draggedNode) {
-            // Handle node dragging with grid snapping (draw.io style)
-            const canvasRect = document.getElementById('mindmap-canvas').getBoundingClientRect();
-            
-            // Calculate new position using the corrected offset
-            let x = e.clientX - canvasRect.left - dragOffset.x;
-            let y = e.clientY - canvasRect.top - dragOffset.y;
-            
-            // Apply grid snapping for more precise alignment
-            x = snapToGrid(x);
-            y = snapToGrid(y);
-            
-            // Strict boundaries - prevent dragging beyond canvas edges
-            const minBound = 0;
-            const maxX = canvasRect.width - draggedNode.offsetWidth;
-            const maxY = canvasRect.height - draggedNode.offsetHeight;
-            
-            const constrainedX = Math.max(minBound, Math.min(x, maxX));
-            const constrainedY = Math.max(minBound, Math.min(y, maxY));
-            
-            draggedNode.style.left = constrainedX + 'px';
-            draggedNode.style.top = constrainedY + 'px';
-            
-            // Update node data
-            const nodeData = nodes.find(n => n.id === draggedNode.id);
-            if (nodeData) {
-                nodeData.x = constrainedX;
-                nodeData.y = constrainedY;
-            }
-            
-            updateConnections();
         }
+
+        // Clear canvas and materials when parent category is selected
+        resetCanvas();
+        document.getElementById('materials-list').innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state__icon"><i class="feather-inbox"></i></div>
+                <p class="empty-state__title">Belum ada materi</p>
+                <p class="empty-state__hint">Pilih subkategori untuk memuat daftar materi</p>
+            </div>
+        `;
+        document.getElementById('materials-count').textContent = '0';
     }
 
-    function handleMouseUp(e) {
-        if (isDraggingConnection) {
-            // Check if dropped on an anchor
-            const targetAnchor = e.target.closest('.connection-anchor');
-            if (targetAnchor && dragConnectionCurrentTarget) {
-                const targetNodeId = targetAnchor.dataset.nodeId;
-                const targetAnchorPos = targetAnchor.dataset.anchor;
-                
-                // Complete the connection
-                const selectedStyle = document.getElementById('connection-style').value;
-                connectNodesWithAnchors(dragConnectionStartNode, dragConnectionStartAnchor, targetNodeId, targetAnchorPos, selectedStyle);
+    function selectCategory(categoryId, categoryName) {
+        selectedCategory = categoryId;
+        updateCategoryChip(categoryName);
+
+        // Update UI - remove active class from all buttons
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Add active class to selected button
+        document.querySelector(`[data-category-id="${categoryId}"]`).classList.add('active');
+
+        // Hide all category children first
+        document.querySelectorAll('.category-children').forEach(children => {
+            children.classList.remove('show');
+        });
+
+        // Reset all arrows
+        document.querySelectorAll('.category-arrow').forEach(arrow => {
+            arrow.style.transform = 'rotate(0deg)';
+        });
+
+        // Show children of the selected category's parent if it's a child category
+        const selectedBtn = document.querySelector(`[data-category-id="${categoryId}"]`);
+        const parentGroup = selectedBtn.closest('.category-group');
+        const childrenContainer = parentGroup.querySelector('.category-children');
+
+        if (childrenContainer) {
+            childrenContainer.classList.add('show');
+            // Rotate the arrow
+            const arrow = parentGroup.querySelector('.category-arrow');
+            if (arrow) {
+                arrow.style.transform = 'rotate(180deg)';
             }
-            
-            // Clean up
-            if (dragConnectionTempLine) {
-                dragConnectionTempLine.remove();
-                dragConnectionTempLine = null;
-            }
-            
-            // Remove active class from start anchor
-            const startNode = document.getElementById(dragConnectionStartNode);
-            if (startNode) {
-                const startAnchor = startNode.querySelector(`.connection-anchor[data-anchor="${dragConnectionStartAnchor}"]`);
-                if (startAnchor) startAnchor.classList.remove('active');
-            }
-            
-            // Hide anchors on target
-            if (dragConnectionCurrentTarget) {
-                const targetNode = document.getElementById(dragConnectionCurrentTarget);
-                if (targetNode) targetNode.classList.remove('show-anchors');
-            }
-            
-            isDraggingConnection = false;
-            dragConnectionStartNode = null;
-            dragConnectionStartAnchor = null;
-            dragConnectionCurrentTarget = null;
-            
-        } else if (draggedControlPoint) {
-            console.log('Finished dragging control point');
-            draggedControlPoint = null;
-        } else if (draggedNode) {
-            draggedNode.style.zIndex = 10;
-            draggedNode.style.cursor = 'move';
-            console.log('Finished dragging node:', draggedNode.id);
         }
-        
-        // End pan if active
-        if (isPanning) {
-            endPan();
-        }
-        
-        isDragging = false;
-        draggedNode = null;
+
+        // Load materials
+        switchRightPanelTab('materials');
+        loadMaterials(categoryId);
+
+        // Load mindmap data from database
+        loadMindmapData(categoryId);
     }
 
-    function updateConnectionFromControlPoint(controlPoint, x, y) {
-        const connection = connections.find(conn => conn.id === controlPoint.connectionId);
-        if (!connection) return;
-        
-        // Use stored node positions instead of DOM rect to avoid zoom issues
-        const fromNodeData = nodes.find(n => n.id === connection.from);
-        const toNodeData = nodes.find(n => n.id === connection.to);
-        
-        if (!fromNodeData || !toNodeData) return;
-        
-        // Calculate positions from stored data plus node center offset
-        const GRID_SIZE = 20;
-        let x1 = fromNodeData.x + 60; // Node width is 120px, so center is at +60
-        let y1 = fromNodeData.y + 20; // Node height is 40px, so center is at +20
-        let x2 = toNodeData.x + 60;
-        let y2 = toNodeData.y + 20;
-        
-        x1 = Math.round(x1 / GRID_SIZE) * GRID_SIZE;
-        y1 = Math.round(y1 / GRID_SIZE) * GRID_SIZE;
-        x2 = Math.round(x2 / GRID_SIZE) * GRID_SIZE;
-        y2 = Math.round(y2 / GRID_SIZE) * GRID_SIZE;
-        
-        // Snap dragged position to grid
-        x = Math.round(x / GRID_SIZE) * GRID_SIZE;
-        y = Math.round(y / GRID_SIZE) * GRID_SIZE;
-        
-        if (controlPoint.type === 'corner1' || controlPoint.type === 'corner2') {
-            // Convert to manual path when corner control points are dragged
-            if (!connection.path) {
-                connection.path = [];
-                connection.style = 'manual';
-            }
-            
-            // Calculate the orthogonal path with the dragged corner
-            const deltaX = Math.abs(x2 - x1);
-            const deltaY = Math.abs(y2 - y1);
-            
-            let pathPoints = [];
-            
-            if (deltaX > deltaY) {
-                // Horizontal first, then vertical
-                if (controlPoint.type === 'corner1') {
-                    pathPoints = [{ x: x, y: y1 }, { x: x, y: y2 }];
-                } else {
-                    pathPoints = [{ x: x1, y: y }, { x: x2, y: y }];
-                }
-            } else {
-                // Vertical first, then horizontal
-                if (controlPoint.type === 'corner1') {
-                    pathPoints = [{ x: x1, y: y }, { x: x2, y: y }];
-                } else {
-                    pathPoints = [{ x: x, y: y1 }, { x: x, y: y2 }];
-                }
-            }
-            
-            connection.path = pathPoints;
-            
-        } else if (controlPoint.type === 'midpoint') {
-            // Legacy support for old midpoint control points
-            // Convert to manual path
-            connection.path = [{ x, y }];
-            connection.style = 'manual';
-            
-        } else if (controlPoint.type === 'path' && controlPoint.index !== null) {
-            // For manual paths, allow free movement but keep it as manual
-            if (connection.path && connection.path[controlPoint.index]) {
-                connection.path[controlPoint.index] = { x, y };
-            }
-            
-        } else if (controlPoint.type === 'midpoint-end') {
-            // For manual paths, allow adding points
-            if (!connection.path) {
-                connection.path = [{ x, y }];
-                connection.style = 'manual';
-            } else {
-                connection.path.push({ x, y });
-            }
+    function switchRightPanelTab(tabName) {
+        document.querySelectorAll('.mm-panel-tab').forEach(tab => {
+            const isActive = tab.dataset.tab === tabName;
+            tab.classList.toggle('active', isActive);
+            tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        document.querySelectorAll('.mm-tab-pane').forEach(pane => {
+            pane.classList.toggle('active', pane.id === `tab-${tabName}`);
+        });
+    }
+
+    function loadMaterials(categoryId) {
+        fetch(`/mindmap-creator/materials?category_id=${categoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                displayMaterials(data.materials);
+            })
+            .catch(error => {
+                console.error('Error loading materials:', error);
+            });
+    }
+
+    function resetCanvas() {
+        // Remove all nodes from canvas
+        const canvas = document.getElementById('mindmap-canvas');
+        if (canvas) {
+            canvas.querySelectorAll('.mindmap-node').forEach(node => node.remove());
         }
-        
-        // Redraw connections
-        updateConnections();
+
+        // Clear SVG connections
+        const svg = document.getElementById('connections-svg');
+        if (svg) svg.querySelectorAll('.conn-path, .conn-hit').forEach(el => el.remove());
+        const hSvg = document.getElementById('handles-svg');
+        if (hSvg) hSvg.innerHTML = '';
+
+        // Clear arrays
+        nodes.length = 0;
+        connections.length = 0;
+        selectedNode = null;
+        selectedConnection = null;
+        selectedNodeForConnection = null;
+    }
+
+    // ============================================
+    // MANUAL COORDINATE SYSTEM - TO BE IMPLEMENTED
+    // ============================================
+
+    // TODO: Implement manual node positioning
+    function createNode(x, y, title, type = 'material') {
+        console.log('Create node at:', { x, y, title, type });
+        // Your implementation here
+    }
+
+    function createConnection(fromId, toId, fromAnchor, toAnchor, style = 'solid') {
+        console.log('=== CREATE CONNECTION ===');
+        console.log('From:', fromId, 'To:', toId, 'Style:', style);
+        // TODO: Implement custom connection drawing
+    }
+
+    // TODO: Implement save/load functionality
+    function saveMindmap() {
+        console.log('Save mindmap:', { nodes, connections });
+        // Your implementation here
     }
 
     function filterCategories(query) {
@@ -2178,107 +1800,6 @@
         el.innerHTML = `<i class="${icons[tool] || 'feather-tool'}"></i> ${labels[tool] || tool}`;
     }
 
-    function toggleCategory(categoryId, categoryName) {
-        selectedCategory = categoryId;
-        updateCategoryChip(categoryName);
-        
-        // Update UI - remove active class from all buttons
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        // Add active class to selected button
-        document.querySelector(`[data-category-id="${categoryId}"]`).classList.add('active');
-        
-        // Hide all category children first
-        document.querySelectorAll('.category-children').forEach(children => {
-            children.classList.remove('show');
-        });
-        
-        // Reset all arrows
-        document.querySelectorAll('.category-arrow').forEach(arrow => {
-            arrow.style.transform = 'rotate(0deg)';
-        });
-        
-        // Show children of the selected category
-        const childrenContainer = document.getElementById(`category-children-${categoryId}`);
-        if (childrenContainer) {
-            childrenContainer.classList.add('show');
-            // Rotate the arrow
-            const arrow = document.querySelector(`[data-category-id="${categoryId}"] .category-arrow`);
-            if (arrow) {
-                arrow.style.transform = 'rotate(180deg)';
-            }
-        }
-        
-        // Update root node
-        document.getElementById('root-text').textContent = categoryName;
-        
-        // Clear canvas and materials when parent category is selected
-        resetCanvas();
-        document.getElementById('materials-list').innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state__icon"><i class="feather-inbox"></i></div>
-                <p class="empty-state__title">Belum ada materi</p>
-                <p class="empty-state__hint">Pilih subkategori untuk memuat daftar materi</p>
-            </div>
-        `;
-        document.getElementById('materials-count').textContent = '0';
-        
-        // Don't load materials for parent categories - only for subcategories
-        // Materials are stored in subcategories, not parent categories
-    }
-
-    function selectCategory(categoryId, categoryName) {
-        selectedCategory = categoryId;
-        updateCategoryChip(categoryName);
-        
-        // Update UI - remove active class from all buttons
-        document.querySelectorAll('.category-btn').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        // Add active class to selected button
-        document.querySelector(`[data-category-id="${categoryId}"]`).classList.add('active');
-        
-        // Hide all category children first
-        document.querySelectorAll('.category-children').forEach(children => {
-            children.classList.remove('show');
-        });
-        
-        // Reset all arrows
-        document.querySelectorAll('.category-arrow').forEach(arrow => {
-            arrow.style.transform = 'rotate(0deg)';
-        });
-        
-        // Show children of the selected category's parent if it's a child category
-        const selectedBtn = document.querySelector(`[data-category-id="${categoryId}"]`);
-        const parentGroup = selectedBtn.closest('.category-group');
-        const childrenContainer = parentGroup.querySelector('.category-children');
-
-        if (childrenContainer) {
-            childrenContainer.classList.add('show');
-            // Rotate the arrow
-            const arrow = parentGroup.querySelector('.category-arrow');
-            if (arrow) {
-                arrow.style.transform = 'rotate(180deg)';
-            }
-        }
-
-        // Update root node (disabled - no root node)
-        // const rootText = document.getElementById('root-text');
-        // if (rootText) {
-        //     rootText.textContent = categoryName;
-        // }
-
-        // Load materials
-        switchRightPanelTab('materials');
-        loadMaterials(categoryId);
-
-        // Load mindmap data from database
-        loadMindmapData(categoryId);
-    }
-
     function loadMindmapData(categoryId) {
         console.log('Loading mindmap for category:', categoryId);
         fetch(`/mindmap-creator/load?reference_id=${categoryId}`, {
@@ -2333,20 +1854,12 @@
                 else if (nodeData.type === 'sub-topic') icon = 'feather-file-text';
 
                 node.innerHTML = `
-                    <i class="feather-${icon} me-2"></i>
-                    <span>${nodeData.title}</span>
+                    <span class="node-label">${nodeData.title}</span>
+                    <div class="connection-anchor anchor-t" data-anchor="t" data-node-id="${nodeData.id}"></div>
+                    <div class="connection-anchor anchor-b" data-anchor="b" data-node-id="${nodeData.id}"></div>
+                    <div class="connection-anchor anchor-l" data-anchor="l" data-node-id="${nodeData.id}"></div>
+                    <div class="connection-anchor anchor-r" data-anchor="r" data-node-id="${nodeData.id}"></div>
                 `;
-
-                // Add 8 connection anchor points
-                const anchorPositions = ['tl', 't', 'tr', 'r', 'br', 'b', 'bl', 'l'];
-                anchorPositions.forEach(pos => {
-                    const anchor = document.createElement('div');
-                    anchor.className = `connection-anchor anchor-${pos}`;
-                    anchor.dataset.anchor = pos;
-                    anchor.dataset.nodeId = nodeData.id;
-                    anchor.addEventListener('mousedown', (e) => handleAnchorMouseDown(e, nodeData.id, pos));
-                    node.appendChild(anchor);
-                });
 
                 // Add click listener
                 node.addEventListener('click', function(e) {
@@ -2354,11 +1867,41 @@
                     selectNode(nodeData.id);
                 });
 
-                // Add drag functionality
+                // Add connection drag functionality - Shift + drag to create connections
                 node.addEventListener('mousedown', function(e) {
-                    if (e.target.classList.contains('connection-anchor')) return;
-                    e.stopPropagation(); // Prevent event bubbling to canvas
-                    handleMouseDown(e);
+                    if (e.target.classList.contains('connection-anchor')) return; // handled by anchor
+                    if (e.button === 0 && e.shiftKey) { // Left click + Shift
+                        e.stopPropagation(); // Prevent event bubbling to canvas
+                        handleAnchorMouseDown(e, nodeData.id, 'auto');
+                    } else if (e.button === 0) { // Regular left click for node selection and dragging
+                        e.stopPropagation(); // Prevent event bubbling to canvas
+                        selectNode(nodeData.id);
+                        
+                        // Start dragging the node
+                        isDraggingNode = true;
+                        draggedNode = node;
+                        const rect = node.getBoundingClientRect();
+                        dragOffset.x = e.clientX - rect.left;
+                        dragOffset.y = e.clientY - rect.top;
+                        node.style.cursor = 'grabbing';
+                    }
+                });
+
+                // Wire anchor dots to connection drawing
+                node.querySelectorAll('.connection-anchor').forEach(anchor => {
+                    anchor.addEventListener('mousedown', function(e) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        handleAnchorMouseDown(e, nodeData.id, anchor.dataset.anchor);
+                    });
+                    anchor.addEventListener('mouseup', function(e) {
+                        e.stopPropagation();
+                        if (connEndpointDrag) {
+                            commitConnEndpointDrag(nodeData.id, anchor.dataset.anchor);
+                        } else {
+                            commitAnchorConnection(nodeData.id, anchor.dataset.anchor);
+                        }
+                    });
                 });
 
                 canvas.appendChild(node);
@@ -2377,30 +1920,53 @@
             });
         }
 
+        // Restore connections
         if (structure.connections) {
+            console.log('=== RESTORING CONNECTIONS ===');
+            console.log('Total connections in structure:', structure.connections.length);
+            
             structure.connections.forEach(connData => {
+                // Check if connection already exists in connections array to prevent duplicates
+                const alreadyInArray = connections.some(c => 
+                    c.from === connData.from && c.to === connData.to && c.id === connData.id
+                );
+                
+                if (alreadyInArray) {
+                    console.log('Connection already in array, skipping:', connData);
+                    return;
+                }
+                
+                // Add to connections array for data tracking
                 connections.push(connData);
+                console.log('Connection data added:', connData);
             });
-            updateConnections();
+            
+            console.log('=== RESTORATION COMPLETE ===');
+            console.log('Final connections array length:', connections.length);
         }
 
         updateNodeCount();
         refreshMaterialsList();
+
+        // Wait two frames so the browser finishes layout and nodes have valid offsetWidth/Height
+        requestAnimationFrame(() => requestAnimationFrame(() => updateConnections()));
     }
 
     function resetCanvas() {
         // Remove all nodes from canvas
         const canvas = document.getElementById('mindmap-canvas');
         if (canvas) {
-            canvas.querySelectorAll('.mindmap-node').forEach(node => {
-                node.remove();
-            });
+            canvas.querySelectorAll('.mindmap-node').forEach(node => node.remove());
         }
 
-        // Remove all connections
-        document.querySelectorAll('.connection-line').forEach(line => {
-            line.remove();
-        });
+        // Clear SVG connections
+        const svg = document.getElementById('connections-svg');
+        if (svg) svg.querySelectorAll('.conn-path, .conn-hit').forEach(el => el.remove());
+        const hSvg2 = document.getElementById('handles-svg');
+        if (hSvg2) hSvg2.innerHTML = '';
+
+        // Remove legacy connection lines
+        document.querySelectorAll('.connection-line').forEach(line => line.remove());
 
         // Clear arrays
         nodes.length = 0;
@@ -2553,8 +2119,8 @@
         const viewportCenterY = canvasArea.clientHeight / 2;
         
         // Convert viewport coordinates to canvas coordinates
-        const x = (viewportCenterX - panOffset.x * zoomLevel) / zoomLevel - 60; // Subtract node width/2
-        const y = (viewportCenterY - panOffset.y * zoomLevel) / zoomLevel - 20; // Subtract node height/2
+        const x = (viewportCenterX - panOffset.x) / zoomLevel - 60;
+        const y = (viewportCenterY - panOffset.y) / zoomLevel - 20;
         
         addMaterialNode('custom-' + Date.now(), title, '', x, y, nodeType);
     }
@@ -2597,31 +2163,53 @@
         else if (nodeType === 'sub-topic') icon = 'feather-file-text';
 
         node.innerHTML = `
-            <i class="feather-${icon} me-2"></i>
-            <span>${title}</span>
+            <span class="node-label">${title}</span>
+            <div class="connection-anchor anchor-t" data-anchor="t" data-node-id="${nodeId}"></div>
+            <div class="connection-anchor anchor-b" data-anchor="b" data-node-id="${nodeId}"></div>
+            <div class="connection-anchor anchor-l" data-anchor="l" data-node-id="${nodeId}"></div>
+            <div class="connection-anchor anchor-r" data-anchor="r" data-node-id="${nodeId}"></div>
         `;
-        
-        // Add 8 connection anchor points
-        const anchorPositions = ['tl', 't', 'tr', 'r', 'br', 'b', 'bl', 'l'];
-        anchorPositions.forEach(pos => {
-            const anchor = document.createElement('div');
-            anchor.className = `connection-anchor anchor-${pos}`;
-            anchor.dataset.anchor = pos;
-            anchor.dataset.nodeId = nodeId;
-            anchor.addEventListener('mousedown', (e) => handleAnchorMouseDown(e, nodeId, pos));
-            node.appendChild(anchor);
-        });
-        
+
         node.addEventListener('click', function(e) {
             e.stopPropagation(); // Prevent event bubbling
             selectNode(nodeId);
         });
-        
-        // Add drag functionality
+
+        // Add connection drag functionality - Shift + drag to create connections
         node.addEventListener('mousedown', function(e) {
-            if (e.target.classList.contains('connection-anchor')) return;
-            e.stopPropagation(); // Prevent event bubbling to canvas
-            handleMouseDown(e);
+            if (e.target.classList.contains('connection-anchor')) return; // handled by anchor
+            if (e.button === 0 && e.shiftKey) { // Left click + Shift
+                e.stopPropagation(); // Prevent event bubbling to canvas
+                handleAnchorMouseDown(e, nodeId, 'auto');
+            } else if (e.button === 0) { // Regular left click for node selection and dragging
+                e.stopPropagation(); // Prevent event bubbling to canvas
+                selectNode(nodeId);
+                
+                // Start dragging the node
+                isDraggingNode = true;
+                draggedNode = node;
+                const rect = node.getBoundingClientRect();
+                dragOffset.x = e.clientX - rect.left;
+                dragOffset.y = e.clientY - rect.top;
+                node.style.cursor = 'grabbing';
+            }
+        });
+
+        // Wire anchor dots to connection drawing
+        node.querySelectorAll('.connection-anchor').forEach(anchor => {
+            anchor.addEventListener('mousedown', function(e) {
+                e.stopPropagation();
+                e.preventDefault();
+                handleAnchorMouseDown(e, nodeId, anchor.dataset.anchor);
+            });
+            anchor.addEventListener('mouseup', function(e) {
+                e.stopPropagation();
+                if (connEndpointDrag) {
+                    commitConnEndpointDrag(nodeId, anchor.dataset.anchor);
+                } else {
+                    commitAnchorConnection(nodeId, anchor.dataset.anchor);
+                }
+            });
         });
         
         const canvas = document.getElementById('mindmap-canvas');
@@ -2629,10 +2217,11 @@
             console.error('Canvas not found!');
             return;
         }
-        
+
         canvas.appendChild(node);
+
         updateNodeCount();
-        
+
         nodes.push({
             id: nodeId,
             materialId: materialId,
@@ -2643,7 +2232,7 @@
             type: nodeType,
             completed: false
         });
-        
+
         console.log('Nodes array updated:', nodes);
         
         // Refresh materials list to remove the added material from sidebar
@@ -2713,24 +2302,47 @@
         }
     }
 
+    let selectedConnectionId = null;
+
     function selectConnection(connectionId) {
-        console.log('=== SELECT CONNECTION ===');
-        console.log('Connection ID:', connectionId);
-        
-        // Clear all previous selections
         clearAllSelections();
+        selectedConnectionId = connectionId;
+        updateConnections();
+    }
+
+    function deleteConnection(connectionId) {
+        connections = connections.filter(c => c.id !== connectionId);
+        selectedConnectionId = null;
+        updateConnections();
+    }
+
+
+    function setupAnchorPointDrag(anchorElement, connectionId, anchorType, nodeId) {
+        let isDragging = false;
+        let startX, startY;
         
-        // Find and highlight the selected connection
-        const connectionElement = document.querySelector(`[data-connection-id="${connectionId}"]`);
-        if (connectionElement) {
-            connectionElement.classList.add('selected');
-            selectedConnection = connectionId;
+        anchorElement.addEventListener('mousedown', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
             
-            // Update properties panel for connection
-            updateConnectionPropertiesPanel(connectionId);
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
             
-            console.log('Connection selected:', connectionId);
-        }
+            console.log('Started dragging anchor:', anchorType, 'for connection:', connectionId);
+            
+            // Start a new connection from the anchor point
+            if (anchorType === 'source') {
+                handleAnchorMouseDown(e, nodeId, 'auto');
+            } else {
+                // For target anchor, we need to handle differently
+                // Start from the source node instead
+                const connection = connections.find(c => c.id === connectionId);
+                if (connection) {
+                    handleAnchorMouseDown(e, connection.from, 'auto');
+                }
+            }
+        });
     }
 
     function clearAllSelections() {
@@ -2749,6 +2361,8 @@
         selectedNode = null;
         selectedConnection = null;
         selectedNodeForConnection = null;
+        selectedConnectionId = null;
+        updateConnections();
     }
 
     function addResizeHandles(node) {
@@ -2866,6 +2480,145 @@
         document.removeEventListener('mouseup', stopResize);
     }
 
+    // ─── Anchor drag-to-connect state ───
+    let anchorDragActive = false;
+    let anchorDragFromNode = null;
+    let anchorDragFromAnchor = null;
+    let anchorPreviewLine = null;
+
+    function handleAnchorMouseDown(e, nodeId, anchorPos) {
+        e.stopPropagation();
+        e.preventDefault();
+        anchorDragActive   = true;
+        anchorDragFromNode  = nodeId;
+        anchorDragFromAnchor = anchorPos;
+
+        // Highlight source node
+        document.querySelectorAll('.connection-source').forEach(n => n.classList.remove('connection-source'));
+        const node = document.getElementById(nodeId);
+        if (node) node.classList.add('connection-source');
+
+        // Create preview line
+        const svg = document.getElementById('connections-svg');
+        if (!svg) return;
+        anchorPreviewLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        anchorPreviewLine.setAttribute('id', 'anchor-preview-line');
+        anchorPreviewLine.setAttribute('stroke', '#6366f1');
+        anchorPreviewLine.setAttribute('stroke-width', '2');
+        anchorPreviewLine.setAttribute('stroke-dasharray', '6 3');
+        anchorPreviewLine.setAttribute('marker-end', 'url(#arrow-preview)');
+        anchorPreviewLine.style.pointerEvents = 'none';
+        const start = getNodeAnchorXY(nodeId, anchorPos);
+        if (start) {
+            anchorPreviewLine.setAttribute('x1', start.x);
+            anchorPreviewLine.setAttribute('y1', start.y);
+            anchorPreviewLine.setAttribute('x2', start.x);
+            anchorPreviewLine.setAttribute('y2', start.y);
+        }
+        svg.appendChild(anchorPreviewLine);
+    }
+
+    // Update preview line on mousemove
+    document.addEventListener('mousemove', function(e) {
+        const canvas = document.getElementById('mindmap-canvas');
+        if (!canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const cx = (e.clientX - rect.left) / zoomLevel;
+        const cy = (e.clientY - rect.top)  / zoomLevel;
+
+        if (anchorDragActive && anchorPreviewLine) {
+            anchorPreviewLine.setAttribute('x2', cx);
+            anchorPreviewLine.setAttribute('y2', cy);
+        }
+        if (connEndpointDrag) {
+            connEndpointDrag.previewLine.setAttribute('x2', cx);
+            connEndpointDrag.previewLine.setAttribute('y2', cy);
+            // Highlight node under cursor
+            document.querySelectorAll('.endpoint-drag-hover').forEach(el => el.classList.remove('endpoint-drag-hover'));
+            const els = document.elementsFromPoint(e.clientX, e.clientY);
+            for (const el of els) {
+                if (el.classList && el.classList.contains('mindmap-node')) {
+                    el.classList.add('endpoint-drag-hover');
+                    break;
+                }
+            }
+        }
+    });
+
+    // Cancel drag on mouseup if not on an anchor/node
+    document.addEventListener('mouseup', function(e) {
+        if (anchorDragActive) {
+            setTimeout(() => { if (anchorDragActive) cancelAnchorDrag(); }, 50);
+        }
+        if (connEndpointDrag) {
+            // Use elementsFromPoint to detect anchor/node under cursor
+            // (handles-svg sits on top and blocks normal mouseup on anchors)
+            const els = document.elementsFromPoint(e.clientX, e.clientY);
+            let committed = false;
+
+            // Try anchor first
+            for (const el of els) {
+                if (el.classList && el.classList.contains('connection-anchor')) {
+                    const nodeId = el.dataset.nodeId;
+                    const anchor = el.dataset.anchor;
+                    if (nodeId) {
+                        commitConnEndpointDrag(nodeId, anchor);
+                        committed = true;
+                        break;
+                    }
+                }
+            }
+
+            // Try node body if no anchor found
+            if (!committed) {
+                for (const el of els) {
+                    if (el.classList && el.classList.contains('mindmap-node') && el.id) {
+                        commitConnEndpointDrag(el.id, null);
+                        committed = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!committed) cancelConnEndpointDrag();
+        }
+    });
+
+    function cancelAnchorDrag() {
+        anchorDragActive = false;
+        anchorDragFromNode = null;
+        anchorDragFromAnchor = null;
+        if (anchorPreviewLine) { anchorPreviewLine.remove(); anchorPreviewLine = null; }
+        document.querySelectorAll('.connection-source').forEach(n => n.classList.remove('connection-source'));
+    }
+
+    function commitAnchorConnection(toNodeId, toAnchor) {
+        if (!anchorDragActive || !anchorDragFromNode || anchorDragFromNode === toNodeId) {
+            cancelAnchorDrag();
+            return;
+        }
+        const style    = document.getElementById('connection-style')?.value || 'solid';
+        const lineType = document.getElementById('connection-line-type')?.value || 'straight';
+        // Prevent duplicate
+        const exists = connections.some(c =>
+            (c.from === anchorDragFromNode && c.to === toNodeId) ||
+            (c.from === toNodeId && c.to === anchorDragFromNode)
+        );
+        if (!exists) {
+            connections.push({
+                id: 'conn-' + Date.now(),
+                from: anchorDragFromNode,
+                fromAnchor: anchorDragFromAnchor,
+                to: toNodeId,
+                toAnchor: toAnchor,
+                style: style,
+                lineType: lineType
+            });
+            updateConnections();
+        }
+        cancelAnchorDrag();
+    }
+
     function selectNode(nodeId) {
         console.log('=== SELECT NODE ===');
         console.log('Node ID:', nodeId);
@@ -2909,7 +2662,9 @@
                 // Second node selection - create connection
                 const selectedStyle = document.getElementById('connection-style').value;
                 console.log('Creating connection with style:', selectedStyle);
+                isManualConnection = true;
                 connectNodes(selectedNodeForConnection, nodeId, selectedStyle);
+                isManualConnection = false;
                 
                 // Clear selections
                 document.getElementById(selectedNodeForConnection).classList.remove('connection-source');
@@ -2932,6 +2687,7 @@
                 // Clicking the same node - deselect
                 node.classList.remove('connection-source');
                 selectedNodeForConnection = null;
+                isManualConnection = false;
                 console.log('Connection selection cancelled');
             }
         } else {
@@ -2950,8 +2706,8 @@
                 node.classList.add('selected');
                 selectedNode = nodeId;
 
-                // Add resize handles
-                addResizeHandles(node);
+                // Add resize handles - disabled
+                // addResizeHandles(node);
             }
         }
     }
@@ -3031,10 +2787,9 @@
         // Don't process if clicking on a node
         if (e.target.classList.contains('mindmap-node')) return;
         
-        const canvas = document.getElementById('mindmap-canvas');
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+        // TODO: Implement coordinate calculation for manual drawing
+        const x = 0;
+        const y = 0;
         
         addDrawingPoint(x, y);
     }
@@ -3058,10 +2813,9 @@
         const startNode = document.getElementById(drawingStartNode);
         if (!startNode) return;
         
-        const startRect = startNode.getBoundingClientRect();
-        const canvasRect = document.getElementById('mindmap-canvas').getBoundingClientRect();
-        const startX = startRect.left + startRect.width / 2 - canvasRect.left;
-        const startY = startRect.top + startRect.height / 2 - canvasRect.top;
+        // TODO: Implement coordinate calculation for temp connection line
+        const startX = 0;
+        const startY = 0;
         
         // Create path from node to all points
         let pathData = `M ${startX} ${startY}`;
@@ -3187,29 +2941,45 @@
         updateToolStatus(tool);
     }
 
-    function setLineStyle(style) {
-        document.getElementById('connection-style').value = style;
+    function setLineType(lineType) {
+        document.getElementById('connection-line-type').value = lineType;
 
-        document.querySelectorAll('.line-style-item').forEach(item => {
+        document.querySelectorAll('[data-line-type]').forEach(item => {
             item.classList.remove('selected');
         });
 
-        const selectedItem = document.querySelector(`.line-style-item[data-line-style="${style}"]`);
+        const selectedItem = document.querySelector(`[data-line-type="${lineType}"]`);
+        if (selectedItem) {
+            selectedItem.classList.add('selected');
+        }
+
+        // Update selected connection's lineType immediately
+        if (selectedConnectionId) {
+            const conn = connections.find(c => c.id === selectedConnectionId);
+            if (conn) {
+                conn.lineType = lineType;
+                updateConnections();
+            }
+        }
+
+        console.log('Line type set to:', lineType);
+    }
+
+    function setLineStyle(style) {
+        document.getElementById('connection-style').value = style;
+
+        document.querySelectorAll('[data-line-style]').forEach(item => {
+            item.classList.remove('selected');
+        });
+
+        const selectedItem = document.querySelector(`[data-line-style="${style}"]`);
         if (selectedItem) {
             selectedItem.classList.add('selected');
         }
 
         updateLineStyleStatus(style);
 
-        // Update selected connection style if one is selected
-        if (selectedConnection) {
-            const connection = connections.find(c => c.id === selectedConnection);
-            if (connection) {
-                connection.style = style;
-                updateConnections();
-                console.log('Updated selected connection style to:', style);
-            }
-        }
+        // TODO: Implement line style update
 
         if (style === 'manual') {
             if (!manualDrawingMode) toggleManualDrawingMode();
@@ -3223,54 +2993,51 @@
         if (hint) hint.classList.toggle('is-active', connectionMode || manualDrawingMode);
     }
 
-    // Zoom Functions (draw.io style) - Slower/gradual zoom
-    function zoomIn() {
-        zoomLevel = Math.min(zoomLevel * 1.02, 5);
+    // Zoom/Pan system
+    // Transform applied as: translate(panOffset.x px, panOffset.y px) scale(zoomLevel)
+    // with transform-origin: 0 0
+    // Screen coords: screenX = canvasX * zoom + panOffset.x
+    //                screenY = canvasY * zoom + panOffset.y
+
+    function zoomAroundPoint(newZoom, focalX, focalY) {
+        // focalX/Y: pixels from top-left of canvas-area (viewport coords)
+        newZoom = Math.min(Math.max(newZoom, 0.1), 5);
+        // Keep the canvas point under focal fixed:
+        // canvasX = (focalX - panOffset.x) / oldZoom  →  after zoom: focalX = canvasX * newZoom + newPanX
+        panOffset.x = focalX - ((focalX - panOffset.x) / zoomLevel) * newZoom;
+        panOffset.y = focalY - ((focalY - panOffset.y) / zoomLevel) * newZoom;
+        zoomLevel = newZoom;
         updateZoom();
     }
 
-    function zoomOut() {
-        zoomLevel = Math.max(zoomLevel / 1.02, 0.1);
-        updateZoom();
+    function zoomIn(focalX, focalY) {
+        const vp = document.querySelector('.canvas-viewport');
+        const cx = focalX !== undefined ? focalX : vp.clientWidth / 2;
+        const cy = focalY !== undefined ? focalY : vp.clientHeight / 2;
+        zoomAroundPoint(zoomLevel * 1.2, cx, cy);
+    }
+
+    function zoomOut(focalX, focalY) {
+        const vp = document.querySelector('.canvas-viewport');
+        const cx = focalX !== undefined ? focalX : vp.clientWidth / 2;
+        const cy = focalY !== undefined ? focalY : vp.clientHeight / 2;
+        zoomAroundPoint(zoomLevel / 1.2, cx, cy);
     }
 
     function resetZoom() {
         zoomLevel = 1;
-        
-        // Center canvas horizontally when resetting zoom
-        const canvasArea = document.querySelector('.drawio-canvas-area');
-        const canvasWidth = 3000; // Canvas width from HTML
-        const viewportWidth = canvasArea.clientWidth;
-        const centerOffset = (viewportWidth - canvasWidth) / 2;
-        
-        panOffset.x = centerOffset;
-        panOffset.y = 0; // Keep at top
-        
+        panOffset.x = 0;
+        panOffset.y = 0;
         updateZoom();
     }
 
     function updateZoom() {
         const canvas = document.getElementById('mindmap-canvas');
-        const canvasArea = document.querySelector('.drawio-canvas-area');
         
-        // Constrain pan offset to prevent canvas from moving beyond viewport
-        const canvasWidth = 3000;
-        const canvasHeight = 3000;
-        const viewportWidth = canvasArea.clientWidth;
-        const viewportHeight = canvasArea.clientHeight;
+        // Apply transform: translate first, then scale (transform-origin: 0 0)
+        canvas.style.transform = `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoomLevel})`;
         
-        // Calculate maximum allowed pan offset
-        const maxPanX = (canvasWidth * zoomLevel - viewportWidth) / zoomLevel;
-        const maxPanY = (canvasHeight * zoomLevel - viewportHeight) / zoomLevel;
-        
-        // Constrain pan offset
-        panOffset.x = Math.max(-maxPanX, Math.min(0, panOffset.x));
-        panOffset.y = Math.max(-maxPanY, Math.min(0, panOffset.y));
-        
-        canvas.style.transform = `scale(${zoomLevel}) translate(${panOffset.x}px, ${panOffset.y}px)`;
-        
-        // Scale the line grid background to maintain visual consistency
-        // At zoom 1: 20px grid. At zoom 2: 40px grid, etc.
+        // Scale the grid background
         const scaledGridSize = 20 * zoomLevel;
         canvas.style.backgroundSize = `${scaledGridSize}px ${scaledGridSize}px`;
         
@@ -3291,8 +3058,8 @@
         if (isPanTool || isSpacebarPan || isMiddleMouse) {
             isPanning = true;
             panStart = { 
-                x: e.clientX - panOffset.x * zoomLevel, 
-                y: e.clientY - panOffset.y * zoomLevel 
+                x: e.clientX - panOffset.x,
+                y: e.clientY - panOffset.y
             };
             document.getElementById('mindmap-canvas').style.cursor = 'grabbing';
             e.preventDefault();
@@ -3301,8 +3068,8 @@
 
     function doPan(e) {
         if (isPanning) {
-            panOffset.x = (e.clientX - panStart.x) / zoomLevel;
-            panOffset.y = (e.clientY - panStart.y) / zoomLevel;
+            panOffset.x = e.clientX - panStart.x;
+            panOffset.y = e.clientY - panStart.y;
             updateZoom();
         }
     }
@@ -3400,6 +3167,9 @@
     }
 
     function deleteConnection(connectionId) {
+        // Remove anchor points for this connection
+        removeConnectionAnchorPoints(connectionId);
+        
         connections = connections.filter(c => c.id !== connectionId);
         updateConnections();
         
@@ -3505,25 +3275,23 @@
 
     function connectNodesWithAnchors(fromId, fromAnchor, toId, toAnchor, style = 'solid') {
         // Check if connection already exists (prevent duplicates)
-        const existingConnection = connections.find(conn => 
-            (conn.from === fromId && conn.to === toId) || 
+        const existingConnection = connections.find(conn =>
+            (conn.from === fromId && conn.to === toId) ||
             (conn.from === toId && conn.to === fromId)
         );
-        
+
         if (existingConnection) {
             console.log('Connection already exists between these nodes');
-            // Optional: Update the style and anchors if different
-            if (existingConnection.style !== style || existingConnection.fromAnchor !== fromAnchor || existingConnection.toAnchor !== toAnchor) {
+            // Optional: Update the style if different
+            if (existingConnection.style !== style) {
                 existingConnection.style = style;
-                existingConnection.fromAnchor = fromAnchor;
-                existingConnection.toAnchor = toAnchor;
                 updateConnections();
             }
             return;
         }
-        
-        connections.push({ 
-            from: fromId, 
+
+        connections.push({
+            from: fromId,
             fromAnchor: fromAnchor,
             to: toId,
             toAnchor: toAnchor,
@@ -3533,186 +3301,309 @@
         updateConnections();
     }
 
+
+    function getConnectorConfig(style, lineType = 'straight') {
+        const lineTypeValue = lineType || document.getElementById('connection-line-type')?.value || 'straight';
+
+        // Determine connector type based on both lineType and style
+        // Styles like 'curved' and 'wavy' always use Bezier regardless of lineType
+        let connectorType;
+        if (style === 'curved' || style === 'wavy') {
+            connectorType = ['Bezier', { curviness: style === 'curved' ? 100 : 150 }];
+        } else {
+            connectorType = lineTypeValue === 'straight' ? 'Straight' : ['Bezier', { curviness: 50 }];
+        }
+
+        console.log('getConnectorConfig:', { style, lineType, lineTypeValue, connectorType });
+
+        const arrowConfig = ['Arrow', {
+            location: 0.95,
+            width: 10,
+            length: 10,
+            direction: 1
+        }];
+
+        const configs = {
+            'solid': {
+                type: connectorType,
+                paintStyle: { stroke: '#667eea', strokeWidth: 2.5 },
+                overlays: [arrowConfig]
+            },
+            'dashed': {
+                type: connectorType,
+                paintStyle: { stroke: '#ef4444', strokeWidth: 2.5, dashstyle: '10 6' },
+                overlays: [arrowConfig]
+            },
+            'dotted': {
+                type: connectorType,
+                paintStyle: { stroke: '#10b981', strokeWidth: 3, dashstyle: '1 5' },
+                overlays: [arrowConfig]
+            },
+            'curved': {
+                type: ['Bezier', { curviness: 100 }],
+                paintStyle: { stroke: '#f59e0b', strokeWidth: 2.5 },
+                overlays: [arrowConfig]
+            },
+            'thick': {
+                type: connectorType,
+                paintStyle: { stroke: '#8b5cf6', strokeWidth: 5 },
+                overlays: [['Arrow', { location: 0.95, width: 12, length: 12, direction: 1 }]]
+            },
+            'double': {
+                type: connectorType,
+                paintStyle: { stroke: '#ec4899', strokeWidth: 2 },
+                overlays: [arrowConfig]
+            },
+            'wavy': {
+                type: ['Bezier', { curviness: 150 }],
+                paintStyle: { stroke: '#06b6d4', strokeWidth: 2 },
+                overlays: [arrowConfig]
+            },
+            'sub-topic': {
+                type: connectorType,
+                paintStyle: { stroke: '#3b82f6', strokeWidth: 2, dashstyle: '5 5', opacity: 0.7 },
+                overlays: [arrowConfig]
+            },
+            'hierarchy': {
+                type: connectorType,
+                paintStyle: { stroke: '#3b82f6', strokeWidth: 3 },
+                overlays: [['Arrow', { location: 0.95, width: 12, length: 12, direction: 1 }]]
+            },
+            'manual': {
+                type: connectorType,
+                paintStyle: { stroke: '#6b7280', strokeWidth: 2 },
+                overlays: [arrowConfig]
+            }
+        };
+        return configs[style] || configs['solid'];
+    }
+
     function getAnchorPosition(nodeId, anchorPos) {
         const node = document.getElementById(nodeId);
-        const nodeData = nodes.find(n => n.id === nodeId);
-        if (!node || !nodeData) return { x: 0, y: 0 };
+        if (!node) return { x: 0, y: 0 };
 
-        const width = node.offsetWidth;
-        const height = node.offsetHeight;
+        const nodeData = nodes.find(n => n.id === nodeId);
+        if (!nodeData) return { x: 0, y: 0 };
+
+        const nodeRect = node.getBoundingClientRect();
+        const width = nodeRect.width;
+        const height = nodeRect.height;
         const x = nodeData.x;
         const y = nodeData.y;
 
-        // Anchor offset (anchors are positioned 6px outside the node)
-        const ANCHOR_OFFSET = 6;
-
-        // Calculate anchor position based on anchor position
-        let anchorX, anchorY;
+        // Calculate anchor position based on anchor type (no offset)
         switch(anchorPos) {
-            case 'tl':
-                anchorX = x - ANCHOR_OFFSET;
-                anchorY = y - ANCHOR_OFFSET;
-                break;
-            case 't':
-                anchorX = x + width / 2;
-                anchorY = y - ANCHOR_OFFSET;
-                break;
-            case 'tr':
-                anchorX = x + width + ANCHOR_OFFSET;
-                anchorY = y - ANCHOR_OFFSET;
-                break;
-            case 'r':
-                anchorX = x + width + ANCHOR_OFFSET;
-                anchorY = y + height / 2;
-                break;
-            case 'br':
-                anchorX = x + width + ANCHOR_OFFSET;
-                anchorY = y + height + ANCHOR_OFFSET;
-                break;
-            case 'b':
-                anchorX = x + width / 2;
-                anchorY = y + height + ANCHOR_OFFSET;
-                break;
-            case 'bl':
-                anchorX = x - ANCHOR_OFFSET;
-                anchorY = y + height + ANCHOR_OFFSET;
-                break;
-            case 'l':
-                anchorX = x - ANCHOR_OFFSET;
-                anchorY = y + height / 2;
-                break;
-            default:
-                // Default to center
-                anchorX = x + width / 2;
-                anchorY = y + height / 2;
+            case 'tl': return { x: x, y: y };
+            case 't': return { x: x + width / 2, y: y };
+            case 'tr': return { x: x + width, y: y };
+            case 'r': return { x: x + width, y: y + height / 2 };
+            case 'br': return { x: x + width, y: y + height };
+            case 'b': return { x: x + width / 2, y: y + height };
+            case 'bl': return { x: x, y: y + height };
+            case 'l': return { x: x, y: y + height / 2 };
+            default: return { x: x + width / 2, y: y + height / 2 };
         }
-        
-        // Don't snap anchor positions to grid - keep them precise at the center
-        return { x: anchorX, y: anchorY };
+    }
+
+    function getNodeAnchorXY(nodeId, anchor) {
+        const node = document.getElementById(nodeId);
+        if (!node) return null;
+        const nd = nodes.find(n => n.id === nodeId);
+        if (!nd) return null;
+        const w = node.offsetWidth;
+        const h = node.offsetHeight;
+        const x = nd.x, y = nd.y;
+        switch (anchor) {
+            case 't':  return { x: x + w / 2, y: y };
+            case 'b':  return { x: x + w / 2, y: y + h };
+            case 'l':  return { x: x,         y: y + h / 2 };
+            case 'r':  return { x: x + w,     y: y + h / 2 };
+            default:   return { x: x + w / 2, y: y + h / 2 };
+        }
+    }
+
+    function getBestAnchors(fromId, toId) {
+        const fn = nodes.find(n => n.id === fromId);
+        const tn = nodes.find(n => n.id === toId);
+        const fe = document.getElementById(fromId);
+        const te = document.getElementById(toId);
+        if (!fn || !tn || !fe || !te) return { from: 'r', to: 'l' };
+        const fcx = fn.x + fe.offsetWidth / 2;
+        const fcy = fn.y + fe.offsetHeight / 2;
+        const tcx = tn.x + te.offsetWidth / 2;
+        const tcy = tn.y + te.offsetHeight / 2;
+        const dx = tcx - fcx, dy = tcy - fcy;
+        if (Math.abs(dx) >= Math.abs(dy)) {
+            return dx >= 0 ? { from: 'r', to: 'l' } : { from: 'l', to: 'r' };
+        } else {
+            return dy >= 0 ? { from: 'b', to: 't' } : { from: 't', to: 'b' };
+        }
     }
 
     function updateConnections() {
         const svg = document.getElementById('connections-svg');
-        svg.innerHTML = '';
-        
-        // Clear existing control points
-        controlPoints = [];
-        
-        connections.forEach(conn => {
-            const fromNode = document.getElementById(conn.from);
-            const toNode = document.getElementById(conn.to);
-            
-            if (fromNode && toNode) {
-                // Use stored node positions instead of DOM rect to avoid zoom issues
-                const fromNodeData = nodes.find(n => n.id === conn.from);
-                const toNodeData = nodes.find(n => n.id === conn.to);
-                
-                if (!fromNodeData || !toNodeData) return;
-                
-                // Calculate positions from anchor points if available, otherwise use center
-                let x1, y1, x2, y2;
-                
-                if (conn.fromAnchor) {
-                    const fromPos = getAnchorPosition(conn.from, conn.fromAnchor);
-                    x1 = fromPos.x;
-                    y1 = fromPos.y;
-                } else {
-                    const fromNodeElement = document.getElementById(conn.from);
-                    const fromWidth = fromNodeElement.offsetWidth;
-                    const fromHeight = fromNodeElement.offsetHeight;
-                    x1 = fromNodeData.x + fromWidth / 2;
-                    y1 = fromNodeData.y + fromHeight / 2;
-                }
-                
-                if (conn.toAnchor) {
-                    const toPos = getAnchorPosition(conn.to, conn.toAnchor);
-                    x2 = toPos.x;
-                    y2 = toPos.y;
-                } else {
-                    const toNodeElement = document.getElementById(conn.to);
-                    const toWidth = toNodeElement.offsetWidth;
-                    const toHeight = toNodeElement.offsetHeight;
-                    x2 = toNodeData.x + toWidth / 2;
-                    y2 = toNodeData.y + toHeight / 2;
-                }
+        if (!svg) return;
+        svg.querySelectorAll('.conn-path, .conn-hit').forEach(el => el.remove());
+        // Always clear handles from overlay
+        const handlesSvg = document.getElementById('handles-svg');
+        if (handlesSvg) handlesSvg.innerHTML = '';
 
-                // Only snap to grid for manual paths, not for anchor-based connections
-                // Anchor-based connections should be precise
-                if (!conn.fromAnchor && !conn.toAnchor) {
-                    const GRID_SIZE = 20;
-                    x1 = Math.round(x1 / GRID_SIZE) * GRID_SIZE;
-                    y1 = Math.round(y1 / GRID_SIZE) * GRID_SIZE;
-                    x2 = Math.round(x2 / GRID_SIZE) * GRID_SIZE;
-                    y2 = Math.round(y2 / GRID_SIZE) * GRID_SIZE;
-                }
-                
-                let line;
-                const style = conn.style || 'solid';
-                
-                // Handle manual path connections
-                if (style === 'manual' && conn.path && conn.path.length > 0) {
-                    line = createManualPath(x1, y1, x2, y2, conn.path, conn);
-                } else {
-                    switch(style) {
-                    case 'dashed':
-                        line = createDashedLine(x1, y1, x2, y2);
-                        break;
-                    case 'dotted':
-                        line = createDottedLine(x1, y1, x2, y2);
-                        break;
-                    case 'curved':
-                        line = createCurvedLine(x1, y1, x2, y2);
-                        break;
-                    case 'thick':
-                        line = createThickLine(x1, y1, x2, y2);
-                        break;
-                    case 'double':
-                        line = createDoubleLine(x1, y1, x2, y2);
-                        break;
-                    case 'wavy':
-                        line = createWavyLine(x1, y1, x2, y2);
-                        break;
-                    case 'sub-topic':
-                        line = createSubTopicLine(x1, y1, x2, y2);
-                        break;
-                    case 'hierarchy':
-                        line = createHierarchyLine(x1, y1, x2, y2);
-                        break;
-                    default:
-                        line = createSolidLine(x1, y1, x2, y2);
-                }
-                
-                // Only add control points for manual paths, not for regular connections
-                // Control points will only appear when user explicitly creates a manual path
+        const styleColor  = { solid:'#475569', dashed:'#3b82f6', dotted:'#10b981', thick:'#7c3aed', curved:'#f59e0b' };
+        const styleDash   = { dashed:'8 4', dotted:'2 5' };
+        const styleWidth  = { thick: 4 };
+        const styleMarker = { dashed:'arrow-dashed', dotted:'arrow-dotted' };
+
+        connections.forEach(conn => {
+            // Always auto-snap to best anchors based on current node positions
+            const anchors = getBestAnchors(conn.from, conn.to);
+            const fa = anchors.from;
+            const ta = anchors.to;
+            const p1 = getNodeAnchorXY(conn.from, fa);
+            const p2 = getNodeAnchorXY(conn.to,   ta);
+            if (!p1 || !p2) return;
+
+            const style      = conn.style || 'solid';
+            const lineType   = conn.lineType || 'straight';
+            const isSelected = conn.id === selectedConnectionId;
+            const stroke     = isSelected ? '#f59e0b' : (styleColor[style] || '#475569');
+            const sw         = styleWidth[style] || 2; // fixed width, not enlarged on select
+            const marker     = isSelected ? 'arrow-selected' : (styleMarker[style] || 'arrow-solid');
+
+            // Build path: straight or curved Bezier
+            let d;
+            if (lineType === 'curved') {
+                // Cubic Bezier: control points follow anchor direction
+                // cp1 exits from source anchor direction, cp2 enters target anchor direction
+                const tension = Math.max(60, Math.abs(p2.x - p1.x) * 0.5, Math.abs(p2.y - p1.y) * 0.5);
+                const anchorDir = {
+                    r: [1, 0], l: [-1, 0], b: [0, 1], t: [0, -1]
+                };
+                const d1 = anchorDir[anchors.from] || [1, 0];
+                const d2 = anchorDir[anchors.to]   || [-1, 0];
+                const cp1x = p1.x + d1[0] * tension;
+                const cp1y = p1.y + d1[1] * tension;
+                const cp2x = p2.x + d2[0] * tension;
+                const cp2y = p2.y + d2[1] * tension;
+                d = `M ${p1.x} ${p1.y} C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+            } else {
+                d = `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
             }
-                
-                line.setAttribute('data-connection-id', conn.id);
-                line.setAttribute('data-from', conn.from);
-                line.setAttribute('data-to', conn.to);
-                line.setAttribute('data-style', style);
-                
-                // Add click event listener for connection selection
-                line.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    selectConnection(conn.id);
-                });
-                
-                svg.appendChild(line);
+
+            // Invisible wide hit-area for easier clicking
+            const hit = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            hit.setAttribute('d', d);
+            hit.setAttribute('class', 'conn-hit');
+            hit.setAttribute('fill', 'none');
+            hit.setAttribute('stroke', 'transparent');
+            hit.setAttribute('stroke-width', '14');
+            hit.style.cursor = 'pointer';
+            hit.style.pointerEvents = 'stroke';
+            hit.addEventListener('click', (e) => { e.stopPropagation(); selectConnection(conn.id); });
+            svg.appendChild(hit);
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', d);
+            path.setAttribute('class', 'conn-path' + (isSelected ? ' conn-selected' : ''));
+            path.setAttribute('fill', 'none');
+            path.setAttribute('stroke', stroke);
+            path.setAttribute('stroke-width', sw);
+            if (styleDash[style]) path.setAttribute('stroke-dasharray', styleDash[style]);
+            path.setAttribute('marker-end', `url(#${marker})`);
+            path.dataset.connId = conn.id;
+            path.style.pointerEvents = 'none';
+            svg.appendChild(path);
+
+            // Endpoint drag handles when selected — rendered in high-z overlay
+            if (isSelected) {
+                const hSvg = document.getElementById('handles-svg');
+                if (hSvg) {
+                    [{ pt: p1, ep: 'from', color: '#3b82f6' }, { pt: p2, ep: 'to', color: '#10b981' }].forEach(({ pt, ep, color }) => {
+                        const handle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        handle.setAttribute('cx', pt.x);
+                        handle.setAttribute('cy', pt.y);
+                        handle.setAttribute('r', '7');
+                        handle.setAttribute('class', 'conn-handle');
+                        handle.setAttribute('fill', color);
+                        handle.setAttribute('stroke', '#fff');
+                        handle.setAttribute('stroke-width', '2.5');
+                        handle.style.cssText = 'cursor:crosshair;pointer-events:fill';
+                        handle.addEventListener('mousedown', (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            startConnEndpointDrag(conn.id, ep, pt);
+                        });
+                        hSvg.appendChild(handle);
+                    });
+                }
             }
         });
     }
 
+    // ─── Endpoint re-route drag ───
+    let connEndpointDrag = null;
+
+    function startConnEndpointDrag(connId, endpoint, startPt) {
+        // Disable pointer-events on handles overlay so elementsFromPoint reaches anchors below
+        const hSvg = document.getElementById('handles-svg');
+        if (hSvg) hSvg.style.pointerEvents = 'none';
+        // Show all anchors on all nodes during drag
+        document.getElementById('mindmap-canvas').classList.add('endpoint-drag-active');
+        const svg = document.getElementById('connections-svg');
+        const preview = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        preview.setAttribute('x1', startPt.x);
+        preview.setAttribute('y1', startPt.y);
+        preview.setAttribute('x2', startPt.x);
+        preview.setAttribute('y2', startPt.y);
+        preview.setAttribute('stroke', '#f59e0b');
+        preview.setAttribute('stroke-width', '2');
+        preview.setAttribute('stroke-dasharray', '6 3');
+        preview.setAttribute('marker-end', 'url(#arrow-preview)');
+        preview.setAttribute('class', 'conn-endpoint-preview');
+        preview.style.pointerEvents = 'none';
+        svg.appendChild(preview);
+        connEndpointDrag = { connId, endpoint, previewLine: preview };
+    }
+
+    function commitConnEndpointDrag(targetNodeId, targetAnchor) {
+        if (!connEndpointDrag) return;
+        const { connId, endpoint, previewLine } = connEndpointDrag;
+        const conn = connections.find(c => c.id === connId);
+        if (conn) {
+            if (endpoint === 'from' && targetNodeId !== conn.to) {
+                conn.from = targetNodeId;
+                conn.fromAnchor = targetAnchor;
+            } else if (endpoint === 'to' && targetNodeId !== conn.from) {
+                conn.to = targetNodeId;
+                conn.toAnchor = targetAnchor;
+            }
+        }
+        previewLine.remove();
+        connEndpointDrag = null;
+        document.getElementById('mindmap-canvas').classList.remove('endpoint-drag-active');
+        document.querySelectorAll('.endpoint-drag-hover').forEach(el => el.classList.remove('endpoint-drag-hover'));
+        updateConnections();
+        if (conn) selectConnection(conn.id);
+    }
+
+    function cancelConnEndpointDrag() {
+        if (!connEndpointDrag) return;
+        connEndpointDrag.previewLine.remove();
+        connEndpointDrag = null;
+        document.getElementById('mindmap-canvas').classList.remove('endpoint-drag-active');
+        document.querySelectorAll('.endpoint-drag-hover').forEach(el => el.classList.remove('endpoint-drag-hover'));
+    }
+
     function createSolidLine(x1, y1, x2, y2) {
         // Create orthogonal L-shaped path instead of diagonal line
-        return createOrthogonalLine(x1, y1, x2, y2, 'solid-line');
+        return createOrthogonalLine(x1, y1, x2, y2, 'solid-line', 'arrowhead-solid');
     }
 
     function createDashedLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'dashed-line');
+        return createOrthogonalLine(x1, y1, x2, y2, 'dashed-line', 'arrowhead-dashed');
     }
 
     function createDottedLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'dotted-line');
+        return createOrthogonalLine(x1, y1, x2, y2, 'dotted-line', 'arrowhead-dotted');
     }
 
     function createCurvedLine(x1, y1, x2, y2) {
@@ -3738,11 +3629,12 @@
         
         path.setAttribute('d', d);
         path.setAttribute('class', 'connection-line curved-line');
+        path.setAttribute('marker-end', 'url(#arrowhead-solid)');
         return path;
     }
 
     function createThickLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'thick-line');
+        return createOrthogonalLine(x1, y1, x2, y2, 'thick-line', 'arrowhead-solid');
     }
 
     function createDoubleLine(x1, y1, x2, y2) {
@@ -3750,8 +3642,8 @@
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         
         // Calculate orthogonal path
-        const path1 = createOrthogonalLine(x1, y1 - 2, x2, y2 - 2, 'double-line');
-        const path2 = createOrthogonalLine(x1, y1 + 2, x2, y2 + 2, 'double-line');
+        const path1 = createOrthogonalLine(x1, y1 - 2, x2, y2 - 2, 'double-line', 'arrowhead-solid');
+        const path2 = createOrthogonalLine(x1, y1 + 2, x2, y2 + 2, 'double-line', null);
         
         group.appendChild(path1);
         group.appendChild(path2);
@@ -3781,190 +3673,58 @@
         
         path.setAttribute('d', d);
         path.setAttribute('class', 'connection-line wavy-line');
+        path.setAttribute('marker-end', 'url(#arrowhead-solid)');
         return path;
     }
 
     function createSubTopicLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'sub-topic-line');
+        return createOrthogonalLine(x1, y1, x2, y2, 'sub-topic-line', 'arrowhead-default');
     }
 
     function createHierarchyLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'hierarchy-line');
+        return createOrthogonalLine(x1, y1, x2, y2, 'hierarchy-line', 'arrowhead-default');
     }
 
-    function createOrthogonalLine(x1, y1, x2, y2, lineClass) {
+    function createOrthogonalLine(x1, y1, x2, y2, lineClass, arrowMarker = 'arrowhead-default') {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        
-        // Grid size for snapping
-        const GRID_SIZE = 20;
-        
-        // Calculate orthogonal path (L-shaped) with grid snapping
-        let midX = (x1 + x2) / 2;
-        let midY = (y1 + y2) / 2;
-        
-        // Snap intermediate points to grid
-        midX = Math.round(midX / GRID_SIZE) * GRID_SIZE;
-        midY = Math.round(midY / GRID_SIZE) * GRID_SIZE;
-        
-        // Determine the best L-shaped route
-        const deltaX = Math.abs(x2 - x1);
-        const deltaY = Math.abs(y2 - y1);
-        
-        let pathData;
-        if (deltaX > deltaY) {
-            // Go horizontal first, then vertical
-            pathData = `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`;
-        } else {
-            // Go vertical first, then horizontal
-            pathData = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
-        }
-        
+
+        // Direct line from anchor to anchor
+        // Anchor positions already have offset to prevent line from entering node
+        const pathData = `M ${x1} ${y1} L ${x2} ${y2}`;
+
         path.setAttribute('d', pathData);
         path.setAttribute('class', `connection-line ${lineClass}`);
         path.style.fill = 'none';
-        
+        if (arrowMarker) {
+            path.setAttribute('marker-end', `url(#${arrowMarker})`);
+        }
+
         return path;
     }
 
     function createManualPath(x1, y1, x2, y2, pathPoints, connection) {
+        // TODO: Implement manual path creation
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        
-        // Snap path points to grid
-        const GRID_SIZE = 20;
-        
-        // Create path from start node through all points to end node
-        let pathData = `M ${x1} ${y1}`;
-        pathPoints.forEach(point => {
-            const snappedX = Math.round(point.x / GRID_SIZE) * GRID_SIZE;
-            const snappedY = Math.round(point.y / GRID_SIZE) * GRID_SIZE;
-            pathData += ` L ${snappedX} ${snappedY}`;
-        });
-        pathData += ` L ${x2} ${y2}`;
-        
-        path.setAttribute('d', pathData);
+        path.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
         path.setAttribute('class', 'connection-line manual-line');
-        path.style.stroke = '#6b7280';
-        path.style.strokeWidth = '2';
-        path.style.fill = 'none';
-        path.style.pointerEvents = 'none';
-        
-        // Add control points for manual path
-        addControlPointsForPath(pathPoints, connection, x1, y1, x2, y2);
-        
         return path;
     }
 
     function addControlPointsForLine(svg, x1, y1, x2, y2, connection) {
-        // Grid size for snapping
-        const GRID_SIZE = 20;
-        
-        // Calculate orthogonal path corners for control points
-        let midX = (x1 + x2) / 2;
-        let midY = (y1 + y2) / 2;
-        const deltaX = Math.abs(x2 - x1);
-        const deltaY = Math.abs(y2 - y1);
-        
-        // Snap intermediate points to grid
-        midX = Math.round(midX / GRID_SIZE) * GRID_SIZE;
-        midY = Math.round(midY / GRID_SIZE) * GRID_SIZE;
-        
-        let corner1X, corner1Y, corner2X, corner2Y;
-        
-        if (deltaX > deltaY) {
-            // Horizontal first, then vertical
-            corner1X = midX;
-            corner1Y = y1;
-            corner2X = midX;
-            corner2Y = y2;
-        } else {
-            // Vertical first, then horizontal
-            corner1X = x1;
-            corner1Y = midY;
-            corner2X = x2;
-            corner2Y = midY;
-        }
-        
-        // Add control points at the corners of the L-shape
-        const corner1 = createControlPoint(corner1X, corner1Y, connection, 'corner1');
-        const corner2 = createControlPoint(corner2X, corner2Y, connection, 'corner2');
-        
-        svg.appendChild(corner1);
-        svg.appendChild(corner2);
-        
-        controlPoints.push({
-            element: corner1,
-            connection: connection,
-            type: 'corner1',
-            x: corner1X,
-            y: corner1Y
-        });
-        
-        controlPoints.push({
-            element: corner2,
-            connection: connection,
-            type: 'corner2',
-            x: corner2X,
-            y: corner2Y
-        });
+        // TODO: Implement control point addition for lines
     }
 
     function addControlPointsForPath(pathPoints, connection, x1, y1, x2, y2) {
-        const svg = document.getElementById('connections-svg');
-        
-        // Add control points for each path point
-        pathPoints.forEach((point, index) => {
-            const controlPoint = createControlPoint(point.x, point.y, connection, 'path', index);
-            svg.appendChild(controlPoint);
-            
-            controlPoints.push({
-                element: controlPoint,
-                connection: connection,
-                type: 'path',
-                index: index,
-                x: point.x,
-                y: point.y
-            });
-        });
-        
-        // Add midpoint control point between last path point and end node
-        const lastPoint = pathPoints.length > 0 ? pathPoints[pathPoints.length - 1] : { x: x1, y: y1 };
-        const midX = (lastPoint.x + x2) / 2;
-        const midY = (lastPoint.y + y2) / 2;
-        
-        const midControlPoint = createControlPoint(midX, midY, connection, 'midpoint-end');
-        svg.appendChild(midControlPoint);
-        
-        controlPoints.push({
-            element: midControlPoint,
-            connection: connection,
-            type: 'midpoint-end',
-            x: midX,
-            y: midY
-        });
+        // TODO: Implement control point addition for paths
     }
 
     function createControlPoint(x, y, connection, type, index = null) {
+        // TODO: Implement control point creation
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', x);
         circle.setAttribute('cy', y);
         circle.setAttribute('r', '6');
         circle.setAttribute('class', 'control-point');
-        circle.style.fill = '#3b82f6';
-        circle.style.stroke = 'white';
-        circle.style.strokeWidth = '2';
-        circle.style.cursor = 'move';
-        circle.style.pointerEvents = 'all';
-        
-        // Store connection data
-        circle.setAttribute('data-connection-id', connection.id);
-        circle.setAttribute('data-type', type);
-        if (index !== null) {
-            circle.setAttribute('data-index', index);
-        }
-        
-        // Add drag event listeners
-        circle.addEventListener('mousedown', handleControlPointMouseDown);
-        
         return circle;
     }
 
@@ -3999,6 +3759,8 @@
             nodes = [];
             connections = [];
             document.getElementById('connections-svg').innerHTML = '';
+            const hSvgFull = document.getElementById('handles-svg');
+            if (hSvgFull) hSvgFull.innerHTML = '';
             updateNodeCount();
             
             // Refresh materials list to make all materials available again in sidebar
@@ -4015,8 +3777,8 @@
         const viewportCenterY = canvasArea.clientHeight / 2;
         
         // Convert viewport coordinates to canvas coordinates
-        const centerX = (viewportCenterX - panOffset.x * zoomLevel) / zoomLevel;
-        const centerY = (viewportCenterY - panOffset.y * zoomLevel) / zoomLevel;
+        const centerX = (viewportCenterX - panOffset.x) / zoomLevel;
+        const centerY = (viewportCenterY - panOffset.y) / zoomLevel;
         
         const radius = 150;
         const angleStep = (2 * Math.PI) / nodes.length;

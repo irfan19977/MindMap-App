@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('users.index');
         $users = User::with('roles')->orderBy('created_at', 'desc')->get();
         
         return view('backend.users.index', compact('users'));
@@ -25,6 +28,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->authorize('users.create');
         $roles = Role::all();
         
         return view('backend.users.addedit', compact('roles'));
@@ -39,6 +43,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'user_type' => 'required|in:admin,teacher,student',
+            'is_active' => 'boolean',
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
         ]);
@@ -47,6 +53,8 @@ class UserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'user_type' => $validated['user_type'],
+            'is_active' => $validated['is_active'] ?? true,
         ]);
 
         if (isset($validated['roles'])) {
@@ -70,6 +78,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('users.edit');
         $roles = Role::all();
         $userRoles = $user->roles->pluck('id')->toArray();
         
@@ -85,6 +94,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
+            'user_type' => 'required|in:admin,teacher,student',
+            'is_active' => 'boolean',
             'roles' => 'nullable|array',
             'roles.*' => 'exists:roles,id',
         ]);
@@ -92,6 +103,8 @@ class UserController extends Controller
         $userData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'user_type' => $validated['user_type'],
+            'is_active' => $validated['is_active'] ?? true,
         ];
 
         if (!empty($validated['password'])) {
@@ -115,6 +128,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->authorize('users.delete');
         try {
             // Prevent deleting the currently authenticated user
             if (auth()->id() === $user->id) {

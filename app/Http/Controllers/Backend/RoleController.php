@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('roles.index');
         $roles = Role::with('permissions')->orderBy('created_at', 'desc')->get();
         
         return view('backend.roles.index', compact('roles'));
@@ -24,6 +27,7 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $this->authorize('roles.create');
         $permissions = Permission::all();
         
         return view('backend.roles.addedit', compact('permissions'));
@@ -63,6 +67,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        $this->authorize('roles.edit');
         $permissions = Permission::all();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
         
@@ -97,6 +102,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        $this->authorize('roles.delete');
         try {
             // Check if role has users
             if ($role->users()->count() > 0) {

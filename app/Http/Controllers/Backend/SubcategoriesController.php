@@ -6,17 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Subcategory;
 use App\Models\Category;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class SubcategoriesController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $subcategories = Subcategory::with('category')->get();
+        $this->authorize('subcategori.index');
+        $query = Subcategory::with('category');
+        if (auth()->user()->hasRole('teacher')) {
+            $query->where('created_by', auth()->id());
+        }
+        $subcategories = $query->get();
             
         return view('backend.subcategories.index', compact('subcategories'));
     }
@@ -26,6 +33,7 @@ class SubcategoriesController extends Controller
      */
     public function create()
     {
+        $this->authorize('subcategori.create');
         $categories = Category::all();
         return view('backend.subcategories.addedit', compact('categories'));
     }
@@ -57,6 +65,7 @@ class SubcategoriesController extends Controller
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
 
+        $validated['created_by'] = auth()->id();
         Subcategory::create($validated);
 
         return redirect()->route('subcategories.index')
@@ -76,6 +85,10 @@ class SubcategoriesController extends Controller
      */
     public function edit(Subcategory $subcategory)
     {
+        $this->authorize('subcategori.edit');
+        if (auth()->user()->hasRole('teacher') && $subcategory->created_by !== auth()->id()) {
+            return redirect()->route('subcategories.index')->with('error', 'Anda tidak memiliki akses untuk mengedit sub kategori ini.');
+        }
         $categories = Category::all();
         return view('backend.subcategories.addedit', compact('subcategory', 'categories'));
     }
@@ -125,6 +138,10 @@ class SubcategoriesController extends Controller
      */
     public function destroy(Subcategory $subcategory)
     {
+        $this->authorize('subcategori.delete');
+        if (auth()->user()->hasRole('teacher') && $subcategory->created_by !== auth()->id()) {
+            return redirect()->route('subcategories.index')->with('error', 'Anda tidak memiliki akses untuk menghapus sub kategori ini.');
+        }
         try {
             // Check if subcategory has materials
             if ($subcategory->materials()->count() > 0) {

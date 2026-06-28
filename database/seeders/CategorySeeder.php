@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -47,15 +48,20 @@ class CategorySeeder extends Seeder
             ],
         ];
 
+        $admin = User::where('email', 'irfanadiprasetyo27@gmail.com')->first();
+        $adminId = $admin?->id;
+
         foreach ($subjects as $subject) {
-            // Create main category
-            Category::create([
-                'name' => $subject['name'],
-                'slug' => $subject['slug'],
-                'description' => $subject['description'],
-                'status' => 'publish',
-                'is_featured' => $subject['is_featured'],
-            ]);
+            Category::firstOrCreate(
+                ['slug' => $subject['slug']],
+                [
+                    'name' => $subject['name'],
+                    'description' => $subject['description'],
+                    'status' => 'publish',
+                    'is_featured' => $subject['is_featured'],
+                    'created_by' => $adminId,
+                ]
+            );
         }
     }
 }

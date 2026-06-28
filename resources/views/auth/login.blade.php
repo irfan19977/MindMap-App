@@ -12,7 +12,9 @@
             <div class="minimal-card-wrapper">
                 <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
                     <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
-                        <img src="{{ asset('backend/assets/images/logo-abbr.png') }}" alt="" class="img-fluid">
+                        <a href="{{ old('intended', session()->get('url.intended', '/')) }}">
+                            <img src="{{ asset('backend/assets/images/logo-abbr.png') }}" alt="" class="img-fluid">
+                        </a>
                     </div>
                     <div class="card-body p-sm-5">
                         <h2 class="fs-20 fw-bolder mb-4">Login</h2>
@@ -28,6 +30,7 @@
 
                         <form method="POST" action="{{ route('login') }}" class="w-100 mt-4 pt-2">
                             @csrf
+                            <input type="hidden" name="intended" value="{{ old('intended', session()->get('url.intended', url()->previous())) }}">
                             
                             <div class="mb-4">
                                 <input type="email" class="form-control" name="email" placeholder="Email or Username" value="{{ old('email') }}" required autofocus autocomplete="username">

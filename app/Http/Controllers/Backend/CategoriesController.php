@@ -5,17 +5,24 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class CategoriesController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = Category::orderBy('created_at', 'desc')->get();
+        $this->authorize('category.index');
+        $query = Category::orderBy('created_at', 'desc');
+        if (auth()->user()->hasRole('teacher')) {
+            $query->where('created_by', auth()->id());
+        }
+        $categories = $query->get();
             
         return view('backend.categories.index', compact('categories'));
     }
@@ -25,6 +32,7 @@ class CategoriesController extends Controller
      */
     public function create()
     {
+        $this->authorize('category.create');
         return view('backend.categories.addedit');
     }
 
@@ -53,6 +61,7 @@ class CategoriesController extends Controller
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
 
+        $validated['created_by'] = auth()->id();
         Category::create($validated);
 
         return redirect()->route('categories.index')
@@ -72,6 +81,10 @@ class CategoriesController extends Controller
      */
     public function edit(Category $category)
     {
+         $this->authorize('category.edit');
+        if (auth()->user()->hasRole('teacher') && $category->created_by !== auth()->id()) {
+            return redirect()->route('categories.index')->with('error', 'Anda tidak memiliki akses untuk mengedit kategori ini.');
+        }
         return view('backend.categories.addedit', compact('category'));
     }
 
@@ -118,6 +131,10 @@ class CategoriesController extends Controller
      */
     public function destroy(Category $category)
     {
+         $this->authorize('category.delete');
+        if (auth()->user()->hasRole('teacher') && $category->created_by !== auth()->id()) {
+            return redirect()->route('categories.index')->with('error', 'Anda tidak memiliki akses untuk menghapus kategori ini.');
+        }
         try {
             // Check if category has subcategories
             if ($category->subcategories()->count() > 0) {

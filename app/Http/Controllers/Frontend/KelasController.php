@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Material;
+use App\Models\UserProgress;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class KelasController extends Controller
 {
@@ -85,7 +87,26 @@ class KelasController extends Controller
         if ($subcategory) {
             // Jika subcategory, ambil materials
             $subcategory->load('materials');
-            return view('frontend.mindmap', compact('subcategory'));
+            // Cek apakah ada mindmap untuk subcategory ini
+            $mindmap = \App\Models\Mindmap::where('reference_id', $subcategory->id)
+                ->published()
+                ->first();
+
+            // Enrich mindmap structure with material slugs
+            if ($mindmap && $mindmap->structure) {
+                $mindmap->structure = $this->enrichMindmapWithSlugs($mindmap->structure);
+            }
+
+            // Debug log
+            \Log::info('Subcategory found for mindmap', [
+                'slug' => $slug,
+                'subcategory_id' => $subcategory->id,
+                'subcategory_name' => $subcategory->name,
+                'mindmap_found' => $mindmap ? true : false,
+                'mindmap_id' => $mindmap ? $mindmap->id : null
+            ]);
+
+            return view('frontend.mindmap', compact('subcategory', 'mindmap'));
         }
 
         // Jika tidak ada di subcategories, cek di categories
@@ -93,7 +114,50 @@ class KelasController extends Controller
             ->with('children')
             ->firstOrFail();
 
-        return view('frontend.mindmap', compact('category'));
+        // Load materials from all subcategories of this category
+        $category->load('children.materials');
+
+        // Cek apakah ada mindmap untuk category ini
+        $mindmap = \App\Models\Mindmap::where('reference_id', $category->id)
+            ->published()
+            ->first();
+
+        // Enrich mindmap structure with material slugs
+        if ($mindmap && $mindmap->structure) {
+            $mindmap->structure = $this->enrichMindmapWithSlugs($mindmap->structure);
+        }
+
+        // Debug log
+        \Log::info('Category found for mindmap', [
+            'slug' => $slug,
+            'category_id' => $category->id,
+            'category_name' => $category->name,
+            'mindmap_found' => $mindmap ? true : false,
+            'mindmap_id' => $mindmap ? $mindmap->id : null
+        ]);
+
+        return view('frontend.mindmap', compact('category', 'mindmap'));
+    }
+
+    /**
+     * Enrich mindmap structure with material slugs
+     */
+    private function enrichMindmapWithSlugs($structure)
+    {
+        if (!isset($structure['nodes'])) {
+            return $structure;
+        }
+
+        foreach ($structure['nodes'] as &$node) {
+            if (isset($node['materialId'])) {
+                $material = Material::find($node['materialId']);
+                if ($material) {
+                    $node['materialSlug'] = $material->slug;
+                }
+            }
+        }
+
+        return $structure;
     }
 
     public function showMateri($slug)
@@ -112,6 +176,61 @@ class KelasController extends Controller
             ->limit(4)
             ->get();
 
-        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials'));
+        // Check if user has passed this quiz
+        $passedQuizAttempt = null;
+        if (Auth::check()) {
+            $quiz = $material->quizzes()->where('status', 'publish')->first();
+            if ($quiz) {
+                $passedQuizAttempt = \App\Models\QuizAttempt::where('user_id', Auth::id())
+                    ->where('quiz_id', $quiz->id)
+                    ->where('status', 'passed')
+                    ->with('quizAnswers.quizQuestion')
+                    ->latest()
+                    ->first();
+            }
+        }
+
+        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials', 'passedQuizAttempt'));
+    }
+
+    /**
+     * Get user progress for materials
+     */
+    public function getUserProgress()
+    {
+        if (!Auth::check()) {
+            return response()->json(['completed_materials' => []]);
+        }
+
+        $user = Auth::user();
+
+        // Materi dianggap selesai/unlock jika quiz-nya lulus (status = passed)
+        $passedMaterialIds = \App\Models\QuizAttempt::where('user_id', $user->id)
+            ->where('status', 'passed')
+            ->with('quiz:id,material_id')
+            ->get()
+            ->pluck('quiz.material_id')
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        // Juga sertakan materi yang tidak punya quiz (langsung dianggap selesai jika pernah dibuka)
+        $progressedMaterials = UserProgress::where('user_id', $user->id)
+            ->whereNotNull('completed_at')
+            ->pluck('material_id')
+            ->toArray();
+
+        // Material tanpa quiz yang sudah dibuka dianggap selesai
+        $materialsWithoutQuiz = \App\Models\Material::whereIn('id', $progressedMaterials)
+            ->whereDoesntHave('quizzes', function($q) {
+                $q->where('status', 'publish');
+            })
+            ->pluck('id')
+            ->toArray();
+
+        $completedMaterials = array_unique(array_merge($passedMaterialIds, $materialsWithoutQuiz));
+
+        return response()->json(['completed_materials' => $completedMaterials]);
     }
 }

@@ -80,6 +80,43 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="user_type" class="form-label">Tipe User <span class="text-danger">*</span></label>
+                                            <select class="form-select @error('user_type') is-invalid @enderror"
+                                                    id="user_type" name="user_type">
+                                                <option value="">Pilih Tipe User</option>
+                                                <option value="admin" {{ (old('user_type') ?? $user->user_type ?? '') === 'admin' ? 'selected' : '' }}>Admin</option>
+                                                <option value="teacher" {{ (old('user_type') ?? $user->user_type ?? '') === 'teacher' ? 'selected' : '' }}>Guru</option>
+                                                <option value="student" {{ (old('user_type') ?? $user->user_type ?? '') === 'student' ? 'selected' : '' }}>Siswa</option>
+                                            </select>
+                                            @error('user_type')
+                                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <div class="form-check mt-4">
+                                                <input class="form-check-input" 
+                                                       type="checkbox" 
+                                                       id="is_active" 
+                                                       name="is_active"
+                                                       value="1"
+                                                       @if(isset($user) && $user->is_active) checked @elseif(!isset($user)) checked @endif>
+                                                <label class="form-check-label" for="is_active">
+                                                    User Aktif
+                                                </label>
+                                            </div>
+                                            @error('is_active')
+                                                <div class="text-danger small mt-1">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
                                 
                                 <div class="row">
                                     <div class="col-md-6">

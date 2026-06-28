@@ -25,6 +25,7 @@ class Material extends Model
         'cover_image',
         'latihan_data',
         'quiz_data',
+        'created_by',
     ];
 
     protected $casts = [
@@ -91,6 +92,14 @@ class Material extends Model
     public function quizzes(): HasMany
     {
         return $this->hasMany(Quiz::class);
+    }
+
+    /**
+     * Get the user progress for the material.
+     */
+    public function userProgresses(): HasMany
+    {
+        return $this->hasMany(UserProgress::class);
     }
 
     /**

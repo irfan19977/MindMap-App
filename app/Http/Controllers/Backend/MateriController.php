@@ -10,20 +10,25 @@ use App\Models\Subcategory;
 use App\Models\PracticeQuestion;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PdfParser;
 
 class MateriController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $materis = Material::with('subcategory.category')
-            ->orderBy('title', 'asc')
-            ->get();
+        $this->authorize('materi.index');
+        $query = Material::with('subcategory.category')->orderBy('title', 'asc');
+        if (auth()->user()->hasRole('teacher')) {
+            $query->where('created_by', auth()->id());
+        }
+        $materis = $query->get();
             
         return view('backend.materis.index', compact('materis'));
     }
@@ -33,6 +38,7 @@ class MateriController extends Controller
      */
     public function create()
     {
+        $this->authorize('materi.create');
         $categories = Category::where('status', 'publish')
             ->orderBy('name', 'asc')
             ->get();
@@ -49,9 +55,6 @@ class MateriController extends Controller
      */
     public function store(Request $request)
     {
-        // Debug: Log all incoming data
-        \Log::info('Materi Store Request:', $request->all());
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -71,6 +74,7 @@ class MateriController extends Controller
         $validated['is_free'] = $request->has('is_free');
 
         // Create material
+        $validated['created_by'] = auth()->id();
         $material = Material::create($validated);
 
         // Save latihan (practice questions)
@@ -113,9 +117,6 @@ class MateriController extends Controller
             }
         }
 
-        // Debug: Log created material
-        \Log::info('Created Material:', $material->toArray());
-
         return redirect()->route('materis.index')
             ->with('success', 'Materi berhasil ditambahkan!');
     }
@@ -133,6 +134,10 @@ class MateriController extends Controller
      */
     public function edit(Material $materi)
     {
+        $this->authorize('materi.edit');
+        if (auth()->user()->hasRole('teacher') && $materi->created_by !== auth()->id()) {
+            return redirect()->route('materis.index')->with('error', 'Anda tidak memiliki akses untuk mengedit materi ini.');
+        }
         $categories = Category::where('status', 'publish')
             ->orderBy('name', 'asc')
             ->get();
@@ -152,9 +157,6 @@ class MateriController extends Controller
      */
     public function update(Request $request, Material $materi)
     {
-        // Debug: Log all incoming data
-        \Log::info('Materi Update Request:', $request->all());
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -218,9 +220,6 @@ class MateriController extends Controller
             }
         }
 
-        // Debug: Log updated material
-        \Log::info('Updated Material:', $materi->toArray());
-
         return redirect()->route('materis.index')
             ->with('success', 'Materi berhasil diperbarui!');
     }
@@ -230,6 +229,10 @@ class MateriController extends Controller
      */
     public function destroy(Material $materi)
     {
+        $this->authorize('materi.delete');
+        if (auth()->user()->hasRole('teacher') && $materi->created_by !== auth()->id()) {
+            return redirect()->route('materis.index')->with('error', 'Anda tidak memiliki akses untuk menghapus materi ini.');
+        }
         // Delete cover image if exists
         if ($materi->cover_image) {
             Storage::disk('public')->delete($materi->cover_image);

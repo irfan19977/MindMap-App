@@ -58,6 +58,26 @@
                             <span class="nxl-mtext">MindMap</span>
                         </a>
                     </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-help-circle"></i></span>
+                            <span class="nxl-mtext">Manajemen Quiz</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quizzes.index') }}">Semua Quiz</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quizzes.create') }}">Tambah Quiz</a></li>
+                        </ul>
+                    </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-external-link"></i></span>
+                            <span class="nxl-mtext">Quiz Frontend</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quiz.index') }}" target="_blank">Quiz Center</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quiz.progress') }}" target="_blank">Progress Belajar</a></li>
+                        </ul>
+                    </li>
                     <li class="nxl-item nxl-caption">
                         <label>Laporan & Analitik</label>
                     </li>
