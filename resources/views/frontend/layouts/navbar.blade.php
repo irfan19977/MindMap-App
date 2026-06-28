@@ -9,6 +9,7 @@
             <li class="hidden"><a href="#page-top"></a></li>
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
+            <li><a href="/teacher">Teacher</a></li>
             <li><a href="#">Kelas <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><strong class="text-muted">Akademik</strong></li>
