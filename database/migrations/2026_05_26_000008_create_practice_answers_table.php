@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreign('practice_question_id')->references('id')->on('practice_questions')->onDelete('cascade');
             $table->text('user_answer');
             $table->boolean('is_correct');
+            $table->integer('points_earned')->default(0);
             $table->timestamps();
             
             // Indexes untuk performance

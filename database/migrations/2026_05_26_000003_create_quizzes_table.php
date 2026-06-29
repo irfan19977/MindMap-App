@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('quizzes', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('material_id');
+            $table->uuid('material_id')->nullable();
             $table->foreign('material_id')->references('id')->on('materials')->onDelete('cascade');
             $table->string('title');
             $table->text('description')->nullable();

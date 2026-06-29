@@ -22,7 +22,10 @@ return new class extends Migration
             $table->longText('content')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
             $table->boolean('is_free')->default(true);
-            $table->string('cover_image')->nullable();
+            $table->json('latihan_data')->nullable();
+            $table->json('quiz_data')->nullable();
+            $table->integer('order_number')->default(0);
+            $table->string('created_by')->nullable();
             $table->timestamps();
             
             // Indexes untuk performance

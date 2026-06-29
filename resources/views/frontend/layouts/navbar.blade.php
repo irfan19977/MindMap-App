@@ -9,6 +9,7 @@
             <li class="hidden"><a href="#page-top"></a></li>
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
+            <li><a href="/teacher">Guru</a></li>
             <li><a href="#">Kelas <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><strong class="text-muted">Akademik</strong></li>
@@ -49,7 +50,6 @@
                 <li><a href="/layanan/sertifikat"><i class="fa fa-certificate fa-lg fa-fw"></i> Sertifikat</a></li>
               </ul>
             </li>
-            <li><a href="{{ route('quiz.index') }}">Quiz</a></li>
             <li><a href="/contact">Contact</a></li>
             <li class="menu-divider visible-lg">&nbsp;</li>
             @auth
@@ -64,7 +64,7 @@
               <ul class="dropdown-menu">
                 <li class="dropdown-header">{{ auth()->user()->name }}<br><small class="text-muted">{{ auth()->user()->email }}</small></li>
                 <li class="divider"></li>
-                <li><a href="/profile"><i class="fa fa-user fa-fw"></i> Profile</a></li>
+                <li><a href="{{ auth()->user()->student ? route('student.profile') : '/profile' }}"><i class="fa fa-user fa-fw"></i> Profile</a></li>
                 <li><a href="/learning-tracking"><i class="fa fa-chart-line fa-fw"></i> Learning Tracking</a></li>
                 <li><a href="/sertifikat"><i class="fa fa-certificate fa-fw"></i> Sertifikat</a></li>
                 <li class="divider"></li>

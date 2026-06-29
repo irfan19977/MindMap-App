@@ -58,8 +58,6 @@
 	
 	<script src="{{ asset('backend/assets/js/settings-init.min.js') }}"></script>	
 
-	<script src="{{ asset('backend/assets/js/widgets-charts-init.min.js') }}"></script>	
-
 	<script src="{{ asset('backend/assets/js/widgets-lists-init.min.js') }}"></script>	
 
 	<script src="{{ asset('backend/assets/js/widgets-miscellaneous-init.min.js') }}"></script>

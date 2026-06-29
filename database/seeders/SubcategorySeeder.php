@@ -39,6 +39,7 @@ class SubcategorySeeder extends Seeder
                             'curriculum' => $curriculum,
                             'status' => 'publish',
                             'is_featured' => false,
+                            'created_by' => $category->created_by,
                         ]
                     );
                 }

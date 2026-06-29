@@ -626,6 +626,7 @@ class MindmapSeeder extends Seeder
                     'title'     => $data['title'],
                     'structure' => ['nodes' => $nodeList, 'connections' => $connections],
                     'status'    => 'publish',
+                    'created_by' => $subcategory->created_by,
                 ]
             );
         }

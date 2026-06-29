@@ -25,12 +25,6 @@ class User extends Authenticatable
         'email',
         'password',
         'theme_preferences',
-        'phone',
-        'school',
-        'subject',
-        'address',
-        'user_type',
-        'is_active',
     ];
 
     /**
@@ -55,5 +49,25 @@ class User extends Authenticatable
             'password' => 'hashed',
             'theme_preferences' => 'array',
         ];
+    }
+
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
+    }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+
+    public function umumUser()
+    {
+        return $this->hasOne(UmumUser::class);
+    }
+
+    public function userProgress()
+    {
+        return $this->hasMany(UserProgress::class);
     }
 }

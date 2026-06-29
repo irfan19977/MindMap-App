@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('cover_image')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
             $table->boolean('is_featured')->default(false);
+            $table->string('created_by')->nullable();
             $table->timestamps();
             
             // Indexes untuk performance

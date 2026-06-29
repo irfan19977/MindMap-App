@@ -3,7 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Teacher;
+use App\Models\Student;
+use App\Models\UmumUser;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -68,6 +72,7 @@ class RoleAndUserSeeder extends Seeder
         $adminRole   = Role::firstOrCreate(['name' => 'admin']);
         $teacherRole = Role::firstOrCreate(['name' => 'teacher']);
         $studentRole = Role::firstOrCreate(['name' => 'student']);
+        $umumRole    = Role::firstOrCreate(['name' => 'umum']);
 
         // Admin: semua permissions
         $adminRole->syncPermissions($permissions);
@@ -92,6 +97,9 @@ class RoleAndUserSeeder extends Seeder
         // Student: tidak ada akses backend
         $studentRole->syncPermissions([]);
 
+        // Umum: tidak ada akses backend
+        $umumRole->syncPermissions([]);
+
         // Create Admin user
         $admin = User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
@@ -102,25 +110,58 @@ class RoleAndUserSeeder extends Seeder
         );
         $admin->syncRoles([$adminRole]);
 
-        // Create Teacher user
-        $teacher = User::firstOrCreate(
+        // Create Teacher user + teacher profile
+        $teacherUser = User::firstOrCreate(
             ['email' => 'teacher@gmail.com'],
             [
                 'name'     => 'Guru MindMap',
                 'password' => bcrypt('password'),
             ]
         );
-        $teacher->syncRoles([$teacherRole]);
+        $teacherUser->syncRoles([$teacherRole]);
+        Teacher::firstOrCreate(
+            ['user_id' => $teacherUser->id],
+            [
+                'slug' => 'guru-mindmap',
+                'specialization' => 'Matematika & Fisika',
+                'category' => 'akademik',
+                'description' => 'Guru default untuk testing aplikasi MindMap',
+                'education' => 'S1 Pendidikan',
+                'experience' => '5 tahun mengajar',
+            ]
+        );
 
-        // Create Student user
-        $student = User::firstOrCreate(
+        // Create Student user + student profile
+        $studentUser = User::firstOrCreate(
             ['email' => 'student@gmail.com'],
             [
                 'name'     => 'Siswa MindMap',
                 'password' => bcrypt('password'),
             ]
         );
-        $student->syncRoles([$studentRole]);
+        $studentUser->syncRoles([$studentRole]);
+        Student::firstOrCreate(
+            ['user_id' => $studentUser->id],
+            [
+                'school' => 'SMA Negeri 1',
+            ]
+        );
+
+        // Create Umum user + umum profile
+        $umumUser = User::firstOrCreate(
+            ['email' => 'umum@gmail.com'],
+            [
+                'name'     => 'User Umum',
+                'password' => bcrypt('password'),
+            ]
+        );
+        $umumUser->syncRoles([$umumRole]);
+        UmumUser::firstOrCreate(
+            ['user_id' => $umumUser->id],
+            [
+                'occupation' => 'Karyawan',
+            ]
+        );
 
         // Assign admin role to existing Irfan user if present
         $irfan = User::where('email', 'irfanadiprasetyo27@gmail.com')->first();

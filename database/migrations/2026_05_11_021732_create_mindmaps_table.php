@@ -18,6 +18,7 @@ return new class extends Migration
             $table->json('structure')->nullable();
             $table->string('thumbnail')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
+            $table->string('created_by')->nullable();
             $table->timestamps();
 
             // Indexes untuk performance

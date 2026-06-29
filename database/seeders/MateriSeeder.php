@@ -348,6 +348,7 @@ class MateriSeeder extends Seeder
                                 'latihan_data' => $latihanData,
                                 'status' => 'publish',
                                 'is_free' => true,
+                                'created_by' => $subcategory->created_by,
                             ]
                         );
 

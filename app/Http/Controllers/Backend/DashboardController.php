@@ -3,6 +3,14 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Subcategory;
+use App\Models\Material;
+use App\Models\Mindmap;
+use App\Models\User;
+use App\Models\UserProgress;
+use App\Models\QuizAttempt;
+use App\Models\SiteVisit;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -12,7 +20,65 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('backend.dashboard.index');
+        // Summary stats
+        $totalUsers = User::count();
+        $totalStudents = User::role('student')->count();
+        $totalTeachers = User::role('teacher')->count();
+        $totalCategories = Category::count();
+        $totalSubcategories = Subcategory::count();
+        $totalMaterials = Material::count();
+        $totalMindmaps = Mindmap::count();
+
+        // Learning activity stats
+        $totalProgress = UserProgress::count();
+        $completedMaterials = UserProgress::whereNotNull('completed_at')->count();
+        $totalQuizAttempts = QuizAttempt::count();
+        $quizPassedCount = QuizAttempt::where('status', 'passed')->count();
+        $averageScore = QuizAttempt::avg('score') ?? 0;
+
+        // Recent activity - latest user progress
+        $recentProgress = UserProgress::with(['user', 'material'])
+            ->orderBy('updated_at', 'desc')
+            ->take(10)
+            ->get();
+
+        // Recent quiz attempts
+        $recentQuizAttempts = QuizAttempt::with(['user', 'quiz'])
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        // Top students by completed materials
+        $topStudents = User::role('student')
+            ->withCount(['userProgress as completed_count' => function ($q) {
+                $q->whereNotNull('completed_at');
+            }])
+            ->orderBy('completed_count', 'desc')
+            ->take(5)
+            ->get();
+
+        // Content stats per category
+        $categoryStats = Category::withCount(['subcategories'])->get();
+
+        // Platform chart: visits & registrations per day (30 days)
+        $platformChart = collect();
+        for ($i = 29; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $platformChart->push([
+                'date' => now()->subDays($i)->format('d M'),
+                'visits' => SiteVisit::where('visited_date', $date)->count(),
+                'registrations' => User::whereDate('created_at', $date)->count(),
+            ]);
+        }
+        $todayVisits = SiteVisit::where('visited_date', now()->toDateString())->count();
+
+        return view('backend.dashboard.index', compact(
+            'totalUsers', 'totalStudents', 'totalTeachers',
+            'totalCategories', 'totalSubcategories', 'totalMaterials', 'totalMindmaps',
+            'totalProgress', 'completedMaterials', 'totalQuizAttempts', 'quizPassedCount', 'averageScore',
+            'recentProgress', 'recentQuizAttempts', 'topStudents', 'categoryStats',
+            'platformChart', 'todayVisits'
+        ));
     }
 
     /**
