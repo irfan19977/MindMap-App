@@ -31,6 +31,7 @@ class User extends Authenticatable
         'address',
         'user_type',
         'is_active',
+        'last_login_at',
     ];
 
     /**

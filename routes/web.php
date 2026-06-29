@@ -14,13 +14,12 @@ use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\Frontend\QuizController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\AIController;
-HEAD
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\Backend\EngagementController;
 
 use App\Http\Controllers\PracticeAnswerController;
 use App\Http\Controllers\QuizAttemptController;
-    ebc41f5181b35e30586690fb9d7f15c42baefc6a
 
 Route::get('/', function () {
     return view('frontend.index');
@@ -62,6 +61,23 @@ Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.his
 
 Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
    Route::resource('dashboard', DashboardController::class);
+
+   // Engagement dashboard routes
+   Route::get('/engagement', [EngagementController::class, 'index'])->name('engagement.index');
+   Route::get('/engagement/analytics', [EngagementController::class, 'analytics'])->name('engagement.analytics');
+   Route::get('/engagement/user-activity', [EngagementController::class, 'userActivity'])->name('engagement.user-activity');
+   Route::get('/engagement/retention', [EngagementController::class, 'retention'])->name('engagement.retention');
+   Route::get('/engagement/content-performance', [EngagementController::class, 'contentPerformance'])->name('engagement.content-performance');
+   Route::get('/engagement/export', [EngagementController::class, 'export'])->name('engagement.export');
+   Route::get('/engagement/activity-feed', [EngagementController::class, 'activityFeed'])->name('engagement.activity-feed');
+   Route::get('/engagement/heatmap', [EngagementController::class, 'heatmap'])->name('engagement.heatmap');
+   Route::get('/engagement/funnel-analysis', [EngagementController::class, 'funnelAnalysis'])->name('engagement.funnel-analysis');
+   Route::get('/engagement/geographic', [EngagementController::class, 'geographicDistribution'])->name('engagement.geographic');
+   Route::get('/engagement/user-journey', [EngagementController::class, 'userJourney'])->name('engagement.user-journey');
+   Route::get('/engagement/live-online', [EngagementController::class, 'liveOnlineUsers'])->name('engagement.live-online');
+   Route::get('/engagement/segmentation', [EngagementController::class, 'userSegmentation'])->name('engagement.segmentation');
+   Route::get('/engagement/alerts', [EngagementController::class, 'alerts'])->name('engagement.alerts');
+   Route::get('/engagement/custom-range', [EngagementController::class, 'customRangeAnalytics'])->name('engagement.custom-range');
 
    Route::resource('categories', CategoriesController::class);
    Route::resource('subcategories', SubcategoriesController::class);
