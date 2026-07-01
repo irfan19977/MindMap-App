@@ -13,6 +13,75 @@
                         <li class="breadcrumb-item">Dashboard</li>
                     </ul>
                 </div>
+                <div class="page-header-right ms-auto">
+                    <div class="page-header-right-items">
+                        <div class="d-flex d-md-none">
+                            <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                                <i class="feather-arrow-left me-2"></i>
+                                <span>Back</span>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            <div class="dropdown">
+                                <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown">
+                                    <i class="feather-calendar me-2"></i>
+                                    <span>Last 7 Days</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="{{ route('dashboard.index') }}?period=7" class="dropdown-item">Last 7 Days</a>
+                                    <a href="{{ route('dashboard.index') }}?period=30" class="dropdown-item">Last 30 Days</a>
+                                    <a href="{{ route('dashboard.index') }}?period=90" class="dropdown-item">Last 90 Days</a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown">
+                                    <i class="feather-zap me-2"></i>
+                                    <span>Aksi Cepat</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="{{ route('categories.create') }}" class="dropdown-item">
+                                        <i class="feather-folder-plus me-2 text-primary"></i>Tambah Kategori
+                                    </a>
+                                    <a href="{{ route('materis.create') }}" class="dropdown-item">
+                                        <i class="feather-file-plus me-2 text-success"></i>Tambah Materi
+                                    </a>
+                                    <a href="{{ route('mindmap.index') }}" class="dropdown-item">
+                                        <i class="feather-git-branch me-2 text-warning"></i>Kelola MindMap
+                                    </a>
+                                    <hr class="my-1">
+                                    <a href="{{ route('learning-results.index') }}" class="dropdown-item">
+                                        <i class="feather-activity me-2 text-danger"></i>Hasil Pembelajaran
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="dropdown">
+                                <a class="btn btn-md btn-primary" data-bs-toggle="dropdown">
+                                    <i class="feather-download me-2"></i>
+                                    <span>Export</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <a href="{{ route('engagement.export', ['type' => 'users', 'format' => 'csv']) }}" class="dropdown-item">
+                                        <i class="feather-users me-2"></i>Users (CSV)
+                                    </a>
+                                    <a href="{{ route('engagement.export', ['type' => 'categories', 'format' => 'csv']) }}" class="dropdown-item">
+                                        <i class="feather-folder me-2"></i>Categories (CSV)
+                                    </a>
+                                    <a href="{{ route('engagement.export', ['type' => 'analytics', 'format' => 'csv']) }}" class="dropdown-item">
+                                        <i class="feather-file-text me-2"></i>Analytics (CSV)
+                                    </a>
+                                    <a href="{{ route('engagement.export', ['type' => 'analytics', 'format' => 'json']) }}" class="dropdown-item">
+                                        <i class="feather-code me-2"></i>Analytics (JSON)
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
@@ -301,44 +370,6 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions Row -->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">Aksi Cepat</h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-3 col-sm-6">
-                                        <a href="{{ route('categories.create') }}" class="btn btn-soft-primary w-100 py-3">
-                                            <i class="feather-folder-plus d-block fs-3 mb-2"></i>
-                                            Tambah Kategori
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <a href="{{ route('materis.create') }}" class="btn btn-soft-success w-100 py-3">
-                                            <i class="feather-file-plus d-block fs-3 mb-2"></i>
-                                            Tambah Materi
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <a href="{{ route('mindmap.index') }}" class="btn btn-soft-warning w-100 py-3">
-                                            <i class="feather-git-branch d-block fs-3 mb-2"></i>
-                                            Kelola MindMap
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6">
-                                        <a href="{{ route('learning-results.index') }}" class="btn btn-soft-danger w-100 py-3">
-                                            <i class="feather-activity d-block fs-3 mb-2"></i>
-                                            Hasil Pembelajaran
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             <!-- [ Main Content ] end -->
         </div>

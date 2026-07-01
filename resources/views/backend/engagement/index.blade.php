@@ -36,6 +36,30 @@
                             </div>
                         </div>
                         <div class="dropdown">
+                            <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown">
+                                <i class="feather-zap me-2"></i>
+                                <span>Quick Actions</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a href="{{ route('users.create') }}" class="dropdown-item">
+                                    <i class="feather-user-plus me-2 text-primary"></i>Add User
+                                </a>
+                                <a href="{{ route('categories.create') }}" class="dropdown-item">
+                                    <i class="feather-folder-plus me-2 text-success"></i>Add Category
+                                </a>
+                                <a href="{{ route('materis.create') }}" class="dropdown-item">
+                                    <i class="feather-file-plus me-2 text-warning"></i>Add Materi
+                                </a>
+                                <hr class="my-1">
+                                <a href="{{ route('categories.index') }}" class="dropdown-item">
+                                    <i class="feather-layers me-2 text-info"></i>Manage Categories
+                                </a>
+                                <a href="{{ route('users.index') }}" class="dropdown-item">
+                                    <i class="feather-users me-2 text-secondary"></i>Manage Users
+                                </a>
+                            </div>
+                        </div>
+                        <div class="dropdown">
                             <a class="btn btn-md btn-primary" data-bs-toggle="dropdown">
                                 <i class="feather-download me-2"></i>
                                 <span>Export</span>
@@ -55,9 +79,6 @@
                                 </a>
                             </div>
                         </div>
-                        <button class="btn btn-md btn-light" onclick="toggleDarkMode()" id="darkModeToggle">
-                            <i class="feather-moon" id="darkModeIcon"></i>
-                        </button>
                     </div>
                 </div>
                 <div class="d-md-none d-flex align-items-center">
@@ -69,39 +90,6 @@
         </div>
         <!-- [ page-header ] end -->
         
-        <!-- Quick Actions Bar -->
-        <div class="quick-actions-bar mb-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h6 class="mb-3">Quick Actions</h6>
-                            <div class="d-flex flex-wrap gap-2">
-                                <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary">
-                                    <i class="feather-user-plus me-1"></i> Add User
-                                </a>
-                                <a href="{{ route('categories.create') }}" class="btn btn-sm btn-success">
-                                    <i class="feather-folder-plus me-1"></i> Add Category
-                                </a>
-                                <a href="{{ route('materis.create') }}" class="btn btn-sm btn-warning">
-                                    <i class="feather-file-plus me-1"></i> Add Materi
-                                </a>
-                                <a href="{{ route('categories.index') }}" class="btn btn-sm btn-info">
-                                    <i class="feather-layers me-1"></i> Manage Categories
-                                </a>
-                                <a href="{{ route('users.index') }}" class="btn btn-sm btn-secondary">
-                                    <i class="feather-users me-1"></i> Manage Users
-                                </a>
-                                <a href="{{ route('engagement.export', ['type' => 'analytics', 'format' => 'csv']) }}" class="btn btn-sm btn-dark">
-                                    <i class="feather-download me-1"></i> Export Report
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- [ Quick Actions Bar ] end -->
         
         <!-- [ Main Content ] start -->
         <div class="main-content">
@@ -110,22 +98,23 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
-                            <div class="d-flex align-items-start justify-content-between mb-4">
-                                <div class="d-flex gap-4 align-items-center">
-                                    <div class="avatar-text avatar-lg bg-primary-soft">
-                                        <i class="feather-users text-primary"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $totalUsers }}</span></div>
-                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Total Users</h3>
-                                    </div>
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="avatar-text avatar-lg bg-soft-primary text-primary rounded">
+                                    <i class="feather-users fs-4"></i>
                                 </div>
-                                <span class="badge bg-success-soft text-success">+12%</span>
+                                <div>
+                                    <div class="fs-4 fw-bold text-dark">{{ $totalUsers }}</div>
+                                    <h3 class="fs-13 fw-semibold text-muted">Total Users</h3>
+                                </div>
                             </div>
-                            <div class="pt-4">
+                            <div class="pt-3">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fs-12 fw-medium text-muted">New this week</span>
-                                    <span class="fs-12 text-dark">{{ $userGrowth->sum('count') }}</span>
+                                    <span class="fs-12 text-muted">New this week</span>
+                                    <span class="fs-12 text-dark fw-semibold">{{ $userGrowth->sum('count') }}</span>
+                                </div>
+                                <div class="progress mt-2 ht-3">
+                                    @php $weeklyPercent = $totalUsers > 0 ? min(round(($userGrowth->sum('count') / $totalUsers) * 100), 100) : 0; @endphp
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $weeklyPercent }}%"></div>
                                 </div>
                             </div>
                         </div>
@@ -135,25 +124,25 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
-                            <div class="d-flex align-items-start justify-content-between mb-4">
-                                <div class="d-flex gap-4 align-items-center">
-                                    <div class="avatar-text avatar-lg bg-success-soft">
-                                        <i class="feather-wifi text-success"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fs-4 fw-bold text-dark">
-                                            <span class="counter" id="liveOnlineCount">--</span>
-                                            <span class="live-indicator" style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-left: 4px; animation: pulse 2s infinite;"></span>
-                                        </div>
-                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Online Now</h3>
-                                    </div>
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="avatar-text avatar-lg bg-soft-success text-success rounded">
+                                    <i class="feather-wifi fs-4"></i>
                                 </div>
-                                <span class="badge bg-success-soft text-success">Live</span>
+                                <div>
+                                    <div class="fs-4 fw-bold text-dark">
+                                        <span id="liveOnlineCount">--</span>
+                                        <span class="live-indicator" style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-left: 4px; animation: pulse 2s infinite;"></span>
+                                    </div>
+                                    <h3 class="fs-13 fw-semibold text-muted">Online Now</h3>
+                                </div>
                             </div>
-                            <div class="pt-4">
+                            <div class="pt-3">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fs-12 fw-medium text-muted">Updated</span>
-                                    <span class="fs-12 text-dark" id="liveTimestamp">--:--:--</span>
+                                    <span class="fs-12 text-muted">Updated</span>
+                                    <span class="fs-12 text-dark fw-semibold" id="liveTimestamp">--:--:--</span>
+                                </div>
+                                <div class="progress mt-2 ht-3">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
                                 </div>
                             </div>
                         </div>
@@ -163,22 +152,23 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
-                            <div class="d-flex align-items-start justify-content-between mb-4">
-                                <div class="d-flex gap-4 align-items-center">
-                                    <div class="avatar-text avatar-lg bg-warning-soft">
-                                        <i class="feather-folder text-warning"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $totalCategories }}</span></div>
-                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Total Categories</h3>
-                                    </div>
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="avatar-text avatar-lg bg-soft-warning text-warning rounded">
+                                    <i class="feather-folder fs-4"></i>
                                 </div>
-                                <span class="badge bg-info-soft text-info">+5%</span>
+                                <div>
+                                    <div class="fs-4 fw-bold text-dark">{{ $totalCategories }}</div>
+                                    <h3 class="fs-13 fw-semibold text-muted">Total Kategori</h3>
+                                </div>
                             </div>
-                            <div class="pt-4">
+                            <div class="pt-3">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fs-12 fw-medium text-muted">With content</span>
-                                    <span class="fs-12 text-dark">{{ $categoryActivity->where('materis_count', '>', 0)->count() }}</span>
+                                    <span class="fs-12 text-muted">With content</span>
+                                    <span class="fs-12 text-dark fw-semibold">{{ $categoryActivity->where('materis_count', '>', 0)->count() }}</span>
+                                </div>
+                                <div class="progress mt-2 ht-3">
+                                    @php $withContentPercent = $totalCategories > 0 ? round(($categoryActivity->where('materis_count', '>', 0)->count() / $totalCategories) * 100) : 0; @endphp
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $withContentPercent }}%"></div>
                                 </div>
                             </div>
                         </div>
@@ -188,22 +178,22 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
-                            <div class="d-flex align-items-start justify-content-between mb-4">
-                                <div class="d-flex gap-4 align-items-center">
-                                    <div class="avatar-text avatar-lg bg-danger-soft">
-                                        <i class="feather-file-text text-danger"></i>
-                                    </div>
-                                    <div>
-                                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $totalMateris }}</span></div>
-                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Total Materis</h3>
-                                    </div>
+                            <div class="d-flex align-items-center gap-4">
+                                <div class="avatar-text avatar-lg bg-soft-danger text-danger rounded">
+                                    <i class="feather-file-text fs-4"></i>
                                 </div>
-                                <span class="badge bg-success-soft text-success">+15%</span>
+                                <div>
+                                    <div class="fs-4 fw-bold text-dark">{{ $totalMateris }}</div>
+                                    <h3 class="fs-13 fw-semibold text-muted">Total Materi</h3>
+                                </div>
                             </div>
-                            <div class="pt-4">
+                            <div class="pt-3">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <span class="fs-12 fw-medium text-muted">Avg per category</span>
-                                    <span class="fs-12 text-dark">{{ $totalCategories > 0 ? round($totalMateris / $totalCategories, 1) : 0 }}</span>
+                                    <span class="fs-12 text-muted">Avg per kategori</span>
+                                    <span class="fs-12 text-dark fw-semibold">{{ $totalCategories > 0 ? round($totalMateris / $totalCategories, 1) : 0 }}</span>
+                                </div>
+                                <div class="progress mt-2 ht-3">
+                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 75%"></div>
                                 </div>
                             </div>
                         </div>
@@ -540,6 +530,10 @@
         <!-- [ Main Content ] end -->
     </div>
 
+@endsection
+
+@push('scripts')
+    @include('backend.layouts.scriptcustom')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -910,10 +904,11 @@
         }
 
         function showCustomRangePicker() {
-            const startDate = prompt('Enter start date (YYYY-MM-DD):', now().format('Y-m-d'));
+            const today = new Date().toISOString().split('T')[0];
+            const startDate = prompt('Enter start date (YYYY-MM-DD):', today);
             if (!startDate) return;
             
-            const endDate = prompt('Enter end date (YYYY-MM-DD):', now().format('Y-m-d'));
+            const endDate = prompt('Enter end date (YYYY-MM-DD):', today);
             if (!endDate) return;
             
             loadCustomRangeAnalytics(startDate, endDate);
@@ -1043,7 +1038,9 @@
             }
         });
     </script>
+@endpush
 
+@push('styles')
     <style>
         /* Dark mode styles */
         .dark-mode {
@@ -1423,4 +1420,4 @@
             }
         }
     </style>
-@endsection
+@endpush
