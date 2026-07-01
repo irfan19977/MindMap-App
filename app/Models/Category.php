@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Category extends Model
 {
@@ -59,6 +60,14 @@ class Category extends Model
     public function children()
     {
         return $this->hasMany(Subcategory::class);
+    }
+
+    /**
+     * Get all materials under this category (alias for materials).
+     */
+    public function materis(): HasManyThrough
+    {
+        return $this->hasManyThrough(Material::class, Subcategory::class, 'category_id', 'subcategory_id', 'id', 'id');
     }
 
     /**
