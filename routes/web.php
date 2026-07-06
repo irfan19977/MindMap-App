@@ -17,6 +17,7 @@ use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\StudentProfileController;
+use App\Http\Controllers\LearningDashboardController;
 
 
 /*
@@ -120,6 +121,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/student/profile', [StudentProfileController::class, 'show'])->name('student.profile');
+    Route::get('/learning-dashboard', [LearningDashboardController::class, 'index'])->name('learning.dashboard');
 });
 
 require __DIR__.'/auth.php';
