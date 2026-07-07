@@ -24,25 +24,48 @@ class EngagementController extends Controller
         $totalSubcategories = Subcategory::count();
         $totalMateris = Material::count();
 
-        // Get user growth data (last 30 days)
-        $userGrowth = User::select(
-            DB::raw('DATE(created_at) as date'),
+        // Get user growth data (last 12 months) — monthly, fill all months including zeros
+        $userGrowthRaw = User::select(
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
             DB::raw('COUNT(*) as count')
         )
-            ->where('created_at', '>=', now()->subDays(30))
-            ->groupBy('date')
-            ->orderBy('date')
-            ->get();
+            ->where('created_at', '>=', now()->subMonths(11)->startOfMonth())
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->keyBy('month');
 
-        // Get activity by category
-        $categoryActivity = Category::withCount('subcategories', 'materis')
-            ->orderBy('materis_count', 'desc')
-            ->limit(10)
-            ->get();
+        $userGrowth = collect();
+        for ($i = 11; $i >= 0; $i--) {
+            $month = now()->subMonths($i)->format('Y-m');
+            $userGrowth->push([
+                'date' => now()->subMonths($i)->format('M/y'),
+                'count' => $userGrowthRaw->has($month) ? $userGrowthRaw[$month]->count : 0,
+            ]);
+        }
+
+        // Get top 5 categories by UserProgress activity (most worked on)
+        $categoryActivity = Category::withCount(['subcategories', 'materis'])
+            ->withCount(['materis as progress_count' => function ($q) {
+                $q->join('user_progress', 'user_progress.material_id', '=', 'materials.id');
+            }])
+            ->with(['subcategories' => function ($q) {
+                $q->limit(1);
+            }])
+            ->orderBy('progress_count', 'desc')
+            ->limit(5)
+            ->get()
+            ->map(function ($cat) {
+                $owner = $cat->created_by
+                    ? \App\Models\User::select('id','name')->find($cat->created_by)
+                    : null;
+                $cat->owner_name = $owner?->name ?? 'Admin';
+                return $cat;
+            });
 
         // Get recent user activity
         $recentUsers = User::orderBy('created_at', 'desc')
-            ->limit(10)
+            ->limit(7)
             ->get();
 
         // Get engagement metrics by day (last 7 days)
