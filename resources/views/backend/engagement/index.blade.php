@@ -222,7 +222,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <canvas id="userGrowthChart" height="300"></canvas>
+                            <div id="userGrowthChart" style="min-height:300px;"></div>
                         </div>
                     </div>
                 </div>
@@ -230,12 +230,56 @@
                 <div class="col-xxl-4 col-lg-5">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
-                            <div class="card-left">
-                                <h6 class="mb-0">Daily Engagement</h6>
+                            <h5 class="card-title">Daily Engagement</h5>
+                        </div>
+                        <div class="card-body custom-card-action">
+                            <div class="text-center mb-4">
+                                <div id="dailyEngagementNewUsers" style="display:none;"></div>
+                                <div id="dailyEngagementActiveUsers" style="display:none;"></div>
+                                <div class="de-circle-progress mx-auto"></div>
+                                <div class="mt-2 fw-bold fs-5" id="deRateLabel">0%</div>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-sm-6">
+                                    <div class="px-4 py-3 text-center border border-dashed rounded-3">
+                                        <div class="avatar-text bg-gray-200 mx-auto mb-2">
+                                            <i class="feather-user-plus"></i>
+                                        </div>
+                                        <h2 class="fs-13 tx-spacing-1">New Users</h2>
+                                        <div class="fs-11 text-muted" id="deNewUsersTotal">7 hari terakhir</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="px-4 py-3 text-center border border-dashed rounded-3">
+                                        <div class="avatar-text bg-gray-200 mx-auto mb-2">
+                                            <i class="feather-activity"></i>
+                                        </div>
+                                        <h2 class="fs-13 tx-spacing-1">Active Users</h2>
+                                        <div class="fs-11 text-muted" id="deActiveUsersTotal">7 hari terakhir</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="px-4 py-3 text-center border border-dashed rounded-3">
+                                        <div class="avatar-text bg-gray-200 mx-auto mb-2">
+                                            <i class="feather-users"></i>
+                                        </div>
+                                        <h2 class="fs-13 tx-spacing-1">Total Users</h2>
+                                        <div class="fs-11 text-muted">{{ $totalUsers }} terdaftar</div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="px-4 py-3 text-center border border-dashed rounded-3">
+                                        <div class="avatar-text bg-gray-200 mx-auto mb-2">
+                                            <i class="feather-check-circle"></i>
+                                        </div>
+                                        <h2 class="fs-13 tx-spacing-1">Engagement Rate</h2>
+                                        <div class="fs-11 text-muted" id="deEngagementRate">—</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="dailyEngagementChart" height="300"></canvas>
+                        <div class="card-footer">
+                            <a href="javascript:void(0);" class="btn btn-primary">Lihat Report</a>
                         </div>
                     </div>
                 </div>
@@ -249,7 +293,6 @@
                             <div class="card-left">
                                 <h6 class="mb-0">Top Categories by Activity</h6>
                             </div>
-                            <a href="{{ route('categories.index') }}" class="btn btn-sm btn-primary">View All</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -257,7 +300,7 @@
                                     <thead>
                                         <tr>
                                             <th>Category</th>
-                                            <th>Subcategories</th>
+                                            <th>Owner</th>
                                             <th>Materis</th>
                                             <th>Activity</th>
                                         </tr>
@@ -272,20 +315,23 @@
                                                     </div>
                                                     <div>
                                                         <h6 class="mb-0">{{ $category->name }}</h6>
-                                                        <span class="fs-12 text-muted">{{ Str::limit($category->description, 30) }}</span>
+                                                        <span class="fs-12 text-muted">{{ Str::limit($category->description, 25) }}</span>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td>{{ $category->subcategories_count }}</td>
+                                            <td>
+                                                <span class="fs-12 text-muted">{{ $category->owner_name }}</span>
+                                            </td>
                                             <td>{{ $category->materis_count }}</td>
                                             <td>
                                                 <div class="progress ht-3" style="width: 100px;">
                                                     @php
-                                                        $maxMateris = $categoryActivity->max('materis_count');
-                                                        $percentage = $maxMateris > 0 ? ($category->materis_count / $maxMateris) * 100 : 0;
+                                                        $maxProgress = $categoryActivity->max('progress_count') ?: 1;
+                                                        $percentage = ($category->progress_count / $maxProgress) * 100;
                                                     @endphp
                                                     <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $percentage }}%"></div>
                                                 </div>
+                                                <span class="fs-11 text-muted">{{ $category->progress_count }} progress</span>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -302,7 +348,6 @@
                             <div class="card-left">
                                 <h6 class="mb-0">Recent Users</h6>
                             </div>
-                            <a href="{{ route('users.index') }}" class="btn btn-sm btn-primary">View All</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -347,33 +392,33 @@
                 </div>
             </div>
 
-            <!-- Retention & Activity Feed -->
+            <!-- Activity Heatmap -->
             <div class="row">
-                <div class="col-xxl-8 col-lg-7">
+                <div class="col-xxl-12 col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
                             <div class="card-left">
-                                <h6 class="mb-0">User Retention</h6>
+                                <h6 class="mb-0">Activity Heatmap</h6>
+                                <span class="fs-12 text-muted">User activity by day and hour</span>
                             </div>
-                            <div class="card-right">
-                                <div class="dropdown">
-                                    <a class="btn btn-sm btn-light" data-bs-toggle="dropdown">
-                                        <i class="feather-more-vertical"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-end">
-                                        <a href="javascript:void(0);" class="dropdown-item" onclick="loadRetentionData(7)">Last 7 Days</a>
-                                        <a href="javascript:void(0);" class="dropdown-item" onclick="loadRetentionData(30)">Last 30 Days</a>
-                                    </div>
+                            <button class="btn btn-sm btn-light" onclick="loadHeatmap()">
+                                <i class="feather-refresh-cw"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="heatmapContainer" class="heatmap-container">
+                                <div class="text-center text-muted">
+                                    <i class="feather-loader spin"></i> Loading...
                                 </div>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <canvas id="retentionChart" height="300"></canvas>
-                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-xxl-4 col-lg-5">
+            <!-- Activity Feed -->
+            <div class="row">
+                <div class="col-xxl-12 col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
                             <div class="card-left">
@@ -394,73 +439,8 @@
                 </div>
             </div>
 
-            <!-- Advanced Analytics Row -->
+            <!-- User Journey & Segmentation -->
             <div class="row">
-                <div class="col-xxl-6 col-lg-12">
-                    <div class="card stretch stretch-full">
-                        <div class="card-header">
-                            <div class="card-left">
-                                <h6 class="mb-0">Activity Heatmap</h6>
-                                <span class="fs-12 text-muted">User activity by day and hour</span>
-                            </div>
-                            <button class="btn btn-sm btn-light" onclick="loadHeatmap()">
-                                <i class="feather-refresh-cw"></i>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="heatmapContainer" class="heatmap-container">
-                                <div class="text-center text-muted">
-                                    <i class="feather-loader spin"></i> Loading...
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xxl-6 col-lg-12">
-                    <div class="card stretch stretch-full">
-                        <div class="card-header">
-                            <div class="card-left">
-                                <h6 class="mb-0">Funnel Analysis</h6>
-                                <span class="fs-12 text-muted">User journey conversion</span>
-                            </div>
-                            <button class="btn btn-sm btn-light" onclick="loadFunnelAnalysis()">
-                                <i class="feather-refresh-cw"></i>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="funnelContainer">
-                                <div class="text-center text-muted">
-                                    <i class="feather-loader spin"></i> Loading...
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Geographic & User Journey -->
-            <div class="row">
-                <div class="col-xxl-6 col-lg-12">
-                    <div class="card stretch stretch-full">
-                        <div class="card-header">
-                            <div class="card-left">
-                                <h6 class="mb-0">Geographic Distribution</h6>
-                            </div>
-                            <button class="btn btn-sm btn-light" onclick="loadGeographicData()">
-                                <i class="feather-refresh-cw"></i>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="geographicContainer">
-                                <div class="text-center text-muted">
-                                    <i class="feather-loader spin"></i> Loading...
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="col-xxl-6 col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
@@ -480,10 +460,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- User Segmentation & Alerts -->
-            <div class="row">
                 <div class="col-xxl-6 col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
@@ -504,27 +481,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-xxl-6 col-lg-12">
-                    <div class="card stretch stretch-full">
-                        <div class="card-header">
-                            <div class="card-left">
-                                <h6 class="mb-0">Alerts & Anomalies</h6>
-                                <span class="fs-12 text-muted">Important notifications</span>
-                            </div>
-                            <button class="btn btn-sm btn-light" onclick="loadAlerts()">
-                                <i class="feather-refresh-cw"></i>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="alertsContainer">
-                                <div class="text-center text-muted">
-                                    <i class="feather-loader spin"></i> Loading...
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
         <!-- [ Main Content ] end -->
@@ -534,94 +490,52 @@
 
 @push('scripts')
     @include('backend.layouts.scriptcustom')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // User Growth Chart
-            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+        (function() {
+            // User Growth Chart — Sales Pipeline style (distributed bars, highlight max)
             const userGrowthData = @json($userGrowth);
-            
-            new Chart(userGrowthCtx, {
-                type: 'line',
-                data: {
-                    labels: userGrowthData.map(item => item.date),
-                    datasets: [{
-                        label: 'New Users',
-                        data: userGrowthData.map(item => item.count),
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
+            const ugCounts = userGrowthData.map(item => item.count);
+            const ugMax = Math.max(...ugCounts);
+            const ugColors = ugCounts.map(v => v === ugMax && ugMax > 0 ? '#3454D1' : '#E9EDF7');
+            new ApexCharts(document.getElementById('userGrowthChart'), {
+                chart: { height: 352, width: '100%', stacked: false, type: 'bar', toolbar: { show: false } },
+                stroke: { show: false },
+                plotOptions: { bar: { endingShape: 'rounded', columnWidth: '20%', distributed: true } },
+                colors: ugColors,
+                dataLabels: { enabled: false },
+                series: [{ name: 'Registrasi User', data: ugCounts }],
+                markers: { size: 0 },
+                xaxis: {
+                    categories: userGrowthData.map(item => item.date),
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    labels: { style: { fontSize: '10px', colors: '#64748b' } }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
+                yaxis: { labels: { offsetX: -5, offsetY: 0, style: { colors: '#64748b' } } },
+                grid: { xaxis: { lines: { show: false } }, yaxis: { lines: { show: false } } },
+                tooltip: { style: { fontSize: '12px', fontFamily: 'Inter' } },
+                legend: { show: false },
+            }).render();
 
-            // Daily Engagement Chart
-            const dailyEngagementCtx = document.getElementById('dailyEngagementChart').getContext('2d');
+            // Daily Engagement — donut chart + stat boxes
             const dailyEngagementData = @json($dailyEngagement);
-            
-            new Chart(dailyEngagementCtx, {
-                type: 'bar',
-                data: {
-                    labels: dailyEngagementData.map(item => \`\${item.date.slice(5)}\`),
-                    datasets: [
-                        {
-                            label: 'New Users',
-                            data: dailyEngagementData.map(item => item.new_users),
-                            backgroundColor: '#6366f1'
-                        },
-                        {
-                            label: 'Active Users',
-                            data: dailyEngagementData.map(item => item.active_users),
-                            backgroundColor: '#10b981'
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // Load retention data
-            loadRetentionData(30);
+            const deNewTotal = dailyEngagementData.reduce((s, i) => s + i.new_users, 0);
+            const deActiveTotal = dailyEngagementData.reduce((s, i) => s + i.active_users, 0);
+            const totalUsers = {{ $totalUsers }};
+            const deRate = totalUsers > 0 ? Math.round((deActiveTotal / totalUsers) * 100) : 0;
+            document.getElementById('deNewUsersTotal').textContent = deNewTotal + ' user';
+            document.getElementById('deActiveUsersTotal').textContent = deActiveTotal + ' user';
+            document.getElementById('deEngagementRate').textContent = deRate + '%';
+            document.getElementById('deRateLabel').textContent = deRate + '%';
+            $('.de-circle-progress').circleProgress({ max: 100, value: deRate, textFormat: 'percent' });
 
             // Load activity feed
             refreshActivityFeed();
 
             // Load advanced analytics
             loadHeatmap();
-            loadFunnelAnalysis();
-            loadGeographicData();
             loadUserJourney();
-
-            // Load new features
             loadUserSegmentation();
-            loadAlerts();
 
             // Load live online users
             loadLiveOnlineUsers();
@@ -629,71 +543,14 @@
             // Auto-refresh live online users every 30 seconds
             setInterval(loadLiveOnlineUsers, 30000);
             
-            // Auto-refresh alerts every 60 seconds
-            setInterval(loadAlerts, 60000);
-        });
+            // Auto-refresh activity feed every 30 seconds
+            setInterval(refreshActivityFeed, 30000);
+            
+        })();
 
         function updatePeriod(days) {
             // Reload page with period parameter
             window.location.href = `{{ route('engagement.index') }}?period=${days}`;
-        }
-
-        function loadRetentionData(period) {
-            fetch(`{{ route('engagement.retention') }}?period=${period}`)
-                .then(response => response.json())
-                .then(data => {
-                    const ctx = document.getElementById('retentionChart').getContext('2d');
-                    
-                    // Destroy existing chart if it exists
-                    if (window.retentionChartInstance) {
-                        window.retentionChartInstance.destroy();
-                    }
-
-                    window.retentionChartInstance = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: data.map(item => item.date.slice(5)),
-                            datasets: [
-                                {
-                                    label: '7-Day Retention',
-                                    data: data.map(item => item.retention_7d),
-                                    borderColor: '#6366f1',
-                                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                                    fill: true,
-                                    tension: 0.4
-                                },
-                                {
-                                    label: '30-Day Retention',
-                                    data: data.map(item => item.retention_30d),
-                                    borderColor: '#10b981',
-                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                    fill: true,
-                                    tension: 0.4
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    max: 100,
-                                    ticks: {
-                                        callback: function(value) {
-                                            return value + '%';
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    });
-                });
         }
 
         function refreshActivityFeed() {
@@ -727,8 +584,6 @@
                 });
         }
 
-        // Auto-refresh activity feed every 30 seconds
-        setInterval(refreshActivityFeed, 30000);
 
         function loadHeatmap() {
             const container = document.getElementById('heatmapContainer');
@@ -741,7 +596,7 @@
                     const hours = Array.from({length: 24}, (_, i) => i);
                     
                     let html = '<div class="heatmap-grid">';
-                    html += '<div class="heatmap-row heatmap-header"><div></div>';
+                    html += '<div class="heatmap-row heatmap-header"><div class="heatmap-cell day-label"></div>';
                     hours.forEach(hour => {
                         html += `<div class="heatmap-cell">${hour}:00</div>`;
                     });
@@ -763,75 +618,6 @@
                 })
                 .catch(error => {
                     container.innerHTML = '<div class="text-center text-danger">Failed to load heatmap</div>';
-                });
-        }
-
-        function loadFunnelAnalysis() {
-            const container = document.getElementById('funnelContainer');
-            container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
-
-            fetch(`{{ route('engagement.funnel-analysis') }}?period=30`)
-                .then(response => response.json())
-                .then(data => {
-                    let html = '<div class="funnel-container">';
-                    
-                    data.forEach((stage, index) => {
-                        const width = stage.conversion_rate;
-                        html += `
-                            <div class="funnel-stage">
-                                <div class="funnel-bar" style="width: ${width}%">
-                                    <div class="funnel-info">
-                                        <strong>${stage.stage}</strong>
-                                        <span class="count">${stage.count}</span>
-                                    </div>
-                                    <div class="funnel-metrics">
-                                        <span class="conversion">${stage.conversion_rate}% conversion</span>
-                                        <span class="dropoff">${stage.drop_off}% drop-off</span>
-                                    </div>
-                                </div>
-                                <p class="funnel-description">${stage.description}</p>
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                    container.innerHTML = html;
-                })
-                .catch(error => {
-                    container.innerHTML = '<div class="text-center text-danger">Failed to load funnel analysis</div>';
-                });
-        }
-
-        function loadGeographicData() {
-            const container = document.getElementById('geographicContainer');
-            container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
-
-            fetch(`{{ route('engagement.geographic') }}`)
-                .then(response => response.json())
-                .then(data => {
-                    let html = '<div class="geographic-list">';
-                    
-                    data.forEach(item => {
-                        const percentage = data[0].count > 0 ? (item.count / data[0].count) * 100 : 0;
-                        html += `
-                            <div class="geographic-item">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <span class="country-name">${item.country}</span>
-                                    <span class="user-count">${item.count} users</span>
-                                </div>
-                                <div class="progress ht-3">
-                                    <div class="progress-bar bg-primary" style="width: ${percentage}%"></div>
-                                </div>
-                                <small class="text-muted">${item.domain}</small>
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                    container.innerHTML = html;
-                })
-                .catch(error => {
-                    container.innerHTML = '<div class="text-center text-danger">Failed to load geographic data</div>';
                 });
         }
 
@@ -966,49 +752,6 @@
                 });
         }
 
-        function loadAlerts() {
-            const container = document.getElementById('alertsContainer');
-            container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
-
-            fetch(`{{ route('engagement.alerts') }}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length === 0) {
-                        container.innerHTML = '<div class="text-center text-muted"><i class="feather-check-circle text-success" style="font-size: 32px;"></i><p class="mt-2">No alerts at this time</p></div>';
-                        return;
-                    }
-
-                    let html = '<div class="alerts-list">';
-                    
-                    data.forEach(alert => {
-                        const alertClass = alert.type === 'success' ? 'success' : 
-                                          alert.type === 'warning' ? 'warning' : 
-                                          alert.type === 'danger' ? 'danger' : 'info';
-                        
-                        html += `
-                            <div class="alert-item alert-${alertClass}">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div class="alert-icon bg-${alertClass}-soft">
-                                        <i class="feather-${alert.icon} text-${alertClass}"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="alert-title mb-1">${alert.title}</h6>
-                                        <p class="alert-message mb-2">${alert.message}</p>
-                                        <small class="text-muted">${alert.timestamp}</small>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    
-                    html += '</div>';
-                    container.innerHTML = html;
-                })
-                .catch(error => {
-                    container.innerHTML = '<div class="text-center text-danger">Failed to load alerts</div>';
-                });
-        }
-
         function toggleDarkMode() {
             const body = document.body;
             const icon = document.getElementById('darkModeIcon');
@@ -1027,16 +770,15 @@
         }
 
         // Check for saved dark mode preference
-        document.addEventListener('DOMContentLoaded', function() {
+        (function() {
             const savedDarkMode = localStorage.getItem('darkMode');
             const icon = document.getElementById('darkModeIcon');
-            
-            if (savedDarkMode === 'enabled') {
+            if (icon && savedDarkMode === 'enabled') {
                 document.body.classList.add('dark-mode');
                 icon.classList.remove('feather-moon');
                 icon.classList.add('feather-sun');
             }
-        });
+        })();
     </script>
 @endpush
 
@@ -1093,30 +835,32 @@
         
         .heatmap-row {
             display: flex;
-            gap: 4px;
-            min-width: max-content;
+            gap: 3px;
+            width: 100%;
         }
         
         .heatmap-cell {
-            width: 40px;
-            height: 40px;
+            flex: 1;
+            min-width: 0;
+            height: 34px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 9px;
             border-radius: 4px;
             transition: all 0.2s;
+            overflow: hidden;
         }
         
         .heatmap-cell:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             z-index: 10;
         }
         
         .heatmap-cell.day-label {
-            width: 80px;
+            flex: 0 0 70px;
             font-weight: 600;
-            font-size: 11px;
+            font-size: 10px;
             background-color: #f3f4f6;
         }
         
@@ -1274,12 +1018,12 @@
             }
             
             .heatmap-cell {
-                width: 30px;
-                height: 30px;
+                height: 28px;
             }
             
             .heatmap-cell.day-label {
-                width: 60px;
+                flex: 0 0 55px;
+                font-size: 9px;
             }
         }
         
