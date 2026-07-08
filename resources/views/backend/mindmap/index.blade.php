@@ -134,7 +134,7 @@
                 </div>
 
                 <!-- Canvas Area -->
-                <div class="drawio-canvas-area">
+                <div class="drawio-canvas-area" dir="ltr">
                     <div class="canvas-chrome">
                         <span class="canvas-chrome__hint"><i class="feather-info"></i> Seret dari titik node untuk menghubungkan · Space + drag untuk geser · Ctrl + scroll untuk zoom</span>
                     </div>
