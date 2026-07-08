@@ -18,8 +18,13 @@ class DashboardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $period = (int) $request->get('period', 30);
+        if (!in_array($period, [7, 30, 90])) {
+            $period = 30;
+        }
+
         // Summary stats
         $totalUsers = User::count();
         $totalStudents = User::role('student')->count();
@@ -60,9 +65,9 @@ class DashboardController extends Controller
         // Content stats per category
         $categoryStats = Category::withCount(['subcategories'])->get();
 
-        // Platform chart: visits & registrations per day (30 days)
+        // Platform chart: visits & registrations per day (based on selected period)
         $platformChart = collect();
-        for ($i = 29; $i >= 0; $i--) {
+        for ($i = $period - 1; $i >= 0; $i--) {
             $date = now()->subDays($i)->format('Y-m-d');
             $platformChart->push([
                 'date' => now()->subDays($i)->format('d M'),
@@ -77,7 +82,7 @@ class DashboardController extends Controller
             'totalCategories', 'totalSubcategories', 'totalMaterials', 'totalMindmaps',
             'totalProgress', 'completedMaterials', 'totalQuizAttempts', 'quizPassedCount', 'averageScore',
             'recentProgress', 'recentQuizAttempts', 'topStudents', 'categoryStats',
-            'platformChart', 'todayVisits'
+            'platformChart', 'todayVisits', 'period'
         ));
     }
 

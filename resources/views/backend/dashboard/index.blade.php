@@ -25,7 +25,7 @@
                             <div class="dropdown">
                                 <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown">
                                     <i class="feather-calendar me-2"></i>
-                                    <span>Last 7 Days</span>
+                                    <span>Last {{ $period }} Days</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="{{ route('dashboard.index') }}?period=7" class="dropdown-item">Last 7 Days</a>
@@ -200,7 +200,7 @@
                                 <h5 class="card-title">Aktivitas Platform</h5>
                             </div>
                             <div class="card-body custom-card-action p-0">
-                                <div id="payment-records-chart"></div>
+                                <div id="platform-activity-chart"></div>
                             </div>
                             <div class="card-footer">
                                 <div class="row g-4">
@@ -212,13 +212,13 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Kunjungan (30 hari)</div>
+                                            <div class="fs-12 text-muted mb-1">Kunjungan ({{ $period }} hari)</div>
                                             <h6 class="fw-bold text-dark">{{ $platformChart->sum('visits') }}</h6>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Pendaftaran (30 hari)</div>
+                                            <div class="fs-12 text-muted mb-1">Pendaftaran ({{ $period }} hari)</div>
                                             <h6 class="fw-bold text-dark">{{ $platformChart->sum('registrations') }}</h6>
                                         </div>
                                     </div>
@@ -377,4 +377,74 @@
 
 @push('scripts')
     @include('backend.layouts.scriptcustom')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var labels  = @json($platformChart->pluck('date'));
+            var visits  = @json($platformChart->pluck('visits'));
+            var registrations = @json($platformChart->pluck('registrations'));
+
+            var el = document.querySelector('#platform-activity-chart');
+            if (!el) return;
+
+            var options = {
+                chart: {
+                    height: 380,
+                    width: '100%',
+                    stacked: false,
+                    toolbar: { show: false }
+                },
+                stroke: {
+                    width: [1, 2],
+                    curve: 'smooth',
+                    lineCap: 'round'
+                },
+                plotOptions: {
+                    bar: { endingShape: 'rounded', columnWidth: '30%' }
+                },
+                colors: ['#3454d1', '#a2acc7'],
+                series: [
+                    { name: 'Kunjungan',   type: 'bar',  data: visits },
+                    { name: 'Pendaftaran', type: 'line', data: registrations }
+                ],
+                fill: {
+                    opacity: [0.85, 0.25],
+                    gradient: {
+                        inverseColors: false,
+                        shade: 'light',
+                        type: 'vertical',
+                        opacityFrom: 0.5,
+                        opacityTo: 0.1,
+                        stops: [0, 100, 100, 100]
+                    }
+                },
+                markers: { size: 0 },
+                xaxis: {
+                    categories: labels,
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
+                    labels: { style: { fontSize: '10px', colors: '#A0ACBB' } }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function (e) { return +e; },
+                        offsetX: -5,
+                        offsetY: 0,
+                        style: { color: '#A0ACBB' }
+                    }
+                },
+                grid: {
+                    xaxis: { lines: { show: false } },
+                    yaxis: { lines: { show: false } }
+                },
+                dataLabels: { enabled: false },
+                tooltip: {
+                    y: { formatter: function (e) { return +e; } },
+                    style: { fontSize: '12px', fontFamily: 'Inter' }
+                },
+                legend: { show: true, labels: { fontSize: '12px', colors: '#A0ACBB' } }
+            };
+
+            new ApexCharts(el, options).render();
+        });
+    </script>
 @endpush

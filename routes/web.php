@@ -13,15 +13,18 @@ use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\Frontend\QuizController;
-use App\Http\Controllers\ThemeController;
-use App\Http\Controllers\AIController;
-use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\Backend\ThemeController;
+use App\Http\Controllers\Frontend\AIController;
+use App\Http\Controllers\Frontend\TeacherController;
 
-use App\Http\Controllers\StudentProfileController;
+use App\Http\Controllers\Frontend\StudentProfileController;
 
 
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Backend\EngagementController;
+use App\Http\Controllers\Backend\HelpController;
+use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
+use App\Http\Controllers\Backend\ReportController;
 
 use App\Http\Controllers\PracticeAnswerController;
 use App\Http\Controllers\QuizAttemptController;
@@ -101,6 +104,24 @@ Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
    Route::get('/engagement/segmentation', [EngagementController::class, 'userSegmentation'])->name('engagement.segmentation');
    Route::get('/engagement/alerts', [EngagementController::class, 'alerts'])->name('engagement.alerts');
    Route::get('/engagement/custom-range', [EngagementController::class, 'customRangeAnalytics'])->name('engagement.custom-range');
+
+   // Pusat Bantuan
+   Route::get('/help', [HelpController::class, 'index'])->name('help.index');
+
+   // Profil Backend
+   Route::prefix('backend/profile')->name('backend.profile.')->group(function () {
+       Route::get('/', [BackendProfileController::class, 'show'])->name('show');
+       Route::patch('/', [BackendProfileController::class, 'update'])->name('update');
+       Route::put('/password', [BackendProfileController::class, 'updatePassword'])->name('password');
+   });
+
+   // Report
+   Route::prefix('reports')->name('reports.')->group(function () {
+       Route::get('/users', [ReportController::class, 'users'])->name('users');
+       Route::get('/mindmaps', [ReportController::class, 'mindmaps'])->name('mindmaps');
+       Route::get('/activities', [ReportController::class, 'activities'])->name('activities');
+       Route::get('/export/{type}', [ReportController::class, 'export'])->name('export');
+   });
 
    Route::resource('categories', CategoriesController::class);
    Route::resource('subcategories', SubcategoriesController::class);
