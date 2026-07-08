@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SiteVisit extends Model
 {
@@ -17,4 +18,12 @@ class SiteVisit extends Model
     protected $casts = [
         'visited_date' => 'date',
     ];
+
+    /**
+     * Get the user associated with the visit (if any).
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -1,7 +1,7 @@
     <nav class="nxl-navigation">
         <div class="navbar-wrapper">
             <div class="m-header">
-                <a href="index.html" class="b-brand">
+                <a href="/" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
                     <img src="{{ asset('backend/assets/images/logo-full.png') }}" style="width: 200px;" alt="" class="logo logo-lg" />
                     <img src="{{ asset('backend/assets/images/logo-abbr.png') }}" alt="" class="logo logo-sm" />
@@ -77,9 +77,9 @@
                             <span class="nxl-mtext">Report</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="reports-users.html">Laporan User</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="reports-mindmaps.html">Laporan MindMap</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="reports-activities.html">Laporan Aktivitas</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('reports.users') }}">Laporan User</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('reports.mindmaps') }}">Laporan MindMap</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('reports.activities') }}">Laporan Aktivitas</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
@@ -90,7 +90,7 @@
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="analytics-dashboard.html">Dashboard Analitik</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">Analitik Pembelajaran</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-engagement.html">Analitik Engagement</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('engagement.index') }}">Analitik Engagement</a></li>
                         </ul>
                     </li>
                     
@@ -127,36 +127,23 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.create') }}">Tambah Permission</a></li>
                         </ul>
                     </li>
-                    
-                    <li class="nxl-item nxl-caption">
-                        <label>Pengaturan</label>
-                    </li>
-                    <li class="nxl-item">
-                        <a href="settings.html" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-settings"></i></span>
-                            <span class="nxl-mtext">Pengaturan</span>
-                        </a>
-                    </li>
-                    <li class="nxl-item">
-                        <a href="profile.html" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-user"></i></span>
-                            <span class="nxl-mtext">Profil Saya</span>
-                        </a>
-                    </li>
                         <li class="nxl-item nxl-caption">
                         <label>Bantuan</label>
                     </li>
                     <li class="nxl-item">
-                        <a href="help.html" class="nxl-link">
+                        <a href="{{ route('help.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-help-circle"></i></span>
                             <span class="nxl-mtext">Pusat Bantuan</span>
                         </a>
                     </li>
                     <li class="nxl-item">
-                        <a href="login.html" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-log-out"></i></span>
-                            <span class="nxl-mtext">Keluar</span>
-                        </a>
+                        <form action="{{ route('logout') }}" method="POST" id="sidebar-logout-form">
+                            @csrf
+                            <a href="javascript:void(0)" class="nxl-link" onclick="document.getElementById('sidebar-logout-form').submit()">
+                                <span class="nxl-micon"><i class="feather-log-out"></i></span>
+                                <span class="nxl-mtext">Keluar</span>
+                            </a>
+                        </form>
                     </li>
                 </ul>
                 <div class="card text-center">
@@ -164,7 +151,7 @@
                         <i class="feather-book-open fs-4 text-primary"></i>
                         <h6 class="mt-4 text-dark fw-bolder">MindMap Education</h6>
                         <p class="fs-11 my-3 text-dark">Platform pembelajaran interaktif dengan mind mapping untuk pengalaman belajar yang lebih baik.</p>
-                        <a href="help.html" class="btn btn-primary w-100">Bantuan</a>
+                        <a href="{{ route('help.index') }}" class="btn btn-primary w-100">Bantuan</a>
                     </div>
                 </div>
             </div>
