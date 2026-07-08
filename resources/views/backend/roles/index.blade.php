@@ -6,11 +6,11 @@
         <div class="page-header">
             <div class="page-header-left d-flex align-items-center">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">Roles</h5>
+                    <h5 class="m-b-10">{{ __('messages.backend_roles_title') }}</h5>
                 </div>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item">Roles</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">{{ __('messages.backend_home') }}</a></li>
+                    <li class="breadcrumb-item">{{ __('messages.backend_roles_title') }}</li>
                 </ul>
             </div>
             <div class="page-header-right ms-auto">
@@ -18,13 +18,13 @@
                     <div class="d-flex d-md-none">
                         <a href="javascript:void(0)" class="page-header-right-close-toggle">
                             <i class="feather-arrow-left me-2"></i>
-                            <span>Back</span>
+                            <span>{{ __('messages.backend_back') }}</span>
                         </a>
                     </div>
                     <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
                         <a href="{{ route('roles.create') }}" class="btn btn-primary">
                             <i class="feather-plus me-2"></i>
-                            <span>Tambah Role</span>
+                            <span>{{ __('messages.backend_add_role') }}</span>
                         </a>
                     </div>
                 </div>
@@ -47,12 +47,12 @@
                                 <table class="table table-hover" id="rolesList">
                                     <thead>
                                         <tr>
-                                            <th class="text-center">No</th>
-                                            <th class="text-center">Nama Role</th>
-                                            <th class="text-center">Guard</th>
-                                            <th class="text-center">Permissions</th>
-                                            <th class="text-center">Users</th>
-                                            <th class="text-end">Actions</th>
+                                            <th class="text-center">{{ __('messages.backend_table_no') }}</th>
+                                            <th class="text-center">{{ __('messages.backend_role_name') }}</th>
+                                            <th class="text-center">{{ __('messages.backend_role_guard') }}</th>
+                                            <th class="text-center">{{ __('messages.backend_role_permissions') }}</th>
+                                            <th class="text-center">{{ __('messages.backend_role_users') }}</th>
+                                            <th class="text-end">{{ __('messages.backend_table_actions') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -94,13 +94,13 @@
                                                                 <li>
                                                                     <a class="dropdown-item" href="{{ route('roles.edit', $role->id) }}">
                                                                         <i class="feather feather-edit-3 me-3"></i>
-                                                                        <span>Edit</span>
+                                                                        <span>{{ __('messages.backend_edit') }}</span>
                                                                     </a>
                                                                 </li>
                                                                 <li>
                                                                     <a class="dropdown-item" href="javascript:void(0)" onclick="deleteRole('{{ $role->id }}', '{{ $role->name }}')">
                                                                         <i class="feather feather-trash-2 me-3"></i>
-                                                                        <span>Hapus</span>
+                                                                        <span>{{ __('messages.backend_delete') }}</span>
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -113,7 +113,7 @@
                                                 <td colspan="6" class="text-center py-4">
                                                     <div class="text-muted">
                                                         <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                        Belum ada data role
+                                                        {{ __('messages.backend_no_role_data') }}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -148,17 +148,17 @@
             $('#rolesList').DataTable({
                 responsive: true,
                 language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    search: "{{ __('messages.backend_datatable_search') }}",
+                    lengthMenu: "{{ __('messages.backend_datatable_length_menu') }}",
+                    info: "{{ __('messages.backend_datatable_info') }}",
                     paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Selanjutnya",
-                        previous: "Sebelumnya"
+                        first: "{{ __('messages.backend_first') }}",
+                        last: "{{ __('messages.backend_last') }}",
+                        next: "{{ __('messages.backend_next') }}",
+                        previous: "{{ __('messages.backend_previous') }}"
                     },
-                    emptyTable: "Tidak ada data tersedia",
-                    zeroRecords: "Tidak ditemukan data yang cocok"
+                    emptyTable: "{{ __('messages.backend_datatable_empty_table') }}",
+                    zeroRecords: "{{ __('messages.backend_datatable_zero_records') }}"
                 },
                 order: []
             });
@@ -166,14 +166,14 @@
         
         function deleteRole(id, name) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: 'Anda tidak akan dapat mengembalikan data ini!',
+                title: '{{ __('messages.backend_sweetalert_confirm_title') }}',
+                text: '{{ __('messages.backend_sweetalert_confirm_text') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                confirmButtonText: '{{ __('messages.backend_sweetalert_confirm_button') }}',
+                cancelButtonText: '{{ __('messages.backend_sweetalert_cancel_button') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     const form = document.createElement('form');

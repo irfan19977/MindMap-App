@@ -6,11 +6,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Kategori Utama</h5>
+                        <h5 class="m-b-10">{{ __('messages.backend_categories') }}</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Kategori Utama</li>
+                        <li class="breadcrumb-item"><a href="index.html">{{ __('messages.backend_home') }}</a></li>
+                        <li class="breadcrumb-item">{{ __('messages.backend_categories') }}</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -18,7 +18,7 @@
                         <div class="d-flex d-md-none">
                             <a href="javascript:void(0)" class="page-header-right-close-toggle">
                                 <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
+                                <span>{{ __('messages.backend_back') }}</span>
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
@@ -32,40 +32,40 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-primary rounded-circle d-inline-block me-3"></span>
-                                        <span>New</span>
+                                        <span>{{ __('messages.backend_dropdown_new') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-warning rounded-circle d-inline-block me-3"></span>
-                                        <span>Working</span>
+                                        <span>{{ __('messages.backend_dropdown_working') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-success rounded-circle d-inline-block me-3"></span>
-                                        <span>Qualified</span>
+                                        <span>{{ __('messages.backend_dropdown_qualified') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-danger rounded-circle d-inline-block me-3"></span>
-                                        <span>Declined</span>
+                                        <span>{{ __('messages.backend_dropdown_declined') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-teal rounded-circle d-inline-block me-3"></span>
-                                        <span>Customer</span>
+                                        <span>{{ __('messages.backend_dropdown_customer') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-indigo rounded-circle d-inline-block me-3"></span>
-                                        <span>Contacted</span>
+                                        <span>{{ __('messages.backend_dropdown_contacted') }}</span>
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-warning rounded-circle d-inline-block me-3"></span>
-                                        <span>Pending</span>
+                                        <span>{{ __('messages.backend_dropdown_pending') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-success rounded-circle d-inline-block me-3"></span>
-                                        <span>Approved</span>
+                                        <span>{{ __('messages.backend_dropdown_approved') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-teal rounded-circle d-inline-block me-3"></span>
-                                        <span>In Progress</span>
+                                        <span>{{ __('messages.backend_dropdown_in_progress') }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -76,34 +76,34 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-filetype-pdf me-3"></i>
-                                        <span>PDF</span>
+                                        <span>{{ __('messages.backend_dropdown_pdf') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-filetype-csv me-3"></i>
-                                        <span>CSV</span>
+                                        <span>{{ __('messages.backend_dropdown_csv') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-filetype-xml me-3"></i>
-                                        <span>XML</span>
+                                        <span>{{ __('messages.backend_dropdown_xml') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-filetype-txt me-3"></i>
-                                        <span>Text</span>
+                                        <span>{{ __('messages.backend_dropdown_text') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-filetype-exe me-3"></i>
-                                        <span>Excel</span>
+                                        <span>{{ __('messages.backend_dropdown_excel') }}</span>
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-printer me-3"></i>
-                                        <span>Print</span>
+                                        <span>{{ __('messages.backend_dropdown_print') }}</span>
                                     </a>
                                 </div>
                             </div>
                             <a href="{{ route('categories.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Tambah Kategori Utama</span>
+                                <span>{{ __('messages.backend_add_category') }}</span>
                             </a>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                                                 <i class="feather-users"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Total Leads</span>
+                                                <span class="d-block">{{ __('messages.backend_stats_total_leads') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">26,595</span>
                                             </a>
                                         </div>
@@ -147,7 +147,7 @@
                                                 <i class="feather-user-check"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Active Leads</span>
+                                                <span class="d-block">{{ __('messages.backend_stats_active_leads') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">2,245</span>
                                             </a>
                                         </div>
@@ -168,7 +168,7 @@
                                                 <i class="feather-user-plus"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">New Leads</span>
+                                                <span class="d-block">{{ __('messages.backend_stats_new_leads') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">1,254</span>
                                             </a>
                                         </div>
@@ -189,7 +189,7 @@
                                                 <i class="feather-user-minus"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Inactive Leads</span>
+                                                <span class="d-block">{{ __('messages.backend_stats_inactive_leads') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">4,586</span>
                                             </a>
                                         </div>
@@ -223,10 +223,10 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th class="text-center">Nama Kategori</th>
-                                                <th class="text-center">Deskripsi</th>
-                                                <th class="text-center">Status</th>
-                                                <th class="text-end">Actions</th>
+                                                <th class="text-center">{{ __('messages.backend_table_category_name') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_table_description') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_table_status') }}</th>
+                                                <th class="text-end">{{ __('messages.backend_table_actions') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -263,9 +263,9 @@
                                                     </td>
                                                     <td>
                                                         <select class="form-control" data-select2-selector="status" data-category-id="{{ $category->id }}">
-                                                            <option value="publish" {{ $category->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">Publish</option>
-                                                            <option value="draft" {{ $category->status == 'draft' ? 'selected' : '' }} data-bg="bg-warning">Draft</option>
-                                                            <option value="inactive" {{ $category->status == 'inactive' ? 'selected' : '' }} data-bg="bg-danger">Tidak Aktif</option>
+                                                            <option value="publish" {{ $category->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">{{ __('messages.backend_status_publish') }}</option>
+                                                            <option value="draft" {{ $category->status == 'draft' ? 'selected' : '' }} data-bg="bg-warning">{{ __('messages.backend_status_draft') }}</option>
+                                                            <option value="inactive" {{ $category->status == 'inactive' ? 'selected' : '' }} data-bg="bg-danger">{{ __('messages.backend_status_inactive') }}</option>
                                                         </select>
                                                     </td>
                                                     <td>
@@ -278,13 +278,13 @@
                                                                     <li>
                                                                         <a class="dropdown-item" href="{{ route('categories.edit', $category->id) }}">
                                                                             <i class="feather feather-edit-3 me-3"></i>
-                                                                            <span>Edit</span>
+                                                                            <span>{{ __('messages.backend_edit') }}</span>
                                                                         </a>
                                                                     </li>
                                                                     <li>
                                                                         <a class="dropdown-item" href="javascript:void(0)" onclick="deleteCategory('{{ $category->id }}', '{{ $category->name }}')">
                                                                             <i class="feather feather-trash-2 me-3"></i>
-                                                                            <span>Hapus</span>
+                                                                            <span>{{ __('messages.backend_delete') }}</span>
                                                                         </a>
                                                                     </li>
                                                                 </ul>
@@ -335,17 +335,17 @@
             $('#categoriesList').DataTable({
                 responsive: true,
                 language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    search: "{{ __('messages.backend_datatable_search') }}",
+                    lengthMenu: "{{ __('messages.backend_datatable_length_menu') }}",
+                    info: "{{ __('messages.backend_datatable_info') }}",
                     paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Selanjutnya",
-                        previous: "Sebelumnya"
+                        first: "{{ __('messages.backend_first') }}",
+                        last: "{{ __('messages.backend_last') }}",
+                        next: "{{ __('messages.backend_next') }}",
+                        previous: "{{ __('messages.backend_previous') }}"
                     },
-                    emptyTable: "Tidak ada data tersedia",
-                    zeroRecords: "Tidak ditemukan data yang cocok"
+                    emptyTable: "{{ __('messages.backend_datatable_empty_table') }}",
+                    zeroRecords: "{{ __('messages.backend_datatable_zero_records') }}"
                 },
                 order: [] // Use backend ordering (created_at desc)
             });
@@ -353,14 +353,14 @@
         
         function deleteCategory(id, name) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: 'Anda tidak akan dapat mengembalikan data ini!',
+                title: '{{ __('messages.backend_sweetalert_confirm_title') }}',
+                text: '{{ __('messages.backend_sweetalert_confirm_text') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                confirmButtonText: '{{ __('messages.backend_sweetalert_confirm_button') }}',
+                cancelButtonText: '{{ __('messages.backend_sweetalert_cancel_button') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Create form and submit

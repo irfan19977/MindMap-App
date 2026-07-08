@@ -6,12 +6,12 @@
         <div class="page-header">
             <div class="page-header-left d-flex align-items-center">
                 <div class="page-header-title">
-                    <h5 class="m-b-10">{{ isset($subcategory) ? 'Edit Sub Kategori' : 'Tambah Sub Kategori' }}</h5>
+                    <h5 class="m-b-10">{{ isset($subcategory) ? __('messages.backend_edit_subcategory') : __('messages.backend_add_subcategory_form') }}</h5>
                 </div>
                 <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('subcategories.index') }}">Sub Kategori</a></li>
-                    <li class="breadcrumb-item active">{{ isset($subcategory) ? 'Edit' : 'Tambah' }}</li>
+                    <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">{{ __('messages.backend_home') }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('subcategories.index') }}">{{ __('messages.backend_subcategories_title') }}</a></li>
+                    <li class="breadcrumb-item active">{{ isset($subcategory) ? __('messages.backend_edit') : __('messages.backend_add') }}</li>
                 </ul>
             </div>
             <div class="page-header-right ms-auto">
@@ -19,13 +19,13 @@
                     <div class="d-flex d-md-none">
                         <a href="javascript:void(0)" class="page-header-right-close-toggle">
                             <i class="feather-arrow-left me-2"></i>
-                            <span>Back</span>
+                            <span>{{ __('messages.backend_back') }}</span>
                         </a>
                     </div>
                     <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
                         <a href="{{ route('subcategories.index') }}" class="btn btn-secondary">
                             <i class="feather-arrow-left me-2"></i>
-                            <span>Kembali</span>
+                            <span>{{ __('messages.backend_back') }}</span>
                         </a>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <div class="col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
-                            <h5 class="card-title">{{ isset($subcategory) ? 'Edit Sub Kategori' : 'Tambah Sub Kategori Baru' }}</h5>
+                            <h5 class="card-title">{{ isset($subcategory) ? __('messages.backend_edit_subcategory') : __('messages.backend_add_subcategory_new') }}</h5>
                         </div>
                         <div class="card-body">
                             <form method="POST" action="{{ isset($subcategory) ? route('subcategories.update', $subcategory->id) : route('subcategories.store') }}" enctype="multipart/form-data">
@@ -56,10 +56,10 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="category_id" class="form-label">Kategori Utama <span class="text-danger">*</span></label>
+                                            <label for="category_id" class="form-label">{{ __('messages.backend_main_category') }} <span class="text-danger">*</span></label>
                                             <select class="form-control @error('category_id') is-invalid @enderror" 
                                                     data-select2-selector="icon" id="category_id" name="category_id">
-                                                <option value="">-- Pilih Kategori Utama --</option>
+                                                <option value="">{{ __('messages.backend_select_main_category') }}</option>
                                                 @foreach($categories as $category)
                                                     <option value="{{ $category->id }}" {{ (old('category_id') ?? ($subcategory->category_id ?? '')) == $category->id ? 'selected' : '' }}>
                                                         {{ $category->name }}
@@ -74,11 +74,11 @@
 
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="name" class="form-label">Nama Sub Kategori <span class="text-danger">*</span></label>
+                                            <label for="name" class="form-label">{{ __('messages.backend_subcategory_name') }} <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                                    id="name" name="name"
                                                    value="{{ old('name') ?? $subcategory->name ?? '' }}"
-                                                   placeholder="Contoh: Matematika Kelas 10">
+                                                   placeholder="{{ __('messages.backend_subcategory_name') }}">
                                             @error('name')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
                                             @enderror
@@ -89,10 +89,10 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="grade_level" class="form-label">Jenjang <span class="text-danger">*</span></label>
+                                            <label for="grade_level" class="form-label">{{ __('messages.backend_grade_level') }} <span class="text-danger">*</span></label>
                                             <select class="form-control @error('grade_level') is-invalid @enderror" 
                                                     data-select2-selector="icon" id="grade_level" name="grade_level">
-                                                <option value="">-- Pilih Jenjang --</option>
+                                                <option value="">{{ __('messages.backend_select_grade_level') }}</option>
                                                 <option value="sd" {{ (old('grade_level') ?? ($subcategory->grade_level ?? '')) == 'sd' ? 'selected' : '' }}>
                                                     SD
                                                 </option>
@@ -114,18 +114,18 @@
 
                                     <div class="col-md-6">
                                         <div class="mb-3">
-                                            <label for="status" class="form-label">Status<span class="text-danger">*</span></label>
+                                            <label for="status" class="form-label">{{ __('messages.backend_status_label') }}<span class="text-danger">*</span></label>
                                             <select class="form-control @error('status') is-invalid @enderror" 
                                                     data-select2-selector="icon" id="status" name="status">
-                                                <option value="">-- Pilih Status --</option>
+                                                <option value="">{{ __('messages.backend_select_status') }}</option>
                                                 <option value="publish" {{ (old('status') ?? ($subcategory->status ?? '')) == 'publish' ? 'selected' : '' }}>
-                                                    Publish
+                                                    {{ __('messages.backend_status_publish') }}
                                                 </option>
                                                 <option value="draft" {{ (old('status') ?? ($subcategory->status ?? '')) == 'draft' ? 'selected' : '' }}>
-                                                    Draft
+                                                    {{ __('messages.backend_status_draft') }}
                                                 </option>
                                                 <option value="inactive" {{ (old('status') ?? ($subcategory->status ?? '')) == 'inactive' ? 'selected' : '' }}>
-                                                    Tidak Aktif
+                                                    {{ __('messages.backend_status_inactive') }}
                                                 </option>
                                             </select>
                                             @error('status')
@@ -138,11 +138,11 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="curriculum" class="form-label">Kurikulum</label>
+                                            <label for="curriculum" class="form-label">{{ __('messages.backend_curriculum_label') }}</label>
                                             <input type="text" class="form-control @error('curriculum') is-invalid @enderror"
                                                    id="curriculum" name="curriculum"
                                                    value="{{ old('curriculum') ?? $subcategory->curriculum ?? '' }}"
-                                                   placeholder="Contoh: Kurikulum Merdeka">
+                                                   placeholder="{{ __('messages.backend_curriculum_placeholder') }}">
                                             @error('curriculum')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
                                             @enderror
@@ -153,17 +153,17 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="cover_image" class="form-label">Gambar Cover</label>
+                                            <label for="cover_image" class="form-label">{{ __('messages.backend_cover_image_label') }}</label>
                                             <input type="file" class="form-control @error('cover_image') is-invalid @enderror" 
                                                    id="cover_image" name="cover_image" 
                                                    accept="image/*">
                                             @if(isset($subcategory) && $subcategory->cover_image)
                                                 <div class="mt-2">
-                                                    <small class="text-muted">Gambar saat ini:</small><br>
+                                                    <small class="text-muted">{{ __('messages.backend_current_image') }}</small><br>
                                                     <img src="{{ asset('storage/' . $subcategory->cover_image) }}" alt="Cover" class="img-thumbnail" style="max-width: 150px; max-height: 100px;">
                                                 </div>
                                             @endif
-                                            <small class="text-muted d-block mt-1">Format: JPG, PNG, WebP. Maksimal: 2MB</small>
+                                            <small class="text-muted d-block mt-1">{{ __('messages.backend_image_format') }}</small>
                                             @error('cover_image')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -178,7 +178,7 @@
                                                    type="checkbox" id="is_featured" name="is_featured" value="1"
                                                    {{ (old('is_featured') ?? $subcategory->is_featured ?? 0) == 1 ? 'checked' : '' }}>
                                             <label class="form-check-label" for="is_featured">
-                                                Tampilkan di Halaman Utama (Featured)
+                                                {{ __('messages.backend_featured_label') }}
                                             </label>
                                             @error('is_featured')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -192,11 +192,11 @@
                                         <div class="d-flex gap-2">
                                             <button type="submit" class="btn btn-primary">
                                                 <i class="feather-save me-2"></i>
-                                                {{ isset($subcategory) ? 'Update Sub Kategori' : 'Simpan Sub Kategori' }}
+                                                {{ isset($subcategory) ? __('messages.backend_update_subcategory') : __('messages.backend_save_subcategory') }}
                                             </button>
                                             <a href="{{ route('subcategories.index') }}" class="btn btn-secondary">
                                                 <i class="feather-x me-2"></i>
-                                                Batal
+                                                {{ __('messages.backend_cancel') }}
                                             </a>
                                         </div>
                                     </div>
@@ -249,20 +249,20 @@
         const actionText = isEdit ? 'update' : 'simpan';
 
         Swal.fire({
-            title: 'Konfirmasi',
-            text: `Apakah Anda yakin ingin ${actionText} sub kategori ini?`,
+            title: '{{ __('messages.backend_confirmation') }}',
+            text: `{{ isset($subcategory) ? __('messages.backend_confirm_update_subcategory') : __('messages.backend_confirm_save_subcategory') }}`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, ' + actionText + '!',
-            cancelButtonText: 'Batal'
+            confirmButtonText: 'Ya!',
+            cancelButtonText: '{{ __('messages.backend_cancel') }}'
         }).then((result) => {
             if (result.isConfirmed) {
                 // Show loading
                 Swal.fire({
-                    title: 'Memproses...',
-                    text: 'Mohon tunggu sebentar',
+                    title: '{{ __('messages.backend_processing') }}',
+                    text: '{{ __('messages.backend_please_wait') }}',
                     allowOutsideClick: false,
                     didOpen: () => {
                         Swal.showLoading();

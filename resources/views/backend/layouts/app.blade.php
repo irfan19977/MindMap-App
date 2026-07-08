@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ session('direction', 'ltr') }}">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="IE=edge" />
@@ -16,7 +16,11 @@
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('backend/assets/images/logo-abbr.png') }}" />
     <!--! END: Favicon-->
     <!--! BEGIN: Bootstrap CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/bootstrap.min.css') }}" />
+    @if(session('direction') === 'rtl')
+        <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/bootstrap.rtl.min.css') }}" />
+    @else
+        <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/bootstrap.min.css') }}" />
+    @endif
     <!--! END: Bootstrap CSS-->
     <!--! BEGIN: Vendors CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/vendors/css/vendors.min.css') }}" />
@@ -43,7 +47,11 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/vendors/css/dataTables.bs5.min.css') }}" />	
     <!--! END: Vendors CSS-->
     <!--! BEGIN: Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/theme.min.css') }}" />
+    @if(session('direction') === 'rtl')
+        <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/theme.rtl.min.css') }}" />
+    @else
+        <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/theme.min.css') }}" />
+    @endif
     @stack('styles')
 
 </head>

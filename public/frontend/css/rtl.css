@@ -1,0 +1,302 @@
+/* RTL Support for Arabic */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .navbar-nav {
+    padding-right: 0;
+}
+
+[dir="rtl"] .navbar-nav > li {
+    float: right;
+}
+
+[dir="rtl"] .dropdown-menu {
+    right: 0;
+    left: auto;
+    text-align: right;
+}
+
+[dir="rtl"] .dropdown-menu > li > a {
+    text-align: right;
+}
+
+[dir="rtl"] .caret {
+    border-left: 4px solid;
+    border-right: 0;
+    margin-right: 2px;
+}
+
+[dir="rtl"] .pull-right {
+    float: left !important;
+}
+
+[dir="rtl"] .pull-left {
+    float: right !important;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left;
+}
+
+[dir="rtl"] .text-left {
+    text-align: right;
+}
+
+[dir="rtl"] .ml-auto {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+[dir="rtl"] .mr-auto {
+    margin-right: 0 !important;
+    margin-left: auto !important;
+}
+
+[dir="rtl"] .pl-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+[dir="rtl"] .pr-0 {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+[dir="rtl"] .ml-1 {
+    margin-left: 0 !important;
+    margin-right: 0.25rem !important;
+}
+
+[dir="rtl"] .ml-2 {
+    margin-left: 0 !important;
+    margin-right: 0.5rem !important;
+}
+
+[dir="rtl"] .ml-3 {
+    margin-left: 0 !important;
+    margin-right: 1rem !important;
+}
+
+[dir="rtl"] .mr-1 {
+    margin-right: 0 !important;
+    margin-left: 0.25rem !important;
+}
+
+[dir="rtl"] .mr-2 {
+    margin-right: 0 !important;
+    margin-left: 0.5rem !important;
+}
+
+[dir="rtl"] .mr-3 {
+    margin-right: 0 !important;
+    margin-left: 1rem !important;
+}
+
+[dir="rtl"] .pl-1 {
+    padding-left: 0 !important;
+    padding-right: 0.25rem !important;
+}
+
+[dir="rtl"] .pl-2 {
+    padding-left: 0 !important;
+    padding-right: 0.5rem !important;
+}
+
+[dir="rtl"] .pl-3 {
+    padding-left: 0 !important;
+    padding-right: 1rem !important;
+}
+
+[dir="rtl"] .pr-1 {
+    padding-right: 0 !important;
+    padding-left: 0.25rem !important;
+}
+
+[dir="rtl"] .pr-2 {
+    padding-right: 0 !important;
+    padding-left: 0.5rem !important;
+}
+
+[dir="rtl"] .pr-3 {
+    padding-right: 0 !important;
+    padding-left: 1rem !important;
+}
+
+/* Icon flipping for RTL */
+[dir="rtl"] .fa-chevron-left:before {
+    content: "\f054";
+}
+
+[dir="rtl"] .fa-chevron-right:before {
+    content: "\f053";
+}
+
+[dir="rtl"] .fa-arrow-left:before {
+    content: "\f061";
+}
+
+[dir="rtl"] .fa-arrow-right:before {
+    content: "\f060";
+}
+
+[dir="rtl"] .fa-angle-left:before {
+    content: "\f105";
+}
+
+[dir="rtl"] .fa-angle-right:before {
+    content: "\f104";
+}
+
+/* Form elements */
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+    text-align: right;
+}
+
+[dir="rtl"] .form-check {
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+[dir="rtl"] .form-check-input {
+    margin-right: -1.5rem;
+    margin-left: 0;
+}
+
+/* Cards */
+[dir="rtl"] .card {
+    text-align: right;
+}
+
+/* Tables */
+[dir="rtl"] table {
+    text-align: right;
+}
+
+[dir="rtl"] th,
+[dir="rtl"] td {
+    text-align: right;
+}
+
+/* Buttons with icons */
+[dir="rtl"] .btn i {
+    margin-right: 0;
+    margin-left: 0.5rem;
+}
+
+/* Navbar specific */
+[dir="rtl"] .navbar-brand {
+    float: right;
+}
+
+[dir="rtl"] .navbar-toggle {
+    float: left;
+    margin-left: 15px;
+    margin-right: 0;
+}
+
+/* Footer */
+[dir="rtl"] .footer {
+    text-align: right;
+}
+
+/* Hero section */
+[dir="rtl"] .hero-section {
+    text-align: right;
+}
+
+/* Features */
+[dir="rtl"] .feature-icon {
+    margin-right: 0;
+    margin-left: 1rem;
+}
+
+/* Course cards */
+[dir="rtl"] .course-card {
+    text-align: right;
+}
+
+/* Teacher cards */
+[dir="rtl"] .teacher-card {
+    text-align: right;
+}
+
+/* Pagination */
+[dir="rtl"] .pagination {
+    padding-right: 0;
+}
+
+[dir="rtl"] .pagination > li > a,
+[dir="rtl"] .pagination > li > span {
+    float: right;
+    margin-right: -1px;
+    margin-left: 0;
+}
+
+/* Breadcrumb */
+[dir="rtl"] .breadcrumb {
+    padding-right: 15px;
+    padding-left: 0;
+}
+
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+    content: "\f104";
+    float: right;
+    padding-right: 0.5rem;
+    padding-left: 0;
+}
+
+/* Alerts */
+[dir="rtl"] .alert {
+    text-align: right;
+}
+
+[dir="rtl"] .alert-dismissible .close {
+    left: 0;
+    right: auto;
+}
+
+/* Modal */
+[dir="rtl"] .modal-header .close {
+    margin-left: -1rem;
+    margin-right: auto;
+}
+
+/* Progress bars */
+[dir="rtl"] .progress {
+    background-color: #e9ecef;
+}
+
+/* Badges */
+[dir="rtl"] .badge {
+    text-align: center;
+}
+
+/* List groups */
+[dir="rtl"] .list-group-item {
+    text-align: right;
+}
+
+/* Media objects */
+[dir="rtl"] .media {
+    text-align: right;
+}
+
+[dir="rtl"] .media-body {
+    text-align: right;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    [dir="rtl"] .navbar-nav > li {
+        float: none;
+    }
+    
+    [dir="rtl"] .navbar-nav {
+        margin: 7.5px -15px;
+        text-align: right;
+    }
+}

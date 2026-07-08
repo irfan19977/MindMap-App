@@ -6,11 +6,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Dashboard</h5>
+                        <h5 class="m-b-10">{{ __('messages.backend_dashboard') }}</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Dashboard</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">{{ __('messages.backend_home') }}</a></li>
+                        <li class="breadcrumb-item">{{ __('messages.backend_dashboard') }}</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -18,7 +18,7 @@
                         <div class="d-flex d-md-none">
                             <a href="javascript:void(0)" class="page-header-right-close-toggle">
                                 <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
+                                <span>{{ __('messages.backend_back') }}</span>
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
@@ -386,12 +386,16 @@
             var el = document.querySelector('#platform-activity-chart');
             if (!el) return;
 
+            var isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+
             var options = {
                 chart: {
                     height: 380,
                     width: '100%',
+                    type: 'line',
                     stacked: false,
-                    toolbar: { show: false }
+                    toolbar: { show: false },
+                    rtl: isRtl
                 },
                 stroke: {
                     width: [1, 2],
