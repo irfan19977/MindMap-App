@@ -6,11 +6,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Materi</h5>
+                        <h5 class="m-b-10">{{ __('messages.backend_materi_title') }}</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">Materi</li>
+                        <li class="breadcrumb-item"><a href="index.html">{{ __('messages.backend_home') }}</a></li>
+                        <li class="breadcrumb-item">{{ __('messages.backend_materi_title') }}</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -18,7 +18,7 @@
                         <div class="d-flex d-md-none">
                             <a href="javascript:void(0)" class="page-header-right-close-toggle">
                                 <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
+                                <span>{{ __('messages.backend_back') }}</span>
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
@@ -32,15 +32,15 @@
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-primary rounded-circle d-inline-block me-3"></span>
-                                        <span>Draft</span>
+                                        <span>{{ __('messages.backend_draft') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-warning rounded-circle d-inline-block me-3"></span>
-                                        <span>Published</span>
+                                        <span>{{ __('messages.backend_published') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <span class="wd-7 ht-7 bg-success rounded-circle d-inline-block me-3"></span>
-                                        <span>Archived</span>
+                                        <span>{{ __('messages.backend_archived') }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -72,13 +72,13 @@
                                     <div class="dropdown-divider"></div>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="bi bi-printer me-3"></i>
-                                        <span>Print</span>
+                                        <span>{{ __('messages.backend_dropdown_print') }}</span>
                                     </a>
                                 </div>
                             </div>
                             <a href="{{ route('materis.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Tambah Materi</span>
+                                <span>{{ __('messages.backend_add_materi') }}</span>
                             </a>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
                                                 <i class="feather-book-open"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Total Materi</span>
+                                                <span class="d-block">{{ __('messages.backend_total_materi') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">{{ $materis->count() }}</span>
                                             </a>
                                         </div>
@@ -122,7 +122,7 @@
                                                 <i class="feather-check-circle"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Diterbitkan</span>
+                                                <span class="d-block">{{ __('messages.backend_published') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">{{ $materis->where('status', 'publish')->count() }}</span>
                                             </a>
                                         </div>
@@ -143,7 +143,7 @@
                                                 <i class="feather-file-text"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Draft</span>
+                                                <span class="d-block">{{ __('messages.backend_draft') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">{{ $materis->where('status', 'draft')->count() }}</span>
                                             </a>
                                         </div>
@@ -164,7 +164,7 @@
                                                 <i class="feather-gift"></i>
                                             </div>
                                             <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="d-block">Gratis</span>
+                                                <span class="d-block">{{ __('messages.backend_free') }}</span>
                                                 <span class="fs-24 fw-bolder d-block">{{ $materis->where('is_free', true)->count() }}</span>
                                             </a>
                                         </div>
@@ -198,12 +198,12 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th class="text-center">Judul Materi</th>
-                                                <th class="text-center">Subkategori</th>
-                                                <th class="text-center">Deskripsi</th>
-                                                <th class="text-center">Status</th>
-                                                <th class="text-center">Gratis</th>
-                                                <th class="text-end">Actions</th>
+                                                <th class="text-center">{{ __('messages.backend_materi_title_header') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_subcategory') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_materi_description') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_materi_status') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_materi_free') }}</th>
+                                                <th class="text-end">{{ __('messages.backend_table_actions') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -242,16 +242,16 @@
                                                     </td>
                                                     <td>
                                                         <select class="form-control" data-select2-selector="status" data-materi-id="{{ $materi->id }}">
-                                                            <option value="draft" {{ $materi->status == 'draft' ? 'selected' : '' }} data-bg="bg-secondary">Draft</option>
-                                                            <option value="publish" {{ $materi->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">Diterbitkan</option>
-                                                            <option value="inactive" {{ $materi->status == 'inactive' ? 'selected' : '' }} data-bg="bg-warning">Tidak Aktif</option>
+                                                            <option value="draft" {{ $materi->status == 'draft' ? 'selected' : '' }} data-bg="bg-secondary">{{ __('messages.backend_draft') }}</option>
+                                                            <option value="publish" {{ $materi->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">{{ __('messages.backend_published') }}</option>
+                                                            <option value="inactive" {{ $materi->status == 'inactive' ? 'selected' : '' }} data-bg="bg-warning">{{ __('messages.backend_status_inactive') }}</option>
                                                         </select>
                                                     </td>
                                                     <td>
                                                         @if($materi->is_free)
-                                                            <span class="badge bg-soft-success text-success">Gratis</span>
+                                                            <span class="badge bg-soft-success text-success">{{ __('messages.backend_free') }}</span>
                                                         @else
-                                                            <span class="badge bg-soft-warning text-warning">Berbayar</span>
+                                                            <span class="badge bg-soft-warning text-warning">{{ __('messages.backend_paid') }}</span>
                                                         @endif
                                                     </td>
                                                     <td>
@@ -264,14 +264,14 @@
                                                                     <li>
                                                                         <a class="dropdown-item" href="{{ route('materis.edit', $materi->id) }}">
                                                                             <i class="feather feather-edit-3 me-3"></i>
-                                                                            <span>Edit</span>
+                                                                            <span>{{ __('messages.backend_edit') }}</span>
                                                                         </a>
                                                                     </li>
                                                                     @if($materi->file_path)
                                                                         <li>
                                                                             <a class="dropdown-item" href="{{ $materi->file_url }}" target="_blank">
                                                                                 <i class="feather feather-download me-3"></i>
-                                                                                <span>Download File</span>
+                                                                                <span>{{ __('messages.backend_download_file') }}</span>
                                                                             </a>
                                                                         </li>
                                                                     @endif
@@ -279,14 +279,14 @@
                                                                         <li>
                                                                             <a class="dropdown-item" href="{{ $materi->video_url }}" target="_blank">
                                                                                 <i class="feather feather-video me-3"></i>
-                                                                                <span>Lihat Video</span>
+                                                                                <span>{{ __('messages.backend_view_video') }}</span>
                                                                             </a>
                                                                         </li>
                                                                     @endif
                                                                     <li>
                                                                         <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteMateri('{{ $materi->id }}', '{{ $materi->title }}')">
                                                                             <i class="feather feather-trash-2 me-3"></i>
-                                                                            <span>Hapus</span>
+                                                                            <span>{{ __('messages.backend_delete') }}</span>
                                                                         </a>
                                                                     </li>
                                                                 </ul>
@@ -336,24 +336,24 @@
             $('#materiList').DataTable({
                 responsive: true,
                 language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    search: "{{ __('messages.backend_datatable_search') }}",
+                    lengthMenu: "{{ __('messages.backend_datatable_length_menu') }}",
+                    info: "{{ __('messages.backend_datatable_info') }}",
                     paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Selanjutnya",
-                        previous: "Sebelumnya"
+                        first: "{{ __('messages.backend_first') }}",
+                        last: "{{ __('messages.backend_last') }}",
+                        next: "{{ __('messages.backend_next') }}",
+                        previous: "{{ __('messages.backend_previous') }}"
                     },
-                    emptyTable: "Tidak ada data tersedia",
-                    zeroRecords: "Tidak ditemukan data yang cocok"
+                    emptyTable: "{{ __('messages.backend_datatable_empty_table') }}",
+                    zeroRecords: "{{ __('messages.backend_datatable_zero_records') }}"
                 },
                 order: [[1, 'asc']] // Sort by Judul Materi column by default
             });
         });
         
         function deleteMateri(id, title) {
-            if (confirm('Apakah Anda yakin ingin menghapus materi "' + title + '"?')) {
+            if (confirm('{{ __('messages.backend_sweetalert_confirm_text') }} ' + title + '?')) {
                 fetch('{{ route('materis.index') }}/' + id, {
                     method: 'DELETE',
                     headers: {
@@ -371,7 +371,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan saat menghapus data.');
+                    alert('{{ __('messages.backend_error_occurred') }}');
                 });
             }
         }
@@ -418,7 +418,7 @@
                     })
                     .catch(error => {
                         console.error('Error:', error);
-                        alert('Terjadi kesalahan saat memperbarui status.');
+                        alert('{{ __('messages.backend_error_update_status') }}');
                     });
                 });
             });

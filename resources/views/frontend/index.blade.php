@@ -8,9 +8,8 @@
           <div class="row">
             <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo.png') }}" alt=""></div>
             <div class="col-md-6">
-              <h1 class="no-pad bold">MindMap <span class="label classic">Pembelajaran</span><br>Inter<span class="light">aktif</span>
-              </h1>
-              <p class="lead">Platform pembelajaran modern dengan alur pembelajaran terstruktur dan materi interaktif untuk meningkatkan pemahaman konsep Anda</p><a class="page-scroll" href="#about"><span class="mouse"><span><i class="ion-ios-arrow-thin-down"></i></span></span></a>
+              <h1 class="no-pad bold">{{ __('messages.hero_title') }}</h1>
+              <p class="lead">{{ __('messages.hero_subtitle') }}</p><a class="page-scroll" href="#about"><span class="mouse"><span><i class="ion-ios-arrow-thin-down"></i></span></span></a>
             </div>
           </div>
         </div>
@@ -20,18 +19,18 @@
     <div class="container text-center box-shadow showcase"  id="about">
       <div class="row">
         <div class="col-lg-4">
-          <h3><i class="ion-ios-analytics-outline icon-big"></i> Alur Pembelajaran</h3>
-          <p class="no-pad">Sistem pembelajaran terstruktur dengan tahapan yang jelas untuk memudahkan pemahaman konsep secara bertahap</p>
+          <h3><i class="ion-ios-analytics-outline icon-big"></i> {{ __('messages.teaser_1_title') }}</h3>
+          <p class="no-pad">{{ __('messages.teaser_1_desc') }}</p>
         </div>
         <div class="col-lg-4 border">
           <h3><i class="ion-ionic icon-big fa-spin"></i>
-            <!--i.ion-load-c.icon-big.text-gradient.fa-spin--> Materi Interaktif
+            <!--i.ion-load-c.icon-big.text-gradient.fa-spin--> {{ __('messages.teaser_2_title') }}
           </h3>
-          <p class="no-pad">Materi pembelajaran yang engaging dan interaktif dengan berbagai media untuk meningkatkan daya ingat dan pemahaman</p>
+          <p class="no-pad">{{ __('messages.teaser_2_desc') }}</p>
         </div>
         <div class="col-lg-4">
-          <h3><i class="ion-ios-stopwatch-outline icon-big"></i> Tracking Progress</h3>
-          <p class="no-pad">Pantau perkembangan pembelajaran Anda secara real-time dengan sistem pelacakan progress yang komprehensif</p>
+          <h3><i class="ion-ios-stopwatch-outline icon-big"></i> {{ __('messages.teaser_3_title') }}</h3>
+          <p class="no-pad">{{ __('messages.teaser_3_desc') }}</p>
         </div>
       </div>
     </div>
@@ -40,10 +39,10 @@
       <div class="container">
         <div class="row v-center">
           <div class="col-lg-6">
-            <h2>Tentang MindMap</h2>
-            <p>MindMap adalah platform pembelajaran inovatif yang dirancang untuk membantu Anda memahami konsep-konsep kompleks dengan cara yang lebih mudah dan menyenangkan. Dengan sistem alur pembelajaran yang terstruktur dan materi yang interaktif, kami berkomitmen untuk meningkatkan kualitas pembelajaran Anda.</p>
-            <p>Platform kami menggabungkan teknologi modern dengan metode pembelajaran efektif untuk memberikan pengalaman belajar yang optimal dan personal.</p>
-            <div class="classic">MindMap Team</div> <small>&mdash; Platform Pembelajaran Digital</small>
+            <h2>{{ __('messages.about_title') }}</h2>
+            <p>{{ __('messages.about_desc_1') }}</p>
+            <p>{{ __('messages.about_desc_2') }}</p>
+            <div class="classic">{{ __('messages.about_team') }}</div> <small>&mdash; {{ __('messages.about_subtitle') }}</small>
           </div>
           <div class="col-lg-6"><img class="wow slideInRight center-block" src="{{ asset('frontend/img/misc/7.png') }}" alt="" data-wow-duration="2s" animation-duration="2s"></div>
         </div>
@@ -52,19 +51,19 @@
     <!-- News-->
     <section class="bg-gray" id="blog">
       <div class="container">
-        <h2 class="no-pad">Fitur Unggulan<a class="fa fa-plus-circle fa-fw gray" href="#features" title="Lihat Semua"></a></h2>
+        <h2 class="no-pad">{{ __('messages.features_title') }}<a class="fa fa-plus-circle fa-fw gray" href="#features" title="Lihat Semua"></a></h2>
         <div class="row grid-pad">
           <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/58.jpg') }}" alt="">
-              <h4>Alur Pembelajaran Adaptif</h4></a>
-            <p>Sistem pembelajaran yang menyesuaikan dengan kemampuan dan kecepatan belajar setiap pengguna untuk hasil yang optimal.</p><a class="btn btn-dark-border" href="#features">Pelajari Lebih</a>
+              <h4>{{ __('messages.feature_1_title') }}</h4></a>
+            <p>{{ __('messages.feature_1_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
           <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/59.jpg') }}" alt="">
-              <h4>Materi Multimedia</h4></a>
-            <p>Konten pembelajaran kaya dengan video, animasi, dan simulasi interaktif untuk pemahaman yang lebih mendalam.</p><a class="btn btn-dark-border" href="#features">Pelajari Lebih</a>
+              <h4>{{ __('messages.feature_2_title') }}</h4></a>
+            <p>{{ __('messages.feature_2_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
           <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/25.jpg') }}" alt="">
-              <h4>Assessment Otomatis</h4></a>
-            <p>Sistem evaluasi otomatis yang memberikan feedback langsung untuk membantu Anda meningkatkan pemahaman secara berkelanjutan.</p><a class="btn btn-dark-border" href="#features">Pelajari Lebih</a>
+              <h4>{{ __('messages.feature_3_title') }}</h4></a>
+            <p>{{ __('messages.feature_3_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
         </div>
       </div>
@@ -75,44 +74,44 @@
       <div class="container text-center">
         <div class="row">
           <div class="col-lg-8 col-lg-offset-2">
-            <h2>Layanan Pembelajaran</h2>
-            <p>Platform MindMap menyediakan berbagai layanan pembelajaran yang komprehensif untuk mendukung perkembangan akademik dan profesional Anda</p>
+            <h2>{{ __('messages.services_title') }}</h2>
+            <p>{{ __('messages.services_desc') }}</p>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".2s">
-            <h4><i class="ion-ios-pie-outline icon-big"></i> Analitik Pembelajaran</h4>
-            <p>Analisis mendalam tentang progress pembelajaran dan identifikasi area yang perlu ditingkatkan.</p>
+            <h4><i class="ion-ios-pie-outline icon-big"></i> {{ __('messages.service_1_title') }}</h4>
+            <p>{{ __('messages.service_1_desc') }}</p>
           </div>
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".3s">
-            <h4><i class="ion-ios-basketball-outline icon-big"></i> Kurikulum Interaktif</h4>
-            <p>Materi pembelajaran yang dirancang dengan pendekatan visual dan interaktif untuk pemahaman optimal.</p>
+            <h4><i class="ion-ios-basketball-outline icon-big"></i> {{ __('messages.service_2_title') }}</h4>
+            <p>{{ __('messages.service_2_desc') }}</p>
           </div>
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".4s">
-            <h4><i class="ion-ios-monitor-outline icon-big"></i> Konsultasi Akademik</h4>
-            <p>Dukungan dari tutor ahli untuk membantu mengatasi kesulitan dalam pembelajaran.</p>
+            <h4><i class="ion-ios-monitor-outline icon-big"></i> {{ __('messages.service_3_title') }}</h4>
+            <p>{{ __('messages.service_3_desc') }}</p>
           </div>
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".5s">
-            <h4><i class="ion-ios-stopwatch-outline icon-big"></i> Sertifikasi</h4>
-            <p>Sertifikat kompetensi yang dapat digunakan untuk meningkatkan nilai akademik dan profesional.</p>
+            <h4><i class="ion-ios-stopwatch-outline icon-big"></i> {{ __('messages.service_4_title') }}</h4>
+            <p>{{ __('messages.service_4_desc') }}</p>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".6s">
-            <h4><i class="ion-ios-analytics-outline icon-big"></i>Progress Tracking</h4>
-            <p>Pemantauan perkembangan pembelajaran secara real-time dengan dashboard yang informatif.</p>
+            <h4><i class="ion-ios-analytics-outline icon-big"></i>{{ __('messages.service_5_title') }}</h4>
+            <p>{{ __('messages.service_5_desc') }}</p>
           </div>
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".7s">
-            <h4><i class="ion-ios-medical-outline icon-big"></i>Quiz & Assessment</h4>
-            <p>Berbagai jenis evaluasi untuk mengukur pemahaman dan penguasaan materi.</p>
+            <h4><i class="ion-ios-medical-outline icon-big"></i>{{ __('messages.service_6_title') }}</h4>
+            <p>{{ __('messages.service_6_desc') }}</p>
           </div>
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".8s">
-            <h4><i class="ion-ios-clock-outline icon-big"></i>Flexible Learning</h4>
-            <p>Pembelajaran yang dapat diakses kapan saja dan di mana saja sesuai dengan kebutuhan Anda.</p>
+            <h4><i class="ion-ios-clock-outline icon-big"></i>{{ __('messages.service_7_title') }}</h4>
+            <p>{{ __('messages.service_7_desc') }}</p>
           </div>
           <div class="col-lg-3 col-sm-6 wow fadeIn" data-wow-delay=".9s">
-            <h4><i class="ion-ios-settings icon-big"></i>Personalisasi</h4>
-            <p>Pengalaman belajar yang disesuaikan dengan gaya belajar dan kebutuhan individual.</p>
+            <h4><i class="ion-ios-settings icon-big"></i>{{ __('messages.service_8_title') }}</h4>
+            <p>{{ __('messages.service_8_desc') }}</p>
           </div>
         </div>
       </div>
@@ -122,23 +121,23 @@
       <div class="row v-center">
         <div class="col-lg-6 no-pad"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/3.jpg') }}" alt=""></div>
         <div class="col-lg-6"><a class="swipebox-video" href="https://vimeo.com/188716447" data-rel="video2"><i class="ion-ios-play-outline icon-big text-gradient-gray"></i></a>
-          <h2>Tonton Cerita Kami</h2>
-          <h5 class="no-pad">Youtube / Vimeo</h5>
+          <h2>{{ __('messages.watch_our_story') }}</h2>
+          <h5 class="no-pad">{{ __('messages.video_platform') }}</h5>
         </div>
       </div>
     </div>
     <!-- Portfolio-->
     <section class="section-small no-pad-btm" id="portfolio">
       <div class="container">
-        <h2 class="pull-left">Portfolio</h2>
+        <h2 class="pull-left">{{ __('messages.portfolio_title') }}</h2>
         <div class="pull-right">
           <h5 class="no-pad">
             <ul class="list-inline"><span class="portfolio-sorting">
-                <li><a class="active" href="{{ asset('frontend/portfolio-single.html') }}" data-group="all">Semua</a></li></span><span class="portfolio-sorting">
-                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="photo">Foto</a></li></span><span class="portfolio-sorting">
-                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="design">Desain</a></li></span><span class="portfolio-sorting">
-                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="branding">Branding</a></li></span><span class="portfolio-sorting2">
-                <li><a href="{{ asset('frontend/portfolio-masonry-4.html') }}" data-group="">Semua Portfolio</a></li></span></ul>
+                <li><a class="active" href="{{ asset('frontend/portfolio-single.html') }}" data-group="all">{{ __('messages.portfolio_all') }}</a></li></span><span class="portfolio-sorting">
+                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="photo">{{ __('messages.portfolio_photo') }}</a></li></span><span class="portfolio-sorting">
+                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="design">{{ __('messages.portfolio_design') }}</a></li></span><span class="portfolio-sorting">
+                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="branding">{{ __('messages.portfolio_branding') }}</a></li></span><span class="portfolio-sorting2">
+                <li><a href="{{ asset('frontend/portfolio-masonry-4.html') }}" data-group="">{{ __('messages.portfolio_all_portfolio') }}</a></li></span></ul>
           </h5>
         </div>
         <div class="clearfix"></div>
@@ -209,31 +208,31 @@
       <div class="container">
         <div class="row">
           <div class="col-md-3">
-            <h2>Testimoni</h2>
+            <h2>{{ __('messages.testimonials_title') }}</h2>
           </div>
           <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/5.jpg') }}" alt=""></div>
           <div class="col-md-6">
-            <h2 class="dark-gray">Platform pembelajaran terbaik untuk meningkatkan pemahaman konsep</h2>
-            <p>MindMap telah membantu saya memahami materi yang sulit dengan cara yang visual dan interaktif. Alur pembelajaran yang terstruktur membuat proses belajar menjadi lebih efektif dan menyenangkan.</p>
-            <div class="classic">Sarah Amanda</div> <small>&mdash; Mahasiswa</small>
+            <h2 class="dark-gray">{{ __('messages.testimonial_main_title') }}</h2>
+            <p>{{ __('messages.testimonial_main_desc') }}</p>
+            <div class="classic">{{ __('messages.testimonial_main_name') }}</div> <small>&mdash; {{ __('messages.testimonial_main_role') }}</small>
           </div>
         </div>
         <div class="row grid-pad">
           <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/1.jpg') }}" alt="">
-            <h4>Budi Santoso</h4>
-            <p class="no-pad">Platform ini sangat membantu dalam memahami konsep-konsep kompleks. Materi interaktif dan tracking progress yang detail membuat pembelajaran lebih terukur.</p>
+            <h4>{{ __('messages.testimonial_1_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_1_desc') }}</p>
           </div>
           <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/2.jpg') }}" alt="">
-            <h4>Maya Putri</h4>
-            <p class="no-pad">Saya sangat puas dengan MindMap! Sistem pembelajaran adaptifnya membantu saya belajar sesuai dengan kecepatan saya sendiri.</p>
+            <h4>{{ __('messages.testimonial_2_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_2_desc') }}</p>
           </div>
           <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/3.jpg') }}" alt="">
-            <h4>Rizki Ahmad</h4>
-            <p class="no-pad">MindMap mengubah cara saya belajar. Materi multimedia dan assessment otomatisnya sangat membantu dalam persiapan ujian.</p>
+            <h4>{{ __('messages.testimonial_3_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_3_desc') }}</p>
           </div>
           <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/4.jpg') }}" alt="">
-            <h4>Diana Wijaya</h4>
-            <p class="no-pad">Platform pembelajaran yang luar biasa! Dukungan tutor ahli dan sistem sertifikatnya sangat membantu karir akademik saya.</p>
+            <h4>{{ __('messages.testimonial_4_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_4_desc') }}</p>
           </div>
         </div>
       </div>
@@ -243,9 +242,9 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-5">
-            <h2>Apa Yang Kami Lakukan</h2>
-            <p>Kami menciptakan platform pembelajaran digital yang inovatif. Pengembangan alur pembelajaran, desain materi interaktif, manajemen konten, perencanaan strategis, dan pengujian usability untuk pengalaman belajar terbaik.</p>
-            <div class="classic">Tim MindMap</div>
+            <h2>{{ __('messages.what_we_do_title') }}</h2>
+            <p>{{ __('messages.what_we_do_desc') }}</p>
+            <div class="classic">{{ __('messages.mindmap_team') }}</div>
           </div>
           <div class="col-lg-7 carousel-item wow zoomIn" data-wow-duration="2s" data-wow-delay=".2s">
             <div class="carousel slide carousel-fade" id="carousel-light2">
@@ -265,7 +264,7 @@
     <!-- Tim Section-->
     <section id="team">
       <div class="container text-center">
-        <h2>Tim Kami</h2>
+        <h2>{{ __('messages.team_title') }}</h2>
         <div class="row">
           <div class="col-md-6 shadow"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/avatar3.jpg') }}" alt="">
             <h5>
@@ -274,7 +273,7 @@
                 <li><a href="/"><i class="fab fa-facebook-f fa-2x"></i></a></li>
                 <li><a href="/"><i class="fab fa-behance fa-2x"></i></a></li>
               </ul>Dr. Ahmad Rizki
-              <div class="small">CEO & Founder</div>
+              <div class="small">{{ __('messages.team_ceo') }}</div>
             </h5>
           </div>
           <div class="col-md-6">
@@ -286,7 +285,7 @@
                     <li><a href="/"><i class="fab fa-youtube fa-2x"></i></a></li>
                     <li><a href="/"><i class="fab fa-vimeo-v fa-2x"></i></a></li>
                   </ul>Siti Nurhaliza
-                  <div class="small">Manager Operasional</div>
+                  <div class="small">{{ __('messages.team_ops_manager') }}</div>
                 </h5>
               </div>
               <div class="col-md-6 shadow"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/avatar1.jpg') }}" alt="">
@@ -296,7 +295,7 @@
                     <li><a href="/"><i class="fab fa-twitter fa-2x"></i></a></li>
                     <li><a href="/"><i class="fab fa-instagram fa-2x"></i></a></li>
                   </ul>Budi Pratama
-                  <div class="small">Lead Designer</div>
+                  <div class="small">{{ __('messages.team_lead_designer') }}</div>
                 </h5>
               </div>
               <div class="col-md-6 shadow"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/avatar4.jpg') }}" alt="">
@@ -306,7 +305,7 @@
                     <li><a href="/"><i class="fab fa-github fa-2x"></i></a></li>
                     <li><a href="/"><i class="fab fa-pinterest fa-2x"></i></a></li>
                   </ul>Dewi Lestari
-                  <div class="small">Content Developer</div>
+                  <div class="small">{{ __('messages.team_content_dev') }}</div>
                 </h5>
               </div>
               <div class="col-md-6 shadow"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/avatar5.jpg') }}" alt="">
@@ -316,7 +315,7 @@
                     <li><a href="/"><i class="fab fa-github fa-2x"></i></a></li>
                     <li><a href="/"><i class="fab fa-linkedin fa-2x"></i></a></li>
                   </ul>Fajar Hidayat
-                  <div class="small">Business Development</div>
+                  <div class="small">{{ __('messages.team_biz_dev') }}</div>
                 </h5>
               </div>
             </div>
@@ -332,8 +331,8 @@
           <div class="col-lg-6">
             <div class="row">
               <div class="col-lg-8 col-lg-offset-2"><i class="ion-ios-infinite-outline icon-big"></i>
-                <h3>Pembelajaran Adalah Perjalanan Tanpa Akhir. Teruslah Bergerak Maju untuk Meraih Kesuksesan.</h3>
-                <h4 class="classic">Tim MindMap</h4>
+                <h3>{{ __('messages.quote_text') }}</h3>
+                <h4 class="classic">{{ __('messages.mindmap_team') }}</h4>
               </div>
             </div>
           </div>
@@ -343,48 +342,48 @@
     <!-- Tabel Harga-->
     <section>
       <div class="container pricing text-center">
-        <h2>Harga</h2>
+        <h2>{{ __('messages.pricing_title') }}</h2>
         <div class="row">
           <div class="col-md-4">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h4>PELAJAR</h4>
+                <h4>{{ __('messages.pricing_student') }}</h4>
               </div>
-              <div class="panel-body">Paket dasar untuk pelajar dengan akses ke materi pembelajaran fundamental.</div>
+              <div class="panel-body">{{ __('messages.pricing_student_desc') }}</div>
               <ul class="list-group">
-                <li class="list-group-item">50+ Materi Pembelajaran</li>
-                <li class="list-group-item">Mobile Optimized</li>
-                <li class="list-group-item">Akses dari mana saja</li>
-                <li class="list-group-item"><span class="number"><sup>Rp</sup>99K</span><sub>/BULAN</sub></li>
+                <li class="list-group-item">{{ __('messages.pricing_student_1') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_student_2') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_student_3') }}</li>
+                <li class="list-group-item"><span class="number"><sup>Rp</sup>{{ __('messages.pricing_student_price') }}</span><sub>{{ __('messages.pricing_month') }}</sub></li>
               </ul>
             </div>
           </div>
           <div class="col-md-4">
             <div class="panel panel-default box-shadow">
               <div class="panel-heading">
-                <h4>PROFESIONAL</h4>
+                <h4>{{ __('messages.pricing_professional') }}</h4>
               </div>
-              <div class="panel-body">Paket lengkap untuk profesional dengan fitur premium dan dukungan tutor.</div>
+              <div class="panel-body">{{ __('messages.pricing_professional_desc') }}</div>
               <ul class="list-group">
-                <li class="list-group-item">Unlimited Materi Pembelajaran</li>
-                <li class="list-group-item">Mobile Optimized <span class="label label-danger">PREMIUM</span>
+                <li class="list-group-item">{{ __('messages.pricing_professional_1') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_professional_2') }} <span class="label label-danger">{{ __('messages.pricing_premium') }}</span>
                 </li>
-                <li class="list-group-item">Dukungan Tutor 24/7</li>
-                <li class="list-group-item"><span class="number"><sup>Rp</sup>199K</span><sub>/BULAN</sub></li>
+                <li class="list-group-item">{{ __('messages.pricing_professional_3') }}</li>
+                <li class="list-group-item"><span class="number"><sup>Rp</sup>{{ __('messages.pricing_professional_price') }}</span><sub>{{ __('messages.pricing_month') }}</sub></li>
               </ul>
             </div>
           </div>
           <div class="col-md-4">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h4>INSTITUSI</h4>
+                <h4>{{ __('messages.pricing_institution') }}</h4>
               </div>
-              <div class="panel-body">Paket khusus untuk institusi pendidikan dengan fitur manajemen kelas dan laporan lengkap.</div>
+              <div class="panel-body">{{ __('messages.pricing_institution_desc') }}</div>
               <ul class="list-group">
-                <li class="list-group-item">Unlimited User & Kelas</li>
-                <li class="list-group-item">Admin Dashboard</li>
-                <li class="list-group-item">Laporan & Analytics</li>
-                <li class="list-group-item"><span class="number"><sup>CUSTOM</sup></span></li>
+                <li class="list-group-item">{{ __('messages.pricing_institution_1') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_institution_2') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_institution_3') }}</li>
+                <li class="list-group-item"><span class="number"><sup>{{ __('messages.pricing_custom') }}</sup></span></li>
               </ul>
             </div>
           </div>
@@ -396,10 +395,10 @@
       <div class="overlay"></div>
       <div class="container text-center">
         <div class="row">
-          <div class="col-sm-3"><i class="ion-ios-stopwatch-outline icon-big"></i><span class="numscroller" data-min="0" data-max="78" data-delay="5" data-increment="1">0</span>Completed project</div>
-          <div class="col-sm-3"><i class="ion-ios-gear-outline icon-big fa-spin"></i><span class="numscroller" data-min="0" data-max="29" data-delay="5" data-increment="1">0</span>Themes released</div>
-          <div class="col-sm-3"><i class="ion-ios-body-outline icon-big"></i><span class="numscroller" data-min="0" data-max="2785" data-delay="5" data-increment="3">0</span>Happy Customers</div>
-          <div class="col-sm-3"><i class="ion-ios-nutrition-outline icon-big"></i><span class="numscroller" data-min="0" data-max="12" data-delay="5" data-increment="1">0</span>Winning awards</div>
+          <div class="col-sm-3"><i class="ion-ios-stopwatch-outline icon-big"></i><span class="numscroller" data-min="0" data-max="78" data-delay="5" data-increment="1">0</span>{{ __('messages.facts_completed') }}</div>
+          <div class="col-sm-3"><i class="ion-ios-gear-outline icon-big fa-spin"></i><span class="numscroller" data-min="0" data-max="29" data-delay="5" data-increment="1">0</span>{{ __('messages.facts_themes') }}</div>
+          <div class="col-sm-3"><i class="ion-ios-body-outline icon-big"></i><span class="numscroller" data-min="0" data-max="2785" data-delay="5" data-increment="3">0</span>{{ __('messages.facts_customers') }}</div>
+          <div class="col-sm-3"><i class="ion-ios-nutrition-outline icon-big"></i><span class="numscroller" data-min="0" data-max="12" data-delay="5" data-increment="1">0</span>{{ __('messages.facts_awards') }}</div>
         </div>
       </div>
     </section>
@@ -408,12 +407,12 @@
       <div class="container">
         <div class="row">
           <div class="col-md-3">
-            <h2 class="no-pad">Mulai Sekarang</h2>
+            <h2 class="no-pad">{{ __('messages.cta_title') }}</h2>
           </div>
           <div class="col-md-4 col-md-offset-1">
-            <p class="no-pad">MindMap adalah platform pembelajaran sempurna untuk kesuksesan akademik Anda! Saatnya meningkatkan pembelajaran Anda.</p>
+            <p class="no-pad">{{ __('messages.cta_desc') }}</p>
           </div>
-          <div class="col-md-2 col-md-offset-1"><a class="btn btn-lg btn-dark" href="/">Info Lebih Lanjut</a></div>
+          <div class="col-md-2 col-md-offset-1"><a class="btn btn-lg btn-dark" href="/">{{ __('messages.cta_button') }}</a></div>
         </div>
       </div>
     </section>
@@ -431,23 +430,23 @@
               <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                   <label class="sr-only control-label" for="name">You Name</label>
-                  <input class="form-control" id="name" type="text" placeholder="You Name" required="" data-validation-required-message="Please enter name"><span class="help-block text-danger"></span>
+                  <input class="form-control" id="name" type="text" placeholder="{{ __('messages.contact_name') }}" required="" data-validation-required-message="Please enter name"><span class="help-block text-danger"></span>
                 </div>
               </div>
               <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                   <label class="sr-only control-label" for="email">You Email</label>
-                  <input class="form-control" id="email" type="email" placeholder="You Email" required="" data-validation-required-message="Please enter email"><span class="help-block text-danger"></span>
+                  <input class="form-control" id="email" type="email" placeholder="{{ __('messages.contact_email') }}" required="" data-validation-required-message="Please enter email"><span class="help-block text-danger"></span>
                 </div>
               </div>
               <div class="control-group">
                 <div class="form-group floating-label-form-group controls">
                   <label class="sr-only control-label" for="message">Message</label>
-                  <textarea class="form-control" id="message" rows="2" placeholder="Message" required="" data-validation-required-message="Please enter a message." aria-invalid="false"></textarea><span class="help-block text-danger"></span>
+                  <textarea class="form-control" id="message" rows="2" placeholder="{{ __('messages.contact_message') }}" required="" data-validation-required-message="Please enter a message." aria-invalid="false"></textarea><span class="help-block text-danger"></span>
                 </div>
               </div>
               <div id="success"></div>
-              <button class="btn btn-dark" type="submit">Send</button>
+              <button class="btn btn-dark" type="submit">{{ __('messages.contact_send') }}</button>
             </form>
           </div>
         </div>

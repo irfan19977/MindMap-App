@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}" dir="{{ session('direction', 'ltr') }}">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,8 +13,12 @@
     <link href="{{ asset('frontend/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Custom CSS-->
     <link href="{{ asset('frontend/css/main.css') }}" rel="stylesheet">
+    <!-- RTL Support CSS for Arabic -->
+    @if(session('direction') === 'rtl')
+    <link href="{{ asset('frontend/css/rtl.css') }}" rel="stylesheet">
+    @endif
   </head>
-  <body class="top" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+  <body class="top {{ session('direction', 'ltr') }}" id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
     <!-- Preloader (Optional)-->
 
     <!-- Navigation-->

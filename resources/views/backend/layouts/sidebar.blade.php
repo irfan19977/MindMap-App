@@ -10,171 +10,171 @@
             <div class="navbar-content">
                 <ul class="nxl-navbar">
                     <li class="nxl-item nxl-caption">
-                        <label>Main Menu</label>
+                        <label>{{ __('messages.backend_sidebar_main_menu') }}</label>
                     </li>
                     <li class="nxl-item">
                         <a href="{{ route('dashboard.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-home"></i></span>
-                            <span class="nxl-mtext">Dashboard</span>
+                            <span class="nxl-mtext">{{ __('messages.backend_dashboard') }}</span>
                         </a>
                     </li>
                     
                     <li class="nxl-item nxl-caption">
-                        <label>Konten Edukasi</label>
+                        <label>{{ __('messages.backend_educational_content') }}</label>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-folder"></i></span>
-                            <span class="nxl-mtext">Kategori</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_categories') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('categories.index') }}">Semua Kategori</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('categories.create') }}">Tambah Kategori</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('categories.index') }}">{{ __('messages.backend_all_categories') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('categories.create') }}">{{ __('messages.backend_add_category') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-layers"></i></span>
-                            <span class="nxl-mtext">Sub Kategori</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_subcategories') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.index') }}">Semua Sub Kategori</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.create') }}">Tambah Sub Kategori</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.index') }}">{{ __('messages.backend_all_subcategories') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.create') }}">{{ __('messages.backend_add_subcategory') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-book-open"></i></span>
-                            <span class="nxl-mtext">Materi</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_materials') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.index') }}">Semua Materi</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.create') }}">Tambah Materi</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.index') }}">{{ __('messages.backend_all_materials') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.create') }}">{{ __('messages.backend_add_material') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item">
                         <a class="nxl-link" href="{{ route('mindmap.index') }}">
                             <span class="nxl-micon"><i class="feather-git-branch"></i></span>
-                            <span class="nxl-mtext">MindMap</span>
+                            <span class="nxl-mtext">{{ __('messages.backend_mindmap') }}</span>
                         </a>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-help-circle"></i></span>
-                            <span class="nxl-mtext">Manajemen Quiz</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_quiz_management') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quizzes.index') }}">Semua Quiz</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quizzes.create') }}">Tambah Quiz</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quizzes.index') }}">{{ __('messages.backend_all_quizzes') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quizzes.create') }}">{{ __('messages.backend_add_quiz') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-external-link"></i></span>
-                            <span class="nxl-mtext">Quiz Frontend</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_sidebar_quiz_frontend') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quiz.index') }}" target="_blank">Quiz Center</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quiz.progress') }}" target="_blank">Progress Belajar</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quiz.index') }}" target="_blank">{{ __('messages.backend_quiz_center') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('quiz.progress') }}" target="_blank">{{ __('messages.backend_learning_progress') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-caption">
-                        <label>Laporan & Analitik</label>
+                        <label>{{ __('messages.backend_report_and_analytics') }}</label>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-bar-chart-2"></i></span>
-                            <span class="nxl-mtext">Report</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_sidebar_report') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="reports-users.html">Laporan User</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="reports-mindmaps.html">Laporan MindMap</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="reports-activities.html">Laporan Aktivitas</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="reports-users.html">{{ __('messages.backend_report_users') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="reports-mindmaps.html">{{ __('messages.backend_report_mindmaps') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="reports-activities.html">{{ __('messages.backend_report_activities') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-trending-up"></i></span>
-                            <span class="nxl-mtext">Analitik</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_analytics') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-dashboard.html">Dashboard Analitik</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">Analitik Pembelajaran</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-engagement.html">Analitik Engagement</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="analytics-dashboard.html">{{ __('messages.backend_analytics_dashboard') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">{{ __('messages.backend_analytics_learning') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="analytics-engagement.html">{{ __('messages.backend_analytics_engagement') }}</a></li>
                         </ul>
                     </li>
                     
                     <li class="nxl-item nxl-caption">
-                        <label>Manajemen Pengguna</label>
+                        <label>{{ __('messages.backend_user_management') }}</label>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Manajemen User</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_user_management_menu') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.index') }}">Semua User</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.create') }}">Tambah User</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.index') }}">{{ __('messages.backend_all_users') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.create') }}">{{ __('messages.backend_add_user') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-shield"></i></span>
-                            <span class="nxl-mtext">Manajemen Role</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_role_management') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.index') }}">Semua Role</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.create') }}">Tambah Role</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.index') }}">{{ __('messages.backend_all_roles') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.create') }}">{{ __('messages.backend_add_role') }}</a></li>
                         </ul>
                     </li>
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-key"></i></span>
-                            <span class="nxl-mtext">Manajemen Permission</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_sidebar_permission') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.index') }}">Semua Permission</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.create') }}">Tambah Permission</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.index') }}">{{ __('messages.backend_all_permissions') }}</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.create') }}">{{ __('messages.backend_add_permission') }}</a></li>
                         </ul>
                     </li>
                     
                     <li class="nxl-item nxl-caption">
-                        <label>Pengaturan</label>
+                        <label>{{ __('messages.backend_settings') }}</label>
                     </li>
                     <li class="nxl-item">
                         <a href="settings.html" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-settings"></i></span>
-                            <span class="nxl-mtext">Pengaturan</span>
+                            <span class="nxl-mtext">{{ __('messages.backend_settings') }}</span>
                         </a>
                     </li>
                     <li class="nxl-item">
                         <a href="profile.html" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-user"></i></span>
-                            <span class="nxl-mtext">Profil Saya</span>
+                            <span class="nxl-mtext">{{ __('messages.backend_my_profile') }}</span>
                         </a>
                     </li>
                         <li class="nxl-item nxl-caption">
-                        <label>Bantuan</label>
+                        <label>{{ __('messages.backend_help') }}</label>
                     </li>
                     <li class="nxl-item">
                         <a href="help.html" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-help-circle"></i></span>
-                            <span class="nxl-mtext">Pusat Bantuan</span>
+                            <span class="nxl-mtext">{{ __('messages.backend_help_center') }}</span>
                         </a>
                     </li>
                     <li class="nxl-item">
                         <a href="login.html" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-log-out"></i></span>
-                            <span class="nxl-mtext">Keluar</span>
+                            <span class="nxl-mtext">{{ __('messages.backend_logout') }}</span>
                         </a>
                     </li>
                 </ul>
                 <div class="card text-center">
                     <div class="card-body">
                         <i class="feather-book-open fs-4 text-primary"></i>
-                        <h6 class="mt-4 text-dark fw-bolder">MindMap Education</h6>
-                        <p class="fs-11 my-3 text-dark">Platform pembelajaran interaktif dengan mind mapping untuk pengalaman belajar yang lebih baik.</p>
-                        <a href="help.html" class="btn btn-primary w-100">Bantuan</a>
+                        <h6 class="mt-4 text-dark fw-bolder">{{ __('messages.backend_mindmap_education') }}</h6>
+                        <p class="fs-11 my-3 text-dark">{{ __('messages.backend_mindmap_education_description') }}</p>
+                        <a href="help.html" class="btn btn-primary w-100">{{ __('messages.backend_help') }}</a>
                     </div>
                 </div>
             </div>

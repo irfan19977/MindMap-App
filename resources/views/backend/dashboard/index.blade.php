@@ -6,11 +6,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Dashboard</h5>
+                        <h5 class="m-b-10">{{ __('messages.backend_dashboard') }}</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-                        <li class="breadcrumb-item">Dashboard</li>
+                        <li class="breadcrumb-item"><a href="index.php">{{ __('messages.backend_home') }}</a></li>
+                        <li class="breadcrumb-item">{{ __('messages.backend_dashboard') }}</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -18,7 +18,7 @@
                         <div class="d-flex d-md-none">
                             <a href="javascript:void(0)" class="page-header-right-close-toggle">
                                 <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
+                                <span>{{ __('messages.backend_back') }}</span>
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
@@ -28,47 +28,47 @@
                             <div class="dropdown filter-dropdown">
                                 <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-filter me-2"></i>
-                                    <span>Filter</span>
+                                    <span>{{ __('messages.backend_filter') }}</span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end">
                                     <div class="dropdown-item">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="Role" checked="checked" />
-                                            <label class="custom-control-label c-pointer" for="Role">Role</label>
+                                            <label class="custom-control-label c-pointer" for="Role">{{ __('messages.backend_filter_role') }}</label>
                                         </div>
                                     </div>
                                     <div class="dropdown-item">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="Team" checked="checked" />
-                                            <label class="custom-control-label c-pointer" for="Team">Team</label>
+                                            <label class="custom-control-label c-pointer" for="Team">{{ __('messages.backend_filter_team') }}</label>
                                         </div>
                                     </div>
                                     <div class="dropdown-item">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="Email" checked="checked" />
-                                            <label class="custom-control-label c-pointer" for="Email">Email</label>
+                                            <label class="custom-control-label c-pointer" for="Email">{{ __('messages.backend_filter_email') }}</label>
                                         </div>
                                     </div>
                                     <div class="dropdown-item">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="Member" checked="checked" />
-                                            <label class="custom-control-label c-pointer" for="Member">Member</label>
+                                            <label class="custom-control-label c-pointer" for="Member">{{ __('messages.backend_filter_member') }}</label>
                                         </div>
                                     </div>
                                     <div class="dropdown-item">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="Recommendation" checked="checked" />
-                                            <label class="custom-control-label c-pointer" for="Recommendation">Recommendation</label>
+                                            <label class="custom-control-label c-pointer" for="Recommendation">{{ __('messages.backend_filter_recommendation') }}</label>
                                         </div>
                                     </div>
                                     <div class="dropdown-divider"></div>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="feather-plus me-3"></i>
-                                        <span>Create New</span>
+                                        <span>{{ __('messages.backend_create_new') }}</span>
                                     </a>
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="feather-filter me-3"></i>
-                                        <span>Manage Filter</span>
+                                        <span>{{ __('messages.backend_manage_filter') }}</span>
                                     </a>
                                 </div>
                             </div>
@@ -96,7 +96,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-4 fw-bold text-dark"><span class="counter">45</span>/<span class="counter">76</span></div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Invoices Awaiting Payment</h3>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_invoices_awaiting') }}</h3>
                                         </div>
                                     </div>
                                     <a href="javascript:void(0);" class="">
@@ -105,7 +105,7 @@
                                 </div>
                                 <div class="pt-4">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Invoices Awaiting </a>
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">{{ __('messages.backend_invoices_awaiting') }} </a>
                                         <div class="w-100 text-end">
                                             <span class="fs-12 text-dark">$5,569</span>
                                             <span class="fs-11 text-muted">(56%)</span>
@@ -130,7 +130,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-4 fw-bold text-dark"><span class="counter">48</span>/<span class="counter">86</span></div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Converted Leads</h3>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_converted_leads') }}</h3>
                                         </div>
                                     </div>
                                     <a href="javascript:void(0);" class="">
@@ -139,9 +139,9 @@
                                 </div>
                                 <div class="pt-4">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Converted Leads </a>
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">{{ __('messages.backend_converted_leads') }} </a>
                                         <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark">52 Completed</span>
+                                            <span class="fs-12 text-dark">52 {{ __('messages.backend_completed') }}</span>
                                             <span class="fs-11 text-muted">(63%)</span>
                                         </div>
                                     </div>
@@ -164,7 +164,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-4 fw-bold text-dark"><span class="counter">16</span>/<span class="counter">20</span></div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Projects In Progress</h3>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_projects_progress') }}</h3>
                                         </div>
                                     </div>
                                     <a href="javascript:void(0);" class="">
@@ -173,9 +173,9 @@
                                 </div>
                                 <div class="pt-4">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Projects In Progress </a>
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">{{ __('messages.backend_projects_progress') }} </a>
                                         <div class="w-100 text-end">
-                                            <span class="fs-12 text-dark">16 Completed</span>
+                                            <span class="fs-12 text-dark">16 {{ __('messages.backend_completed') }}</span>
                                             <span class="fs-11 text-muted">(78%)</span>
                                         </div>
                                     </div>
@@ -198,7 +198,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-4 fw-bold text-dark"><span class="counter">46.59</span>%</div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Conversion Rate</h3>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_conversion_rate') }}</h3>
                                         </div>
                                     </div>
                                     <a href="javascript:void(0);" class="">
@@ -207,7 +207,7 @@
                                 </div>
                                 <div class="pt-4">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line"> Conversion Rate </a>
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line"> {{ __('messages.backend_conversion_rate') }} </a>
                                         <div class="w-100 text-end">
                                             <span class="fs-12 text-dark">$2,254</span>
                                             <span class="fs-11 text-muted">(46%)</span>
@@ -225,7 +225,7 @@
                     <div class="col-xxl-8">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Payment Record</h5>
+                                <h5 class="card-title">{{ __('messages.backend_payment_record') }}</h5>
                                 <div class="card-header-action">
                                     <div class="card-header-btn">
                                         <div data-bs-toggle="tooltip" title="Delete">
@@ -263,7 +263,7 @@
                                 <div class="row g-4">
                                     <div class="col-lg-3">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Awaiting</div>
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_awaiting') }}</div>
                                             <h6 class="fw-bold text-dark">$5,486</h6>
                                             <div class="progress mt-2 ht-3">
                                                 <div class="progress-bar bg-primary" role="progressbar" style="width: 81%"></div>
@@ -272,7 +272,7 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Completed</div>
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_completed') }}</div>
                                             <h6 class="fw-bold text-dark">$9,275</h6>
                                             <div class="progress mt-2 ht-3">
                                                 <div class="progress-bar bg-success" role="progressbar" style="width: 82%"></div>
@@ -281,7 +281,7 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Rejected</div>
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_rejected') }}</div>
                                             <h6 class="fw-bold text-dark">$3,868</h6>
                                             <div class="progress mt-2 ht-3">
                                                 <div class="progress-bar bg-danger" role="progressbar" style="width: 68%"></div>
@@ -290,7 +290,7 @@
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Revenue</div>
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_revenue') }}</div>
                                             <h6 class="fw-bold text-dark">$50,668</h6>
                                             <div class="progress mt-2 ht-3">
                                                 <div class="progress-bar bg-dark" role="progressbar" style="width: 75%"></div>
@@ -310,7 +310,7 @@
                                     <span class="badge bg-light text-primary text-dark float-end">12%</span>
                                     <div class="text-start">
                                         <h4 class="text-reset">30,569</h4>
-                                        <p class="text-reset m-0">Total Sales</p>
+                                        <p class="text-reset m-0">{{ __('messages.backend_total_sales') }}</p>
                                     </div>
                                 </div>
                                 <div id="total-sales-color-graph"></div>
@@ -323,12 +323,12 @@
                                         </div>
                                         <div>
                                             <a href="javascript:void(0);" class="d-block">Shopify eCommerce Store</a>
-                                            <span class="fs-12 text-muted">Development</span>
+                                            <span class="fs-12 text-muted">{{ __('messages.backend_project_development') }}</span>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark">$1200</div>
-                                        <div class="fs-12 text-end">6 Projects</div>
+                                        <div class="fs-12 text-end">6 {{ __('messages.backend_project_count') }}</div>
                                     </div>
                                 </div>
                                 <hr class="border-dashed my-3" />
@@ -339,12 +339,12 @@
                                         </div>
                                         <div>
                                             <a href="javascript:void(0);" class="d-block">iOS Apps Development</a>
-                                            <span class="fs-12 text-muted">Development</span>
+                                            <span class="fs-12 text-muted">{{ __('messages.backend_project_development') }}</span>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark">$1450</div>
-                                        <div class="fs-12 text-end">3 Projects</div>
+                                        <div class="fs-12 text-end">3 {{ __('messages.backend_project_count') }}</div>
                                     </div>
                                 </div>
                                 <hr class="border-dashed my-3" />
@@ -355,16 +355,16 @@
                                         </div>
                                         <div>
                                             <a href="javascript:void(0);" class="d-block">Figma Dashboard Design</a>
-                                            <span class="fs-12 text-muted">UI/UX Design</span>
+                                            <span class="fs-12 text-muted">{{ __('messages.backend_project_ui_ux') }}</span>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="fw-bold text-dark">$1250</div>
-                                        <div class="fs-12 text-end">5 Projects</div>
+                                        <div class="fs-12 text-end">5 {{ __('messages.backend_project_count') }}</div>
                                     </div>
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center py-4">Full Details</a>
+                            <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center py-4">{{ __('messages.backend_full_details') }}</a>
                         </div>
                     </div>
                     <!-- [Total Sales] end !-->
@@ -377,7 +377,7 @@
                                         <i class="feather feather-star"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-semibold text-dark">Tasks Completed</div>
+                                        <div class="fw-semibold text-dark">{{ __('messages.backend_tasks_completed') }}</div>
                                         <div class="fs-12 text-muted">22/35 completed</div>
                                     </div>
                                 </div>
@@ -387,7 +387,7 @@
                                 <div id="task-completed-area-chart"></div>
                                 <div class="fs-12 text-muted text-nowrap">
                                     <span class="fw-semibold text-primary">28% more</span><br />
-                                    <span>from last week</span>
+                                    <span>{{ __('messages.backend_from_last_week') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -400,7 +400,7 @@
                                         <i class="feather feather-file-text"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-semibold text-dark">New Tasks</div>
+                                        <div class="fw-semibold text-dark">{{ __('messages.backend_new_tasks') }}</div>
                                         <div class="fs-12 text-muted">0/20 tasks</div>
                                     </div>
                                 </div>
@@ -410,7 +410,7 @@
                                 <div id="new-tasks-area-chart"></div>
                                 <div class="fs-12 text-muted text-nowrap">
                                     <span class="fw-semibold text-success">34% more</span><br />
-                                    <span>from last week</span>
+                                    <span>{{ __('messages.backend_from_last_week') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -423,7 +423,7 @@
                                         <i class="feather feather-airplay"></i>
                                     </div>
                                     <div>
-                                        <div class="fw-semibold text-dark">Project Done</div>
+                                        <div class="fw-semibold text-dark">{{ __('messages.backend_project_done') }}</div>
                                         <div class="fs-12 text-muted">20/30 project</div>
                                     </div>
                                 </div>
@@ -433,7 +433,7 @@
                                 <div id="project-done-area-chart"></div>
                                 <div class="fs-12 text-muted text-nowrap">
                                     <span class="fw-semibold text-danger">42% more</span><br />
-                                    <span>from last week</span>
+                                    <span>{{ __('messages.backend_from_last_week') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -443,7 +443,7 @@
                     <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Leads Overview</h5>
+                                <h5 class="card-title">{{ __('messages.backend_leads_overview') }}</h5>
                                 <div class="card-header-action">
                                     <div class="card-header-btn">
                                         <div data-bs-toggle="tooltip" title="Delete">
@@ -480,31 +480,31 @@
                                     <div class="col-4">
                                         <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
                                             <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #3454d1"></span>
-                                            <span>New<span class="fs-10 text-muted ms-1">(20K)</span></span>
+                                            <span>{{ __('messages.backend_leads_new') }}<span class="fs-10 text-muted ms-1">(20K)</span></span>
                                         </a>
                                     </div>
                                     <div class="col-4">
                                         <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
                                             <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #0d519e"></span>
-                                            <span>Contacted<span class="fs-10 text-muted ms-1">(15K)</span></span>
+                                            <span>{{ __('messages.backend_leads_contacted') }}<span class="fs-10 text-muted ms-1">(15K)</span></span>
                                         </a>
                                     </div>
                                     <div class="col-4">
                                         <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
                                             <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #1976d2"></span>
-                                            <span>Qualified<span class="fs-10 text-muted ms-1">(10K)</span></span>
+                                            <span>{{ __('messages.backend_leads_qualified') }}<span class="fs-10 text-muted ms-1">(10K)</span></span>
                                         </a>
                                     </div>
                                     <div class="col-4">
                                         <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
                                             <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #1e88e5"></span>
-                                            <span>Working<span class="fs-10 text-muted ms-1">(18K)</span></span>
+                                            <span>{{ __('messages.backend_leads_working') }}<span class="fs-10 text-muted ms-1">(18K)</span></span>
                                         </a>
                                     </div>
                                     <div class="col-4">
                                         <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
                                             <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #2196f3"></span>
-                                            <span>Customer<span class="fs-10 text-muted ms-1">(10K)</span></span>
+                                            <span>{{ __('messages.backend_filter_member') }}<span class="fs-10 text-muted ms-1">(10K)</span></span>
                                         </a>
                                     </div>
                                     <div class="col-4">

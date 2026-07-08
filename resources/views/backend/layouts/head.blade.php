@@ -43,6 +43,34 @@
     <!--! BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('backend/assets/css/theme.min.css') }}" />
     <!--! END: Custom CSS-->
+    <style>
+        /* Fix sidebar position for RTL languages */
+        .nxl-navigation {
+            left: 0 !important;
+            right: auto !important;
+        }
+        .nxl-container {
+            margin-left: 280px !important;
+            margin-right: 0 !important;
+        }
+        .page-header {
+            left: 280px !important;
+            right: 0 !important;
+        }
+        /* RTL specific fixes */
+        [dir="rtl"] .nxl-navigation {
+            left: 0 !important;
+            right: auto !important;
+        }
+        [dir="rtl"] .nxl-container {
+            margin-left: 280px !important;
+            margin-right: 0 !important;
+        }
+        [dir="rtl"] .page-header {
+            left: 280px !important;
+            right: 0 !important;
+        }
+    </style>
     <!--! HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries !-->
     <!--! WARNING: Respond.js doesn"t work if you view the page via file: !-->
     <!--[if lt IE 9]>

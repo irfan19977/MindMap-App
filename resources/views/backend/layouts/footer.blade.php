@@ -6,8 +6,8 @@
         </script>
     </p>
     <div class="d-flex align-items-center gap-4">
-        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
-        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
-        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_help') }}</a>
+        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_terms') }}</a>
+        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_privacy') }}</a>
     </div>
 </footer>

@@ -614,92 +614,49 @@
                     </div>
                     <div class="dropdown nxl-h-item nxl-header-language d-none d-sm-flex">
                         <a href="javascript:void(0);" class="nxl-head-link me-0 nxl-language-link" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+                            @if(app()->getLocale() == 'id')
+                            <img src="{{ asset('backend/assets/vendors/img/flags/4x3/id.svg') }}" alt="" class="img-fluid wd-20" />
+                            @elseif(app()->getLocale() == 'es')
+                            <img src="{{ asset('backend/assets/vendors/img/flags/4x3/es.svg') }}" alt="" class="img-fluid wd-20" />
+                            @elseif(app()->getLocale() == 'ar')
+                            <img src="{{ asset('backend/assets/vendors/img/flags/4x3/sa.svg') }}" alt="" class="img-fluid wd-20" />
+                            @else
                             <img src="{{ asset('backend/assets/vendors/img/flags/4x3/us.svg') }}" alt="" class="img-fluid wd-20" />
+                            @endif
                         </a>
                         <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-language-dropdown">
                             <div class="dropdown-divider mt-0"></div>
                             <div class="language-items-wrapper">
                                 <div class="select-language px-4 py-2 hstack justify-content-between gap-4">
                                     <div class="lh-lg">
-                                        <h6 class="mb-0">Select Language</h6>
-                                        <p class="fs-11 text-muted mb-0">12 languages avaiable!</p>
+                                        <h6 class="mb-0">{{ __('messages.select_language') }}</h6>
+                                        <p class="fs-11 text-muted mb-0">4 languages available!</p>
                                     </div>
-                                    <a href="javascript:void(0);" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Add Language">
-                                        <i class="feather-plus"></i>
-                                    </a>
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="row px-4 pt-3">
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
+                                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}" class="d-flex align-items-center gap-2">
                                             <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/sa.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Arabic</span>
+                                            <span>{{ __('messages.arabic') }}</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/bd.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Bengali</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/ch.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Chinese</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/nl.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Dutch</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select active">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="d-flex align-items-center gap-2">
                                             <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/us.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>English</span>
+                                            <span>{{ __('messages.english') }}</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/fr.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>French</span>
+                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'id']) }}" class="d-flex align-items-center gap-2">
+                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/id.svg') }}" alt="" class="img-fluid" /></div>
+                                            <span>{{ __('messages.indonesian') }}</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/de.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>German</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/in.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Hindi</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/ru.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Russian</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
+                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'es' ? 'active' : '' }}">
+                                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}" class="d-flex align-items-center gap-2">
                                             <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/es.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Spanish</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/tr.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Turkish</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/pk.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>Urdo</span>
+                                            <span>{{ __('messages.spanish') }}</span>
                                         </a>
                                     </div>
                                 </div>

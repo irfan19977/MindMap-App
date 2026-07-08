@@ -6,11 +6,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Sub Kategori</h5>
+                        <h5 class="m-b-10">{{ __('messages.backend_subcategories_title') }}</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Sub Kategori</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">{{ __('messages.backend_home') }}</a></li>
+                        <li class="breadcrumb-item">{{ __('messages.backend_subcategories_title') }}</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -18,13 +18,13 @@
                         <div class="d-flex d-md-none">
                             <a href="javascript:void(0)" class="page-header-right-close-toggle">
                                 <i class="feather-arrow-left me-2"></i>
-                                <span>Back</span>
+                                <span>{{ __('messages.backend_back') }}</span>
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
                             <a href="{{ route('subcategories.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Tambah Sub Kategori</span>
+                                <span>{{ __('messages.backend_add_subcategory') }}</span>
                             </a>
                         </div>
                     </div>
@@ -54,11 +54,11 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th class="text-center">Nama Sub Kategori</th>
-                                                <th class="text-center">Kategori Utama</th>
-                                                <th class="text-center">Jenjang</th>
-                                                <th class="text-center">Status</th>
-                                                <th class="text-end">Actions</th>
+                                                <th class="text-center">{{ __('messages.backend_subcategory_name') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_main_category') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_grade_level') }}</th>
+                                                <th class="text-center">{{ __('messages.backend_table_status') }}</th>
+                                                <th class="text-end">{{ __('messages.backend_table_actions') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -96,9 +96,9 @@
                                                     </td>
                                                     <td>
                                                         <select class="form-control" data-select2-selector="status" data-subcategory-id="{{ $subcategory->id }}">
-                                                            <option value="publish" {{ $subcategory->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">Publish</option>
-                                                            <option value="draft" {{ $subcategory->status == 'draft' ? 'selected' : '' }} data-bg="bg-warning">Draft</option>
-                                                            <option value="inactive" {{ $subcategory->status == 'inactive' ? 'selected' : '' }} data-bg="bg-danger">Tidak Aktif</option>
+                                                            <option value="publish" {{ $subcategory->status == 'publish' ? 'selected' : '' }} data-bg="bg-success">{{ __('messages.backend_status_publish') }}</option>
+                                                            <option value="draft" {{ $subcategory->status == 'draft' ? 'selected' : '' }} data-bg="bg-warning">{{ __('messages.backend_status_draft') }}</option>
+                                                            <option value="inactive" {{ $subcategory->status == 'inactive' ? 'selected' : '' }} data-bg="bg-danger">{{ __('messages.backend_status_inactive') }}</option>
                                                         </select>
                                                     </td>
                                                     <td>
@@ -111,13 +111,13 @@
                                                                     <li>
                                                                         <a class="dropdown-item" href="{{ route('subcategories.edit', $subcategory->id) }}">
                                                                             <i class="feather feather-edit-3 me-3"></i>
-                                                                            <span>Edit</span>
+                                                                            <span>{{ __('messages.backend_edit') }}</span>
                                                                         </a>
                                                                     </li>
                                                                     <li>
                                                                         <a class="dropdown-item" href="javascript:void(0)" onclick="deleteSubcategory('{{ $subcategory->id }}', '{{ $subcategory->name }}')">
                                                                             <i class="feather feather-trash-2 me-3"></i>
-                                                                            <span>Hapus</span>
+                                                                            <span>{{ __('messages.backend_delete') }}</span>
                                                                         </a>
                                                                     </li>
                                                                 </ul>
@@ -130,7 +130,7 @@
                                                     <td colspan="6" class="text-center py-4">
                                                         <div class="text-muted">
                                                             <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                            Belum ada data sub kategori
+                                                            {{ __('messages.backend_no_subcategory_data') }}
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -168,17 +168,17 @@
             $('#subcategoriesList').DataTable({
                 responsive: true,
                 language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    info: "Menampilkan _START_ hingga _END_ dari _TOTAL_ data",
+                    search: "{{ __('messages.backend_datatable_search') }}",
+                    lengthMenu: "{{ __('messages.backend_datatable_length_menu') }}",
+                    info: "{{ __('messages.backend_datatable_info') }}",
                     paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "Selanjutnya",
-                        previous: "Sebelumnya"
+                        first: "{{ __('messages.backend_first') }}",
+                        last: "{{ __('messages.backend_last') }}",
+                        next: "{{ __('messages.backend_next') }}",
+                        previous: "{{ __('messages.backend_previous') }}"
                     },
-                    emptyTable: "Tidak ada data tersedia",
-                    zeroRecords: "Tidak ditemukan data yang cocok"
+                    emptyTable: "{{ __('messages.backend_datatable_empty_table') }}",
+                    zeroRecords: "{{ __('messages.backend_datatable_zero_records') }}"
                 },
                 order: [] // Use backend ordering (created_at desc)
             });
@@ -186,14 +186,14 @@
         
         function deleteSubcategory(id, name) {
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: 'Anda tidak akan dapat mengembalikan data ini!',
+                title: '{{ __('messages.backend_sweetalert_confirm_title') }}',
+                text: '{{ __('messages.backend_sweetalert_confirm_text') }}',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                confirmButtonText: '{{ __('messages.backend_sweetalert_confirm_button') }}',
+                cancelButtonText: '{{ __('messages.backend_sweetalert_cancel_button') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Create form and submit
