@@ -24,11 +24,10 @@ class MateriController extends Controller
     public function index()
     {
         $this->authorize('materi.index');
-        $query = Material::with('subcategory.category')->orderBy('title', 'asc');
-        if (auth()->user()->hasRole('teacher')) {
-            $query->where('created_by', auth()->id());
-        }
-        $materis = $query->get();
+        $materis = Material::with('subcategory.category')
+            ->orderBy('title', 'asc')
+            ->where('created_by', auth()->id())
+            ->get();
             
         return view('backend.materis.index', compact('materis'));
     }
@@ -40,9 +39,11 @@ class MateriController extends Controller
     {
         $this->authorize('materi.create');
         $categories = Category::where('status', 'publish')
+            ->where('created_by', auth()->id())
             ->orderBy('name', 'asc')
             ->get();
         $subcategories = Subcategory::where('status', 'publish')
+            ->where('created_by', auth()->id())
             ->with('category')
             ->orderBy('name', 'asc')
             ->get();
@@ -73,9 +74,23 @@ class MateriController extends Controller
         // Convert checkboxes to boolean
         $validated['is_free'] = $request->has('is_free');
 
+        // Strip editor HTML wrapper from content (e.g. <p>[{...json...}]</p>)
+        if (!empty($validated['content'])) {
+            $stripped = strip_tags($validated['content']);
+            $validated['content'] = (json_decode($stripped) !== null) ? $stripped : $validated['content'];
+        }
+
         // Create material
         $validated['created_by'] = auth()->id();
-        $material = Material::create($validated);
+        try {
+            $material = Material::create($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Kamu sudah memiliki materi dengan judul yang sama.');
+            }
+            throw $e;
+        }
 
         // Save latihan (practice questions)
         if ($request->filled('latihan_data')) {
@@ -135,13 +150,15 @@ class MateriController extends Controller
     public function edit(Material $materi)
     {
         $this->authorize('materi.edit');
-        if (auth()->user()->hasRole('teacher') && $materi->created_by !== auth()->id()) {
+        if ($materi->created_by !== auth()->id()) {
             return redirect()->route('materis.index')->with('error', 'Anda tidak memiliki akses untuk mengedit materi ini.');
         }
         $categories = Category::where('status', 'publish')
+            ->where('created_by', auth()->id())
             ->orderBy('name', 'asc')
             ->get();
         $subcategories = Subcategory::where('status', 'publish')
+            ->where('created_by', auth()->id())
             ->with('category')
             ->orderBy('name', 'asc')
             ->get();
@@ -175,8 +192,22 @@ class MateriController extends Controller
         // Convert checkboxes to boolean
         $validated['is_free'] = $request->has('is_free');
 
+        // Strip editor HTML wrapper from content
+        if (!empty($validated['content'])) {
+            $stripped = strip_tags($validated['content']);
+            $validated['content'] = (json_decode($stripped) !== null) ? $stripped : $validated['content'];
+        }
+
         // Update material
-        $materi->update($validated);
+        try {
+            $materi->update($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Kamu sudah memiliki materi dengan judul yang sama.');
+            }
+            throw $e;
+        }
 
         // Update latihan (practice questions) - delete old and create new
         $materi->practiceQuestions()->delete();
@@ -230,7 +261,7 @@ class MateriController extends Controller
     public function destroy(Material $materi)
     {
         $this->authorize('materi.delete');
-        if (auth()->user()->hasRole('teacher') && $materi->created_by !== auth()->id()) {
+        if ($materi->created_by !== auth()->id()) {
             return redirect()->route('materis.index')->with('error', 'Anda tidak memiliki akses untuk menghapus materi ini.');
         }
         // Delete cover image if exists

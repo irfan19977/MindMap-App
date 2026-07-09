@@ -31,8 +31,9 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
         $user->update(['last_login_at' => now()]);
 
+        // Redirect based on role — admin/teacher always go to dashboard
         if ($user->hasRole('admin') || $user->hasRole('teacher')) {
-            return redirect()->intended(route('dashboard.index', absolute: false));
+            return redirect()->route('dashboard.index');
         }
 
         return redirect()->intended('/');

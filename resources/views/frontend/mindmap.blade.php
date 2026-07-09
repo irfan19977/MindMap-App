@@ -18,35 +18,67 @@
         <div class="row">
           @if(isset($mindmap) && $mindmap)
             <!-- MindMap exists - display it -->
+            @php
+              $creator = $mindmap->creator
+                  ?? \App\Models\User::find($subcategory->created_by ?? $category->created_by ?? null);
+              $teacher = $creator->teacher ?? null;
+            @endphp
             <!-- Sidebar Kiri -->
             <div class="col-md-3">
-              <div class="info-box">
-                <h5><i class="ion-ios-checkmark-outline"></i> Personal Recommendation</h5>
-                <ul class="checklist">
-                  <li><i class="ion-ios-checkmark"></i> Alternative Option</li>
-                  <li><i class="ion-ios-checkmark"></i> Order not strict on roadmap</li>
-                </ul>
-              </div>
-              
-              <button class="btn btn-primary btn-block">
-                <i class="ion-ios-arrow-thin-right"></i> Visit Beginner Friendly Version
-              </button>
-              
-              <div class="info-box">
-                <h5><i class="ion-ios-link-outline"></i> Related Roadmaps</h5>
-                <ul class="roadmap-list">
-                  <li><i class="ion-ios-checkmark"></i> JavaScript Roadmap</li>
-                  <li><i class="ion-ios-checkmark"></i> React Roadmap</li>
-                  <li><i class="ion-ios-checkmark"></i> TypeScript Roadmap</li>
-                  <li><i class="ion-ios-checkmark"></i> Node.js Roadmap</li>
-                </ul>
-              </div>
-              
-              <div class="info-box tip-box">
-                <p><strong>HTML, CSS, and JavaScript</strong> are the backbone of web development. Make sure you practice by building a lot of projects.</p>
-                <button class="btn btn-dark-border btn-sm">
-                  <i class="ion-ios-lightbulb-outline"></i> Beginner Project Ideas
-                </button>
+              <div class="profile-card">
+                <div class="profile-avatar-wrap">
+                  <div class="profile-avatar">
+                    @if($teacher && $teacher->image_url)
+                      <img src="{{ asset($teacher->image_url) }}" alt="{{ $creator->name ?? 'Pembuat' }}">
+                    @else
+                      {{ strtoupper(substr($creator->name ?? '?', 0, 1)) }}
+                    @endif
+                  </div>
+                  @if($teacher)
+                    <span class="profile-verified"><i class="ion-ios-checkmark"></i></span>
+                  @endif
+                </div>
+
+                <div class="profile-name">{{ $creator->name ?? 'Tidak diketahui' }}</div>
+                <div class="profile-email">{{ $creator->email ?? '-' }}</div>
+
+                @if($teacher)
+                  <div class="profile-stats">
+                    <div class="profile-stat">
+                      <div class="profile-stat-value">{{ $teacher->materials()->count() }}</div>
+                      <div class="profile-stat-label">Materi</div>
+                    </div>
+                    <div class="profile-stat">
+                      <div class="profile-stat-value">{{ $teacher->published_courses->count() }}</div>
+                      <div class="profile-stat-label">Kursus</div>
+                    </div>
+                    <div class="profile-stat">
+                      <div class="profile-stat-value">{{ number_format($teacher->rating ?? 0, 1) }}</div>
+                      <div class="profile-stat-label">Rating</div>
+                    </div>
+                  </div>
+                @endif
+
+                <div class="profile-details">
+                  <div class="profile-detail-row">
+                    <span class="profile-detail-icon"><i class="ion-ios-person-outline"></i></span>
+                    <span class="profile-detail-label">Role</span>
+                    <span class="profile-detail-value">{{ ucfirst($creator->user_type ?? 'User') }}</span>
+                  </div>
+                  @if($teacher && $teacher->specialization)
+                    <div class="profile-detail-row">
+                      <span class="profile-detail-icon"><i class="ion-ios-lightbulb-outline"></i></span>
+                      <span class="profile-detail-label">Spesialisasi</span>
+                      <span class="profile-detail-value">{{ $teacher->specialization }}</span>
+                    </div>
+                  @endif
+                </div>
+
+                @if($teacher && $teacher->slug)
+                  <a href="{{ route('teacher.show', $teacher->slug) }}" class="profile-btn profile-btn-primary">
+                    <i class="ion-ios-eye-outline"></i> Lihat Profil
+                  </a>
+                @endif
               </div>
             </div>
 
@@ -929,6 +961,173 @@
 
     .tip-box strong {
         color: #78350f;
+    }
+
+    .profile-card {
+        background: #fff;
+        border: 1px solid var(--mm-border);
+        border-radius: 16px;
+        padding: 28px 20px;
+        margin-bottom: 20px;
+        box-shadow: var(--mm-shadow);
+        text-align: center;
+    }
+
+    .profile-avatar-wrap {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 16px;
+    }
+
+    .profile-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--mm-primary) 0%, var(--mm-primary-dark) 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: 700;
+        overflow: hidden;
+        border: 4px solid #f1f5f9;
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-verified {
+        position: absolute;
+        bottom: 6px;
+        right: 6px;
+        width: 26px;
+        height: 26px;
+        background: #10b981;
+        color: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        border: 2px solid #fff;
+    }
+
+    .profile-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 4px;
+    }
+
+    .profile-email {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 18px;
+    }
+
+    .profile-stats {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .profile-stat {
+        flex: 1;
+        border: 1px dashed #cbd5e1;
+        border-radius: 10px;
+        padding: 12px 6px;
+        min-width: 0;
+    }
+
+    .profile-stat-value {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 2px;
+    }
+
+    .profile-stat-label {
+        font-size: 11px;
+        color: #64748b;
+    }
+
+    .profile-details {
+        text-align: left;
+        margin-bottom: 20px;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 16px;
+    }
+
+    .profile-detail-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        font-size: 13px;
+    }
+
+    .profile-detail-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #f1f5f9;
+        color: var(--mm-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .profile-detail-label {
+        flex: 1;
+        color: #64748b;
+    }
+
+    .profile-detail-value {
+        font-weight: 600;
+        color: #1e293b;
+        text-align: right;
+    }
+
+    .profile-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .profile-btn-primary {
+        background: linear-gradient(135deg, var(--mm-primary) 0%, var(--mm-primary-dark) 100%);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 12px rgba(52, 84, 209, 0.3);
+    }
+
+    .profile-btn-primary:hover {
+        background: linear-gradient(135deg, var(--mm-primary-dark) 0%, #1e3a8a 100%);
+        transform: translateY(-2px);
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .roadmap-desc {
+        font-size: 14px;
+        color: #475569;
+        line-height: 1.6;
+        margin: 0;
     }
     </style>
 

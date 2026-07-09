@@ -324,14 +324,16 @@ class EngagementController extends Controller
             }
         }
 
-        // Get user activity by day and hour
+        // Get user activity by day and hour (fallback to created_at when never logged in)
         $userActivity = User::select(
-            DB::raw('DAYOFWEEK(last_login_at) as day_of_week'),
-            DB::raw('HOUR(last_login_at) as hour'),
+            DB::raw('DAYOFWEEK(COALESCE(last_login_at, created_at)) as day_of_week'),
+            DB::raw('HOUR(COALESCE(last_login_at, created_at)) as hour'),
             DB::raw('COUNT(*) as count')
         )
-            ->where('last_login_at', '>=', $startDate)
-            ->whereNotNull('last_login_at')
+            ->where(function ($query) use ($startDate) {
+                $query->where('last_login_at', '>=', $startDate)
+                      ->orWhere('created_at', '>=', $startDate);
+            })
             ->groupBy('day_of_week', 'hour')
             ->get();
 

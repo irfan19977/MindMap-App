@@ -18,16 +18,12 @@ class MindmapController extends Controller
     public function index()
     {
         $this->authorize('mindmap.index');
-        $query = Category::published()->ordered()
+        $categories = Category::published()->ordered()
+            ->where('created_by', auth()->id())
             ->with(['subcategories' => function($query) {
                 $query->where('status', 'publish')->orderBy('name', 'asc');
-            }]);
-
-        if (auth()->user()->hasRole('teacher')) {
-            $query->where('created_by', auth()->id());
-        }
-
-        $categories = $query->get();
+            }])
+            ->get();
 
         return view('backend.mindmap.index', compact('categories'));
     }
@@ -87,12 +83,16 @@ class MindmapController extends Controller
                 'title' => 'required|string|max:255'
             ]);
 
+            // Determine if the reference is a subcategory or category
+            $referenceType = Subcategory::find($data['category_id']) ? 'subcategory' : 'category';
+
             // Save the mind map data to the database
             $mindmap = \App\Models\Mindmap::updateOrCreate(
                 [
                     'reference_id' => $data['category_id']
                 ],
                 [
+                    'reference_type' => $referenceType,
                     'title' => $data['title'],
                     'structure' => $data['mindmap_data'],
                     'status' => 'publish',

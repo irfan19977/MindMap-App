@@ -589,7 +589,7 @@
             const container = document.getElementById('heatmapContainer');
             container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
 
-            fetch(`{{ route('engagement.heatmap') }}?period=30`)
+            fetch(`{{ route('engagement.heatmap') }}?period=30&t=${Date.now()}`)
                 .then(response => response.json())
                 .then(data => {
                     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];

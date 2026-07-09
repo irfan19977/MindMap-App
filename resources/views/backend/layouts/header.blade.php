@@ -765,6 +765,7 @@
                             </div>
                         </div>
                     </div>
+                    @include('components.notification-dropdown')
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <div class="avatar-text bg-primary text-white user-avtar me-0 d-flex align-items-center justify-content-center fw-bold" style="width:36px;height:36px;border-radius:50%;font-size:1rem;">

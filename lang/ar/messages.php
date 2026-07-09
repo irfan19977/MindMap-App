@@ -115,6 +115,7 @@ return [
     'nav_international_certification' => 'الشَّهَادَة الدَّوْلِيَّة',
 
     // Course Categories
+    'nav_popular' => 'الأَكْثَر زِيَارَة',
     'nav_academic' => 'أَكَادِيمِيّ',
     'nav_digital' => 'رَقْمِيّ',
     'nav_business' => 'أَعْمَال',

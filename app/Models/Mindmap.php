@@ -13,6 +13,7 @@ class Mindmap extends Model
 
     protected $fillable = [
         'reference_id',
+        'reference_type',
         'title',
         'structure',
         'thumbnail',

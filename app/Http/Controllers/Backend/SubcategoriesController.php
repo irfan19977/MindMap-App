@@ -19,10 +19,8 @@ class SubcategoriesController extends Controller
     public function index()
     {
         $this->authorize('subcategori.index');
-        $query = Subcategory::with('category');
-        if (auth()->user()->hasRole('teacher')) {
-            $query->where('created_by', auth()->id());
-        }
+        $query = Subcategory::with('category')
+            ->where('created_by', auth()->id());
         $subcategories = $query->get();
             
         return view('backend.subcategories.index', compact('subcategories'));
@@ -34,7 +32,9 @@ class SubcategoriesController extends Controller
     public function create()
     {
         $this->authorize('subcategori.create');
-        $categories = Category::all();
+        $categories = Category::orderBy('name', 'asc')
+            ->where('created_by', auth()->id())
+            ->get();
         return view('backend.subcategories.addedit', compact('categories'));
     }
 
@@ -64,9 +64,17 @@ class SubcategoriesController extends Controller
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
-
         $validated['created_by'] = auth()->id();
-        Subcategory::create($validated);
+
+        try {
+            Subcategory::create($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Kamu sudah memiliki sub kategori dengan nama yang sama.');
+            }
+            throw $e;
+        }
 
         return redirect()->route('subcategories.index')
             ->with('success', 'Sub Kategori berhasil ditambahkan!');
@@ -86,10 +94,12 @@ class SubcategoriesController extends Controller
     public function edit(Subcategory $subcategory)
     {
         $this->authorize('subcategori.edit');
-        if (auth()->user()->hasRole('teacher') && $subcategory->created_by !== auth()->id()) {
+        if ($subcategory->created_by !== auth()->id()) {
             return redirect()->route('subcategories.index')->with('error', 'Anda tidak memiliki akses untuk mengedit sub kategori ini.');
         }
-        $categories = Category::all();
+        $categories = Category::orderBy('name', 'asc')
+            ->where('created_by', auth()->id())
+            ->get();
         return view('backend.subcategories.addedit', compact('subcategory', 'categories'));
     }
 
@@ -127,7 +137,15 @@ class SubcategoriesController extends Controller
             $validated['slug'] = Str::slug($validated['name']);
         }
 
-        $subcategory->update($validated);
+        try {
+            $subcategory->update($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Kamu sudah memiliki sub kategori dengan nama yang sama.');
+            }
+            throw $e;
+        }
 
         return redirect()->route('subcategories.index')
             ->with('success', 'Sub Kategori berhasil diperbarui!');
@@ -139,7 +157,7 @@ class SubcategoriesController extends Controller
     public function destroy(Subcategory $subcategory)
     {
         $this->authorize('subcategori.delete');
-        if (auth()->user()->hasRole('teacher') && $subcategory->created_by !== auth()->id()) {
+        if ($subcategory->created_by !== auth()->id()) {
             return redirect()->route('subcategories.index')->with('error', 'Anda tidak memiliki akses untuk menghapus sub kategori ini.');
         }
         try {

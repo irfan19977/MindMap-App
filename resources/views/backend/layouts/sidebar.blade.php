@@ -88,7 +88,8 @@
                             <span class="nxl-mtext">{{ __('messages.backend_analytics') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-dashboard.html">{{ __('messages.backend_analytics_dashboard') }}</a></li>
+
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('analytics.index') }}">{{ __('messages.backend_analytics_dashboard') }}</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">{{ __('messages.backend_analytics_learning') }}</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('engagement.index') }}">{{ __('messages.backend_analytics_engagement') }}</a></li>
                         </ul>

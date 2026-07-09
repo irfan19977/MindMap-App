@@ -115,6 +115,7 @@ return [
     'nav_international_certification' => 'International Certification',
 
     // Course Categories
+    'nav_popular' => 'Most Visited',
     'nav_academic' => 'Academic',
     'nav_digital' => 'Digital',
     'nav_business' => 'Business',
