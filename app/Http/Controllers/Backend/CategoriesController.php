@@ -18,10 +18,8 @@ class CategoriesController extends Controller
     public function index()
     {
         $this->authorize('category.index');
-        $query = Category::orderBy('created_at', 'desc');
-        if (auth()->user()->hasRole('teacher')) {
-            $query->where('created_by', auth()->id());
-        }
+        $query = Category::orderBy('created_at', 'desc')
+            ->where('created_by', auth()->id());
         $categories = $query->get();
             
         return view('backend.categories.index', compact('categories'));
@@ -60,9 +58,17 @@ class CategoriesController extends Controller
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
-
         $validated['created_by'] = auth()->id();
-        Category::create($validated);
+
+        try {
+            Category::create($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Kamu sudah memiliki kategori dengan nama yang sama.');
+            }
+            throw $e;
+        }
 
         return redirect()->route('categories.index')
             ->with('success', 'Kategori berhasil ditambahkan!');
@@ -82,7 +88,7 @@ class CategoriesController extends Controller
     public function edit(Category $category)
     {
          $this->authorize('category.edit');
-        if (auth()->user()->hasRole('teacher') && $category->created_by !== auth()->id()) {
+        if ($category->created_by !== auth()->id()) {
             return redirect()->route('categories.index')->with('error', 'Anda tidak memiliki akses untuk mengedit kategori ini.');
         }
         return view('backend.categories.addedit', compact('category'));
@@ -120,7 +126,15 @@ class CategoriesController extends Controller
             $validated['slug'] = Str::slug($validated['name']);
         }
 
-        $category->update($validated);
+        try {
+            $category->update($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()->withInput()
+                    ->with('error', 'Kamu sudah memiliki kategori dengan nama yang sama.');
+            }
+            throw $e;
+        }
 
         return redirect()->route('categories.index')
             ->with('success', 'Kategori berhasil diperbarui!');
@@ -132,7 +146,7 @@ class CategoriesController extends Controller
     public function destroy(Category $category)
     {
          $this->authorize('category.delete');
-        if (auth()->user()->hasRole('teacher') && $category->created_by !== auth()->id()) {
+        if ($category->created_by !== auth()->id()) {
             return redirect()->route('categories.index')->with('error', 'Anda tidak memiliki akses untuk menghapus kategori ini.');
         }
         try {

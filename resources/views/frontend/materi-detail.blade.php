@@ -69,7 +69,11 @@
                   <a href="#latihan" aria-controls="latihan" role="tab" data-toggle="tab">Latihan</a>
                 </li>
                 <li role="presentation">
+                  @guest
+                  <a href="{{ route('login') }}" id="quizTabLink">Quiz <span class="label label-default" style="font-size:9px;vertical-align:middle">Login</span></a>
+                  @else
                   <a href="#quiz" aria-controls="quiz" role="tab" id="quizTabLink" @if(!$passedQuizAttempt) onclick="handleQuizTabClick(event)" @else data-toggle="tab" @endif>Quiz</a>
+                  @endguest
                 </li>
               </ul>
               
@@ -149,7 +153,13 @@
 
                           <!-- Quick question chips -->
                           <div class="ai-chips" id="aiChips">
-                            <button class="ai-chip" onclick="askQuestion('Jelaskan materi ini secara singkat')">📖 Jelaskan singkat</button>
+                            @guest
+                              <button class="ai-chip" onclick="askQuestion('Jelaskan materi ini secara singkat')">📖 Jelaskan singkat</button>
+                            @else
+                              @if(auth()->user()->user_type !== 'student' && !auth()->user()->hasRole('student'))
+                                <button class="ai-chip" onclick="askQuestion('Jelaskan materi ini secara singkat')">📖 Jelaskan singkat</button>
+                              @endif
+                            @endguest
                             <button class="ai-chip" onclick="askQuestion('Berikan contoh penerapan materi ini')">💡 Contoh penerapan</button>
                             <button class="ai-chip" onclick="askQuestion('Apa saja poin penting yang perlu diingat?')">📌 Poin penting</button>
                           </div>
@@ -212,20 +222,18 @@
                       </div>
                     </div>
 
-                    @if($material->latihan_data && is_array($material->latihan_data))
+                    @if($material->practiceQuestions->count() > 0)
                       <div class="exercise-list">
-                        @foreach($material->latihan_data as $index => $latihan)
-                          @php $type = $latihan['type'] ?? 'essay'; @endphp
+                        @foreach($material->practiceQuestions as $index => $latihan)
+                          @php $type = $latihan->question_type ?? 'essay'; @endphp
                           <div class="exercise-card" id="exercise-{{ $index }}">
                             <div class="exercise-card-num">{{ $index + 1 }}</div>
                             <div class="exercise-card-body">
-                              <p class="exercise-question">{{ $latihan['question'] ?? 'Soal Latihan' }}</p>
+                              <p class="exercise-question">{{ $latihan->question }}</p>
                               <div class="exercise-meta">
-                                @if(isset($latihan['type']))
-                                  <span class="exercise-badge badge-type"><i class="ion-ios-pricetag-outline"></i> {{ $latihan['type'] }}</span>
-                                @endif
-                                @if(isset($latihan['points']))
-                                  <span class="exercise-badge badge-point"><i class="ion-ios-star-outline"></i> {{ $latihan['points'] }} poin</span>
+                                <span class="exercise-badge badge-type"><i class="ion-ios-pricetag-outline"></i> {{ $type }}</span>
+                                @if($latihan->points)
+                                  <span class="exercise-badge badge-point"><i class="ion-ios-star-outline"></i> {{ $latihan->points }} poin</span>
                                 @endif
                               </div>
 
@@ -236,7 +244,7 @@
                                 @else
                                   <input type="text" class="exercise-input" id="ans-{{ $index }}" placeholder="Tulis jawaban singkat kamu...">
                                 @endif
-                                <button class="exercise-check-btn" onclick="checkExercise({{ $index }}, '{{ addslashes($latihan['correct_answer'] ?? '') }}', '{{ addslashes($latihan['explanation'] ?? '') }}')">
+                                <button class="exercise-check-btn" onclick="checkExercise({{ $index }}, '{{ addslashes($latihan->correct_answer ?? '') }}', '{{ addslashes($latihan->explanation ?? '') }}', '{{ addslashes($latihan->question ?? '') }}')">
                                   <i class="ion-ios-checkmark-outline"></i> Cek Jawaban
                                 </button>
                               </div>
@@ -1594,7 +1602,13 @@
 
             } catch (error) {
                 console.error('Error starting quiz:', error);
-                alert('Terjadi kesalahan saat memulai quiz');
+                if (error instanceof SyntaxError) {
+                    // Likely got HTML redirect (unauthenticated)
+                    alert('Kamu harus login terlebih dahulu untuk mengerjakan quiz.');
+                    window.location.href = '{{ route("login") }}';
+                } else {
+                    alert('Terjadi kesalahan saat memulai quiz. Silakan coba lagi.');
+                }
             }
         }
 
@@ -1723,7 +1737,7 @@
         }
 
         // Check exercise answer
-        function checkExercise(index, correctAnswer, explanation) {
+        async function checkExercise(index, correctAnswer, explanation, question) {
             const input = document.getElementById('ans-' + index);
             const feedback = document.getElementById('feedback-' + index);
             const btn = document.querySelector('#exercise-' + index + ' .exercise-check-btn');
@@ -1739,18 +1753,56 @@
 
             // Disable input & button after submit
             input.disabled = true;
-            if (btn) btn.disabled = true;
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ion-ios-loading"></i> Mengoreksi...'; }
 
             const isEssay = input.tagName === 'TEXTAREA';
 
             if (isEssay) {
-                // Essay: tidak bisa dinilai otomatis — tampilkan kunci jawaban untuk dibandingkan sendiri
                 feedback.className = 'exercise-feedback essay-done';
-                feedback.innerHTML = `
-                    <strong>📝 Jawaban kamu telah disimpan.</strong> Bandingkan dengan kunci berikut:
-                    ${correctAnswer ? '<div class="feedback-answer"><strong>Kunci:</strong> ' + correctAnswer + '</div>' : ''}
-                    ${explanation ? '<div class="feedback-answer" style="margin-top:6px"><strong>Penjelasan:</strong> ' + explanation + '</div>' : ''}
-                `;
+                feedback.innerHTML = '<span style="color:#6b7280">⏳ AI sedang mengoreksi jawaban kamu...</span>';
+                feedback.style.display = 'block';
+
+                try {
+                    const response = await fetch('/api/ai/grade-essay', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({
+                            question: question || '',
+                            user_answer: answer,
+                            correct_answer: correctAnswer || ''
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success && data.result) {
+                        const r = data.result;
+                        const score = r.score ?? 0;
+                        const verdict = r.verdict ?? '';
+                        const verdictColor = verdict === 'Benar' ? '#16a34a' : verdict === 'Sebagian Benar' ? '#d97706' : '#dc2626';
+                        const verdictIcon = verdict === 'Benar' ? '✅' : verdict === 'Sebagian Benar' ? '⚠️' : '❌';
+
+                        feedback.className = 'exercise-feedback ' + (verdict === 'Benar' ? 'correct' : 'essay-done');
+                        feedback.innerHTML = `
+                            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                                <span style="font-size:20px">${verdictIcon}</span>
+                                <strong style="color:${verdictColor}">${verdict}</strong>
+                                <span style="margin-left:auto;background:${verdictColor};color:#fff;padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700">${score}/100</span>
+                            </div>
+                            <div class="feedback-answer">${r.feedback ?? ''}</div>
+                            ${r.suggestion ? '<div class="feedback-answer" style="margin-top:6px"><strong>💡 Saran:</strong> ' + r.suggestion + '</div>' : ''}
+                        `;
+                    } else {
+                        feedback.innerHTML = `<strong>📝 Jawaban tersimpan.</strong>${correctAnswer ? '<div class="feedback-answer"><strong>Kunci:</strong> ' + correctAnswer + '</div>' : ''}`;
+                    }
+                } catch (e) {
+                    feedback.innerHTML = `<strong>📝 Jawaban tersimpan.</strong>${correctAnswer ? '<div class="feedback-answer"><strong>Kunci:</strong> ' + correctAnswer + '</div>' : ''}`;
+                }
+
+                if (btn) btn.innerHTML = '<i class="ion-ios-checkmark-outline"></i> Selesai';
             } else {
                 // Short answer: bandingkan (case-insensitive)
                 const isCorrect = answer.toLowerCase() === correctAnswer.toLowerCase();
@@ -1803,7 +1855,7 @@
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
-                        quiz_attempt_id: currentQuizAttempt.id,
+                        attempt_id: currentQuizAttempt.id,
                         answers: answers
                     })
                 });

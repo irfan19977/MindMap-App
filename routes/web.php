@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\CategoriesController;
@@ -11,22 +12,17 @@ use App\Http\Controllers\Backend\LearningResultsController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\AnalyticsController;
 use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\Frontend\QuizController;
 use App\Http\Controllers\Backend\ThemeController;
 use App\Http\Controllers\Frontend\AIController;
 use App\Http\Controllers\Frontend\TeacherController;
-
 use App\Http\Controllers\Frontend\StudentProfileController;
-
-
-use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Backend\EngagementController;
 use App\Http\Controllers\Backend\HelpController;
 use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
-
-use App\Http\Controllers\PracticeAnswerController;
 use App\Http\Controllers\QuizAttemptController;
 
 /*
@@ -72,6 +68,7 @@ Route::get('/materi/{slug}', [KelasController::class, 'showMateri'])->name('mate
 */
 Route::get('/api/user-progress', [KelasController::class, 'getUserProgress'])->name('api.user-progress');
 Route::post('/api/ai/chat', [AIController::class, 'chat'])->name('ai.chat');
+Route::post('/api/ai/grade-essay', [AIController::class, 'gradeEssay'])->name('ai.grade-essay');
 Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.history');
 
 /*
@@ -144,6 +141,12 @@ Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
         Route::get('/quizzes', [LearningResultsController::class, 'quizzes'])->name('quizzes');
     });
 
+    // Analytics Dashboard
+    Route::prefix('analytics')->name('analytics.')->group(function () {
+        Route::get('/', [AnalyticsController::class, 'index'])->name('index');
+        Route::get('/data', [AnalyticsController::class, 'getData'])->name('data');
+    });
+
     // Manajemen Pengguna
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
@@ -168,6 +171,27 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/student/profile', [StudentProfileController::class, 'show'])->name('student.profile');
+
+    // Quiz API Routes
+    Route::prefix('api/quiz')->group(function () {
+        Route::post('/start', [QuizAttemptController::class, 'start'])->name('quiz.start');
+        Route::post('/submit', [QuizAttemptController::class, 'submit'])->name('quiz.submit');
+        Route::post('/answer', [QuizAttemptController::class, 'submitAnswer'])->name('quiz.answer');
+        Route::get('/attempt/{attemptId}', [QuizAttemptController::class, 'show'])->name('quiz.attempt.show');
+        Route::get('/{quizId}/attempts', [QuizAttemptController::class, 'getAttemptsByQuiz'])->name('quiz.attempts');
+        Route::get('/statistics', [QuizAttemptController::class, 'getStatistics'])->name('quiz.statistics');
+        Route::get('/{quizId}/leaderboard', [QuizAttemptController::class, 'getLeaderboard'])->name('quiz.leaderboard');
+    });
+
+    // Notification Routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('unread-count');
+        Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
+    });
 });
 
 require __DIR__.'/auth.php';

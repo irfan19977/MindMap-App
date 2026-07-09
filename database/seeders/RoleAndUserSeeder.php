@@ -104,8 +104,9 @@ class RoleAndUserSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
-                'name'     => 'Admin MindMap',
-                'password' => bcrypt('password'),
+                'name'      => 'Admin MindMap',
+                'password'  => bcrypt('password'),
+                'user_type' => 'admin',
             ]
         );
         $admin->syncRoles([$adminRole]);
@@ -114,8 +115,9 @@ class RoleAndUserSeeder extends Seeder
         $teacherUser = User::firstOrCreate(
             ['email' => 'teacher@gmail.com'],
             [
-                'name'     => 'Guru MindMap',
-                'password' => bcrypt('password'),
+                'name'      => 'Guru MindMap',
+                'password'  => bcrypt('password'),
+                'user_type' => 'teacher',
             ]
         );
         $teacherUser->syncRoles([$teacherRole]);
@@ -135,8 +137,9 @@ class RoleAndUserSeeder extends Seeder
         $studentUser = User::firstOrCreate(
             ['email' => 'student@gmail.com'],
             [
-                'name'     => 'Siswa MindMap',
-                'password' => bcrypt('password'),
+                'name'      => 'Siswa MindMap',
+                'password'  => bcrypt('password'),
+                'user_type' => 'student',
             ]
         );
         $studentUser->syncRoles([$studentRole]);
@@ -151,8 +154,9 @@ class RoleAndUserSeeder extends Seeder
         $umumUser = User::firstOrCreate(
             ['email' => 'umum@gmail.com'],
             [
-                'name'     => 'User Umum',
-                'password' => bcrypt('password'),
+                'name'      => 'User Umum',
+                'password'  => bcrypt('password'),
+                'user_type' => 'student',
             ]
         );
         $umumUser->syncRoles([$umumRole]);

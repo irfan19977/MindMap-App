@@ -12,20 +12,25 @@
             <li><a href="/teacher">{{ __('messages.teachers') }}</a></li>
             <li><a href="#">{{ __('messages.courses') }} <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><strong class="text-muted">{{ __('messages.nav_academic') }}</strong></li>
-                <li><a href="/kelas/matematika">{{ __('messages.nav_mathematics') }}</a></li>
-                <li><a href="/kelas/fisika">{{ __('messages.nav_physics') }}</a></li>
-                <li><a href="/kelas/kimia">{{ __('messages.nav_chemistry') }}</a></li>
-                <li><strong class="text-muted">{{ __('messages.nav_digital') }}</strong></li>
-                <li><a href="/kelas/programming">{{ __('messages.nav_programming') }}</a></li>
-                <li><a href="/kelas/web-design">{{ __('messages.nav_web_design') }}</a></li>
-                <li><strong class="text-muted">{{ __('messages.nav_business') }}</strong></li>
-                <li><a href="/kelas/akuntansi">{{ __('messages.nav_accounting') }}</a></li>
+                @if($popularCategories->isNotEmpty())
+                  <li><strong class="text-muted">{{ __('messages.nav_popular') }}</strong></li>
+                  @foreach($popularCategories as $cat)
+                    <li><a href="/kelas/{{ $cat->slug }}">{{ $cat->name }}</a></li>
+                  @endforeach
+                @else
+                  <li><strong class="text-muted">{{ __('messages.nav_academic') }}</strong></li>
+                  <li><a href="/kelas/matematika">{{ __('messages.nav_mathematics') }}</a></li>
+                  <li><a href="/kelas/fisika">{{ __('messages.nav_physics') }}</a></li>
+                  <li><a href="/kelas/kimia">{{ __('messages.nav_chemistry') }}</a></li>
+                  <li><strong class="text-muted">{{ __('messages.nav_digital') }}</strong></li>
+                  <li><a href="/kelas/programming">{{ __('messages.nav_programming') }}</a></li>
+                  <li><a href="/kelas/web-design">{{ __('messages.nav_web_design') }}</a></li>
+                @endif
                 <li class="divider"></li>
                 <li><a href="/kelas"><i class="ion-ios-grid-outline"></i> {{ __('messages.view_all_courses') }}</a></li>
               </ul>
             </li>
-            <li><a href="#">{{ __('messages.nav_program') }} <span class="caret"></span></a>
+            {{-- <li><a href="#">{{ __('messages.nav_program') }} <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><strong class="text-muted">{{ __('messages.nav_regular_program') }}</strong></li>
                 <li><a href="/program/pelajar">{{ __('messages.nav_student_program') }}</a></li>
@@ -49,10 +54,13 @@
                 <li><a href="/layanan/progress-tracking"><i class="fa fa-chart-line fa-lg fa-fw"></i> {{ __('messages.nav_progress_tracking') }}</a></li>
                 <li><a href="/layanan/sertifikat"><i class="fa fa-certificate fa-lg fa-fw"></i> {{ __('messages.nav_certificate_service') }}</a></li>
               </ul>
-            </li>
+            </li> --}}
             <li><a href="/contact">{{ __('messages.contact') }}</a></li>
             <li class="menu-divider visible-lg">&nbsp;</li>
             @auth
+            @if(!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('teacher'))
+            <li>@include('components.notification-dropdown')</li>
+            @endif
             @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('teacher'))
             <li><a href="{{ route('dashboard.index') }}">{{ __('messages.dashboard') }}</a></li>
             @else

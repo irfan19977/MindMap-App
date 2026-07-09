@@ -114,8 +114,9 @@ class TeacherSeeder extends Seeder
             $user = User::firstOrCreate(
                 ['email' => $teacherData['email']],
                 [
-                    'name' => $teacherData['name'],
-                    'password' => bcrypt('password'),
+                    'name'      => $teacherData['name'],
+                    'password'  => bcrypt('password'),
+                    'user_type' => 'teacher',
                 ]
             );
             $user->syncRoles([$teacherRole]);

@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Material;
 use App\Models\UserProgress;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class KelasController extends Controller
 {
@@ -88,7 +88,8 @@ class KelasController extends Controller
             // Jika subcategory, ambil materials
             $subcategory->load('materials');
             // Cek apakah ada mindmap untuk subcategory ini
-            $mindmap = \App\Models\Mindmap::where('reference_id', $subcategory->id)
+            $mindmap = \App\Models\Mindmap::with('creator.teacher')
+                ->where('reference_id', $subcategory->id)
                 ->published()
                 ->first();
 
@@ -98,7 +99,7 @@ class KelasController extends Controller
             }
 
             // Debug log
-            \Log::info('Subcategory found for mindmap', [
+            Log::info('Subcategory found for mindmap', [
                 'slug' => $slug,
                 'subcategory_id' => $subcategory->id,
                 'subcategory_name' => $subcategory->name,
@@ -118,7 +119,8 @@ class KelasController extends Controller
         $category->load('children.materials');
 
         // Cek apakah ada mindmap untuk category ini
-        $mindmap = \App\Models\Mindmap::where('reference_id', $category->id)
+        $mindmap = \App\Models\Mindmap::with('creator.teacher')
+            ->where('reference_id', $category->id)
             ->published()
             ->first();
 
@@ -128,7 +130,7 @@ class KelasController extends Controller
         }
 
         // Debug log
-        \Log::info('Category found for mindmap', [
+        Log::info('Category found for mindmap', [
             'slug' => $slug,
             'category_id' => $category->id,
             'category_name' => $category->name,
@@ -163,11 +165,16 @@ class KelasController extends Controller
     public function showMateri($slug)
     {
         $material = Material::where('slug', $slug)
-            ->with(['subcategory', 'subcategory.category'])
+            ->with(['subcategory', 'subcategory.category', 'practiceQuestions' => fn($q) => $q->ordered()])
             ->firstOrFail();
 
-        // Decode konten materi dari JSON
-        $kontenMateri = json_decode($material->content, true) ?? [];
+        // Decode konten materi dari JSON (strip HTML tags if editor wrapped it)
+        $rawContent = strip_tags($material->content ?? '');
+        $kontenMateri = json_decode($rawContent, true);
+        // If not valid JSON array, treat as plain HTML content
+        if (!is_array($kontenMateri)) {
+            $kontenMateri = [];
+        }
 
         // Get related materials from same subcategory
         $relatedMaterials = Material::where('subcategory_id', $material->subcategory_id)

@@ -115,6 +115,7 @@ return [
     'nav_international_certification' => 'Sertifikasi Internasional',
 
     // Course Categories
+    'nav_popular' => 'Sering Dikunjungi',
     'nav_academic' => 'Akademik',
     'nav_digital' => 'Digital',
     'nav_business' => 'Bisnis',
