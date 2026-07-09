@@ -53,6 +53,9 @@
             <li><a href="/contact">Contact</a></li>
             <li class="menu-divider visible-lg">&nbsp;</li>
             @auth
+            @if(!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('teacher'))
+            <li>@include('components.notification-dropdown')</li>
+            @endif
             @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('teacher'))
             <li><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
             @else

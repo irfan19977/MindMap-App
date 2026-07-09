@@ -88,9 +88,9 @@
                             <span class="nxl-mtext">Analitik</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-dashboard.html">Dashboard Analitik</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">Analitik Pembelajaran</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="analytics-engagement.html">Analitik Engagement</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('analytics.index') }}">Dashboard Analitik</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.index') }}">Analitik Pembelajaran</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.quizzes') }}">Analitik Quiz</a></li>
                         </ul>
                     </li>
                     

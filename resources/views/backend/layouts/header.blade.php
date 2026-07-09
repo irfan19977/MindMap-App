@@ -808,6 +808,7 @@
                             </div>
                         </div>
                     </div>
+                    @include('components.notification-dropdown')
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <img src="{{ asset('backend/assets/images/avatar/1.png') }}" alt="user-image" class="img-fluid user-avtar me-0" />

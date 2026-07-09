@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\CategoriesController;
@@ -11,8 +12,11 @@ use App\Http\Controllers\Backend\LearningResultsController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\AnalyticsController;
+use App\Http\Controllers\Backend\QuizController;
+use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\Frontend\KelasController;
-use App\Http\Controllers\Frontend\QuizController;
+use App\Http\Controllers\Frontend\QuizController as FrontendQuizController;
 use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\AIController;
 use App\Http\Controllers\TeacherController;
@@ -96,6 +100,12 @@ Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
         Route::get('/quizzes', [LearningResultsController::class, 'quizzes'])->name('quizzes');
     });
 
+    // Analytics Dashboard
+    Route::prefix('analytics')->name('analytics.')->group(function () {
+        Route::get('/', [AnalyticsController::class, 'index'])->name('index');
+        Route::get('/data', [AnalyticsController::class, 'getData'])->name('data');
+    });
+
     // Manajemen Pengguna
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
@@ -120,6 +130,37 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/student/profile', [StudentProfileController::class, 'show'])->name('student.profile');
+
+    // Frontend Quiz Routes
+    Route::prefix('quiz')->name('quiz.')->group(function () {
+        Route::get('/', [FrontendQuizController::class, 'index'])->name('index');
+        Route::get('/take/{quizId}', [FrontendQuizController::class, 'take'])->name('take');
+        Route::get('/result/{attemptId}', [FrontendQuizController::class, 'result'])->name('result');
+        Route::get('/history/{quizId}', [FrontendQuizController::class, 'history'])->name('history');
+        Route::get('/leaderboard/{quizId}', [FrontendQuizController::class, 'leaderboard'])->name('leaderboard');
+        Route::get('/progress', [FrontendQuizController::class, 'progress'])->name('progress');
+    });
+
+    // Quiz API Routes
+    Route::prefix('api/quiz')->group(function () {
+        Route::post('/start', [QuizAttemptController::class, 'start'])->name('quiz.start');
+        Route::post('/submit', [QuizAttemptController::class, 'submit'])->name('quiz.submit');
+        Route::post('/answer', [QuizAttemptController::class, 'submitAnswer'])->name('quiz.answer');
+        Route::get('/attempt/{attemptId}', [QuizAttemptController::class, 'show'])->name('quiz.attempt.show');
+        Route::get('/{quizId}/attempts', [QuizAttemptController::class, 'getAttemptsByQuiz'])->name('quiz.attempts');
+        Route::get('/statistics', [QuizAttemptController::class, 'getStatistics'])->name('quiz.statistics');
+        Route::get('/{quizId}/leaderboard', [QuizAttemptController::class, 'getLeaderboard'])->name('quiz.leaderboard');
+    });
+
+    // Notification Routes
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::get('/unread-count', [NotificationController::class, 'unreadCount'])->name('unread-count');
+        Route::post('/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
+    });
 });
 
 require __DIR__.'/auth.php';
