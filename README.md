@@ -1,6 +1,42 @@
-# MindMap App
+# 🧠 MindMap App
 
-Aplikasi web untuk membuat dan mengelola peta pikiran (mind map) yang dibangun dengan Laravel.
+**MindMap App** adalah platform pembelajaran berbasis web yang membantu pengguna memahami materi secara bertahap (*step by step*) melalui **Mind Map**, latihan soal, kuis interaktif, sistem *unlock* materi, dan **AI Learning Assistant**. Aplikasi ini dirancang untuk memberikan pengalaman belajar yang lebih terstruktur, interaktif, dan efektif.
+
+---
+
+## 👥 Tim Pengembang
+
+| No | Nama |
+|----|-------------------------------|
+| 1. | **Irfan Adi Prastyo** |
+| 2. | **Faishal Danurweda Bisma Wibowo** |
+| 3. | **Muhammad Fadhli Robbi Elhami** |
+| 4. | **Arkan Thaariq Asadullah** |
+| 5. | **Muhammad Mishaal** |
+
+---
+
+## ✨ Fitur
+
+- 🧠 **Interactive Mind Map** – Membuat dan mempelajari materi menggunakan visualisasi peta konsep.
+- 📚 **Structured Learning** – Materi disusun secara bertahap (*step by step*).
+- 🔓 **Unlock Materi** – Materi selanjutnya terbuka setelah pengguna menyelesaikan materi sebelumnya.
+- 📝 **Latihan Soal** – Menguji pemahaman pengguna melalui latihan interaktif.
+- 🎯 **Quiz** – Evaluasi pembelajaran pada setiap materi.
+- 🤖 **AI Learning Assistant** – Chat AI yang dapat menjawab pertanyaan seputar materi pembelajaran.
+- 📈 **Learning Progress** – Memantau perkembangan belajar pengguna.
+- 💾 **Auto Save** – Menyimpan perubahan secara otomatis.
+- 📱 **Responsive Design** – Tampilan yang dapat diakses melalui desktop maupun perangkat mobile.
+
+---
+
+## 🗄️ Database Diagram
+
+Rancangan struktur database dapat diakses melalui tautan berikut:
+
+> **DB Diagram:** https://dbdiagram.io/d/PROJEK-LOMBA-6a4f56b54ac62e474c64dc7a
+
+---
 
 ## Persyaratan Sistem
 
@@ -9,7 +45,6 @@ Sebelum menginstal aplikasi ini, pastikan sistem Anda memenuhi persyaratan berik
 - PHP >= 8.1
 - Composer
 - MySQL/MariaDB atau PostgreSQL
-- Node.js dan NPM (untuk mengompilasi aset frontend)
 - Web Server (Apache, Nginx, atau Laravel Valet)
 
 ## Cara Instalasi
@@ -72,16 +107,7 @@ Jalankan migrasi database untuk membuat tabel yang diperlukan:
 php artisan migrate:fresh --seed
 ```
 
-
-### 7. Kompilasi Aset Frontend
-
-Kompilasi aset CSS dan JavaScript:
-
-```bash
-npm run build
-```
-
-### 8. Jalankan Aplikasi
+### 6. Jalankan Aplikasi
 
 Jalankan server development:
 
@@ -102,4 +128,6 @@ Aplikasi akan dapat diakses di `http://localhost:8000`
 
 ## Lisensi
 
-Proyek ini dilisensikan under MIT License.
+Copyright (c) 2026 **Santri Berkreasi**. Hak cipta dilindungi.
+
+Perangkat lunak ini bersifat proprietary. Dilarang menyalin, memodifikasi, mendistribusikan, atau menggunakan perangkat lunak ini tanpa izin tertulis dari Santri Berkreasi. Lihat file [LICENSE](LICENSE) untuk detail lengkap.
