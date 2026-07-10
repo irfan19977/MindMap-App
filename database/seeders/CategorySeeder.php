@@ -28,7 +28,7 @@ class CategorySeeder extends Seeder
                 'slug' => 'bahasa-indonesia',
                 'description' => 'Pelajaran bahasa Indonesia untuk semua jenjang pendidikan',
                 'is_featured' => true,
-                'teacher_email' => 'eko.prasetyo@example.com',
+                'teacher_email' => 'admin@gmail.com',
             ],
             [
                 'name' => 'IPA',

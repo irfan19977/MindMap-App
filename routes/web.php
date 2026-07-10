@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\CategoriesController;
@@ -24,6 +25,24 @@ use App\Http\Controllers\Backend\HelpController;
 use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\QuizAttemptController;
+
+/*
+|--------------------------------------------------------------------------
+| Temporary Cache Clear (remove after deployment)
+|--------------------------------------------------------------------------
+*/
+Route::get('/clear', function () {
+    if (request('key') !== 'gantirahasia') {
+        abort(403, 'Forbidden');
+    }
+
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+
+    return 'Cache cleared successfully';
+});
 
 /*
 |--------------------------------------------------------------------------

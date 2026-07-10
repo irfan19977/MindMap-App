@@ -13,7 +13,7 @@ return [
     'dashboard' => 'Dashboard',
     
     // Hero Section
-    'hero_title' => 'Learn Mind Mapping Easily',
+    'hero_title' => 'MindMap <span class="label classic">Learning</span><br>Inter<span class="light">active</span>',
     'hero_subtitle' => 'Boost your productivity and creativity with proven mind mapping techniques',
     'hero_cta' => 'Start Learning',
     'hero_secondary_cta' => 'Learn More',
@@ -299,8 +299,8 @@ return [
     'about_page_title' => 'About Us',
     'about_page_subtitle' => 'Who we are?',
     'about_what_we_do' => 'What We Do',
-    'about_what_we_do_desc' => 'We make hip and exciting web sites. Big and Small. Concept development, interface design, production management, strategic planning, usability testing.',
-    'about_team' => 'The Concept Team',
+    'about_what_we_do_desc' => 'MindMap is a digital learning platform that helps students understand complex concepts through interactive mind maps, structured learning paths, and multimedia materials. We combine modern technology with effective learning methods to create an easier, more enjoyable, and trackable learning experience.',
+    'about_team' => 'MindMap Team',
 
     // Contact Page
     'contact_page_title' => 'Contact',
