@@ -45,6 +45,14 @@ class Subcategory extends Model
     }
 
     /**
+     * Get the course classes for this subcategory.
+     */
+    public function classes()
+    {
+        return $this->hasMany(CourseClass::class);
+    }
+
+    /**
      * Scope a query to only include active subcategories.
      */
     public function scopeActive($query)

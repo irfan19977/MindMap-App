@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\CourseClass;
 use App\Models\Material;
 use App\Models\Subcategory;
+use App\Models\TeacherCollaboration;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
@@ -25,7 +27,35 @@ class MindmapController extends Controller
             }])
             ->get();
 
-        return view('backend.mindmap.index', compact('categories'));
+        // Get collaboration categories with subcategories
+        $collabCategories = collect();
+        $user = auth()->user();
+        if ($user && $user->teacher) {
+            $classIds = TeacherCollaboration::where('teacher_id', $user->teacher->id)
+                ->where('collaboration_type', 'class')
+                ->where('status', 'accepted')
+                ->pluck('class_id')
+                ->toArray();
+
+            if (!empty($classIds)) {
+                $subcategoryIds = CourseClass::whereIn('id', $classIds)
+                    ->pluck('subcategory_id')
+                    ->unique()
+                    ->toArray();
+
+                if (!empty($subcategoryIds)) {
+                    $categoryIds = Subcategory::whereIn('id', $subcategoryIds)->pluck('category_id')->unique()->toArray();
+                    $collabCategories = Category::whereIn('id', $categoryIds)
+                        ->with(['subcategories' => function($query) use ($subcategoryIds) {
+                            $query->whereIn('id', $subcategoryIds)->where('status', 'publish')->orderBy('name', 'asc');
+                        }])
+                        ->ordered()
+                        ->get();
+                }
+            }
+        }
+
+        return view('backend.mindmap.index', compact('categories', 'collabCategories'));
     }
 
     /**

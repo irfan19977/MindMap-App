@@ -39,11 +39,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadNotifications();
         updateUnreadCount();
-        
-        // Auto-refresh notifications every 30 seconds
-        notificationInterval = setInterval(function() {
-            updateUnreadCount();
-        }, 30000);
+
+        // Polling dinonaktifkan sementara
+        // notificationInterval = setInterval(function() {
+        //     updateUnreadCount();
+        // }, 30000);
     });
 
     // Load notifications

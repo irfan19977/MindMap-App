@@ -230,6 +230,9 @@
                                                                 @if($materi->subcategory->category)
                                                                     <br><small class="text-muted">{{ $materi->subcategory->category->name }}</small>
                                                                 @endif
+                                                                @if(isset($collaborationSubcategoryIds) && in_array($materi->subcategory_id, $collaborationSubcategoryIds))
+                                                                    <br><span class="badge bg-soft-info text-info mt-1">Kolaborasi</span>
+                                                                @endif
                                                             </div>
                                                         @else
                                                             <span class="text-muted">-</span>

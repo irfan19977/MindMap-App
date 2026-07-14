@@ -103,6 +103,14 @@ class Material extends Model
     }
 
     /**
+     * Get the course classes that include this material.
+     */
+    public function courseClasses()
+    {
+        return $this->belongsToMany(CourseClass::class, 'class_material', 'material_id', 'class_id');
+    }
+
+    /**
      * Scope a query to only include published materials.
      */
     public function scopePublished($query)

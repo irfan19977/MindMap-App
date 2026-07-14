@@ -80,6 +80,59 @@
                   </a>
                 @endif
               </div>
+
+              <!-- Class Enrollment Card -->
+              @if(isset($relatedClasses) && $relatedClasses->count() > 0)
+                @foreach($relatedClasses as $class)
+                  <div class="profile-card" style="margin-top: 20px;">
+                    <div class="profile-name" style="font-size: 16px;">
+                      <i class="fa fa-users text-primary"></i> {{ $class->name }}
+                    </div>
+                    <div class="profile-stats" style="margin-top: 12px; margin-bottom: 12px;">
+                      <div class="profile-stat">
+                        <div class="profile-stat-value">{{ $class->materials->count() }}</div>
+                        <div class="profile-stat-label">Materi</div>
+                      </div>
+                      <div class="profile-stat">
+                        <div class="profile-stat-value">{{ $class->teacher->initials ?? 'G' }}</div>
+                        <div class="profile-stat-label">Guru</div>
+                      </div>
+                    </div>
+
+                    @auth
+                      @if(isset($enrollments[$class->id]))
+                        @if($enrollments[$class->id] === 'pending')
+                          <button class="profile-btn profile-btn-primary" disabled>
+                            <i class="fa fa-clock-o"></i> Menunggu Persetujuan
+                          </button>
+                        @elseif($enrollments[$class->id] === 'active' || $enrollments[$class->id] === 'completed')
+                          <span class="profile-btn" style="background: #059669; color: #fff; cursor: default;">
+                            <i class="fa fa-check"></i> Sudah Bergabung
+                          </span>
+                        @else
+                          <form method="POST" action="{{ route('kelas.join', $class->slug) }}">
+                            @csrf
+                            <button type="submit" class="profile-btn profile-btn-primary">
+                              <i class="fa fa-sign-in"></i> Gabung Kelas
+                            </button>
+                          </form>
+                        @endif
+                      @else
+                        <form method="POST" action="{{ route('kelas.join', $class->slug) }}">
+                          @csrf
+                          <button type="submit" class="profile-btn profile-btn-primary">
+                            <i class="fa fa-sign-in"></i> Gabung Kelas
+                          </button>
+                        </form>
+                      @endif
+                    @else
+                      <a href="{{ route('login') }}" class="profile-btn profile-btn-primary">
+                        <i class="fa fa-sign-in"></i> Login untuk Gabung
+                      </a>
+                    @endauth
+                  </div>
+                @endforeach
+              @endif
             </div>
 
             <!-- MindMap Utama -->

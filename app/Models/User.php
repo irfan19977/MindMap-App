@@ -78,6 +78,11 @@ class User extends Authenticatable
         return $this->hasMany(UserProgress::class);
     }
 
+    public function createdClasses()
+    {
+        return $this->hasMany(CourseClass::class, 'created_by');
+    }
+
     public function notifications()
     {
         return $this->hasMany(Notification::class);

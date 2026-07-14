@@ -52,6 +52,16 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.create') }}">{{ __('messages.backend_add_material') }}</a></li>
                         </ul>
                     </li>
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-users"></i></span>
+                            <span class="nxl-mtext">Kelas</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('classes.index') }}">Semua Kelas</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('classes.create') }}">Tambah Kelas</a></li>
+                        </ul>
+                    </li>
                     <li class="nxl-item">
                         <a class="nxl-link" href="{{ route('mindmap.index') }}">
                             <span class="nxl-micon"><i class="feather-git-branch"></i></span>

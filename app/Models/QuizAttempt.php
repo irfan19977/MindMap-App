@@ -12,6 +12,25 @@ class QuizAttempt extends Model
 {
     use HasFactory, HasUuids;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($quizAttempt) {
+            // Sync progress when quiz attempt status changes to 'passed'
+            if ($quizAttempt->wasChanged('status') && $quizAttempt->status === 'passed') {
+                $quizAttempt->syncStudentProgress();
+            }
+        });
+
+        static::created(function ($quizAttempt) {
+            // Sync progress when quiz attempt is created with 'passed' status
+            if ($quizAttempt->status === 'passed') {
+                $quizAttempt->syncStudentProgress();
+            }
+        });
+    }
+
     protected $fillable = [
         'user_id',
         'quiz_id',
@@ -53,5 +72,37 @@ class QuizAttempt extends Model
     public function quizAnswers(): HasMany
     {
         return $this->hasMany(QuizAnswer::class);
+    }
+
+    /**
+     * Sync student progress for all class enrollments when quiz is passed
+     */
+    public function syncStudentProgress()
+    {
+        if (!$this->quiz || !$this->quiz->material_id) {
+            return;
+        }
+
+        // Find all classes that contain this material
+        $classes = CourseClass::whereHas('materials', function ($query) {
+            $query->where('materials.id', $this->quiz->material_id);
+        })->get();
+
+        // Find the student record for this user
+        $student = Student::where('user_id', $this->user_id)->first();
+        if (!$student) {
+            return;
+        }
+
+        // Sync progress for each class enrollment
+        foreach ($classes as $class) {
+            $enrollment = ClassEnrollment::where('class_id', $class->id)
+                ->where('student_id', $student->id)
+                ->first();
+
+            if ($enrollment) {
+                $enrollment->syncProgress();
+            }
+        }
     }
 }

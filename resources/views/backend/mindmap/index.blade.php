@@ -63,6 +63,9 @@
                 
                 <div class="toolbar-section ms-auto">
                     <div class="btn-group">
+                        <button onclick="deleteSelectedElement()" class="btn btn-sm btn-outline-danger" title="Delete Selected (Delete)">
+                            <i class="feather-trash"></i>
+                        </button>
                         <button onclick="clearCanvas()" class="btn btn-sm btn-outline-danger" title="Clear Canvas">
                             <i class="feather-trash-2"></i>
                         </button>
@@ -128,6 +131,46 @@
                                         @endif
                                     </div>
                                 @endforeach
+
+                                @if(isset($collabCategories) && $collabCategories->count() > 0)
+                                    <div class="mt-3 mb-2 px-2">
+                                        <small class="text-muted fw-bold text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;"><i class="feather-users me-1"></i>Kolaborasi</small>
+                                    </div>
+                                    @foreach($collabCategories as $category)
+                                        <div class="category-group mb-3" data-category-group="{{ $category->id }}">
+                                            <button 
+                                                onclick="toggleCategory('{{ $category->id }}', '{{ $category->name }} (Kolaborasi)')"
+                                                class="category-btn w-full text-start d-flex align-items-center"
+                                                data-category-id="{{ $category->id }}">
+                                                <span class="category-icon" style="background: rgba(0, 207, 207, 0.15); color: #00cfcf;">
+                                                    <i class="feather-folder"></i>
+                                                </span>
+                                                <span class="category-text">{{ $category->name }}</span>
+                                                @if($category->subcategories->count() > 0)
+                                                    <span class="category-arrow ms-auto">
+                                                        <i class="feather-chevron-down"></i>
+                                                    </span>
+                                                @endif
+                                            </button>
+
+                                            @if($category->subcategories->count() > 0)
+                                                <div class="category-children" id="category-children-{{ $category->id }}">
+                                                    @foreach($category->subcategories as $child)
+                                                        <button 
+                                                            onclick="selectCategory('{{ $child->id }}', '{{ $category->name }} > {{ $child->name }} (Kolaborasi)')"
+                                                            class="category-btn category-child w-full text-start d-flex align-items-center"
+                                                            data-category-id="{{ $child->id }}">
+                                                            <span class="category-icon child-icon" style="background: rgba(0, 207, 207, 0.15); color: #00cfcf;">
+                                                                <i class="feather-folder"></i>
+                                                            </span>
+                                                            <span class="category-text">{{ $child->name }}</span>
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -1452,6 +1495,8 @@
     let isDraggingNode = false;
     let draggedNode = null;
     let dragOffset = { x: 0, y: 0 };
+    let dragStartPos = { x: 0, y: 0 };
+    const DRAG_THRESHOLD = 5; // pixels
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -1539,10 +1584,38 @@
             }
             if ((e.key === 'Delete' || e.key === 'Backspace') && !e.target.matches('input, textarea')) {
                 if (selectedConnectionId) {
-                    deleteConnection(selectedConnectionId);
+                    Swal.fire({
+                        title: 'Hapus Koneksi?',
+                        text: 'Apakah Anda yakin ingin menghapus koneksi ini?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, Hapus',
+                        cancelButtonText: 'Batal'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            deleteConnection(selectedConnectionId);
+                        }
+                    });
                 } else if (selectedNode && selectedNode !== 'root-node') {
                     const node = document.getElementById(selectedNode);
-                    if (node) removeNode(node);
+                    if (node) {
+                        Swal.fire({
+                            title: 'Hapus Node?',
+                            text: 'Apakah Anda yakin ingin menghapus node ini dan semua koneksinya?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ya, Hapus',
+                            cancelButtonText: 'Batal'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                removeNode(node);
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -1840,6 +1913,14 @@
         }
 
         if (structure.nodes) {
+            // Update nodeIdCounter to avoid ID conflicts with restored nodes
+            structure.nodes.forEach(nodeData => {
+                const idNum = parseInt(nodeData.id.replace('node-', ''));
+                if (!isNaN(idNum) && idNum >= nodeIdCounter) {
+                    nodeIdCounter = idNum + 1;
+                }
+            });
+
             structure.nodes.forEach(nodeData => {
                 // Create node element
                 const node = document.createElement('div');
@@ -1873,16 +1954,14 @@
                     if (e.button === 0 && e.shiftKey) { // Left click + Shift
                         e.stopPropagation(); // Prevent event bubbling to canvas
                         handleAnchorMouseDown(e, nodeData.id, 'auto');
-                    } else if (e.button === 0) { // Regular left click for node selection and dragging
+                    } else if (e.button === 0 && selectedNode === nodeData.id) { // Dragging already selected node
                         e.stopPropagation(); // Prevent event bubbling to canvas
-                        selectNode(nodeData.id);
-                        
-                        // Start dragging the node
                         isDraggingNode = true;
                         draggedNode = node;
                         const rect = node.getBoundingClientRect();
                         dragOffset.x = e.clientX - rect.left;
                         dragOffset.y = e.clientY - rect.top;
+                        dragStartPos = { x: e.clientX, y: e.clientY };
                         node.style.cursor = 'grabbing';
                     }
                 });
@@ -2007,8 +2086,14 @@
             .filter(node => node.materialId && node.type === 'material')
             .map(node => node.materialId);
 
+        console.log('Current nodes on canvas:', nodes);
+        console.log('Canvas material IDs:', canvasMaterialIds);
+        console.log('All materials from server:', materials);
+
         // Filter out materials that are already on the canvas
         const availableMaterials = materials.filter(material => !canvasMaterialIds.includes(material.id));
+
+        console.log('Available materials after filtering:', availableMaterials);
 
         if (countEl) countEl.textContent = availableMaterials.length;
 
@@ -2181,16 +2266,14 @@
             if (e.button === 0 && e.shiftKey) { // Left click + Shift
                 e.stopPropagation(); // Prevent event bubbling to canvas
                 handleAnchorMouseDown(e, nodeId, 'auto');
-            } else if (e.button === 0) { // Regular left click for node selection and dragging
+            } else if (e.button === 0 && selectedNode === nodeId) { // Dragging already selected node
                 e.stopPropagation(); // Prevent event bubbling to canvas
-                selectNode(nodeId);
-                
-                // Start dragging the node
                 isDraggingNode = true;
                 draggedNode = node;
                 const rect = node.getBoundingClientRect();
                 dragOffset.x = e.clientX - rect.left;
                 dragOffset.y = e.clientY - rect.top;
+                dragStartPos = { x: e.clientX, y: e.clientY };
                 node.style.cursor = 'grabbing';
             }
         });
@@ -2307,12 +2390,6 @@
     function selectConnection(connectionId) {
         clearAllSelections();
         selectedConnectionId = connectionId;
-        updateConnections();
-    }
-
-    function deleteConnection(connectionId) {
-        connections = connections.filter(c => c.id !== connectionId);
-        selectedConnectionId = null;
         updateConnections();
     }
 
@@ -3154,28 +3231,52 @@
             // Delete selected node
             const node = document.getElementById(selectedNode);
             if (node && node.id !== 'root-node') {
-                if (confirm('Are you sure you want to delete this node and all its connections?')) {
-                    removeNode(node);
-                }
+                Swal.fire({
+                    title: 'Hapus Node?',
+                    text: 'Apakah Anda yakin ingin menghapus node ini dan semua koneksinya?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, Hapus',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        removeNode(node);
+                    }
+                });
             }
-        } else if (selectedConnection) {
+        } else if (selectedConnectionId) {
             // Delete selected connection
-            if (confirm('Are you sure you want to delete this connection?')) {
-                deleteConnection(selectedConnection);
-            }
+            Swal.fire({
+                title: 'Hapus Koneksi?',
+                text: 'Apakah Anda yakin ingin menghapus koneksi ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteConnection(selectedConnectionId);
+                }
+            });
         }
     }
 
     function deleteConnection(connectionId) {
-        // Remove anchor points for this connection
-        removeConnectionAnchorPoints(connectionId);
-        
         connections = connections.filter(c => c.id !== connectionId);
+        selectedConnectionId = null;
         updateConnections();
-        
+
         // Clear selection and reset properties panel
         clearAllSelections();
-        document.getElementById('properties-panel').innerHTML = '<p class="text-muted">Select an element to edit properties</p>';
+        const panel = document.getElementById('properties-panel');
+        if (panel) panel.innerHTML = '<p class="text-muted">Select an element to edit properties</p>';
+
+        // Auto-save after connection deletion
+        saveMindmap();
     }
 
     function updatePropertiesPanel(nodeId) {
@@ -3595,15 +3696,15 @@
 
     function createSolidLine(x1, y1, x2, y2) {
         // Create orthogonal L-shaped path instead of diagonal line
-        return createOrthogonalLine(x1, y1, x2, y2, 'solid-line', 'arrowhead-solid');
+        return createOrthogonalLine(x1, y1, x2, y2, 'solid-line', 'arrow-solid');
     }
 
     function createDashedLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'dashed-line', 'arrowhead-dashed');
+        return createOrthogonalLine(x1, y1, x2, y2, 'dashed-line', 'arrow-dashed');
     }
 
     function createDottedLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'dotted-line', 'arrowhead-dotted');
+        return createOrthogonalLine(x1, y1, x2, y2, 'dotted-line', 'arrow-dotted');
     }
 
     function createCurvedLine(x1, y1, x2, y2) {
@@ -3629,25 +3730,25 @@
         
         path.setAttribute('d', d);
         path.setAttribute('class', 'connection-line curved-line');
-        path.setAttribute('marker-end', 'url(#arrowhead-solid)');
+        path.setAttribute('marker-end', 'url(#arrow-solid)');
         return path;
     }
 
     function createThickLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'thick-line', 'arrowhead-solid');
+        return createOrthogonalLine(x1, y1, x2, y2, 'thick-line', 'arrow-thick');
     }
 
     function createDoubleLine(x1, y1, x2, y2) {
         // Create double orthogonal lines
         const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        
+
         // Calculate orthogonal path
-        const path1 = createOrthogonalLine(x1, y1 - 2, x2, y2 - 2, 'double-line', 'arrowhead-solid');
+        const path1 = createOrthogonalLine(x1, y1 - 2, x2, y2 - 2, 'double-line', 'arrow-solid');
         const path2 = createOrthogonalLine(x1, y1 + 2, x2, y2 + 2, 'double-line', null);
-        
+
         group.appendChild(path1);
         group.appendChild(path2);
-        
+
         return group;
     }
 
@@ -3670,22 +3771,22 @@
             // Vertical first, then horizontal with waves
             d = `M ${x1} ${y1} Q ${x1 - 5} ${y1 + 20} ${x1} ${y1 + 40} T ${x1} ${y1 + 80} L ${x1} ${midY} Q ${x1 - 5} ${midY + 10} ${x1} ${midY} T ${x1} ${midY + 40} L ${x1} ${y2} Q ${x1 + 5} ${y2 - 10} ${x2} ${y2}`;
         }
-        
+
         path.setAttribute('d', d);
         path.setAttribute('class', 'connection-line wavy-line');
-        path.setAttribute('marker-end', 'url(#arrowhead-solid)');
+        path.setAttribute('marker-end', 'url(#arrow-solid)');
         return path;
     }
 
     function createSubTopicLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'sub-topic-line', 'arrowhead-default');
+        return createOrthogonalLine(x1, y1, x2, y2, 'sub-topic-line', 'arrow-dotted');
     }
 
     function createHierarchyLine(x1, y1, x2, y2) {
-        return createOrthogonalLine(x1, y1, x2, y2, 'hierarchy-line', 'arrowhead-default');
+        return createOrthogonalLine(x1, y1, x2, y2, 'hierarchy-line', 'arrow-solid');
     }
 
-    function createOrthogonalLine(x1, y1, x2, y2, lineClass, arrowMarker = 'arrowhead-default') {
+    function createOrthogonalLine(x1, y1, x2, y2, lineClass, arrowMarker = 'arrow-solid') {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
         // Direct line from anchor to anchor
@@ -3730,26 +3831,33 @@
 
     function removeNode(node) {
         if (node.id === 'root-node') return; // Don't remove root node
-        
+
+        // Get materialId before removing node
+        const nodeData = nodes.find(n => n.id === node.id);
+        const materialId = nodeData ? nodeData.materialId : null;
+        console.log('Removing node:', node.id, 'with materialId:', materialId);
+
         // Remove connections
-        connections = connections.filter(conn => 
+        connections = connections.filter(conn =>
             conn.from !== node.id && conn.to !== node.id
         );
-        
+
         // Remove from nodes array
         nodes = nodes.filter(n => n.id !== node.id);
-        
+
         // Remove from DOM
         node.remove();
-        
+
         // Clear selections and reset properties panel
         clearAllSelections();
-        document.getElementById('properties-panel').innerHTML = '<p class="text-muted">Select an element to edit properties</p>';
-        
+        const panel = document.getElementById('properties-panel');
+        if (panel) panel.innerHTML = '<p class="text-muted">Select an element to edit properties</p>';
+
         updateConnections();
         updateNodeCount();
-        
+
         // Refresh materials list to make the material available again in sidebar
+        console.log('Refreshing materials list after node removal');
         refreshMaterialsList();
     }
 

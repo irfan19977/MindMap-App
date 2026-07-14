@@ -71,6 +71,14 @@ class Category extends Model
     }
 
     /**
+     * Get the course classes for this category.
+     */
+    public function courseClasses()
+    {
+        return $this->hasMany(CourseClass::class);
+    }
+
+    /**
      * Scope a query to only include published categories.
      */
     public function scopePublished($query)
