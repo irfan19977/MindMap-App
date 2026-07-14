@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use App\Models\Category;
 use App\Models\Material;
 use App\Models\Mindmap;
-use App\Models\Subcategory;
 
 class Teacher extends Model
 {
@@ -40,6 +39,11 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function classes()
+    {
+        return $this->hasMany(CourseClass::class, 'teacher_id');
+    }
+
     public function getNameAttribute()
     {
         return $this->user->name ?? '';
@@ -52,8 +56,9 @@ class Teacher extends Model
 
     public function getPublishedCoursesAttribute(): Collection
     {
-        return Subcategory::where('created_by', $this->user_id)
+        return CourseClass::where('teacher_id', $this->id)
             ->where('status', 'publish')
+            ->with(['category', 'subcategory', 'materials'])
             ->get();
     }
 

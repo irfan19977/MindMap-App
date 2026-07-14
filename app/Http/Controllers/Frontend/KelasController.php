@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\ClassEnrollment;
+use App\Models\CourseClass;
 use App\Models\Material;
 use App\Models\UserProgress;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -13,70 +16,58 @@ class KelasController extends Controller
 {
     public function index()
     {
-        // Get all published categories
-        $categories = Category::published()
-            ->ordered()
+        $classes = CourseClass::with(['category', 'subcategory', 'teacher.user', 'materials'])
+            ->where('status', 'publish')
+            ->orderBy('created_at', 'desc')
             ->get();
-            
-        return view('frontend.kelas', ['categories' => $categories]);
+
+        return view('frontend.kelas', compact('classes'));
     }
-    
+
     public function show($slug)
     {
-        $category = Category::where('slug', $slug)
-            ->with('children')
+        $class = CourseClass::where('slug', $slug)
+            ->where('status', 'publish')
             ->firstOrFail();
-            
-        // Get related categories (excluding current category)
-        $relatedCategories = Category::where('id', '!=', $category->id)
-            ->published()
-            ->limit(6)
-            ->get();
-            
-        return view('frontend.kelas-detail', compact('category', 'relatedCategories'));
+
+        return redirect()->route('mindmap.show', $class->subcategory->slug);
     }
-    
-    public function showByLevel($slug, $level)
+
+    public function joinClass(Request $request, $slug)
     {
-        // Find parent category
-        $parentCategory = Category::where('slug', $slug)->firstOrFail();
-        
-        // Find specific sub-category by level (create slug for sub-category)
-        $subSlug = $slug . '-' . $level;
-        $category = Category::where('slug', $subSlug)
+        if (! Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu untuk bergabung ke kelas.');
+        }
+
+        $courseClass = CourseClass::where('slug', $slug)
+            ->where('status', 'publish')
             ->firstOrFail();
-            
-        // Get related categories (excluding current category)
-        $relatedCategories = Category::where('id', '!=', $category->id)
-            ->published()
-            ->limit(6)
-            ->get();
-            
-        return view('frontend.kelas-detail', compact('category', 'relatedCategories', 'parentCategory'));
-    }
-    
-    public function showBySubCategory($category, $slug)
-    {
-        // Find parent category
-        $parentCategory = Category::where('slug', $category)->firstOrFail();
-        
-        // Find specific sub-category
-        $subCategory = Category::where('slug', $slug)
-            ->firstOrFail();
-            
-        // Get related categories (excluding current category)
-        $relatedCategories = Category::where('id', '!=', $subCategory->id)
-            ->published()
-            ->limit(6)
-            ->get();
-            
-        return view('frontend.kelas-detail', [
-            'category' => $subCategory,
-            'relatedCategories' => $relatedCategories,
-            'parentCategory' => $parentCategory
+
+        $student = Auth::user()->student;
+        if (! $student) {
+            return redirect()->back()->with('error', 'Akun Anda tidak terdaftar sebagai siswa.');
+        }
+
+        $existingEnrollment = ClassEnrollment::where('class_id', $courseClass->id)
+            ->where('student_id', $student->id)
+            ->first();
+
+        if ($existingEnrollment) {
+            if ($existingEnrollment->status === 'dropped') {
+                $existingEnrollment->update(['status' => 'pending']);
+            }
+            return redirect()->back()->with('success', 'Anda sudah terdaftar di kelas ini. Status: ' . ucfirst($existingEnrollment->status));
+        }
+
+        ClassEnrollment::create([
+            'class_id' => $courseClass->id,
+            'student_id' => $student->id,
+            'status' => 'pending',
         ]);
+
+        return redirect()->back()->with('success', 'Permintaan bergabung telah dikirim. Menunggu persetujuan guru.');
     }
-    
+
     public function showMindmap($slug)
     {
         // Cek apakah slug ada di subcategories
@@ -98,6 +89,14 @@ class KelasController extends Controller
                 $mindmap->structure = $this->enrichMindmapWithSlugs($mindmap->structure);
             }
 
+            // Load related classes for this subcategory
+            $relatedClasses = CourseClass::with(['teacher.user', 'materials', 'category'])
+                ->where('subcategory_id', $subcategory->id)
+                ->where('status', 'publish')
+                ->get();
+
+            $enrollments = $this->getEnrollmentStatuses($relatedClasses);
+
             // Debug log
             Log::info('Subcategory found for mindmap', [
                 'slug' => $slug,
@@ -107,7 +106,7 @@ class KelasController extends Controller
                 'mindmap_id' => $mindmap ? $mindmap->id : null
             ]);
 
-            return view('frontend.mindmap', compact('subcategory', 'mindmap'));
+            return view('frontend.mindmap', compact('subcategory', 'mindmap', 'relatedClasses', 'enrollments'));
         }
 
         // Jika tidak ada di subcategories, cek di categories
@@ -129,6 +128,14 @@ class KelasController extends Controller
             $mindmap->structure = $this->enrichMindmapWithSlugs($mindmap->structure);
         }
 
+        // Load related classes for this category
+        $relatedClasses = CourseClass::with(['teacher.user', 'materials', 'subcategory'])
+            ->where('category_id', $category->id)
+            ->where('status', 'publish')
+            ->get();
+
+        $enrollments = $this->getEnrollmentStatuses($relatedClasses);
+
         // Debug log
         Log::info('Category found for mindmap', [
             'slug' => $slug,
@@ -138,7 +145,29 @@ class KelasController extends Controller
             'mindmap_id' => $mindmap ? $mindmap->id : null
         ]);
 
-        return view('frontend.mindmap', compact('category', 'mindmap'));
+        return view('frontend.mindmap', compact('category', 'mindmap', 'relatedClasses', 'enrollments'));
+    }
+
+    /**
+     * Get enrollment statuses for the current student on given classes.
+     */
+    private function getEnrollmentStatuses($classes): array
+    {
+        if (! Auth::check()) {
+            return [];
+        }
+
+        $student = Auth::user()->student;
+        if (! $student || $classes->isEmpty()) {
+            return [];
+        }
+
+        return ClassEnrollment::where('student_id', $student->id)
+            ->whereIn('class_id', $classes->pluck('id'))
+            ->get()
+            ->keyBy('class_id')
+            ->map(fn ($enrollment) => $enrollment->status)
+            ->toArray();
     }
 
     /**

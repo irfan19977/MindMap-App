@@ -7,7 +7,6 @@ use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\UmumUser;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -61,6 +60,12 @@ class RoleAndUserSeeder extends Seeder
             'users.create',
             'users.edit',
             'users.delete',
+
+            // Collaborations
+            'collaboration.index',
+            'collaboration.create',
+            'collaboration.edit',
+            'collaboration.delete',
         ];
 
         // Create all permissions

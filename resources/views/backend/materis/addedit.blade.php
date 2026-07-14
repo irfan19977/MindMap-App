@@ -110,6 +110,15 @@
                                                                 </option>
                                                             @endforeach
                                                         @endif
+                                                        @if(isset($collabCategories) && $collabCategories->count() > 0)
+                                                            <optgroup label="── Kolaborasi ──">
+                                                                @foreach($collabCategories as $category)
+                                                                    <option value="{{ $category->id }}" data-subcategories="{{ json_encode($category->subcategories ?? []) }}">
+                                                                        {{ $category->name }} (Kolaborasi)
+                                                                    </option>
+                                                                @endforeach
+                                                            </optgroup>
+                                                        @endif
                                                     </select>
                                                 </div>
                                             </div>
@@ -131,6 +140,20 @@
                                                                     @endif
                                                                 </option>
                                                             @endforeach
+                                                        @endif
+                                                        @if(isset($collabSubcategories) && $collabSubcategories->count() > 0)
+                                                            <optgroup label="── Kolaborasi ──">
+                                                                @foreach($collabSubcategories as $subcategory)
+                                                                    <option value="{{ $subcategory->id }}" 
+                                                                            data-category-id="{{ $subcategory->category_id }}"
+                                                                            {{ (old('subcategory_id') ?? (isset($materi) ? $materi->subcategory_id : '')) == $subcategory->id ? 'selected' : '' }}>
+                                                                        {{ $subcategory->name }} (Kolaborasi)
+                                                                        @if($subcategory->category)
+                                                                            - {{ $subcategory->category->name }}
+                                                                        @endif
+                                                                    </option>
+                                                                @endforeach
+                                                            </optgroup>
                                                         @endif
                                                     </select>
                                                     @error('subcategory_id')

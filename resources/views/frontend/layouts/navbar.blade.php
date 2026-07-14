@@ -15,16 +15,16 @@
                 @if($popularCategories->isNotEmpty())
                   <li><strong class="text-muted">{{ __('messages.nav_popular') }}</strong></li>
                   @foreach($popularCategories as $cat)
-                    <li><a href="/kelas/{{ $cat->slug }}">{{ $cat->name }}</a></li>
+                    <li><a href="/mindmap/{{ $cat->slug }}">{{ $cat->name }}</a></li>
                   @endforeach
                 @else
                   <li><strong class="text-muted">{{ __('messages.nav_academic') }}</strong></li>
-                  <li><a href="/kelas/matematika">{{ __('messages.nav_mathematics') }}</a></li>
-                  <li><a href="/kelas/fisika">{{ __('messages.nav_physics') }}</a></li>
-                  <li><a href="/kelas/kimia">{{ __('messages.nav_chemistry') }}</a></li>
+                  <li><a href="/mindmap/matematika">{{ __('messages.nav_mathematics') }}</a></li>
+                  <li><a href="/mindmap/fisika">{{ __('messages.nav_physics') }}</a></li>
+                  <li><a href="/mindmap/kimia">{{ __('messages.nav_chemistry') }}</a></li>
                   <li><strong class="text-muted">{{ __('messages.nav_digital') }}</strong></li>
-                  <li><a href="/kelas/programming">{{ __('messages.nav_programming') }}</a></li>
-                  <li><a href="/kelas/web-design">{{ __('messages.nav_web_design') }}</a></li>
+                  <li><a href="/mindmap/programming">{{ __('messages.nav_programming') }}</a></li>
+                  <li><a href="/mindmap/web-design">{{ __('messages.nav_web_design') }}</a></li>
                 @endif
                 <li class="divider"></li>
                 <li><a href="/kelas"><i class="ion-ios-grid-outline"></i> {{ __('messages.view_all_courses') }}</a></li>

@@ -246,10 +246,28 @@
                     @foreach($student->enrolledCourses as $course)
                     @php
                         $totalMaterials = $course->materials->count();
-                        $completedMaterials = \App\Models\UserProgress::where('user_id', $student->user_id)
-                            ->whereIn('material_id', $course->materials->pluck('id'))
+                        $courseMaterialIds = $course->materials->pluck('id')->toArray();
+
+                        $completedByProgress = \App\Models\UserProgress::where('user_id', $student->user_id)
+                            ->whereIn('material_id', $courseMaterialIds)
                             ->whereNotNull('completed_at')
-                            ->count();
+                            ->pluck('material_id')
+                            ->unique()
+                            ->toArray();
+
+                        $passedMaterialIds = \App\Models\QuizAttempt::where('user_id', $student->user_id)
+                            ->where('status', 'passed')
+                            ->whereHas('quiz', function ($q) use ($courseMaterialIds) {
+                                $q->whereIn('material_id', $courseMaterialIds);
+                            })
+                            ->with('quiz:id,material_id')
+                            ->get()
+                            ->pluck('quiz.material_id')
+                            ->filter()
+                            ->unique()
+                            ->toArray();
+
+                        $completedMaterials = count(array_unique(array_merge($completedByProgress, $passedMaterialIds)));
                         $progressPercent = $totalMaterials > 0 ? round(($completedMaterials / $totalMaterials) * 100) : 0;
                     @endphp
                     <div class="col-md-3 col-sm-6">
@@ -258,16 +276,16 @@
                             <img src="{{ $course->cover_image_url }}" alt="{{ $course->name }}" class="course-thumbnail">
                             @endif
                             <h4>{{ $course->name }}</h4>
-                            <p class="small text-muted">{{ $course->category->name ?? '' }} - {{ $course->curriculum ?? 'Kurikulum Merdeka' }}</p>
+                            <p class="small text-muted">{{ $course->category->name ?? '' }} - {{ $course->subcategory->name ?? 'Kurikulum Merdeka' }}</p>
                             <div class="course-meta">
-                                <span><i class="fas fa-signal"></i> {{ $course->formatted_grade_level }}</span>
+                                <span><i class="fas fa-signal"></i> {{ $course->subcategory->formatted_grade_level ?? 'Umum' }}</span>
                                 <span><i class="fas fa-book"></i> {{ $completedMaterials }}/{{ $totalMaterials }} materi</span>
                             </div>
                             <div class="progress-bar-custom">
                                 <div class="progress-fill" style="width: {{ $progressPercent }}%;"></div>
                             </div>
                             <p class="small text-muted" style="margin-top: 5px;">{{ $progressPercent }}% selesai</p>
-                            <a href="{{ route('mindmap.show', $course->slug) }}" class="btn btn-sm btn-dark-border">Lanjutkan Belajar</a>
+                            <a href="{{ route('mindmap.show', $course->subcategory->slug) }}" class="btn btn-sm btn-dark-border">Lanjutkan Belajar</a>
                         </div>
                     </div>
                     @endforeach

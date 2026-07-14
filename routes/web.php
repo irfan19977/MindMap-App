@@ -22,6 +22,7 @@ use App\Http\Controllers\Frontend\TeacherController;
 use App\Http\Controllers\Frontend\StudentProfileController;
 use App\Http\Controllers\Backend\EngagementController;
 use App\Http\Controllers\Backend\HelpController;
+use App\Http\Controllers\Backend\CourseClassController;
 use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\QuizAttemptController;
@@ -64,6 +65,13 @@ Route::prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/{slug}', [TeacherController::class, 'show'])->name('show');
     Route::get('/{slug}/reviews', [TeacherController::class, 'reviews'])->name('reviews');
     Route::get('/{slug}/courses', [TeacherController::class, 'courses'])->name('courses');
+    
+    // Teacher Collaboration (requires auth and teacher role)
+    Route::middleware(['auth', 'teacher'])->group(function () {
+        Route::get('/collaborations', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'index'])->name('collaborations.index');
+        Route::post('/collaborations/{collaboration}/accept', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'accept'])->name('collaborations.accept');
+        Route::post('/collaborations/{collaboration}/reject', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'reject'])->name('collaborations.reject');
+    });
 });
 
 /*
@@ -74,7 +82,7 @@ Route::prefix('teacher')->name('teacher.')->group(function () {
 Route::prefix('kelas')->name('kelas.')->group(function () {
     Route::get('/', [KelasController::class, 'index'])->name('index');
     Route::get('/{slug}', [KelasController::class, 'show'])->name('show');
-    Route::get('/{category}/{slug}', [KelasController::class, 'showBySubCategory'])->name('show.sub');
+    Route::post('/{slug}/join', [KelasController::class, 'joinClass'])->name('join');
 });
 
 Route::get('/mindmap/{slug}', [KelasController::class, 'showMindmap'])->name('mindmap.show');
@@ -143,6 +151,15 @@ Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
    Route::resource('subcategories', SubcategoriesController::class);
    Route::resource('materis', MateriController::class);
 
+    // Kelas
+    Route::get('/classes/materials', [CourseClassController::class, 'getMaterials'])->name('classes.materials');
+    Route::post('/classes/{courseClass}/sync-materials', [CourseClassController::class, 'syncMaterials'])->name('classes.sync-materials');
+    Route::patch('/classes/{courseClass}/enrollments/{enrollment}/approve', [CourseClassController::class, 'approveEnrollment'])->name('classes.enrollments.approve');
+    Route::patch('/classes/{courseClass}/enrollments/{enrollment}/reject', [CourseClassController::class, 'rejectEnrollment'])->name('classes.enrollments.reject');
+    Route::resource('classes', CourseClassController::class)->parameters([
+        'classes' => 'courseClass',
+    ]);
+
     // Quiz
     Route::resource('quizzes', QuizController::class);
 
@@ -170,6 +187,19 @@ Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::resource('users', UserController::class);
+
+    // Kolaborasi - custom routes must be defined before Route::resource
+    Route::get('/classes/{courseClass}/collaboration', [\App\Http\Controllers\Backend\CollaborationController::class, 'classCollaboration'])->name('classes.collaboration');
+    Route::get('/collaborations/subcategories', [\App\Http\Controllers\Backend\CollaborationController::class, 'getSubcategories'])->name('collaborations.subcategories');
+    Route::get('/collaborations/classes', [\App\Http\Controllers\Backend\CollaborationController::class, 'getClasses'])->name('collaborations.classes');
+    Route::post('/collaborations/quick-invite', [\App\Http\Controllers\Backend\CollaborationController::class, 'quickInvite'])->name('collaborations.quickInvite');
+    Route::post('/collaborations/{collaboration}/revoke', [\App\Http\Controllers\Backend\CollaborationController::class, 'revoke'])->name('collaborations.revoke');
+    Route::resource('collaborations', \App\Http\Controllers\Backend\CollaborationController::class);
+
+    // Kolaborasi - Teacher Inbox
+    Route::get('/my-collaborations', [\App\Http\Controllers\Backend\CollaborationController::class, 'myCollaborations'])->name('collaborations.my');
+    Route::post('/my-collaborations/{collaboration}/accept', [\App\Http\Controllers\Backend\CollaborationController::class, 'acceptCollaboration'])->name('collaborations.my.accept');
+    Route::post('/my-collaborations/{collaboration}/reject', [\App\Http\Controllers\Backend\CollaborationController::class, 'rejectCollaboration'])->name('collaborations.my.reject');
 
     // Tema
     Route::prefix('theme')->name('theme.')->group(function () {

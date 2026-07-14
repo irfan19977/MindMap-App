@@ -10,6 +10,8 @@ use App\Models\Subcategory;
 use App\Models\PracticeQuestion;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
+use App\Models\TeacherCollaboration;
+use App\Models\CourseClass;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -24,12 +26,19 @@ class MateriController extends Controller
     public function index()
     {
         $this->authorize('materi.index');
+
+        $user = auth()->user();
+        $collaborationSubcategoryIds = $this->getCollaborationSubcategoryIds();
+
         $materis = Material::with('subcategory.category')
             ->orderBy('title', 'asc')
-            ->where('created_by', auth()->id())
+            ->where(function ($query) use ($user, $collaborationSubcategoryIds) {
+                $query->where('created_by', $user->id)
+                    ->orWhereIn('subcategory_id', $collaborationSubcategoryIds);
+            })
             ->get();
             
-        return view('backend.materis.index', compact('materis'));
+        return view('backend.materis.index', compact('materis', 'collaborationSubcategoryIds'));
     }
 
     /**
@@ -47,8 +56,13 @@ class MateriController extends Controller
             ->with('category')
             ->orderBy('name', 'asc')
             ->get();
+
+        // Get collaboration categories and subcategories
+        $collabData = $this->getCollaborationCategoriesAndSubcategories();
+        $collabCategories = $collabData['categories'];
+        $collabSubcategories = $collabData['subcategories'];
             
-        return view('backend.materis.addedit', compact('categories', 'subcategories'));
+        return view('backend.materis.addedit', compact('categories', 'subcategories', 'collabCategories', 'collabSubcategories'));
     }
 
     /**
@@ -150,7 +164,9 @@ class MateriController extends Controller
     public function edit(Material $materi)
     {
         $this->authorize('materi.edit');
-        if ($materi->created_by !== auth()->id()) {
+        $collaborationSubcategoryIds = $this->getCollaborationSubcategoryIds();
+
+        if ($materi->created_by !== auth()->id() && !in_array($materi->subcategory_id, $collaborationSubcategoryIds)) {
             return redirect()->route('materis.index')->with('error', 'Anda tidak memiliki akses untuk mengedit materi ini.');
         }
         $categories = Category::where('status', 'publish')
@@ -163,10 +179,15 @@ class MateriController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
+        // Get collaboration categories and subcategories
+        $collabData = $this->getCollaborationCategoriesAndSubcategories();
+        $collabCategories = $collabData['categories'];
+        $collabSubcategories = $collabData['subcategories'];
+
         // Eager load relationships
         $materi->load(['practiceQuestions', 'quizzes.quizQuestions']);
 
-        return view('backend.materis.addedit', compact('materi', 'categories', 'subcategories'));
+        return view('backend.materis.addedit', compact('materi', 'categories', 'subcategories', 'collabCategories', 'collabSubcategories'));
     }
 
     /**
@@ -261,7 +282,8 @@ class MateriController extends Controller
     public function destroy(Material $materi)
     {
         $this->authorize('materi.delete');
-        if ($materi->created_by !== auth()->id()) {
+        $collaborationSubcategoryIds = $this->getCollaborationSubcategoryIds();
+        if ($materi->created_by !== auth()->id() && !in_array($materi->subcategory_id, $collaborationSubcategoryIds)) {
             return redirect()->route('materis.index')->with('error', 'Anda tidak memiliki akses untuk menghapus materi ini.');
         }
         // Delete cover image if exists
@@ -458,5 +480,55 @@ class MateriController extends Controller
         }
 
         return $htmlContent;
+    }
+
+    /**
+     * Get subcategory IDs from accepted class collaborations for current teacher.
+     */
+    protected function getCollaborationSubcategoryIds(): array
+    {
+        $user = auth()->user();
+        if (!$user || !$user->teacher) {
+            return [];
+        }
+
+        $classIds = TeacherCollaboration::where('teacher_id', $user->teacher->id)
+            ->where('collaboration_type', 'class')
+            ->where('status', 'accepted')
+            ->pluck('class_id')
+            ->toArray();
+
+        if (empty($classIds)) {
+            return [];
+        }
+
+        return CourseClass::whereIn('id', $classIds)
+            ->pluck('subcategory_id')
+            ->unique()
+            ->toArray();
+    }
+
+    /**
+     * Get collaboration categories and subcategories for form dropdowns.
+     */
+    protected function getCollaborationCategoriesAndSubcategories(): array
+    {
+        $subcategoryIds = $this->getCollaborationSubcategoryIds();
+
+        if (empty($subcategoryIds)) {
+            return ['categories' => collect(), 'subcategories' => collect()];
+        }
+
+        $subcategories = Subcategory::whereIn('id', $subcategoryIds)
+            ->with('category')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $categoryIds = $subcategories->pluck('category_id')->unique()->toArray();
+        $categories = Category::whereIn('id', $categoryIds)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return ['categories' => $categories, 'subcategories' => $subcategories];
     }
 }

@@ -28,6 +28,18 @@ class Student extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function classEnrollments()
+    {
+        return $this->hasMany(ClassEnrollment::class);
+    }
+
+    public function courseClasses()
+    {
+        return $this->belongsToMany(CourseClass::class, 'class_enrollments', 'student_id', 'class_id')
+            ->withPivot('status', 'progress_percentage', 'enrolled_at', 'completed_at', 'approved_at', 'notes')
+            ->wherePivot('status', '!=', 'dropped');
+    }
+
     public function getNameAttribute()
     {
         return $this->user->name ?? '';
@@ -39,24 +51,13 @@ class Student extends Model
     }
 
     /**
-     * Get subcategories (kelas) where the student has progress on materials.
+     * Get course classes where the student is actively enrolled.
      */
     public function getEnrolledCoursesAttribute(): Collection
     {
-        $materialIds = UserProgress::where('user_id', $this->user_id)
-            ->pluck('material_id')
-            ->unique();
-
-        if ($materialIds->isEmpty()) {
-            return collect();
-        }
-
-        $subcategoryIds = Material::whereIn('id', $materialIds)
-            ->pluck('subcategory_id')
-            ->unique();
-
-        return Subcategory::whereIn('id', $subcategoryIds)
-            ->with('category')
+        return $this->courseClasses()
+            ->with(['category', 'subcategory', 'teacher.user', 'materials'])
+            ->wherePivotIn('status', ['active', 'completed'])
             ->get();
     }
 

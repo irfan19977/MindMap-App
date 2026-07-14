@@ -173,7 +173,7 @@
                     <li><a href="/"><i class="fab fa-twitter"></i></a></li>
                     <li><a href="/"><i class="fab fa-youtube"></i></a></li>
                     <li><a href="https://github.com/BielCre4tive" target="_blank"><i class="fab fa-github"></i></a></li>
-                  </ul>Muhammad Fadhil Robbi Elhami
+                  </ul>Muhammad Fadhli Robbi Elhami
                   <div class="small">{{ __('messages.team_ops_manager') }}</div>
                 </h5>
               </div>
