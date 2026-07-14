@@ -15,6 +15,7 @@ class UmumUser extends Model
         'user_id',
         'phone',
         'occupation',
+        'learning_interest',
         'address',
     ];
 

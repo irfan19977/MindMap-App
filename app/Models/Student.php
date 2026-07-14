@@ -14,6 +14,8 @@ class Student extends Model
         'user_id',
         'school',
         'grade',
+        'major',
+        'learning_interest',
         'birth_date',
         'phone',
         'address',

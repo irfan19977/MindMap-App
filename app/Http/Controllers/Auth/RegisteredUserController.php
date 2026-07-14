@@ -53,6 +53,13 @@ class RegisteredUserController extends Controller
 
         if ($request->user_type === 'student') {
             $rules['school'] = ['nullable', 'string', 'max:255'];
+            $rules['major'] = ['nullable', 'string', 'max:255'];
+            $rules['learning_interest'] = ['nullable', 'string', 'max:1000'];
+        }
+
+        if ($request->user_type === 'umum') {
+            $rules['occupation'] = ['nullable', 'string', 'max:255'];
+            $rules['learning_interest'] = ['nullable', 'string', 'max:1000'];
         }
 
         $request->validate($rules);
@@ -84,6 +91,8 @@ class RegisteredUserController extends Controller
             Student::create([
                 'user_id' => $user->id,
                 'school' => $request->school,
+                'major' => $request->major,
+                'learning_interest' => $request->learning_interest,
             ]);
             $user->assignRole('student');
         }
@@ -91,6 +100,8 @@ class RegisteredUserController extends Controller
         if ($request->user_type === 'umum') {
             UmumUser::create([
                 'user_id' => $user->id,
+                'occupation' => $request->occupation,
+                'learning_interest' => $request->learning_interest,
             ]);
             $user->assignRole('student');
         }
