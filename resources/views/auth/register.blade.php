@@ -214,12 +214,41 @@
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold">Jurusan</label>
+                                        <input type="text" class="form-control" name="major" placeholder="cth: IPA / IPS / Teknik Informatika" value="{{ old('major') }}">
+                                        @error('major')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold">Materi yang ingin dipelajari</label>
+                                        <textarea class="form-control" name="learning_interest" rows="3" placeholder="cth: Matematika, Fisika, Pemrograman, Bahasa Inggris">{{ old('learning_interest') }}</textarea>
+                                        @error('learning_interest')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
 
                                 <!-- Umum Fields -->
                                 <div id="umum-fields" style="display: none;">
                                     <h4 class="fs-13 fw-bold mb-2">Akun Umum</h4>
-                                    <p class="fs-12 fw-medium text-muted mb-4">Akun Anda siap dibuat! Klik tombol di bawah untuk menyelesaikan pendaftaran.</p>
+                                    <p class="fs-12 fw-medium text-muted mb-4">Lengkapi data profil Anda</p>
+
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold">Pekerjaan</label>
+                                        <input type="text" class="form-control" name="occupation" placeholder="cth: Mahasiswa, Karyawan, Freelancer" value="{{ old('occupation') }}">
+                                        @error('occupation')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small fw-bold">Ingin belajar apa</label>
+                                        <textarea class="form-control" name="learning_interest" rows="3" placeholder="cth: Pemrograman, Desain Grafis, Bahasa Asing">{{ old('learning_interest') }}</textarea>
+                                        @error('learning_interest')
+                                            <div class="text-danger small mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
 
                                 <div class="mt-3">
