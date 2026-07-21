@@ -75,9 +75,9 @@
                 </div>
 
                 @if($teacher && $teacher->slug)
-                  <a href="{{ route('teacher.show', $teacher->slug) }}" class="profile-btn profile-btn-primary">
-                    <i class="ion-ios-eye-outline"></i> Lihat Profil
-                  </a>
+                  <a href="{{ route('teacher.show', $teacher->slug) }}" class="btn btn-dark-border btn-sm">Lihat Profil</a>
+                @elseif($creator && $creator->hasRole('admin'))
+                  <a href="/profile" class="btn btn-dark-border btn-sm">Lihat Profil</a>
                 @endif
               </div>
 
@@ -1206,7 +1206,7 @@
         margin-bottom: 8px;
     }
     .mindmap-progress .progress-info span:last-child {
-        color: #10b981;
+        color: #6c757d;
     }
     .mindmap-progress .progress-bar-wrapper {
         background: #e2e8f0;
@@ -1215,7 +1215,7 @@
         overflow: hidden;
     }
     .mindmap-progress .progress-bar-fill {
-        background: #10b981;
+        background: #6c757d;
         height: 100%;
         border-radius: 10px;
         width: 0%;

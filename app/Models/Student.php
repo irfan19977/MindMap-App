@@ -20,6 +20,7 @@ class Student extends Model
         'birth_date',
         'phone',
         'address',
+        'avatar',
     ];
 
     protected $casts = [
@@ -52,6 +53,14 @@ class Student extends Model
     public function getEmailAttribute()
     {
         return $this->user->email ?? '';
+    }
+
+    /**
+     * Get the public URL of the student's avatar, if any.
+     */
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 
     /**

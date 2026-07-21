@@ -22,6 +22,14 @@
             display: block;
             font-weight: bold;
         }
+        .student-profile-card .avatar-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+        }
         .student-profile-card .role-badge {
             display: inline-block;
             background: #e8f5e9;
@@ -72,6 +80,7 @@
             margin-bottom: 10px;
             color: #555;
         }
+
         .courses-section { padding: 60px 0; background: #f9f9f9; }
         .course-card {
             background: #fff;
@@ -111,7 +120,6 @@
         }
     </style>
 
-    <!-- Header Section -->
     <section class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
         <div class="intro-body">
             <div class="overlay"></div>
@@ -126,23 +134,31 @@
         </div>
     </section>
 
-    <!-- Section 1: Detail Student -->
     <section class="student-detail-section">
         <div class="container">
             <div class="row">
-                <!-- Left: Profile Card -->
+                
                 <div class="col-md-4">
                     <div class="student-profile-card text-center">
-                        <div class="avatar">{{ strtoupper(substr($student->name, 0, 1)) }}</div>
+                        @if($student->avatar_url)
+                            <img src="{{ $student->avatar_url }}" alt="{{ $student->name }}" class="avatar-img">
+                        @else
+                            <div class="avatar">{{ strtoupper(substr($student->name, 0, 1)) }}</div>
+                        @endif
                         <h2>{{ $student->name }}</h2>
                         <span class="role-badge"><i class="fas fa-user-graduate"></i> Siswa</span>
                         <div style="margin-top: 10px;">
                             <p class="text-muted"><i class="fas fa-envelope"></i> {{ $student->email }}</p>
                         </div>
+
+                        <div style="margin-top: 20px;">
+                            <a href="{{ route('student.profile.edit') }}" class="btn btn-sm btn-primary" style="width: 100%; display: block;">
+                                <i class="fas fa-user-edit"></i> Edit Profil
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Right: Detail Info -->
                 <div class="col-md-8">
                     <div class="student-info-section">
                         <h3><i class="fas fa-user"></i> Informasi Pribadi</h3>
@@ -193,7 +209,6 @@
                         @endif
                     </div>
 
-                    <!-- Stats Cards -->
                     <div class="student-info-section">
                         <h3><i class="fas fa-chart-bar"></i> Statistik Belajar</h3>
                         <div class="row">
@@ -228,11 +243,11 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- Section 2: Kelas yang Diikuti -->
     <section class="courses-section">
         <div class="container">
             <div class="row">

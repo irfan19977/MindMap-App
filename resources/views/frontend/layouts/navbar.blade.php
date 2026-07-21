@@ -7,43 +7,46 @@
         <div class="collapse navbar-collapse navbar-main-collapse">
           <ul class="nav navbar-nav navbar-left">
             <li class="hidden"><a href="#page-top"></a></li>
+            @guest
             <li><a href="/">{{ __('messages.home') }}</a></li>
             <li><a href="/about">{{ __('messages.about') }}</a></li>
             <li><a href="/teacher">{{ __('messages.teachers') }}</a></li>
             <li><a href="/kelas">{{ __('messages.courses') }}</a></li>
-            {{-- <li><a href="#">{{ __('messages.nav_program') }} <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><strong class="text-muted">{{ __('messages.nav_regular_program') }}</strong></li>
-                <li><a href="/program/pelajar">{{ __('messages.nav_student_program') }}</a></li>
-                <li><a href="/program/mahasiswa">{{ __('messages.nav_university_program') }}</a></li>
-                <li><a href="/program/profesional">{{ __('messages.nav_professional_program') }}</a></li>
-                <li><strong class="text-muted">{{ __('messages.nav_intensive_program') }}</strong></li>
-                <li><a href="/program/bootcamp">{{ __('messages.nav_bootcamp') }}</a></li>
-                <li><a href="/program/workshop">{{ __('messages.nav_workshop') }}</a></li>
-                <li><a href="/program/private-lesson">{{ __('messages.nav_private_lesson') }}</a></li>
-                <li><strong class="text-muted">{{ __('messages.nav_certification') }}</strong></li>
-                <li><a href="/program/sertifikasi-kompetensi">{{ __('messages.nav_competency_certification') }}</a></li>
-                <li><a href="/program/sertifikasi-internasional">{{ __('messages.nav_international_certification') }}</a></li>
-              </ul>
-            </li>
-            <li><a href="#">{{ __('messages.nav_services') }} <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="/layanan/konsultasi-akademik"><i class="fa fa-users fa-lg fa-fw"></i> {{ __('messages.nav_academic_consultation') }}</a></li>
-                <li><a href="/layanan/tutor-private"><i class="fa fa-user-graduate fa-lg fa-fw"></i> {{ __('messages.nav_private_tutor') }}</a></li>
-                <li><a href="/layanan/materi-custom"><i class="fa fa-book fa-lg fa-fw"></i> {{ __('messages.nav_custom_materials') }}</a></li>
-                <li><a href="/layanan/assessment-test"><i class="fa fa-clipboard-check fa-lg fa-fw"></i> {{ __('messages.nav_assessment_test') }}</a></li>
-                <li><a href="/layanan/progress-tracking"><i class="fa fa-chart-line fa-lg fa-fw"></i> {{ __('messages.nav_progress_tracking') }}</a></li>
-                <li><a href="/layanan/sertifikat"><i class="fa fa-certificate fa-lg fa-fw"></i> {{ __('messages.nav_certificate_service') }}</a></li>
-              </ul>
-            </li> --}}
             <li><a href="/contact">{{ __('messages.contact') }}</a></li>
+            @endguest
             <li class="menu-divider visible-lg">&nbsp;</li>
             @auth
             @if(!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('teacher'))
             <li>@include('components.notification-dropdown')</li>
             @endif
             @if(auth()->user()->hasRole('admin') || (auth()->user()->hasRole('teacher') && auth()->user()->is_active))
-            <li><a href="{{ route('dashboard.index') }}">{{ __('messages.dashboard') }}</a></li>
+            <li class="dropdown">
+              <a class="dropdown-toggle" href="#" data-toggle="dropdown">
+                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#4f8ef7;color:#fff;font-weight:700;font-size:12px;vertical-align:middle;margin-right:4px;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">{{ auth()->user()->name }}<br><small class="text-muted">{{ auth()->user()->email }}</small></li>
+                <li class="divider"></li>
+                <li><a href="/"><i class="fa fa-home fa-fw"></i>{{ __('messages.home') }}</a></li>
+                <li><a href="/about"><i class="fa fa-info-circle fa-fw"></i>{{ __('messages.about') }}</a></li>
+                <li><a href="/teacher"><i class="fa fa-chalkboard-teacher fa-fw"></i>{{ __('messages.teachers') }}</a></li>
+                <li><a href="/kelas"><i class="fa fa-book fa-fw"></i>{{ __('messages.courses') }}</a></li>
+                <li><a href="/contact"><i class="fa fa-envelope fa-fw"></i>{{ __('messages.contact') }}</a></li>
+                <li class="divider"></li>
+                <li><a href="{{ route('dashboard.index') }}"><i class="fa fa-tachometer fa-fw"></i>{{ __('messages.dashboard') }}</a></li>
+                <li><a href="/profile"><i class="fa fa-user fa-fw"></i>{{ __('messages.nav_profile') }}</a></li>
+                <li class="divider"></li>
+                <li>
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="btn btn-link" style="padding:3px 20px;width:100%;text-align:left;color:#333;text-decoration:none;">
+                      <i class="fa fa-sign-out fa-fw"></i> {{ __('messages.logout') }}
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </li>
             @else
             <li class="dropdown">
               <a class="dropdown-toggle" href="#" data-toggle="dropdown">
@@ -52,6 +55,12 @@
               </a>
               <ul class="dropdown-menu">
                 <li class="dropdown-header">{{ auth()->user()->name }}<br><small class="text-muted">{{ auth()->user()->email }}</small></li>
+                <li class="divider"></li>
+                <li><a href="/"><i class="fa fa-home fa-fw"></i>{{ __('messages.home') }}</a></li>
+                <li><a href="/about"><i class="fa fa-info-circle fa-fw"></i>{{ __('messages.about') }}</a></li>
+                <li><a href="/teacher"><i class="fa fa-chalkboard-teacher fa-fw"></i>{{ __('messages.teachers') }}</a></li>
+                <li><a href="/kelas"><i class="fa fa-book fa-fw"></i>{{ __('messages.courses') }}</a></li>
+                <li><a href="/contact"><i class="fa fa-envelope fa-fw"></i>{{ __('messages.contact') }}</a></li>
                 <li class="divider"></li>
                 <li><a href="{{ auth()->user()->student ? route('student.profile') : '/profile' }}"><i class="fa fa-user fa-fw"></i>{{ __('messages.nav_profile') }}</a></li>
                 <li><a href="/learning-tracking"><i class="fa fa-chart-line fa-fw"></i>{{ __('messages.nav_learning_tracking') }}</a></li>
