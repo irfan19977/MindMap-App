@@ -36,6 +36,7 @@
                             </div>
                         </div>
                         <div class="dropdown">
+<<<<<<< HEAD
                             <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown">
                                 <i class="feather-zap me-2"></i>
                                 <span>Quick Actions</span>
@@ -60,6 +61,8 @@
                             </div>
                         </div>
                         <div class="dropdown">
+=======
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                             <a class="btn btn-md btn-primary" data-bs-toggle="dropdown">
                                 <i class="feather-download me-2"></i>
                                 <span>Export</span>
@@ -79,6 +82,12 @@
                                 </a>
                             </div>
                         </div>
+<<<<<<< HEAD
+=======
+                        <button class="btn btn-md btn-light" onclick="toggleDarkMode()" id="darkModeToggle">
+                            <i class="feather-moon" id="darkModeIcon"></i>
+                        </button>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                     </div>
                 </div>
                 <div class="d-md-none d-flex align-items-center">
@@ -90,6 +99,42 @@
         </div>
         <!-- [ page-header ] end -->
         
+<<<<<<< HEAD
+=======
+        <!-- Quick Actions Bar -->
+        <div class="quick-actions-bar mb-4">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="mb-3">Quick Actions</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary">
+                                    <i class="feather-user-plus me-1"></i> Add User
+                                </a>
+                                <a href="{{ route('categories.create') }}" class="btn btn-sm btn-success">
+                                    <i class="feather-folder-plus me-1"></i> Add Category
+                                </a>
+                                <a href="{{ route('materis.create') }}" class="btn btn-sm btn-warning">
+                                    <i class="feather-file-plus me-1"></i> Add Materi
+                                </a>
+                                <a href="{{ route('categories.index') }}" class="btn btn-sm btn-info">
+                                    <i class="feather-layers me-1"></i> Manage Categories
+                                </a>
+                                <a href="{{ route('users.index') }}" class="btn btn-sm btn-secondary">
+                                    <i class="feather-users me-1"></i> Manage Users
+                                </a>
+                                <a href="{{ route('engagement.export', ['type' => 'analytics', 'format' => 'csv']) }}" class="btn btn-sm btn-dark">
+                                    <i class="feather-download me-1"></i> Export Report
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Quick Actions Bar ] end -->
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         
         <!-- [ Main Content ] start -->
         <div class="main-content">
@@ -98,6 +143,7 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
+<<<<<<< HEAD
                             <div class="d-flex align-items-center gap-4">
                                 <div class="avatar-text avatar-lg bg-soft-primary text-primary rounded">
                                     <i class="feather-users fs-4"></i>
@@ -143,6 +189,24 @@
                                 </div>
                                 <div class="progress mt-2 ht-3">
                                     <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+=======
+                            <div class="d-flex align-items-start justify-content-between mb-4">
+                                <div class="d-flex gap-4 align-items-center">
+                                    <div class="avatar-text avatar-lg bg-primary-soft">
+                                        <i class="feather-users text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $totalUsers }}</span></div>
+                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Total Users</h3>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success-soft text-success">+12%</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="fs-12 fw-medium text-muted">New this week</span>
+                                    <span class="fs-12 text-dark">{{ $userGrowth->sum('count') }}</span>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                 </div>
                             </div>
                         </div>
@@ -152,6 +216,7 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
+<<<<<<< HEAD
                             <div class="d-flex align-items-center gap-4">
                                 <div class="avatar-text avatar-lg bg-soft-warning text-warning rounded">
                                     <i class="feather-folder fs-4"></i>
@@ -169,6 +234,27 @@
                                 <div class="progress mt-2 ht-3">
                                     @php $withContentPercent = $totalCategories > 0 ? round(($categoryActivity->where('materis_count', '>', 0)->count() / $totalCategories) * 100) : 0; @endphp
                                     <div class="progress-bar bg-warning" role="progressbar" style="width: {{ $withContentPercent }}%"></div>
+=======
+                            <div class="d-flex align-items-start justify-content-between mb-4">
+                                <div class="d-flex gap-4 align-items-center">
+                                    <div class="avatar-text avatar-lg bg-success-soft">
+                                        <i class="feather-wifi text-success"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fs-4 fw-bold text-dark">
+                                            <span class="counter" id="liveOnlineCount">--</span>
+                                            <span class="live-indicator" style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-left: 4px; animation: pulse 2s infinite;"></span>
+                                        </div>
+                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Online Now</h3>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success-soft text-success">Live</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="fs-12 fw-medium text-muted">Updated</span>
+                                    <span class="fs-12 text-dark" id="liveTimestamp">--:--:--</span>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                 </div>
                             </div>
                         </div>
@@ -178,6 +264,7 @@
                 <div class="col-xxl-3 col-md-6">
                     <div class="card stretch stretch-full">
                         <div class="card-body">
+<<<<<<< HEAD
                             <div class="d-flex align-items-center gap-4">
                                 <div class="avatar-text avatar-lg bg-soft-danger text-danger rounded">
                                     <i class="feather-file-text fs-4"></i>
@@ -194,6 +281,49 @@
                                 </div>
                                 <div class="progress mt-2 ht-3">
                                     <div class="progress-bar bg-danger" role="progressbar" style="width: 75%"></div>
+=======
+                            <div class="d-flex align-items-start justify-content-between mb-4">
+                                <div class="d-flex gap-4 align-items-center">
+                                    <div class="avatar-text avatar-lg bg-warning-soft">
+                                        <i class="feather-folder text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $totalCategories }}</span></div>
+                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Total Categories</h3>
+                                    </div>
+                                </div>
+                                <span class="badge bg-info-soft text-info">+5%</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="fs-12 fw-medium text-muted">With content</span>
+                                    <span class="fs-12 text-dark">{{ $categoryActivity->where('materis_count', '>', 0)->count() }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-3 col-md-6">
+                    <div class="card stretch stretch-full">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start justify-content-between mb-4">
+                                <div class="d-flex gap-4 align-items-center">
+                                    <div class="avatar-text avatar-lg bg-danger-soft">
+                                        <i class="feather-file-text text-danger"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fs-4 fw-bold text-dark"><span class="counter">{{ $totalMateris }}</span></div>
+                                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Total Materis</h3>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success-soft text-success">+15%</span>
+                            </div>
+                            <div class="pt-4">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="fs-12 fw-medium text-muted">Avg per category</span>
+                                    <span class="fs-12 text-dark">{{ $totalCategories > 0 ? round($totalMateris / $totalCategories, 1) : 0 }}</span>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                 </div>
                             </div>
                         </div>
@@ -222,7 +352,11 @@
                             </div>
                         </div>
                         <div class="card-body">
+<<<<<<< HEAD
                             <div id="userGrowthChart" style="min-height:300px;"></div>
+=======
+                            <canvas id="userGrowthChart" height="300"></canvas>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                         </div>
                     </div>
                 </div>
@@ -230,6 +364,7 @@
                 <div class="col-xxl-4 col-lg-5">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
+<<<<<<< HEAD
                             <h5 class="card-title">Daily Engagement</h5>
                         </div>
                         <div class="card-body custom-card-action">
@@ -280,6 +415,14 @@
                         </div>
                         <div class="card-footer">
                             <a href="javascript:void(0);" class="btn btn-primary">Lihat Report</a>
+=======
+                            <div class="card-left">
+                                <h6 class="mb-0">Daily Engagement</h6>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="dailyEngagementChart" height="300"></canvas>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                         </div>
                     </div>
                 </div>
@@ -293,6 +436,10 @@
                             <div class="card-left">
                                 <h6 class="mb-0">Top Categories by Activity</h6>
                             </div>
+<<<<<<< HEAD
+=======
+                            <a href="{{ route('categories.index') }}" class="btn btn-sm btn-primary">View All</a>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -300,7 +447,11 @@
                                     <thead>
                                         <tr>
                                             <th>Category</th>
+<<<<<<< HEAD
                                             <th>Owner</th>
+=======
+                                            <th>Subcategories</th>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                             <th>Materis</th>
                                             <th>Activity</th>
                                         </tr>
@@ -315,6 +466,7 @@
                                                     </div>
                                                     <div>
                                                         <h6 class="mb-0">{{ $category->name }}</h6>
+<<<<<<< HEAD
                                                         <span class="fs-12 text-muted">{{ Str::limit($category->description, 25) }}</span>
                                                     </div>
                                                 </div>
@@ -322,16 +474,31 @@
                                             <td>
                                                 <span class="fs-12 text-muted">{{ $category->owner_name }}</span>
                                             </td>
+=======
+                                                        <span class="fs-12 text-muted">{{ Str::limit($category->description, 30) }}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>{{ $category->subcategories_count }}</td>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                             <td>{{ $category->materis_count }}</td>
                                             <td>
                                                 <div class="progress ht-3" style="width: 100px;">
                                                     @php
+<<<<<<< HEAD
                                                         $maxProgress = $categoryActivity->max('progress_count') ?: 1;
                                                         $percentage = ($category->progress_count / $maxProgress) * 100;
                                                     @endphp
                                                     <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $percentage }}%"></div>
                                                 </div>
                                                 <span class="fs-11 text-muted">{{ $category->progress_count }} progress</span>
+=======
+                                                        $maxMateris = $categoryActivity->max('materis_count');
+                                                        $percentage = $maxMateris > 0 ? ($category->materis_count / $maxMateris) * 100 : 0;
+                                                    @endphp
+                                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $percentage }}%"></div>
+                                                </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                             </td>
                                         </tr>
                                         @endforeach
@@ -348,6 +515,10 @@
                             <div class="card-left">
                                 <h6 class="mb-0">Recent Users</h6>
                             </div>
+<<<<<<< HEAD
+=======
+                            <a href="{{ route('users.index') }}" class="btn btn-sm btn-primary">View All</a>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -392,6 +563,7 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- Activity Heatmap -->
             <div class="row">
                 <div class="col-xxl-12 col-lg-12">
@@ -419,6 +591,35 @@
             <!-- Activity Feed -->
             <div class="row">
                 <div class="col-xxl-12 col-lg-12">
+=======
+            <!-- Retention & Activity Feed -->
+            <div class="row">
+                <div class="col-xxl-8 col-lg-7">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <div class="card-left">
+                                <h6 class="mb-0">User Retention</h6>
+                            </div>
+                            <div class="card-right">
+                                <div class="dropdown">
+                                    <a class="btn btn-sm btn-light" data-bs-toggle="dropdown">
+                                        <i class="feather-more-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-end">
+                                        <a href="javascript:void(0);" class="dropdown-item" onclick="loadRetentionData(7)">Last 7 Days</a>
+                                        <a href="javascript:void(0);" class="dropdown-item" onclick="loadRetentionData(30)">Last 30 Days</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="retentionChart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-4 col-lg-5">
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                     <div class="card stretch stretch-full">
                         <div class="card-header">
                             <div class="card-left">
@@ -439,12 +640,84 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
             <!-- User Journey & Segmentation -->
+=======
+            <!-- Advanced Analytics Row -->
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             <div class="row">
                 <div class="col-xxl-6 col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
                             <div class="card-left">
+<<<<<<< HEAD
+=======
+                                <h6 class="mb-0">Activity Heatmap</h6>
+                                <span class="fs-12 text-muted">User activity by day and hour</span>
+                            </div>
+                            <button class="btn btn-sm btn-light" onclick="loadHeatmap()">
+                                <i class="feather-refresh-cw"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="heatmapContainer" class="heatmap-container">
+                                <div class="text-center text-muted">
+                                    <i class="feather-loader spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <div class="card-left">
+                                <h6 class="mb-0">Funnel Analysis</h6>
+                                <span class="fs-12 text-muted">User journey conversion</span>
+                            </div>
+                            <button class="btn btn-sm btn-light" onclick="loadFunnelAnalysis()">
+                                <i class="feather-refresh-cw"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="funnelContainer">
+                                <div class="text-center text-muted">
+                                    <i class="feather-loader spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geographic & User Journey -->
+            <div class="row">
+                <div class="col-xxl-6 col-lg-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <div class="card-left">
+                                <h6 class="mb-0">Geographic Distribution</h6>
+                            </div>
+                            <button class="btn btn-sm btn-light" onclick="loadGeographicData()">
+                                <i class="feather-refresh-cw"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="geographicContainer">
+                                <div class="text-center text-muted">
+                                    <i class="feather-loader spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xxl-6 col-lg-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <div class="card-left">
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                 <h6 class="mb-0">User Journey Stats</h6>
                             </div>
                             <button class="btn btn-sm btn-light" onclick="loadUserJourney()">
@@ -460,7 +733,14 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
 
+=======
+            </div>
+
+            <!-- User Segmentation & Alerts -->
+            <div class="row">
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                 <div class="col-xxl-6 col-lg-12">
                     <div class="card stretch stretch-full">
                         <div class="card-header">
@@ -481,11 +761,36 @@
                         </div>
                     </div>
                 </div>
+<<<<<<< HEAD
+=======
+
+                <div class="col-xxl-6 col-lg-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <div class="card-left">
+                                <h6 class="mb-0">Alerts & Anomalies</h6>
+                                <span class="fs-12 text-muted">Important notifications</span>
+                            </div>
+                            <button class="btn btn-sm btn-light" onclick="loadAlerts()">
+                                <i class="feather-refresh-cw"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="alertsContainer">
+                                <div class="text-center text-muted">
+                                    <i class="feather-loader spin"></i> Loading...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             </div>
         </div>
         <!-- [ Main Content ] end -->
     </div>
 
+<<<<<<< HEAD
 @endsection
 
 @push('scripts')
@@ -528,14 +833,101 @@
             document.getElementById('deEngagementRate').textContent = deRate + '%';
             document.getElementById('deRateLabel').textContent = deRate + '%';
             $('.de-circle-progress').circleProgress({ max: 100, value: deRate, textFormat: 'percent' });
+=======
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User Growth Chart
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            const userGrowthData = @json($userGrowth);
+            
+            new Chart(userGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: userGrowthData.map(item => item.date),
+                    datasets: [{
+                        label: 'New Users',
+                        data: userGrowthData.map(item => item.count),
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Daily Engagement Chart
+            const dailyEngagementCtx = document.getElementById('dailyEngagementChart').getContext('2d');
+            const dailyEngagementData = @json($dailyEngagement);
+            
+            new Chart(dailyEngagementCtx, {
+                type: 'bar',
+                data: {
+                    labels: dailyEngagementData.map(item => \`\${item.date.slice(5)}\`),
+                    datasets: [
+                        {
+                            label: 'New Users',
+                            data: dailyEngagementData.map(item => item.new_users),
+                            backgroundColor: '#6366f1'
+                        },
+                        {
+                            label: 'Active Users',
+                            data: dailyEngagementData.map(item => item.active_users),
+                            backgroundColor: '#10b981'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Load retention data
+            loadRetentionData(30);
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 
             // Load activity feed
             refreshActivityFeed();
 
             // Load advanced analytics
             loadHeatmap();
+<<<<<<< HEAD
             loadUserJourney();
             loadUserSegmentation();
+=======
+            loadFunnelAnalysis();
+            loadGeographicData();
+            loadUserJourney();
+
+            // Load new features
+            loadUserSegmentation();
+            loadAlerts();
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 
             // Load live online users
             loadLiveOnlineUsers();
@@ -543,16 +935,83 @@
             // Auto-refresh live online users every 30 seconds
             setInterval(loadLiveOnlineUsers, 30000);
             
+<<<<<<< HEAD
             // Auto-refresh activity feed every 30 seconds
             setInterval(refreshActivityFeed, 30000);
             
         })();
+=======
+            // Auto-refresh alerts every 60 seconds
+            setInterval(loadAlerts, 60000);
+        });
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 
         function updatePeriod(days) {
             // Reload page with period parameter
             window.location.href = `{{ route('engagement.index') }}?period=${days}`;
         }
 
+<<<<<<< HEAD
+=======
+        function loadRetentionData(period) {
+            fetch(`{{ route('engagement.retention') }}?period=${period}`)
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('retentionChart').getContext('2d');
+                    
+                    // Destroy existing chart if it exists
+                    if (window.retentionChartInstance) {
+                        window.retentionChartInstance.destroy();
+                    }
+
+                    window.retentionChartInstance = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.map(item => item.date.slice(5)),
+                            datasets: [
+                                {
+                                    label: '7-Day Retention',
+                                    data: data.map(item => item.retention_7d),
+                                    borderColor: '#6366f1',
+                                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                                    fill: true,
+                                    tension: 0.4
+                                },
+                                {
+                                    label: '30-Day Retention',
+                                    data: data.map(item => item.retention_30d),
+                                    borderColor: '#10b981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    fill: true,
+                                    tension: 0.4
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    ticks: {
+                                        callback: function(value) {
+                                            return value + '%';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         function refreshActivityFeed() {
             const feedContainer = document.getElementById('activityFeed');
             feedContainer.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
@@ -584,19 +1043,32 @@
                 });
         }
 
+<<<<<<< HEAD
+=======
+        // Auto-refresh activity feed every 30 seconds
+        setInterval(refreshActivityFeed, 30000);
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 
         function loadHeatmap() {
             const container = document.getElementById('heatmapContainer');
             container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
 
+<<<<<<< HEAD
             fetch(`{{ route('engagement.heatmap') }}?period=30&t=${Date.now()}`)
+=======
+            fetch(`{{ route('engagement.heatmap') }}?period=30`)
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                 .then(response => response.json())
                 .then(data => {
                     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                     const hours = Array.from({length: 24}, (_, i) => i);
                     
                     let html = '<div class="heatmap-grid">';
+<<<<<<< HEAD
                     html += '<div class="heatmap-row heatmap-header"><div class="heatmap-cell day-label"></div>';
+=======
+                    html += '<div class="heatmap-row heatmap-header"><div></div>';
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                     hours.forEach(hour => {
                         html += `<div class="heatmap-cell">${hour}:00</div>`;
                     });
@@ -621,6 +1093,78 @@
                 });
         }
 
+<<<<<<< HEAD
+=======
+        function loadFunnelAnalysis() {
+            const container = document.getElementById('funnelContainer');
+            container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
+
+            fetch(`{{ route('engagement.funnel-analysis') }}?period=30`)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<div class="funnel-container">';
+                    
+                    data.forEach((stage, index) => {
+                        const width = stage.conversion_rate;
+                        html += `
+                            <div class="funnel-stage">
+                                <div class="funnel-bar" style="width: ${width}%">
+                                    <div class="funnel-info">
+                                        <strong>${stage.stage}</strong>
+                                        <span class="count">${stage.count}</span>
+                                    </div>
+                                    <div class="funnel-metrics">
+                                        <span class="conversion">${stage.conversion_rate}% conversion</span>
+                                        <span class="dropoff">${stage.drop_off}% drop-off</span>
+                                    </div>
+                                </div>
+                                <p class="funnel-description">${stage.description}</p>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                })
+                .catch(error => {
+                    container.innerHTML = '<div class="text-center text-danger">Failed to load funnel analysis</div>';
+                });
+        }
+
+        function loadGeographicData() {
+            const container = document.getElementById('geographicContainer');
+            container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
+
+            fetch(`{{ route('engagement.geographic') }}`)
+                .then(response => response.json())
+                .then(data => {
+                    let html = '<div class="geographic-list">';
+                    
+                    data.forEach(item => {
+                        const percentage = data[0].count > 0 ? (item.count / data[0].count) * 100 : 0;
+                        html += `
+                            <div class="geographic-item">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="country-name">${item.country}</span>
+                                    <span class="user-count">${item.count} users</span>
+                                </div>
+                                <div class="progress ht-3">
+                                    <div class="progress-bar bg-primary" style="width: ${percentage}%"></div>
+                                </div>
+                                <small class="text-muted">${item.domain}</small>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                })
+                .catch(error => {
+                    container.innerHTML = '<div class="text-center text-danger">Failed to load geographic data</div>';
+                });
+        }
+
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         function loadUserJourney() {
             const container = document.getElementById('userJourneyContainer');
             container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
@@ -690,11 +1234,18 @@
         }
 
         function showCustomRangePicker() {
+<<<<<<< HEAD
             const today = new Date().toISOString().split('T')[0];
             const startDate = prompt('Enter start date (YYYY-MM-DD):', today);
             if (!startDate) return;
             
             const endDate = prompt('Enter end date (YYYY-MM-DD):', today);
+=======
+            const startDate = prompt('Enter start date (YYYY-MM-DD):', now().format('Y-m-d'));
+            if (!startDate) return;
+            
+            const endDate = prompt('Enter end date (YYYY-MM-DD):', now().format('Y-m-d'));
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             if (!endDate) return;
             
             loadCustomRangeAnalytics(startDate, endDate);
@@ -752,6 +1303,52 @@
                 });
         }
 
+<<<<<<< HEAD
+=======
+        function loadAlerts() {
+            const container = document.getElementById('alertsContainer');
+            container.innerHTML = '<div class="text-center text-muted"><i class="feather-loader spin"></i> Loading...</div>';
+
+            fetch(`{{ route('engagement.alerts') }}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="text-center text-muted"><i class="feather-check-circle text-success" style="font-size: 32px;"></i><p class="mt-2">No alerts at this time</p></div>';
+                        return;
+                    }
+
+                    let html = '<div class="alerts-list">';
+                    
+                    data.forEach(alert => {
+                        const alertClass = alert.type === 'success' ? 'success' : 
+                                          alert.type === 'warning' ? 'warning' : 
+                                          alert.type === 'danger' ? 'danger' : 'info';
+                        
+                        html += `
+                            <div class="alert-item alert-${alertClass}">
+                                <div class="d-flex align-items-start gap-3">
+                                    <div class="alert-icon bg-${alertClass}-soft">
+                                        <i class="feather-${alert.icon} text-${alertClass}"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="alert-title mb-1">${alert.title}</h6>
+                                        <p class="alert-message mb-2">${alert.message}</p>
+                                        <small class="text-muted">${alert.timestamp}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    container.innerHTML = html;
+                })
+                .catch(error => {
+                    container.innerHTML = '<div class="text-center text-danger">Failed to load alerts</div>';
+                });
+        }
+
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         function toggleDarkMode() {
             const body = document.body;
             const icon = document.getElementById('darkModeIcon');
@@ -770,19 +1367,33 @@
         }
 
         // Check for saved dark mode preference
+<<<<<<< HEAD
         (function() {
             const savedDarkMode = localStorage.getItem('darkMode');
             const icon = document.getElementById('darkModeIcon');
             if (icon && savedDarkMode === 'enabled') {
+=======
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedDarkMode = localStorage.getItem('darkMode');
+            const icon = document.getElementById('darkModeIcon');
+            
+            if (savedDarkMode === 'enabled') {
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                 document.body.classList.add('dark-mode');
                 icon.classList.remove('feather-moon');
                 icon.classList.add('feather-sun');
             }
+<<<<<<< HEAD
         })();
     </script>
 @endpush
 
 @push('styles')
+=======
+        });
+    </script>
+
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     <style>
         /* Dark mode styles */
         .dark-mode {
@@ -835,6 +1446,7 @@
         
         .heatmap-row {
             display: flex;
+<<<<<<< HEAD
             gap: 3px;
             width: 100%;
         }
@@ -854,13 +1466,38 @@
         
         .heatmap-cell:hover {
             transform: scale(1.05);
+=======
+            gap: 4px;
+            min-width: max-content;
+        }
+        
+        .heatmap-cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             z-index: 10;
         }
         
         .heatmap-cell.day-label {
+<<<<<<< HEAD
             flex: 0 0 70px;
             font-weight: 600;
             font-size: 10px;
+=======
+            width: 80px;
+            font-weight: 600;
+            font-size: 11px;
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             background-color: #f3f4f6;
         }
         
@@ -1018,12 +1655,21 @@
             }
             
             .heatmap-cell {
+<<<<<<< HEAD
                 height: 28px;
             }
             
             .heatmap-cell.day-label {
                 flex: 0 0 55px;
                 font-size: 9px;
+=======
+                width: 30px;
+                height: 30px;
+            }
+            
+            .heatmap-cell.day-label {
+                width: 60px;
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             }
         }
         
@@ -1164,4 +1810,8 @@
             }
         }
     </style>
+<<<<<<< HEAD
 @endpush
+=======
+@endsection
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1

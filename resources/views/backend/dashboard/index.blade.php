@@ -9,7 +9,11 @@
                         <h5 class="m-b-10">{{ __('messages.backend_dashboard') }}</h5>
                     </div>
                     <ul class="breadcrumb">
+<<<<<<< HEAD
                         <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">{{ __('messages.backend_home') }}</a></li>
+=======
+                        <li class="breadcrumb-item"><a href="index.php">{{ __('messages.backend_home') }}</a></li>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                         <li class="breadcrumb-item">{{ __('messages.backend_dashboard') }}</li>
                     </ul>
                 </div>
@@ -22,6 +26,7 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+<<<<<<< HEAD
                             <div class="dropdown">
                                 <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown">
                                     <i class="feather-calendar me-2"></i>
@@ -71,6 +76,55 @@
                                     </a>
                                     <a href="{{ route('engagement.export', ['type' => 'analytics', 'format' => 'json']) }}" class="dropdown-item">
                                         <i class="feather-code me-2"></i>Analytics (JSON)
+=======
+                            <div id="reportrange" class="reportrange-picker d-flex align-items-center">
+                                <span class="reportrange-picker-field"></span>
+                            </div>
+                            <div class="dropdown filter-dropdown">
+                                <a class="btn btn-md btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
+                                    <i class="feather-filter me-2"></i>
+                                    <span>{{ __('messages.backend_filter') }}</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Role" checked="checked" />
+                                            <label class="custom-control-label c-pointer" for="Role">{{ __('messages.backend_filter_role') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Team" checked="checked" />
+                                            <label class="custom-control-label c-pointer" for="Team">{{ __('messages.backend_filter_team') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Email" checked="checked" />
+                                            <label class="custom-control-label c-pointer" for="Email">{{ __('messages.backend_filter_email') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Member" checked="checked" />
+                                            <label class="custom-control-label c-pointer" for="Member">{{ __('messages.backend_filter_member') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-item">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="Recommendation" checked="checked" />
+                                            <label class="custom-control-label c-pointer" for="Recommendation">{{ __('messages.backend_filter_recommendation') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-plus me-3"></i>
+                                        <span>{{ __('messages.backend_create_new') }}</span>
+                                    </a>
+                                    <a href="javascript:void(0);" class="dropdown-item">
+                                        <i class="feather-filter me-3"></i>
+                                        <span>{{ __('messages.backend_manage_filter') }}</span>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </a>
                                 </div>
                             </div>
@@ -92,6 +146,7 @@
                     <div class="col-xxl-3 col-md-6">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
+<<<<<<< HEAD
                                 <div class="d-flex align-items-center gap-4">
                                     <div class="avatar-text avatar-lg bg-soft-primary text-primary rounded">
                                         <i class="feather-users fs-4"></i>
@@ -99,12 +154,31 @@
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalUsers }}</div>
                                         <h3 class="fs-13 fw-semibold text-muted">Total Pengguna</h3>
+=======
+                                <div class="d-flex align-items-start justify-content-between mb-4">
+                                    <div class="d-flex gap-4 align-items-center">
+                                        <div class="avatar-text avatar-lg bg-gray-200">
+                                            <i class="feather-dollar-sign"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter">45</span>/<span class="counter">76</span></div>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_invoices_awaiting') }}</h3>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                 </div>
                                 <div class="pt-3">
                                     <div class="d-flex align-items-center justify-content-between">
+<<<<<<< HEAD
                                         <span class="fs-12 text-muted">Siswa: {{ $totalStudents }}</span>
                                         <span class="fs-12 text-muted">Guru: {{ $totalTeachers }}</span>
+=======
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">{{ __('messages.backend_invoices_awaiting') }} </a>
+                                        <div class="w-100 text-end">
+                                            <span class="fs-12 text-dark">$5,569</span>
+                                            <span class="fs-11 text-muted">(56%)</span>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                     <div class="progress mt-2 ht-3">
                                         @php $studentPercent = $totalUsers > 0 ? round(($totalStudents / $totalUsers) * 100) : 0; @endphp
@@ -118,6 +192,7 @@
                     <div class="col-xxl-3 col-md-6">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
+<<<<<<< HEAD
                                 <div class="d-flex align-items-center gap-4">
                                     <div class="avatar-text avatar-lg bg-soft-success text-success rounded">
                                         <i class="feather-book-open fs-4"></i>
@@ -125,12 +200,31 @@
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalMaterials }}</div>
                                         <h3 class="fs-13 fw-semibold text-muted">Total Materi</h3>
+=======
+                                <div class="d-flex align-items-start justify-content-between mb-4">
+                                    <div class="d-flex gap-4 align-items-center">
+                                        <div class="avatar-text avatar-lg bg-gray-200">
+                                            <i class="feather-cast"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter">48</span>/<span class="counter">86</span></div>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_converted_leads') }}</h3>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                 </div>
                                 <div class="pt-3">
                                     <div class="d-flex align-items-center justify-content-between">
+<<<<<<< HEAD
                                         <span class="fs-12 text-muted">{{ $totalCategories }} Kategori</span>
                                         <span class="fs-12 text-muted">{{ $totalSubcategories }} Sub Kategori</span>
+=======
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">{{ __('messages.backend_converted_leads') }} </a>
+                                        <div class="w-100 text-end">
+                                            <span class="fs-12 text-dark">52 {{ __('messages.backend_completed') }}</span>
+                                            <span class="fs-11 text-muted">(63%)</span>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                     <div class="progress mt-2 ht-3">
                                         <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
@@ -143,6 +237,7 @@
                     <div class="col-xxl-3 col-md-6">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
+<<<<<<< HEAD
                                 <div class="d-flex align-items-center gap-4">
                                     <div class="avatar-text avatar-lg bg-soft-warning text-warning rounded">
                                         <i class="feather-git-branch fs-4"></i>
@@ -150,12 +245,31 @@
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalMindmaps }}</div>
                                         <h3 class="fs-13 fw-semibold text-muted">Total MindMap</h3>
+=======
+                                <div class="d-flex align-items-start justify-content-between mb-4">
+                                    <div class="d-flex gap-4 align-items-center">
+                                        <div class="avatar-text avatar-lg bg-gray-200">
+                                            <i class="feather-briefcase"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter">16</span>/<span class="counter">20</span></div>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_projects_progress') }}</h3>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                 </div>
                                 <div class="pt-3">
                                     <div class="d-flex align-items-center justify-content-between">
+<<<<<<< HEAD
                                         <span class="fs-12 text-muted">Materi aktif</span>
                                         <span class="fs-12 text-dark fw-semibold">{{ $totalMindmaps }} mindmap</span>
+=======
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">{{ __('messages.backend_projects_progress') }} </a>
+                                        <div class="w-100 text-end">
+                                            <span class="fs-12 text-dark">16 {{ __('messages.backend_completed') }}</span>
+                                            <span class="fs-11 text-muted">(78%)</span>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                     <div class="progress mt-2 ht-3">
                                         <div class="progress-bar bg-warning" role="progressbar" style="width: 75%"></div>
@@ -168,6 +282,7 @@
                     <div class="col-xxl-3 col-md-6">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
+<<<<<<< HEAD
                                 <div class="d-flex align-items-center gap-4">
                                     <div class="avatar-text avatar-lg bg-soft-danger text-danger rounded">
                                         <i class="feather-activity fs-4"></i>
@@ -175,13 +290,32 @@
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalProgress }}</div>
                                         <h3 class="fs-13 fw-semibold text-muted">Aktivitas Belajar</h3>
+=======
+                                <div class="d-flex align-items-start justify-content-between mb-4">
+                                    <div class="d-flex gap-4 align-items-center">
+                                        <div class="avatar-text avatar-lg bg-gray-200">
+                                            <i class="feather-activity"></i>
+                                        </div>
+                                        <div>
+                                            <div class="fs-4 fw-bold text-dark"><span class="counter">46.59</span>%</div>
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">{{ __('messages.backend_conversion_rate') }}</h3>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                 </div>
                                 <div class="pt-3">
                                     <div class="d-flex align-items-center justify-content-between">
+<<<<<<< HEAD
                                         <span class="fs-12 text-muted">Selesai: {{ $completedMaterials }}</span>
                                         @php $completionRate = $totalProgress > 0 ? round(($completedMaterials / $totalProgress) * 100) : 0; @endphp
                                         <span class="fs-12 text-dark fw-semibold">{{ $completionRate }}%</span>
+=======
+                                        <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line"> {{ __('messages.backend_conversion_rate') }} </a>
+                                        <div class="w-100 text-end">
+                                            <span class="fs-12 text-dark">$2,254</span>
+                                            <span class="fs-11 text-muted">(46%)</span>
+                                        </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                     <div class="progress mt-2 ht-3">
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: {{ $completionRate }}%"></div>
@@ -197,7 +331,40 @@
                     <div class="col-xxl-8">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
+<<<<<<< HEAD
                                 <h5 class="card-title">Aktivitas Platform</h5>
+=======
+                                <h5 class="card-title">{{ __('messages.backend_payment_record') }}</h5>
+                                <div class="card-header-action">
+                                    <div class="card-header-btn">
+                                        <div data-bs-toggle="tooltip" title="Delete">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-danger" data-bs-toggle="remove"> </a>
+                                        </div>
+                                        <div data-bs-toggle="tooltip" title="Refresh">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-warning" data-bs-toggle="refresh"> </a>
+                                        </div>
+                                        <div data-bs-toggle="tooltip" title="Maximize/Minimize">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-success" data-bs-toggle="expand"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown">
+                                        <a href="javascript:void(0);" class="avatar-text avatar-sm" data-bs-toggle="dropdown" data-bs-offset="25, 25">
+                                            <div data-bs-toggle="tooltip" title="Options">
+                                                <i class="feather-more-vertical"></i>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-at-sign"></i>New</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-calendar"></i>Event</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-bell"></i>Snoozed</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-trash-2"></i>Deleted</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-settings"></i>Settings</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-life-buoy"></i>Tips & Tricks</a>
+                                        </div>
+                                    </div>
+                                </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                             </div>
                             <div class="card-body custom-card-action p-0">
                                 <div id="platform-activity-chart"></div>
@@ -206,26 +373,60 @@
                                 <div class="row g-4">
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
+<<<<<<< HEAD
                                             <div class="fs-12 text-muted mb-1">Kunjungan Hari Ini</div>
                                             <h6 class="fw-bold text-dark">{{ $todayVisits }}</h6>
+=======
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_awaiting') }}</div>
+                                            <h6 class="fw-bold text-dark">$5,486</h6>
+                                            <div class="progress mt-2 ht-3">
+                                                <div class="progress-bar bg-primary" role="progressbar" style="width: 81%"></div>
+                                            </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
+<<<<<<< HEAD
                                             <div class="fs-12 text-muted mb-1">Kunjungan ({{ $period }} hari)</div>
                                             <h6 class="fw-bold text-dark">{{ $platformChart->sum('visits') }}</h6>
+=======
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_completed') }}</div>
+                                            <h6 class="fw-bold text-dark">$9,275</h6>
+                                            <div class="progress mt-2 ht-3">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 82%"></div>
+                                            </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
+<<<<<<< HEAD
                                             <div class="fs-12 text-muted mb-1">Pendaftaran ({{ $period }} hari)</div>
                                             <h6 class="fw-bold text-dark">{{ $platformChart->sum('registrations') }}</h6>
+=======
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_rejected') }}</div>
+                                            <h6 class="fw-bold text-dark">$3,868</h6>
+                                            <div class="progress mt-2 ht-3">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 68%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <div class="p-3 border border-dashed rounded">
+                                            <div class="fs-12 text-muted mb-1">{{ __('messages.backend_revenue') }}</div>
+                                            <h6 class="fw-bold text-dark">$50,668</h6>
+                                            <div class="progress mt-2 ht-3">
+                                                <div class="progress-bar bg-dark" role="progressbar" style="width: 75%"></div>
+                                            </div>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+<<<<<<< HEAD
                     <!-- Statistik Quiz -->
                     <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
@@ -245,6 +446,237 @@
                                     <div class="text-center flex-fill">
                                         <div class="fs-3 fw-bold text-warning">{{ number_format($averageScore, 1) }}%</div>
                                         <div class="fs-12 text-muted">Rata-rata Skor</div>
+=======
+                    <!-- [Payment Records] end -->
+                    <!-- [Total Sales] start -->
+                    <div class="col-xxl-4">
+                        <div class="card stretch stretch-full overflow-hidden">
+                            <div class="bg-primary text-white">
+                                <div class="p-4">
+                                    <span class="badge bg-light text-primary text-dark float-end">12%</span>
+                                    <div class="text-start">
+                                        <h4 class="text-reset">30,569</h4>
+                                        <p class="text-reset m-0">{{ __('messages.backend_total_sales') }}</p>
+                                    </div>
+                                </div>
+                                <div id="total-sales-color-graph"></div>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="hstack gap-3">
+                                        <div class="avatar-image avatar-lg p-2 rounded">
+                                            <img class="img-fluid" src="{{ asset('backend/assets/images/brand/shopify.png') }}" alt="" />
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="d-block">Shopify eCommerce Store</a>
+                                            <span class="fs-12 text-muted">{{ __('messages.backend_project_development') }}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">$1200</div>
+                                        <div class="fs-12 text-end">6 {{ __('messages.backend_project_count') }}</div>
+                                    </div>
+                                </div>
+                                <hr class="border-dashed my-3" />
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="hstack gap-3">
+                                        <div class="avatar-image avatar-lg p-2 rounded">
+                                            <img class="img-fluid" src="{{ asset('backend/assets/images/brand/app-store.png') }}" alt="" />
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="d-block">iOS Apps Development</a>
+                                            <span class="fs-12 text-muted">{{ __('messages.backend_project_development') }}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">$1450</div>
+                                        <div class="fs-12 text-end">3 {{ __('messages.backend_project_count') }}</div>
+                                    </div>
+                                </div>
+                                <hr class="border-dashed my-3" />
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="hstack gap-3">
+                                        <div class="avatar-image avatar-lg p-2 rounded">
+                                            <img class="img-fluid" src="{{ asset('backend/assets/images/brand/figma.png') }}" alt="" />
+                                        </div>
+                                        <div>
+                                            <a href="javascript:void(0);" class="d-block">Figma Dashboard Design</a>
+                                            <span class="fs-12 text-muted">{{ __('messages.backend_project_ui_ux') }}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold text-dark">$1250</div>
+                                        <div class="fs-12 text-end">5 {{ __('messages.backend_project_count') }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center py-4">{{ __('messages.backend_full_details') }}</a>
+                        </div>
+                    </div>
+                    <!-- [Total Sales] end !-->
+                    <!-- [Mini] start -->
+                    <div class="col-lg-4">
+                        <div class="card mb-4 stretch stretch-full">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="avatar-text">
+                                        <i class="feather feather-star"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-dark">{{ __('messages.backend_tasks_completed') }}</div>
+                                        <div class="fs-12 text-muted">22/35 completed</div>
+                                    </div>
+                                </div>
+                                <div class="fs-4 fw-bold text-dark">22/35</div>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-between gap-4">
+                                <div id="task-completed-area-chart"></div>
+                                <div class="fs-12 text-muted text-nowrap">
+                                    <span class="fw-semibold text-primary">28% more</span><br />
+                                    <span>{{ __('messages.backend_from_last_week') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card mb-4 stretch stretch-full">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="avatar-text">
+                                        <i class="feather feather-file-text"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-dark">{{ __('messages.backend_new_tasks') }}</div>
+                                        <div class="fs-12 text-muted">0/20 tasks</div>
+                                    </div>
+                                </div>
+                                <div class="fs-4 fw-bold text-dark">5/20</div>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-between gap-4">
+                                <div id="new-tasks-area-chart"></div>
+                                <div class="fs-12 text-muted text-nowrap">
+                                    <span class="fw-semibold text-success">34% more</span><br />
+                                    <span>{{ __('messages.backend_from_last_week') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card mb-4 stretch stretch-full">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <div class="avatar-text">
+                                        <i class="feather feather-airplay"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-dark">{{ __('messages.backend_project_done') }}</div>
+                                        <div class="fs-12 text-muted">20/30 project</div>
+                                    </div>
+                                </div>
+                                <div class="fs-4 fw-bold text-dark">20/30</div>
+                            </div>
+                            <div class="card-body d-flex align-items-center justify-content-between gap-4">
+                                <div id="project-done-area-chart"></div>
+                                <div class="fs-12 text-muted text-nowrap">
+                                    <span class="fw-semibold text-danger">42% more</span><br />
+                                    <span>{{ __('messages.backend_from_last_week') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- [Mini] end !-->
+                    <!-- [Leads Overview] start -->
+                    <div class="col-xxl-4">
+                        <div class="card stretch stretch-full">
+                            <div class="card-header">
+                                <h5 class="card-title">{{ __('messages.backend_leads_overview') }}</h5>
+                                <div class="card-header-action">
+                                    <div class="card-header-btn">
+                                        <div data-bs-toggle="tooltip" title="Delete">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-danger" data-bs-toggle="remove"> </a>
+                                        </div>
+                                        <div data-bs-toggle="tooltip" title="Refresh">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-warning" data-bs-toggle="refresh"> </a>
+                                        </div>
+                                        <div data-bs-toggle="tooltip" title="Maximize/Minimize">
+                                            <a href="javascript:void(0);" class="avatar-text avatar-xs bg-success" data-bs-toggle="expand"> </a>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown">
+                                        <a href="javascript:void(0);" class="avatar-text avatar-sm" data-bs-toggle="dropdown" data-bs-offset="25, 25">
+                                            <div data-bs-toggle="tooltip" title="Options">
+                                                <i class="feather-more-vertical"></i>
+                                            </div>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-at-sign"></i>New</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-calendar"></i>Event</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-bell"></i>Snoozed</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-trash-2"></i>Deleted</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-settings"></i>Settings</a>
+                                            <a href="javascript:void(0);" class="dropdown-item"><i class="feather-life-buoy"></i>Tips & Tricks</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body custom-card-action">
+                                <div id="leads-overview-donut"></div>
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #3454d1"></span>
+                                            <span>{{ __('messages.backend_leads_new') }}<span class="fs-10 text-muted ms-1">(20K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #0d519e"></span>
+                                            <span>{{ __('messages.backend_leads_contacted') }}<span class="fs-10 text-muted ms-1">(15K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #1976d2"></span>
+                                            <span>{{ __('messages.backend_leads_qualified') }}<span class="fs-10 text-muted ms-1">(10K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #1e88e5"></span>
+                                            <span>{{ __('messages.backend_leads_working') }}<span class="fs-10 text-muted ms-1">(18K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #2196f3"></span>
+                                            <span>{{ __('messages.backend_filter_member') }}<span class="fs-10 text-muted ms-1">(10K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #42a5f5"></span>
+                                            <span>Proposal<span class="fs-10 text-muted ms-1">(15K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #64b5f6"></span>
+                                            <span>Leads<span class="fs-10 text-muted ms-1">(16K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #90caf9"></span>
+                                            <span>Progress<span class="fs-10 text-muted ms-1">(14K)</span></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a href="javascript:void(0);" class="p-2 hstack gap-2 rounded border border-dashed border-gray-5">
+                                            <span class="wd-7 ht-7 rounded-circle d-inline-block" style="background-color: #aad6fa"></span>
+                                            <span>Others<span class="fs-10 text-muted ms-1">(10K)</span></span>
+                                        </a>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                                     </div>
                                 </div>
                                 @if($totalQuizAttempts > 0)

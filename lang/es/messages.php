@@ -13,7 +13,11 @@ return [
     'dashboard' => 'Panel',
     
     // Hero Section
+<<<<<<< HEAD
     'hero_title' => 'MindMap <span class="label classic">Aprendizaje</span><br>Inter<span class="light">activo</span>',
+=======
+    'hero_title' => 'Aprende Mapas Mentales Fácilmente',
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     'hero_subtitle' => 'Mejora tu productividad y creatividad con técnicas de mapas mentales comprobadas',
     'hero_cta' => 'Comenzar a Aprender',
     'hero_secondary_cta' => 'Saber Más',
@@ -115,7 +119,10 @@ return [
     'nav_international_certification' => 'Certificación Internacional',
 
     // Course Categories
+<<<<<<< HEAD
     'nav_popular' => 'Más Visitados',
+=======
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     'nav_academic' => 'Académico',
     'nav_digital' => 'Digital',
     'nav_business' => 'Negocios',
@@ -299,8 +306,13 @@ return [
     'about_page_title' => 'Acerca de Nosotros',
     'about_page_subtitle' => '¿Quiénes somos?',
     'about_what_we_do' => 'Lo Que Hacemos',
+<<<<<<< HEAD
     'about_what_we_do_desc' => 'MindMap es una plataforma de aprendizaje digital que ayuda a los estudiantes a comprender conceptos complejos a través de mapas mentales interactivos, rutas de aprendizaje estructuradas y materiales multimedia. Combinamos tecnología moderna con métodos de aprendizaje efectivos para crear una experiencia más fácil, agradable y rastreable.',
     'about_team' => 'Equipo MindMap',
+=======
+    'about_what_we_do_desc' => 'Creamos sitios web modernos y emocionantes. Grandes y pequeños. Desarrollo de conceptos, diseño de interfaz, gestión de producción, planificación estratégica, pruebas de usabilidad.',
+    'about_team' => 'El Equipo Concept',
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 
     // Contact Page
     'contact_page_title' => 'Contacto',

@@ -12,6 +12,7 @@
             <li><a href="/teacher">{{ __('messages.teachers') }}</a></li>
             <li><a href="#">{{ __('messages.courses') }} <span class="caret"></span></a>
               <ul class="dropdown-menu">
+<<<<<<< HEAD
                 @if($popularCategories->isNotEmpty())
                   <li><strong class="text-muted">{{ __('messages.nav_popular') }}</strong></li>
                   @foreach($popularCategories as $cat)
@@ -26,11 +27,26 @@
                   <li><a href="/mindmap/programming">{{ __('messages.nav_programming') }}</a></li>
                   <li><a href="/mindmap/web-design">{{ __('messages.nav_web_design') }}</a></li>
                 @endif
+=======
+                <li><strong class="text-muted">{{ __('messages.nav_academic') }}</strong></li>
+                <li><a href="/kelas/matematika">{{ __('messages.nav_mathematics') }}</a></li>
+                <li><a href="/kelas/fisika">{{ __('messages.nav_physics') }}</a></li>
+                <li><a href="/kelas/kimia">{{ __('messages.nav_chemistry') }}</a></li>
+                <li><strong class="text-muted">{{ __('messages.nav_digital') }}</strong></li>
+                <li><a href="/kelas/programming">{{ __('messages.nav_programming') }}</a></li>
+                <li><a href="/kelas/web-design">{{ __('messages.nav_web_design') }}</a></li>
+                <li><strong class="text-muted">{{ __('messages.nav_business') }}</strong></li>
+                <li><a href="/kelas/akuntansi">{{ __('messages.nav_accounting') }}</a></li>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                 <li class="divider"></li>
                 <li><a href="/kelas"><i class="ion-ios-grid-outline"></i> {{ __('messages.view_all_courses') }}</a></li>
               </ul>
             </li>
+<<<<<<< HEAD
             {{-- <li><a href="#">{{ __('messages.nav_program') }} <span class="caret"></span></a>
+=======
+            <li><a href="#">{{ __('messages.nav_program') }} <span class="caret"></span></a>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
               <ul class="dropdown-menu">
                 <li><strong class="text-muted">{{ __('messages.nav_regular_program') }}</strong></li>
                 <li><a href="/program/pelajar">{{ __('messages.nav_student_program') }}</a></li>
@@ -54,7 +70,12 @@
                 <li><a href="/layanan/progress-tracking"><i class="fa fa-chart-line fa-lg fa-fw"></i> {{ __('messages.nav_progress_tracking') }}</a></li>
                 <li><a href="/layanan/sertifikat"><i class="fa fa-certificate fa-lg fa-fw"></i> {{ __('messages.nav_certificate_service') }}</a></li>
               </ul>
+<<<<<<< HEAD
             </li> --}}
+=======
+            </li>
+            <li><a href="{{ route('quiz.index') }}">{{ __('messages.nav_quiz') }}</a></li>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             <li><a href="/contact">{{ __('messages.contact') }}</a></li>
             <li class="menu-divider visible-lg">&nbsp;</li>
             @auth
@@ -72,9 +93,15 @@
               <ul class="dropdown-menu">
                 <li class="dropdown-header">{{ auth()->user()->name }}<br><small class="text-muted">{{ auth()->user()->email }}</small></li>
                 <li class="divider"></li>
+<<<<<<< HEAD
                 <li><a href="{{ auth()->user()->student ? route('student.profile') : '/profile' }}"><i class="fa fa-user fa-fw"></i>{{ __('messages.nav_profile') }}</a></li>
                 <li><a href="/learning-tracking"><i class="fa fa-chart-line fa-fw"></i>{{ __('messages.nav_learning_tracking') }}</a></li>
                 <li><a href="/sertifikat"><i class="fa fa-certificate fa-fw"></i>{{ __('messages.nav_certificate') }}</a></li>
+=======
+                <li><a href="/profile"><i class="fa fa-user fa-fw"></i> {{ __('messages.nav_profile') }}</a></li>
+                <li><a href="/learning-tracking"><i class="fa fa-chart-line fa-fw"></i> {{ __('messages.nav_learning_tracking') }}</a></li>
+                <li><a href="/sertifikat"><i class="fa fa-certificate fa-fw"></i> {{ __('messages.nav_certificate') }}</a></li>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                 <li class="divider"></li>
                 <li>
                   <form method="POST" action="{{ route('logout') }}">

@@ -8,7 +8,11 @@
           <div class="row">
             <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo.png') }}" alt=""></div>
             <div class="col-md-6">
+<<<<<<< HEAD
               <h1 class="no-pad bold">{!! __('messages.hero_title') !!}</h1>
+=======
+              <h1 class="no-pad bold">{{ __('messages.hero_title') }}</h1>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
               <p class="lead">{{ __('messages.hero_subtitle') }}</p><a class="page-scroll" href="#about"><span class="mouse"><span><i class="ion-ios-arrow-thin-down"></i></span></span></a>
             </div>
           </div>
@@ -120,12 +124,130 @@
     <div class="container text-center box-shadow offcet showcase">
       <div class="row v-center">
         <div class="col-lg-6 no-pad"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/3.jpg') }}" alt=""></div>
+<<<<<<< HEAD
         <div class="col-lg-6"><a class="swipebox-video" href="" data-rel="video2"><i class="ion-ios-play-outline icon-big text-gradient-gray"></i></a>
+=======
+        <div class="col-lg-6"><a class="swipebox-video" href="https://vimeo.com/188716447" data-rel="video2"><i class="ion-ios-play-outline icon-big text-gradient-gray"></i></a>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
           <h2>{{ __('messages.watch_our_story') }}</h2>
           <h5 class="no-pad">{{ __('messages.video_platform') }}</h5>
         </div>
       </div>
     </div>
+<<<<<<< HEAD
+=======
+    <!-- Portfolio-->
+    <section class="section-small no-pad-btm" id="portfolio">
+      <div class="container">
+        <h2 class="pull-left">{{ __('messages.portfolio_title') }}</h2>
+        <div class="pull-right">
+          <h5 class="no-pad">
+            <ul class="list-inline"><span class="portfolio-sorting">
+                <li><a class="active" href="{{ asset('frontend/portfolio-single.html') }}" data-group="all">{{ __('messages.portfolio_all') }}</a></li></span><span class="portfolio-sorting">
+                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="photo">{{ __('messages.portfolio_photo') }}</a></li></span><span class="portfolio-sorting">
+                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="design">{{ __('messages.portfolio_design') }}</a></li></span><span class="portfolio-sorting">
+                <li><a href="{{ asset('frontend/portfolio-single.html') }}" data-group="branding">{{ __('messages.portfolio_branding') }}</a></li></span><span class="portfolio-sorting2">
+                <li><a href="{{ asset('frontend/portfolio-masonry-4.html') }}" data-group="">{{ __('messages.portfolio_all_portfolio') }}</a></li></span></ul>
+          </h5>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="container-fluid">
+        <div class="row portfolio-items" id="grid">
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;branding&quot;, &quot;design&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/17.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;photo&quot;, &quot;branding&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/16.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/26.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;design&quot;, &quot;photo&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/29.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;branding&quot;, &quot;design&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/21.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;photo&quot;, &quot;design&quot;, &quot;branding&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/40.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+          <div class="col-md-3 col-sm-6 no-pad" data-groups="[&quot;photo&quot;]">
+            <div class="portfolio-item"><a href="{{ asset('frontend/portfolio-single.html') }}"><img src="{{ asset('frontend/img/main/10.jpg') }}" alt="">
+                <div class="portfolio-overlay">
+                  <div class="caption">
+                    <h5>Form Image Creative</h5><span>Lorem ipsum dolor sit amet</span>
+                  </div>
+                </div></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Testimoni Section-->
+    <section id="testimonials">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <h2>{{ __('messages.testimonials_title') }}</h2>
+          </div>
+          <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/5.jpg') }}" alt=""></div>
+          <div class="col-md-6">
+            <h2 class="dark-gray">{{ __('messages.testimonial_main_title') }}</h2>
+            <p>{{ __('messages.testimonial_main_desc') }}</p>
+            <div class="classic">{{ __('messages.testimonial_main_name') }}</div> <small>&mdash; {{ __('messages.testimonial_main_role') }}</small>
+          </div>
+        </div>
+        <div class="row grid-pad">
+          <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/1.jpg') }}" alt="">
+            <h4>{{ __('messages.testimonial_1_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_1_desc') }}</p>
+          </div>
+          <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/2.jpg') }}" alt="">
+            <h4>{{ __('messages.testimonial_2_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_2_desc') }}</p>
+          </div>
+          <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/3.jpg') }}" alt="">
+            <h4>{{ __('messages.testimonial_3_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_3_desc') }}</p>
+          </div>
+          <div class="col-md-3"><img class="center-block img-responsive" src="{{ asset('frontend/img/testimonials/4.jpg') }}" alt="">
+            <h4>{{ __('messages.testimonial_4_name') }}</h4>
+            <p class="no-pad">{{ __('messages.testimonial_4_desc') }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     <!-- Slider-->
     <section class="section-small section-offcet bg-gray">
       <div class="container">
@@ -160,8 +282,13 @@
               <ul class="list-inline">
                 <li><a href="/"><i class="fab fa-twitter fa-2x"></i></a></li>
                 <li><a href="/"><i class="fab fa-facebook-f fa-2x"></i></a></li>
+<<<<<<< HEAD
                 <li><a href="https://github.com/irfan19977" target="_blank"><i class="fab fa-github fa-2x"></i></a></li>
               </ul>Irfan Adi Prastyo
+=======
+                <li><a href="/"><i class="fab fa-behance fa-2x"></i></a></li>
+              </ul>Dr. Ahmad Rizki
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
               <div class="small">{{ __('messages.team_ceo') }}</div>
             </h5>
           </div>
@@ -170,40 +297,68 @@
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bili.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
+<<<<<<< HEAD
                     <li><a href="/"><i class="fab fa-twitter"></i></a></li>
                     <li><a href="/"><i class="fab fa-youtube"></i></a></li>
                     <li><a href="https://github.com/BielCre4tive" target="_blank"><i class="fab fa-github"></i></a></li>
                   </ul>Muhammad Fadhli Robbi Elhami
+=======
+                    <li><a href="/"><i class="fab fa-twitter fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-youtube fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-vimeo-v fa-2x"></i></a></li>
+                  </ul>Siti Nurhaliza
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                   <div class="small">{{ __('messages.team_ops_manager') }}</div>
                 </h5>
               </div>
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bisma.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
+<<<<<<< HEAD
                     <li><a href="/"><i class="fab fa-facebook-f"></i></a></li>
                     <li><a href="/"><i class="fab fa-twitter"></i></a></li>
                     <li><a href="https://github.com/ajaajasada03-cmyk" target="_blank"><i class="fab fa-github"></i></a></li>
                   </ul>Faishal Danurweda Bisma
+=======
+                    <li><a href="/"><i class="fab fa-facebook-f fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-twitter fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-instagram fa-2x"></i></a></li>
+                  </ul>Budi Pratama
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                   <div class="small">{{ __('messages.team_lead_designer') }}</div>
                 </h5>
               </div>
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/arkan.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
+<<<<<<< HEAD
                     <li><a href="/"><i class="fab fa-twitter"></i></a></li>
                     <li><a href="https://github.com/thooreqkerjo-star" target="_blank"><i class="fab fa-github"></i></a></li>
                     <li><a href="/"><i class="fab fa-pinterest"></i></a></li>
                   </ul>Arkan Thaariq Asadullah
+=======
+                    <li><a href="/"><i class="fab fa-twitter fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-github fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-pinterest fa-2x"></i></a></li>
+                  </ul>Dewi Lestari
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                   <div class="small">{{ __('messages.team_content_dev') }}</div>
                 </h5>
               </div>
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/mishaal.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
+<<<<<<< HEAD
                     <li><a href="/"><i class="fab fa-facebook-f"></i></a></li>
                     <li><a href="https://github.com/muhammadmishaal2204-del" target="_blank"><i class="fab fa-github"></i></a></li>
                     <li><a href="/"><i class="fab fa-linkedin"></i></a></li>
                   </ul>Muhammad Mishaal
+=======
+                    <li><a href="/"><i class="fab fa-facebook-f fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-github fa-2x"></i></a></li>
+                    <li><a href="/"><i class="fab fa-linkedin fa-2x"></i></a></li>
+                  </ul>Fajar Hidayat
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                   <div class="small">{{ __('messages.team_biz_dev') }}</div>
                 </h5>
               </div>
@@ -228,6 +383,60 @@
         </div>
       </div>
     </section>
+<<<<<<< HEAD
+=======
+    <!-- Tabel Harga-->
+    <section>
+      <div class="container pricing text-center">
+        <h2>{{ __('messages.pricing_title') }}</h2>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4>{{ __('messages.pricing_student') }}</h4>
+              </div>
+              <div class="panel-body">{{ __('messages.pricing_student_desc') }}</div>
+              <ul class="list-group">
+                <li class="list-group-item">{{ __('messages.pricing_student_1') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_student_2') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_student_3') }}</li>
+                <li class="list-group-item"><span class="number"><sup>Rp</sup>{{ __('messages.pricing_student_price') }}</span><sub>{{ __('messages.pricing_month') }}</sub></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="panel panel-default box-shadow">
+              <div class="panel-heading">
+                <h4>{{ __('messages.pricing_professional') }}</h4>
+              </div>
+              <div class="panel-body">{{ __('messages.pricing_professional_desc') }}</div>
+              <ul class="list-group">
+                <li class="list-group-item">{{ __('messages.pricing_professional_1') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_professional_2') }} <span class="label label-danger">{{ __('messages.pricing_premium') }}</span>
+                </li>
+                <li class="list-group-item">{{ __('messages.pricing_professional_3') }}</li>
+                <li class="list-group-item"><span class="number"><sup>Rp</sup>{{ __('messages.pricing_professional_price') }}</span><sub>{{ __('messages.pricing_month') }}</sub></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4>{{ __('messages.pricing_institution') }}</h4>
+              </div>
+              <div class="panel-body">{{ __('messages.pricing_institution_desc') }}</div>
+              <ul class="list-group">
+                <li class="list-group-item">{{ __('messages.pricing_institution_1') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_institution_2') }}</li>
+                <li class="list-group-item">{{ __('messages.pricing_institution_3') }}</li>
+                <li class="list-group-item"><span class="number"><sup>{{ __('messages.pricing_custom') }}</sup></span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     <!-- Facts section-->
     <section class="facts bg-img-custom-small" style="background-image: url('{{ asset('frontend/img/main/4.jpg') }}');">
       <div class="overlay"></div>
@@ -254,4 +463,44 @@
         </div>
       </div>
     </section>
+<<<<<<< HEAD
+=======
+    <!-- Contact Section-->
+    <section class="section-small" id="contact">
+      <!-- Map Section-->
+      <div id="map"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 alert alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3><i class="fa fa-phone"></i> 1-800-CONCEPT
+            </h3>
+            <!-- Contact Form - Enter your email address on line 17 of the mail/contact_me.php file to make this form work. For more information on how to do this please visit the Docs!-->
+            <form id="contactForm" name="sentMessage" novalidate="">
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label class="sr-only control-label" for="name">You Name</label>
+                  <input class="form-control" id="name" type="text" placeholder="{{ __('messages.contact_name') }}" required="" data-validation-required-message="Please enter name"><span class="help-block text-danger"></span>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label class="sr-only control-label" for="email">You Email</label>
+                  <input class="form-control" id="email" type="email" placeholder="{{ __('messages.contact_email') }}" required="" data-validation-required-message="Please enter email"><span class="help-block text-danger"></span>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label class="sr-only control-label" for="message">Message</label>
+                  <textarea class="form-control" id="message" rows="2" placeholder="{{ __('messages.contact_message') }}" required="" data-validation-required-message="Please enter a message." aria-invalid="false"></textarea><span class="help-block text-danger"></span>
+                </div>
+              </div>
+              <div id="success"></div>
+              <button class="btn btn-dark" type="submit">{{ __('messages.contact_send') }}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    
+    </section>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 @endsection

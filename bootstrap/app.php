@@ -20,9 +20,12 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->web(append: [
             \App\Http\Middleware\SetLanguage::class,
+<<<<<<< HEAD
         ]);
         $middleware->web(append: [
             \App\Http\Middleware\TrackSiteVisit::class,
+=======
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

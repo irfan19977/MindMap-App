@@ -6,7 +6,11 @@
         </script>
     </p>
     <div class="d-flex align-items-center gap-4">
+<<<<<<< HEAD
         <a href="{{ route('help.index') }}" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_help') }}</a>
+=======
+        <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_help') }}</a>
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_terms') }}</a>
         <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">{{ __('messages.backend_footer_privacy') }}</a>
     </div>

@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Subcategory;
+<<<<<<< HEAD
 use App\Models\Material;
+=======
+use App\Models\Materi;
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
 use Illuminate\Support\Facades\DB;
 
 class EngagementController extends Controller
@@ -22,6 +26,7 @@ class EngagementController extends Controller
         $activeUsers = User::where('last_login_at', '>=', now()->subDays(7))->count();
         $totalCategories = Category::count();
         $totalSubcategories = Subcategory::count();
+<<<<<<< HEAD
         $totalMateris = Material::count();
 
         // Get user growth data (last 12 months) — monthly, fill all months including zeros
@@ -66,6 +71,29 @@ class EngagementController extends Controller
         // Get recent user activity
         $recentUsers = User::orderBy('created_at', 'desc')
             ->limit(7)
+=======
+        $totalMateris = Materi::count();
+
+        // Get user growth data (last 30 days)
+        $userGrowth = User::select(
+            DB::raw('DATE(created_at) as date'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
+
+        // Get activity by category
+        $categoryActivity = Category::withCount('subcategories', 'materis')
+            ->orderBy('materis_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        // Get recent user activity
+        $recentUsers = User::orderBy('created_at', 'desc')
+            ->limit(10)
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             ->get();
 
         // Get engagement metrics by day (last 7 days)
@@ -106,7 +134,11 @@ class EngagementController extends Controller
             'user_registrations' => User::where('created_at', '>=', $startDate)->count(),
             'active_sessions' => User::where('last_login_at', '>=', $startDate)->count(),
             'new_categories' => Category::where('created_at', '>=', $startDate)->count(),
+<<<<<<< HEAD
             'new_materis' => Material::where('created_at', '>=', $startDate)->count(),
+=======
+            'new_materis' => Materi::where('created_at', '>=', $startDate)->count(),
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         ];
 
         return response()->json($metrics);
@@ -177,7 +209,11 @@ class EngagementController extends Controller
             ->get();
 
         // Get content creation trends
+<<<<<<< HEAD
         $contentTrends = Material::select(
+=======
+        $contentTrends = Materi::select(
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             DB::raw('DATE(created_at) as date'),
             DB::raw('COUNT(*) as count')
         )
@@ -230,7 +266,11 @@ class EngagementController extends Controller
                     'total_users' => User::count(),
                     'active_users' => User::where('last_login_at', '>=', now()->subDays(7))->count(),
                     'total_categories' => Category::count(),
+<<<<<<< HEAD
                     'total_materis' => Material::count(),
+=======
+                    'total_materis' => Materi::count(),
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                     'export_date' => now()->format('Y-m-d H:i:s'),
                 ];
                 break;
@@ -324,6 +364,7 @@ class EngagementController extends Controller
             }
         }
 
+<<<<<<< HEAD
         // Get user activity by day and hour (fallback to created_at when never logged in)
         $userActivity = User::select(
             DB::raw('DAYOFWEEK(COALESCE(last_login_at, created_at)) as day_of_week'),
@@ -334,6 +375,16 @@ class EngagementController extends Controller
                 $query->where('last_login_at', '>=', $startDate)
                       ->orWhere('created_at', '>=', $startDate);
             })
+=======
+        // Get user activity by day and hour
+        $userActivity = User::select(
+            DB::raw('DAYOFWEEK(last_login_at) as day_of_week'),
+            DB::raw('HOUR(last_login_at) as hour'),
+            DB::raw('COUNT(*) as count')
+        )
+            ->where('last_login_at', '>=', $startDate)
+            ->whereNotNull('last_login_at')
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             ->groupBy('day_of_week', 'hour')
             ->get();
 
@@ -380,7 +431,11 @@ class EngagementController extends Controller
                 'stage' => 'Content Engagement',
                 'count' => User::where('created_at', '>=', $startDate)
                     ->where('last_login_at', '>=', now()->subDays(7))
+<<<<<<< HEAD
                     ->whereHas('userProgress')
+=======
+                    ->whereHas('materis')
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
                     ->count(),
                 'description' => 'Users who engaged with content'
             ],
@@ -590,7 +645,11 @@ class EngagementController extends Controller
         }
 
         // Alert 3: No new content in 7 days
+<<<<<<< HEAD
         $recentMateri = Material::where('created_at', '>=', now()->subDays(7))->count();
+=======
+        $recentMateri = Materi::where('created_at', '>=', now()->subDays(7))->count();
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
         if ($recentMateri === 0) {
             $alerts[] = [
                 'type' => 'info',
@@ -645,7 +704,11 @@ class EngagementController extends Controller
                 'new_users' => User::whereBetween('created_at', [$start, $end])->count(),
                 'active_users' => User::whereBetween('last_login_at', [$start, $end])->count(),
                 'new_categories' => Category::whereBetween('created_at', [$start, $end])->count(),
+<<<<<<< HEAD
                 'new_materis' => Material::whereBetween('created_at', [$start, $end])->count(),
+=======
+                'new_materis' => Materi::whereBetween('created_at', [$start, $end])->count(),
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
             ],
             'daily_breakdown' => []
         ];

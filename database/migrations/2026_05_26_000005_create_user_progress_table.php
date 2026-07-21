@@ -21,7 +21,6 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             
-            // Indexes untuk performance
             $table->index('user_id');
             $table->index('material_id');
         });

@@ -13,7 +13,11 @@ return [
     'dashboard' => 'Dashboard',
     
     // Hero Section
+<<<<<<< HEAD
     'hero_title' => 'MindMap <span class="label classic">Pembelajaran</span><br>Inter<span class="light">aktif</span>',
+=======
+    'hero_title' => 'Belajar Mind Mapping dengan Mudah',
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     'hero_subtitle' => 'Tingkatkan produktivitas dan kreativitas Anda dengan teknik mind mapping yang terbukti efektif',
     'hero_cta' => 'Mulai Belajar',
     'hero_secondary_cta' => 'Pelajari Lebih Lanjut',
@@ -115,7 +119,10 @@ return [
     'nav_international_certification' => 'Sertifikasi Internasional',
 
     // Course Categories
+<<<<<<< HEAD
     'nav_popular' => 'Sering Dikunjungi',
+=======
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     'nav_academic' => 'Akademik',
     'nav_digital' => 'Digital',
     'nav_business' => 'Bisnis',
@@ -127,7 +134,11 @@ return [
     'nav_accounting' => 'Akuntansi',
     
     // Homepage Hero
+<<<<<<< HEAD
     'hero_title' => 'MindMap <span class="label classic">Pembelajaran</span><br>Inter<span class="light">aktif</span>',
+=======
+    'hero_title' => 'MindMap Pembelajaran Interaktif',
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     'hero_subtitle' => 'Platform pembelajaran modern dengan alur pembelajaran terstruktur dan materi interaktif untuk meningkatkan pemahaman konsep Anda',
     
     // Homepage Teaser
@@ -299,8 +310,13 @@ return [
     'about_page_title' => 'Tentang Kami',
     'about_page_subtitle' => 'Siapa kami?',
     'about_what_we_do' => 'Apa Yang Kami Lakukan',
+<<<<<<< HEAD
     'about_what_we_do_desc' => 'MindMap adalah platform pembelajaran digital yang membantu siswa memahami konsep kompleks melalui peta konsep interaktif, alur pembelajaran terstruktur, dan materi multimedia. Kami memadukan teknologi modern dengan metode pembelajaran yang efektif untuk menciptakan pengalaman belajar yang lebih mudah, menyenangkan, dan dapat dipantau progresnya.',
     'about_team' => 'Tim MindMap',
+=======
+    'about_what_we_do_desc' => 'Kami membuat website yang modern dan menarik. Besar dan kecil. Pengembangan konsep, desain antarmuka, manajemen produksi, perencanaan strategis, pengujian usability.',
+    'about_team' => 'Tim Konsep',
+>>>>>>> 78bdc598ddbf41bef6c09c132d718564328353e1
     
     // Contact Page
     'contact_page_title' => 'Kontak',
