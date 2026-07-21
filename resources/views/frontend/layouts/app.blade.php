@@ -45,7 +45,7 @@
     <script src="{{ asset('frontend/js/wow.min.js') }}"></script>
     <script src="{{ asset('frontend/js/jquery.smartmenus.js') }}"></script>
     @stack('scripts')
-    <!-- Youtube video background--><a class="player" id="bgndVideo" data-property="{videoURL:'https://www.youtube.com/watch?v=yx226REvbzw', containment:'.intro', autoPlay:true, loop:true, mute:true, startAt:0, stopAt: 240, quality:'default', opacity:1, showControls: false, showYTLogo:false, vol:25}"></a>
+    <!-- Youtube video background--><a class="player" id="bgndVideo" data-property="{videoURL:'https://www.pexels.com/video/person-writing-on-paper-4017222/', containment:'.intro', autoPlay:true, loop:true, mute:true, startAt:0, stopAt: 240, quality:'default', opacity:1, showControls: false, vol:25}"></a>
     <script src="{{ asset('frontend/js/jquery.mb.YTPlayer.js') }}"></script>
     <!-- Custom Theme JavaScript-->
     <script src="{{ asset('frontend/js/main.js') }}"></script>

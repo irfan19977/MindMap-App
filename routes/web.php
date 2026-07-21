@@ -220,6 +220,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/student/profile', [StudentProfileController::class, 'show'])->name('student.profile');
+    Route::get('/student/profile/edit', [StudentProfileController::class, 'edit'])->name('student.profile.edit');
+    Route::put('/student/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
 
     // Quiz API Routes
     Route::prefix('api/quiz')->group(function () {
