@@ -15,14 +15,10 @@ class SubcategorySeeder extends Seeder
     public function run(): void
     {
         $subjects = [
-            'matematika' => 'Matematika',
             'bahasa-indonesia' => 'Bahasa Indonesia',
-            'ipa' => 'IPA',
-            'ips' => 'IPS',
-            'bahasa-inggris' => 'Bahasa Inggris',
         ];
 
-        $levels = ['sd', 'smp', 'sma'];
+        $levels = ['sd'];
         $curriculum = 'Kurikulum Merdeka';
 
         foreach ($subjects as $slug => $name) {
@@ -30,7 +26,7 @@ class SubcategorySeeder extends Seeder
 
             if ($category) {
                 foreach ($levels as $level) {
-                    Subcategory::firstOrCreate(
+                    Subcategory::updateOrCreate(
                         ['slug' => $slug . '-' . $level],
                         [
                             'category_id' => $category->id,

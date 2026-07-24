@@ -72,6 +72,7 @@ class AIController extends Controller
         }
 
         try {
+            // MODEL AI
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json',

@@ -800,6 +800,35 @@ a .la {
   }
 }
 
+.navbar-custom.navbar-solid {
+  background-color: #fff;
+  a {
+    color: #111;
+  }
+  .navbar-brand {
+    .logo {
+      display: none;
+    }
+    .logodark {
+      display: inline-block;
+      max-height: 30px;
+    }
+  }
+  .icon-bar {
+    background: #111;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar-custom.navbar-solid {
+    padding: 12px 30px !important;
+    .nav > li > a {
+      padding-top: 16px;
+      padding-bottom: 10px;
+    }
+  }
+}
+
 .vmenu {
   display: inline-block;
   margin: 0;

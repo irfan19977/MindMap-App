@@ -27,11 +27,12 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             RoleAndUserSeeder::class,
-            TeacherSeeder::class,
             CategorySeeder::class,
             SubcategorySeeder::class,
             MateriSeeder::class,
+            BahasaIndonesiaSdContentSeeder::class,
             MindmapSeeder::class,
+            BahasaIndonesiaSdClassSeeder::class,
         ]);
     }
 }

@@ -1,4 +1,4 @@
- <nav class="navbar navbar-Concept navbar-custom navbar-fixed-top">
+ <nav class="navbar navbar-Concept navbar-custom navbar-fixed-top @yield('navbar_class')">
       <div class="container">
         <div class="navbar-header">
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand page-scroll" href="/">
@@ -10,26 +10,7 @@
             <li><a href="/">{{ __('messages.home') }}</a></li>
             <li><a href="/about">{{ __('messages.about') }}</a></li>
             <li><a href="/teacher">{{ __('messages.teachers') }}</a></li>
-            <li><a href="#">{{ __('messages.courses') }} <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                @if($popularCategories->isNotEmpty())
-                  <li><strong class="text-muted">{{ __('messages.nav_popular') }}</strong></li>
-                  @foreach($popularCategories as $cat)
-                    <li><a href="/mindmap/{{ $cat->slug }}">{{ $cat->name }}</a></li>
-                  @endforeach
-                @else
-                  <li><strong class="text-muted">{{ __('messages.nav_academic') }}</strong></li>
-                  <li><a href="/mindmap/matematika">{{ __('messages.nav_mathematics') }}</a></li>
-                  <li><a href="/mindmap/fisika">{{ __('messages.nav_physics') }}</a></li>
-                  <li><a href="/mindmap/kimia">{{ __('messages.nav_chemistry') }}</a></li>
-                  <li><strong class="text-muted">{{ __('messages.nav_digital') }}</strong></li>
-                  <li><a href="/mindmap/programming">{{ __('messages.nav_programming') }}</a></li>
-                  <li><a href="/mindmap/web-design">{{ __('messages.nav_web_design') }}</a></li>
-                @endif
-                <li class="divider"></li>
-                <li><a href="/kelas"><i class="ion-ios-grid-outline"></i> {{ __('messages.view_all_courses') }}</a></li>
-              </ul>
-            </li>
+            <li><a href="/kelas">{{ __('messages.courses') }}</a></li>
             {{-- <li><a href="#">{{ __('messages.nav_program') }} <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><strong class="text-muted">{{ __('messages.nav_regular_program') }}</strong></li>
@@ -61,7 +42,7 @@
             @if(!auth()->user()->hasRole('admin') && !auth()->user()->hasRole('teacher'))
             <li>@include('components.notification-dropdown')</li>
             @endif
-            @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('teacher'))
+            @if(auth()->user()->hasRole('admin') || (auth()->user()->hasRole('teacher') && auth()->user()->is_active))
             <li><a href="{{ route('dashboard.index') }}">{{ __('messages.dashboard') }}</a></li>
             @else
             <li class="dropdown">

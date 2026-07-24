@@ -162,7 +162,7 @@
                 <li><a href="/"><i class="fab fa-facebook-f fa-2x"></i></a></li>
                 <li><a href="https://github.com/irfan19977" target="_blank"><i class="fab fa-github fa-2x"></i></a></li>
               </ul>Irfan Adi Prastyo
-              <div class="small">{{ __('messages.team_ceo') }}</div>
+              <div class="small">Project Manager & Web Developer</div>
             </h5>
           </div>
           <div class="col-md-6">
@@ -174,7 +174,7 @@
                     <li><a href="/"><i class="fab fa-youtube"></i></a></li>
                     <li><a href="https://github.com/BielCre4tive" target="_blank"><i class="fab fa-github"></i></a></li>
                   </ul>Muhammad Fadhli Robbi Elhami
-                  <div class="small">{{ __('messages.team_ops_manager') }}</div>
+                  <div class="small">Web Developer</div>
                 </h5>
               </div>
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bisma.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
@@ -184,7 +184,7 @@
                     <li><a href="/"><i class="fab fa-twitter"></i></a></li>
                     <li><a href="https://github.com/ajaajasada03-cmyk" target="_blank"><i class="fab fa-github"></i></a></li>
                   </ul>Faishal Danurweda Bisma
-                  <div class="small">{{ __('messages.team_lead_designer') }}</div>
+                  <div class="small">Web Developer</div>
                 </h5>
               </div>
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/arkan.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
@@ -194,7 +194,7 @@
                     <li><a href="https://github.com/thooreqkerjo-star" target="_blank"><i class="fab fa-github"></i></a></li>
                     <li><a href="/"><i class="fab fa-pinterest"></i></a></li>
                   </ul>Arkan Thaariq Asadullah
-                  <div class="small">{{ __('messages.team_content_dev') }}</div>
+                  <div class="small">Web Developer</div>
                 </h5>
               </div>
               <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/mishaal.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
@@ -204,7 +204,7 @@
                     <li><a href="https://github.com/muhammadmishaal2204-del" target="_blank"><i class="fab fa-github"></i></a></li>
                     <li><a href="/"><i class="fab fa-linkedin"></i></a></li>
                   </ul>Muhammad Mishaal
-                  <div class="small">{{ __('messages.team_biz_dev') }}</div>
+                  <div class="small">Web Developer</div>
                 </h5>
               </div>
             </div>

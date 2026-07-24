@@ -767,6 +767,32 @@ a .la:hover {
   color: #333;
 }
 
+.navbar-custom.navbar-solid {
+  background-color: #fff;
+}
+.navbar-custom.navbar-solid a {
+  color: #111;
+}
+.navbar-custom.navbar-solid .navbar-brand .logo {
+  display: none;
+}
+.navbar-custom.navbar-solid .navbar-brand .logodark {
+  display: inline-block;
+  max-height: 30px;
+}
+.navbar-custom.navbar-solid .icon-bar {
+  background: #111;
+}
+@media (min-width: 768px) {
+  .navbar-custom.navbar-solid {
+    padding: 12px 30px !important;
+  }
+  .navbar-custom.navbar-solid .nav > li > a {
+    padding-top: 16px;
+    padding-bottom: 10px;
+  }
+}
+
 .vmenu {
   display: inline-block;
   margin: 0;

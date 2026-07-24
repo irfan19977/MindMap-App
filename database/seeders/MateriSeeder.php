@@ -16,49 +16,11 @@ class MateriSeeder extends Seeder
      */
     public function run(): void
     {
-        $subjects = ['matematika', 'bahasa-indonesia', 'ipa', 'ips', 'bahasa-inggris'];
-        $levels = ['sd', 'smp', 'sma'];
+        $subjects = ['bahasa-indonesia'];
+        $levels = ['sd'];
 
         // Material data for each subject and level
         $materialsData = [
-            'matematika' => [
-                'sd' => [
-                    'Penjumlahan dan Pengurangan Bilangan Bulat',
-                    'Perkalian dan Pembagian Dasar',
-                    'Pecahan Sederhana',
-                    'Geometri Dasar: Bangun Datar',
-                    'Pengukuran Panjang dan Berat',
-                    'Waktu dan Jam',
-                    'Uang dan Mata Uang',
-                    'Statistik Dasar: Diagram Batang',
-                    'Bangun Ruang Sederhana',
-                    'Soal Cerita Matematika SD'
-                ],
-                'smp' => [
-                    'Aljabar Dasar',
-                    'Persamaan Linear Satu Variabel',
-                    'Teorema Pythagoras',
-                    'Geometri: Lingkaran',
-                    'Trigonometri Dasar',
-                    'Statistik: Mean, Median, Modus',
-                    'Peluang Dasar',
-                    'Bangun Ruang: Kubus dan Balok',
-                    'Sistem Persamaan Linear Dua Variabel',
-                    'Fungsi Linear dan Kuadrat'
-                ],
-                'sma' => [
-                    'Limit dan Turunan Fungsi',
-                    'Integral Tak Tentu',
-                    'Matriks dan Determinan',
-                    'Vektor dalam Ruang Dimensi Tiga',
-                    'Barisan dan Deret',
-                    'Logika Matematika',
-                    'Persamaan Lingkaran',
-                    'Statistika Inferensial',
-                    'Program Linear',
-                    'Transformasi Geometri'
-                ]
-            ],
             'bahasa-indonesia' => [
                 'sd' => [
                     'Mengenal Huruf dan Kata',
@@ -337,7 +299,7 @@ class MateriSeeder extends Seeder
                         ];
 
                         $slug = strtolower(str_replace(' ', '-', $title)) . '-' . $index;
-                        $material = Material::firstOrCreate(
+                        $material = Material::updateOrCreate(
                             ['slug' => $slug],
                             [
                                 'subcategory_id' => $subcategory->id,

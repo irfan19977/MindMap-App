@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Student;
@@ -24,7 +25,10 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        return view('auth.register', [
+            'categories' => Category::where('status', 'publish')->orderBy('name')->get(['id', 'name']),
+            'socialRegistration' => session('social_registration'),
+        ]);
     }
 
     /**
@@ -34,12 +38,19 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $socialRegistration = $request->session()->get('social_registration');
+
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'user_type' => ['required', 'in:student,teacher,umum'],
+            'category_interests' => ['nullable', 'array'],
+            'category_interests.*' => ['uuid', 'exists:categories,id'],
         ];
+
+        if (! $socialRegistration) {
+            $rules['password'] = ['required', 'confirmed', Rules\Password::defaults()];
+        }
 
         if ($request->user_type === 'teacher') {
             $rules['specialization'] = ['required', 'string', 'max:255'];
@@ -64,11 +75,18 @@ class RegisteredUserController extends Controller
 
         $request->validate($rules);
 
-        // Create user (only name, email, password)
+        $isPendingTeacher = $request->user_type === 'teacher';
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $socialRegistration ? Str::random(64) : Hash::make($request->password),
+            'social_provider' => $socialRegistration['provider'] ?? null,
+            'social_provider_id' => $socialRegistration['provider_id'] ?? null,
+            'email_verified_at' => $socialRegistration ? now() : null,
+            'user_type' => $request->user_type,
+            'is_active' => ! $isPendingTeacher,
+            'teacher_verification_status' => $isPendingTeacher ? 'pending' : null,
         ]);
 
         // Create related profile and assign role based on user_type
@@ -93,6 +111,7 @@ class RegisteredUserController extends Controller
                 'school' => $request->school,
                 'major' => $request->major,
                 'learning_interest' => $request->learning_interest,
+                'category_interests' => $request->input('category_interests', []),
             ]);
             $user->assignRole('student');
         }
@@ -102,14 +121,21 @@ class RegisteredUserController extends Controller
                 'user_id' => $user->id,
                 'occupation' => $request->occupation,
                 'learning_interest' => $request->learning_interest,
+                'category_interests' => $request->input('category_interests', []),
             ]);
-            $user->assignRole('student');
+            $user->assignRole('umum');
         }
+
+        $request->session()->forget('social_registration');
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard.index', absolute: false));
+        if ($isPendingTeacher) {
+            return redirect()->route('teacher.pending');
+        }
+
+        return redirect('/');
     }
 }

@@ -110,12 +110,6 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="7" class="text-center py-4 text-muted">
-                                                <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                Belum ada undangan kolaborasi
-                                            </td>
-                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>

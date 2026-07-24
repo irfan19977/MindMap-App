@@ -16,6 +16,7 @@ class Student extends Model
         'grade',
         'major',
         'learning_interest',
+        'category_interests',
         'birth_date',
         'phone',
         'address',
@@ -23,6 +24,7 @@ class Student extends Model
 
     protected $casts = [
         'birth_date' => 'date',
+        'category_interests' => 'array',
     ];
 
     public function user()

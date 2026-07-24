@@ -86,6 +86,14 @@
                                                         <span class="badge bg-soft-success text-success">
                                                             <i class="feather-check-circle me-1"></i>{{ __('messages.backend_active') }}
                                                         </span>
+                                                    @elseif($user->user_type === 'teacher' && $user->teacher_verification_status === 'rejected')
+                                                        <span class="badge bg-soft-danger text-danger">
+                                                            <i class="feather-x-circle me-1"></i>Ditolak
+                                                        </span>
+                                                    @elseif($user->user_type === 'teacher')
+                                                        <span class="badge bg-soft-warning text-warning">
+                                                            <i class="feather-clock me-1"></i>Menunggu Verifikasi
+                                                        </span>
                                                     @else
                                                         <span class="badge bg-soft-secondary text-secondary">
                                                             <i class="feather-x-circle me-1"></i>{{ __('messages.backend_inactive') }}
@@ -99,6 +107,27 @@
                                                                 <i class="feather feather-more-horizontal"></i>
                                                             </a>
                                                             <ul class="dropdown-menu">
+                                                                @if(auth()->user()->hasRole('admin') && $user->user_type === 'teacher' && ! $user->is_active && $user->teacher_verification_status !== 'rejected')
+                                                                    <li>
+                                                                        <form method="POST" action="{{ route('users.approve-teacher', $user) }}" class="teacher-verification-form" data-action="approve" data-name="{{ $user->name }}">
+                                                                            @csrf
+                                                                            <button type="submit" class="dropdown-item text-success">
+                                                                                <i class="feather feather-check me-3"></i>
+                                                                                <span>Approve</span>
+                                                                            </button>
+                                                                        </form>
+                                                                    </li>
+                                                                    <li>
+                                                                        <form method="POST" action="{{ route('users.reject-teacher', $user) }}" class="teacher-verification-form" data-action="reject" data-name="{{ $user->name }}">
+                                                                            @csrf
+                                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                                <i class="feather feather-x me-3"></i>
+                                                                                <span>Reject</span>
+                                                                            </button>
+                                                                        </form>
+                                                                    </li>
+                                                                    <li><hr class="dropdown-divider"></li>
+                                                                @endif
                                                                 <li>
                                                                     <a class="dropdown-item" href="{{ route('users.edit', $user->id) }}">
                                                                         <i class="feather feather-edit-3 me-3"></i>
@@ -117,14 +146,6 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
-                                                <td colspan="6" class="text-center py-4">
-                                                    <div class="text-muted">
-                                                        <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                        {{ __('messages.backend_no_user_data') }}
-                                                    </div>
-                                                </td>
-                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -172,6 +193,30 @@
             });
         });
         
+        document.querySelectorAll('.teacher-verification-form').forEach((form) => {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                const isApprove = this.dataset.action === 'approve';
+                const name = this.dataset.name;
+
+                Swal.fire({
+                    title: isApprove ? 'Setujui pengajar?' : 'Tolak pengajar?',
+                    text: isApprove ? `Aktifkan akses mengajar untuk ${name}?` : `Tolak pendaftaran pengajar untuk ${name}?`,
+                    icon: isApprove ? 'question' : 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: isApprove ? '#198754' : '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: isApprove ? 'Ya, approve' : 'Ya, reject',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
+            });
+        });
+
         function deleteUser(id, name) {
             Swal.fire({
                 title: '{{ __('messages.backend_sweetalert_confirm_title') }}',

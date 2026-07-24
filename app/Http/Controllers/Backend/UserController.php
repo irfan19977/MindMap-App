@@ -65,6 +65,42 @@ class UserController extends Controller
             ->with('success', 'User berhasil ditambahkan!');
     }
 
+    public function approveTeacher(User $user)
+    {
+        abort_unless(auth()->user()->hasRole('admin'), 403);
+
+        if ($user->user_type !== 'teacher') {
+            return redirect()->route('users.index')
+                ->with('error', 'Hanya akun pengajar yang dapat disetujui.');
+        }
+
+        $user->update([
+            'is_active' => true,
+            'teacher_verification_status' => 'approved',
+        ]);
+
+        return redirect()->route('users.index')
+            ->with('success', 'Akun pengajar ' . $user->name . ' telah disetujui.');
+    }
+
+    public function rejectTeacher(User $user)
+    {
+        abort_unless(auth()->user()->hasRole('admin'), 403);
+
+        if ($user->user_type !== 'teacher') {
+            return redirect()->route('users.index')
+                ->with('error', 'Hanya akun pengajar yang dapat ditolak.');
+        }
+
+        $user->update([
+            'is_active' => false,
+            'teacher_verification_status' => 'rejected',
+        ]);
+
+        return redirect()->route('users.index')
+            ->with('success', 'Pendaftaran pengajar ' . $user->name . ' telah ditolak.');
+    }
+
     /**
      * Display the specified resource.
      */

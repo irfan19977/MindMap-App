@@ -13,11 +13,89 @@
     <!-- Kelas Block-->
     <section class="section-small" id="kelas">
         <div class="container">
+            <style>
+                .class-search-filter {
+                    max-width: 600px;
+                    margin: 0 auto 30px;
+                }
+                .class-search-filter .search-input-wrap {
+                    position: relative;
+                    margin-bottom: 15px;
+                }
+                .class-search-filter .search-input-wrap input {
+                    width: 100%;
+                    padding: 12px 20px 12px 45px;
+                    border: 2px solid #e0e0e0;
+                    border-radius: 30px;
+                    font-size: 15px;
+                    outline: none;
+                    transition: border-color 0.3s;
+                }
+                .class-search-filter .search-input-wrap input:focus {
+                    border-color: #333;
+                }
+                .class-search-filter .search-input-wrap i {
+                    position: absolute;
+                    left: 18px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #999;
+                    font-size: 16px;
+                }
+                .class-search-filter .filter-buttons {
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    gap: 8px;
+                }
+                .class-search-filter .filter-buttons button {
+                    padding: 7px 20px;
+                    border: 2px solid #e0e0e0;
+                    border-radius: 25px;
+                    background: #fff;
+                    color: #555;
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s;
+                }
+                .class-search-filter .filter-buttons button:hover {
+                    border-color: #333;
+                    color: #333;
+                }
+                .class-search-filter .filter-buttons button.active {
+                    background: #333;
+                    border-color: #333;
+                    color: #fff;
+                }
+            </style>
+
             <div class="row grid-pad">
-                <div class="col-md-8">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2 text-center">
+                            <div class="class-search-filter">
+                                <div class="search-input-wrap">
+                                    <i class="fa fa-search"></i>
+                                    <input type="text" id="classSearch" placeholder="Cari kelas...">
+                                </div>
+                                <div class="filter-buttons">
+                                    <button type="button" class="filter-btn active" data-level="all">Semua</button>
+                                    <button type="button" class="filter-btn" data-level="sd">SD</button>
+                                    <button type="button" class="filter-btn" data-level="smp">SMP</button>
+                                    <button type="button" class="filter-btn" data-level="sma">SMA</button>
+                                    <button type="button" class="filter-btn" data-level="umum">Umum</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row" id="class-grid">
                         @forelse($classes as $class)
-                            <div class="col-sm-6 class-item" data-level="{{ $class->subcategory->grade_level ?? 'umum' }}">
+                            <div class="col-md-4 col-sm-6 class-item"
+                                 data-name="{{ strtolower($class->name) }}"
+                                 data-description="{{ strtolower($class->description ?? '') }}"
+                                 data-level="{{ $class->subcategory->grade_level ?? 'umum' }}">
                                 <a href="{{ route('mindmap.show', $class->subcategory->slug) }}">
                                     <div style="position: relative; display: inline-block;">
                                         @if($class->cover_image)
@@ -54,108 +132,62 @@
                                 </div>
                             </div>
                         @endforelse
+
+                        <div id="noResults" class="col-sm-12" style="display: none;">
+                            <div class="alert alert-info text-center">
+                                <i class="fa fa-info-circle fa-2x"></i>
+                                <h4>Tidak Ada Kelas</h4>
+                                <p>Tidak ada kelas yang cocok dengan pencarian Anda.</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="col-md-3 col-md-offset-1">
-                    <form class="form-inline subscribe-form" action="#" method="post">
-                        <div class="input-group input-group-lg">
-                            <input class="form-control" type="search" name="search" placeholder="Cari kelas...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-dark" type="submit" name="search"><i class="fa fa-search fa-lg"></i></button>
-                            </span>
-                        </div>
-                    </form>
-
-                    <hr>
-                    <h4>Kategori Pembelajaran</h4>
-                    <ul class="list-unstyled">
-                        @php
-                            $uniqueCategories = $classes->pluck('category')->unique('id')->filter();
-                        @endphp
-                        @forelse($uniqueCategories as $cat)
-                            <li>
-                                <a href="{{ route('mindmap.show', $cat->slug) }}">
-                                    @if($cat->grade_level == 'sd')
-                                        <i class="fa fa-calculator text-primary"></i>
-                                    @elseif($cat->grade_level == 'smp')
-                                        <i class="fa fa-atom text-success"></i>
-                                    @elseif($cat->grade_level == 'sma')
-                                        <i class="fa fa-flask text-warning"></i>
-                                    @else
-                                        <i class="fa fa-code text-info"></i>
-                                    @endif
-                                    {{ $cat->name }}
-                                </a>
-                            </li>
-                        @empty
-                            <li><a href="javascript:void(0);"><i class="fa fa-info-circle"></i> Belum ada kategori</a></li>
-                        @endforelse
-                    </ul>
-
-                    <hr>
-                    <h4>Level Pembelajaran</h4>
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="javascript:void(0);" onclick="filterByLevel('sd')">
-                                <span class="label label-success">SD</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" onclick="filterByLevel('smp')">
-                                <span class="label label-warning">SMP</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" onclick="filterByLevel('sma')">
-                                <span class="label label-danger">SMA</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" onclick="filterByLevel('umum')">
-                                <span class="label label-info">UMUM</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);" onclick="showAllClasses()">
-                                <span class="label label-default">Semua Level</span>
-                            </a>
-                        </li>
-                    </ul>
-
-                    <hr>
-                    <h4>Subscribe</h4>
-                    <p>Dapatkan informasi kelas terbaru dan penawaran khusus.</p>
-                    <form class="form-inline subscribe-form" id="mc-embedded-subscribe-form" action="#" method="post" name="mc-embedded-subscribe-form" target="_blank" novalidate="">
-                        <div class="input-group input-group-lg">
-                            <input class="form-control" id="mce-EMAIL" type="email" name="EMAIL" placeholder="Email address...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-dark" id="mc-embedded-subscribe" type="submit" name="subscribe">Subscribe</button>
-                            </span>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Pagination-->
-    <div class="section section-small bg-white">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <nav>
-                        <ul class="pagination">
-                            <li><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-                            <li class="active"><a href="#">1<span class="sr-only">(current)</span></a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">&middot;&middot;&middot;</a><a href="#">38</a></li>
-                            <li><a href="#" aria-label="Previous"><span aria-hidden="true">&raquo;</span></a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var searchInput = document.getElementById('classSearch');
+        var filterBtns = document.querySelectorAll('.filter-btn');
+        var classItems = document.querySelectorAll('.class-item');
+        var noResults = document.getElementById('noResults');
+        var activeLevel = 'all';
+
+        function filterClasses() {
+            var term = searchInput.value.toLowerCase().trim();
+            var visibleCount = 0;
+
+            classItems.forEach(function(item) {
+                var name = item.getAttribute('data-name') || '';
+                var description = item.getAttribute('data-description') || '';
+                var level = item.getAttribute('data-level') || 'umum';
+                var matchSearch = term === '' || name.indexOf(term) !== -1 || description.indexOf(term) !== -1;
+                var matchLevel = activeLevel === 'all' || level === activeLevel;
+
+                if (matchSearch && matchLevel) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            noResults.style.display = visibleCount === 0 ? '' : 'none';
+        }
+
+        searchInput.addEventListener('input', filterClasses);
+
+        filterBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                activeLevel = btn.getAttribute('data-level');
+                filterClasses();
+            });
+        });
+    });
+    </script>
     <!-- Action Section-->
     <section class="section-small bg-gray2 action">
         <div class="container">
@@ -173,38 +205,4 @@
         </div>
     </section>
 
-<script>
-function filterByLevel(level) {
-    const items = document.querySelectorAll('.class-item');
-    const contentArea = document.getElementById('class-grid');
-    let visibleCount = 0;
-
-    items.forEach(item => {
-        if (item.dataset.level === level) {
-            item.style.display = 'block';
-            visibleCount++;
-        } else {
-            item.style.display = 'none';
-        }
-    });
-
-    if (visibleCount === 0) {
-        contentArea.innerHTML = `
-            <div class="col-sm-12">
-                <div class="alert alert-info text-center">
-                    <i class="fa fa-info-circle fa-2x"></i>
-                    <h4>Tidak Ada Kelas</h4>
-                    <p>Belum ada kelas untuk level ${level.toUpperCase()} saat ini.</p>
-                </div>
-            </div>
-        `;
-    }
-
-    document.getElementById('kelas').scrollIntoView({ behavior: 'smooth' });
-}
-
-function showAllClasses() {
-    location.reload();
-}
-</script>
 @endsection

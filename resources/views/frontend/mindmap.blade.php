@@ -137,6 +137,16 @@
 
             <!-- MindMap Utama -->
             <div class="col-md-9">
+              <div class="mindmap-progress">
+                <div class="progress-info">
+                  <span>Progress Pembelajaran</span>
+                  <span id="progress-text">0%</span>
+                </div>
+                <div class="progress-bar-wrapper">
+                  <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+              </div>
+
               <div class="drawio-layout">
                 <!-- Canvas Area -->
                 <div class="drawio-canvas-area">
@@ -1182,6 +1192,35 @@
         line-height: 1.6;
         margin: 0;
     }
+
+    .mindmap-progress {
+        margin-bottom: 15px;
+    }
+    .mindmap-progress .progress-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 600;
+        font-size: 14px;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+    .mindmap-progress .progress-info span:last-child {
+        color: #10b981;
+    }
+    .mindmap-progress .progress-bar-wrapper {
+        background: #e2e8f0;
+        border-radius: 10px;
+        height: 12px;
+        overflow: hidden;
+    }
+    .mindmap-progress .progress-bar-fill {
+        background: #10b981;
+        height: 100%;
+        border-radius: 10px;
+        width: 0%;
+        transition: width 0.4s ease;
+    }
     </style>
 
     @if(isset($mindmap) && $mindmap)
@@ -1245,7 +1284,8 @@
             const mindmapData = @json($mindmap->structure);
             if (mindmapData && mindmapData.nodes && mindmapData.connections) {
                 renderMindmap(mindmapData);
-                
+                updateProgressBar();
+
                 // Auto-center the mindmap after rendering
                 setTimeout(() => autoCenterMindmap(), 100);
             }
@@ -1298,6 +1338,28 @@
                 }
             }
         });
+    }
+
+    function updateProgressBar() {
+        const total = nodes.filter(function(node) {
+            return node.materialId;
+        }).length;
+
+        const completed = nodes.filter(function(node) {
+            return node.materialId && userCompletedMaterials.includes(node.materialId);
+        }).length;
+
+        const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+        const fill = document.getElementById('progress-bar-fill');
+        const text = document.getElementById('progress-text');
+
+        if (fill) {
+            fill.style.width = percentage + '%';
+        }
+        if (text) {
+            text.textContent = percentage + '%';
+        }
     }
 
     function renderMindmap(structure) {

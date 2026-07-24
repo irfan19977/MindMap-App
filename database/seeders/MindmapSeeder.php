@@ -584,7 +584,7 @@ class MindmapSeeder extends Seeder
             ],
         ];
 
-        foreach ($mindmapsData as $subcategorySlug => $data) {
+        foreach (array_intersect_key($mindmapsData, ['bahasa-indonesia-sd' => true]) as $subcategorySlug => $data) {
             $subcategory = Subcategory::where('slug', $subcategorySlug)->first();
             if (!$subcategory) continue;
 
