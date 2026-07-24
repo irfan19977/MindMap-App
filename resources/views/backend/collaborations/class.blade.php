@@ -161,12 +161,6 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center py-4 text-muted">
-                                                <i class="feather-users fs-24 d-block mb-2"></i>
-                                                Belum ada kolaborasi untuk kelas ini
-                                            </td>
-                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>

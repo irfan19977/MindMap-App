@@ -223,9 +223,6 @@
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="6" class="text-center py-4 text-muted">Belum ada siswa yang mendaftar.</td>
-                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>

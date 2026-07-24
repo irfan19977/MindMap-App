@@ -123,16 +123,23 @@ class RoleAndUserSeeder extends Seeder
                 'name'      => 'Guru MindMap',
                 'password'  => bcrypt('password'),
                 'user_type' => 'teacher',
+                'is_active' => true,
+                'teacher_verification_status' => 'approved',
             ]
         );
+        $teacherUser->update([
+            'user_type' => 'teacher',
+            'is_active' => true,
+            'teacher_verification_status' => 'approved',
+        ]);
         $teacherUser->syncRoles([$teacherRole]);
-        Teacher::firstOrCreate(
+        Teacher::updateOrCreate(
             ['user_id' => $teacherUser->id],
             [
                 'slug' => 'guru-mindmap',
-                'specialization' => 'Matematika & Fisika',
+                'specialization' => 'Bahasa Indonesia SD',
                 'category' => 'akademik',
-                'description' => 'Guru default untuk testing aplikasi MindMap',
+                'description' => 'Guru default untuk materi Bahasa Indonesia SD di aplikasi MindMap',
                 'education' => 'S1 Pendidikan',
                 'experience' => '5 tahun mengajar',
             ]
@@ -173,9 +180,9 @@ class RoleAndUserSeeder extends Seeder
         );
 
         // Assign admin role to existing Irfan user if present
-        $irfan = User::where('email', 'irfanadiprasetyo27@gmail.com')->first();
-        if ($irfan) {
-            $irfan->syncRoles([$adminRole]);
-        }
+        // $irfan = User::where('email', 'irfanadiprasetyo27@gmail.com')->first();
+        // if ($irfan) {
+        //     $irfan->syncRoles([$adminRole]);
+        // }
     }
 }

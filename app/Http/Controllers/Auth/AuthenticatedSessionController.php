@@ -31,12 +31,22 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
         $user->update(['last_login_at' => now()]);
 
-        // Redirect based on role — admin/teacher always go to dashboard
-        if ($user->hasRole('admin') || $user->hasRole('teacher')) {
+        if ($user->hasRole('admin') || ($user->hasRole('teacher') && $user->is_active)) {
             return redirect()->route('dashboard.index');
         }
 
-        return redirect()->intended('/');
+        if ($user->hasRole('teacher') && ! $user->is_active) {
+            return redirect()->route('teacher.pending');
+        }
+
+        $intended = $request->input('intended', $request->session()->pull('url.intended', '/'));
+
+        $intendedHost = parse_url($intended, PHP_URL_HOST);
+        if ($intendedHost !== null && $intendedHost !== $request->getHost()) {
+            $intended = '/';
+        }
+
+        return redirect()->to($intended);
     }
 
     /**

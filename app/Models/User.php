@@ -23,6 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'social_provider',
+        'social_provider_id',
         'theme_preferences',
         'phone',
         'school',
@@ -30,6 +32,7 @@ class User extends Authenticatable
         'address',
         'user_type',
         'is_active',
+        'teacher_verification_status',
         'last_login_at',
     ];
 

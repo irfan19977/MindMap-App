@@ -16,7 +16,12 @@ class UmumUser extends Model
         'phone',
         'occupation',
         'learning_interest',
+        'category_interests',
         'address',
+    ];
+
+    protected $casts = [
+        'category_interests' => 'array',
     ];
 
     public function user()

@@ -172,14 +172,6 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
-                                                <td colspan="4" class="text-center py-4">
-                                                    <div class="text-muted">
-                                                        <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                        Tidak ada data login
-                                                    </div>
-                                                </td>
-                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -227,14 +219,6 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
-                                                <td colspan="6" class="text-center py-4">
-                                                    <div class="text-muted">
-                                                        <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                        Tidak ada data quiz
-                                                    </div>
-                                                </td>
-                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -283,14 +267,6 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
-                                                <td colspan="6" class="text-center py-4">
-                                                    <div class="text-muted">
-                                                        <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                        Tidak ada data pembelajaran
-                                                    </div>
-                                                </td>
-                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -317,14 +293,6 @@
                                                 </td>
                                             </tr>
                                         @empty
-                                            <tr>
-                                                <td colspan="5" class="text-center py-4">
-                                                    <div class="text-muted">
-                                                        <i class="feather-inbox fs-24 d-block mb-2"></i>
-                                                        Tidak ada data kunjungan
-                                                    </div>
-                                                </td>
-                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>

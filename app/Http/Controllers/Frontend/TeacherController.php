@@ -14,6 +14,17 @@ class TeacherController extends Controller
         return view('frontend.teacher', compact('teachers'));
     }
 
+    public function pending()
+    {
+        if (auth()->user()->is_active) {
+            return redirect()->route('dashboard.index');
+        }
+
+        return view('frontend.teacher-pending', [
+            'verificationStatus' => auth()->user()->teacher_verification_status,
+        ]);
+    }
+
     public function show($slug)
     {
         $teacher = Teacher::with('user')->where('slug', $slug)->firstOrFail();

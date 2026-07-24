@@ -61,13 +61,14 @@ Route::get('/detailk', function () { return view('frontend.kelas-detail'); });
 |--------------------------------------------------------------------------
 */
 Route::prefix('teacher')->name('teacher.')->group(function () {
+    Route::get('/pending', [TeacherController::class, 'pending'])->middleware(['auth', 'role:teacher'])->name('pending');
     Route::get('/', [TeacherController::class, 'index'])->name('index');
     Route::get('/{slug}', [TeacherController::class, 'show'])->name('show');
     Route::get('/{slug}/reviews', [TeacherController::class, 'reviews'])->name('reviews');
     Route::get('/{slug}/courses', [TeacherController::class, 'courses'])->name('courses');
     
     // Teacher Collaboration (requires auth and teacher role)
-    Route::middleware(['auth', 'teacher'])->group(function () {
+    Route::middleware(['auth', 'role:teacher', 'approved_teacher'])->group(function () {
         Route::get('/collaborations', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'index'])->name('collaborations.index');
         Route::post('/collaborations/{collaboration}/accept', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'accept'])->name('collaborations.accept');
         Route::post('/collaborations/{collaboration}/reject', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'reject'])->name('collaborations.reject');
@@ -103,7 +104,7 @@ Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.his
 | Backend Routes (Admin & Teacher)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
+Route::middleware(['auth', 'role:admin|teacher', 'approved_teacher'])->group(function () {
     Route::resource('dashboard', DashboardController::class);
 
     // Konten Edukasi
@@ -186,6 +187,8 @@ Route::middleware(['auth', 'role:admin|teacher'])->group(function () {
     // Manajemen Pengguna
     Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
+    Route::post('users/{user}/approve-teacher', [UserController::class, 'approveTeacher'])->name('users.approve-teacher');
+    Route::post('users/{user}/reject-teacher', [UserController::class, 'rejectTeacher'])->name('users.reject-teacher');
     Route::resource('users', UserController::class);
 
     // Kolaborasi - custom routes must be defined before Route::resource

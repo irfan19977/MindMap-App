@@ -24,6 +24,7 @@
     <!-- Navigation-->
     @include('frontend.layouts.navbar')
 
+
     @yield('content')
     <!-- footer-->
     @include('frontend.layouts.footer')
