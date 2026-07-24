@@ -127,57 +127,57 @@ return [
     'nav_accounting' => 'Akuntansi',
     
     // Homepage Hero
-    'hero_title' => 'MindMap <span class="label classic">Pembelajaran</span><br>Inter<span class="light">aktif</span>',
-    'hero_subtitle' => 'Platform pembelajaran modern dengan alur pembelajaran terstruktur dan materi interaktif untuk meningkatkan pemahaman konsep Anda',
+    'hero_title' => 'MindMap <span class="label classic">Belajar</span><br>Lebih <span class="light">Terarah</span>',
+    'hero_subtitle' => 'Ubah materi yang rumit jadi peta konsep yang mudah dipahami, dengan alur belajar bertahap dari SD hingga SMA',
     
     // Homepage Teaser
-    'teaser_1_title' => 'Alur Pembelajaran',
-    'teaser_1_desc' => 'Sistem pembelajaran terstruktur dengan tahapan yang jelas untuk memudahkan pemahaman konsep secara bertahap',
-    'teaser_2_title' => 'Materi Interaktif',
-    'teaser_2_desc' => 'Materi pembelajaran yang engaging dan interaktif dengan berbagai media untuk meningkatkan daya ingat dan pemahaman',
-    'teaser_3_title' => 'Tracking Progress',
-    'teaser_3_desc' => 'Pantau perkembangan pembelajaran Anda secara real-time dengan sistem pelacakan progress yang komprehensif',
+    'teaser_1_title' => 'Peta Konsep Visual',
+    'teaser_1_desc' => 'Materi pelajaran diubah jadi mind map visual sehingga hubungan antar konsep terlihat jelas dan lebih mudah diingat',
+    'teaser_2_title' => 'Alur Belajar Bertahap',
+    'teaser_2_desc' => 'Materi tersusun berurutan dan baru terbuka setelah kamu menyelesaikan tahap sebelumnya, jadi belajar lebih terarah',
+    'teaser_3_title' => 'Pantau Progres Belajar',
+    'teaser_3_desc' => 'Lihat sejauh mana kamu sudah paham lewat dashboard progres, hasil quiz, dan materi yang sudah diselesaikan',
     
     // About Section
     'about_title' => 'Tentang MindMap',
-    'about_desc_1' => 'MindMap adalah platform pembelajaran inovatif yang dirancang untuk membantu Anda memahami konsep-konsep kompleks dengan cara yang lebih mudah dan menyenangkan. Dengan sistem alur pembelajaran yang terstruktur dan materi yang interaktif, kami berkomitmen untuk meningkatkan kualitas pembelajaran Anda.',
-    'about_desc_2' => 'Platform kami menggabungkan teknologi modern dengan metode pembelajaran efektif untuk memberikan pengalaman belajar yang optimal dan personal.',
-    'about_team' => 'MindMap Team',
-    'about_subtitle' => 'Platform Pembelajaran Digital',
+    'about_desc_1' => 'MindMap adalah platform belajar yang mengubah materi pelajaran menjadi mind map interaktif, supaya konsep yang rumit lebih mudah dipahami dan diingat. Materi disusun bertahap dari dasar sampai lanjutan, jadi kamu tidak akan tersesat di tengah jalan.',
+    'about_desc_2' => 'Setiap materi dilengkapi latihan soal dan quiz untuk menguji pemahaman, serta dashboard progres supaya kamu bisa memantau perkembangan belajarmu sendiri.',
+    'about_team' => 'Tim MindMap',
+    'about_subtitle' => 'Platform Belajar dengan Mind Mapping',
     
     // Features Section
     'features_title' => 'Fitur Unggulan',
     'feature_1_title' => 'Alur Pembelajaran Adaptif',
-    'feature_1_desc' => 'Sistem pembelajaran yang menyesuaikan dengan kemampuan dan kecepatan belajar setiap pengguna untuk hasil yang optimal.',
+    'feature_1_desc' => 'Urutan materi otomatis menyesuaikan levelmu, jadi kamu belajar dengan langkah yang pas — tidak terlalu mudah, tidak terlalu berat.',
     'feature_2_title' => 'Materi Multimedia',
-    'feature_2_desc' => 'Konten pembelajaran kaya dengan video, animasi, dan simulasi interaktif untuk pemahaman yang lebih mendalam.',
-    'feature_3_title' => 'Assessment Otomatis',
-    'feature_3_desc' => 'Sistem evaluasi otomatis yang memberikan feedback langsung untuk membantu Anda meningkatkan pemahaman secara berkelanjutan.',
+    'feature_2_desc' => 'Belajar lewat mind map, video, dan animasi supaya konsep yang sulit dijelaskan jadi lebih mudah dibayangkan.',
+    'feature_3_title' => 'Evaluasi Otomatis',
+    'feature_3_desc' => 'Setiap materi dilengkapi quiz dengan penilaian otomatis, jadi kamu langsung tahu bagian mana yang masih perlu dipelajari ulang.',
     'learn_more' => 'Pelajari Lebih',
     
     // Services Section
     'services_title' => 'Layanan Pembelajaran',
-    'services_desc' => 'Platform MindMap menyediakan berbagai layanan pembelajaran yang komprehensif untuk mendukung perkembangan akademik dan profesional Anda',
+    'services_desc' => 'MindMap menyediakan berbagai layanan untuk mendukung proses belajarmu, dari materi dasar sampai persiapan ujian',
     'service_1_title' => 'Analitik Pembelajaran',
-    'service_1_desc' => 'Analisis mendalam tentang progress pembelajaran dan identifikasi area yang perlu ditingkatkan.',
+    'service_1_desc' => 'Lihat progres belajarmu secara rinci dan temukan materi mana yang perlu dipelajari ulang.',
     'service_2_title' => 'Kurikulum Interaktif',
-    'service_2_desc' => 'Materi pembelajaran yang dirancang dengan pendekatan visual dan interaktif untuk pemahaman optimal.',
+    'service_2_desc' => 'Materi disusun dalam bentuk mind map visual yang memudahkan pemahaman konsep.',
     'service_3_title' => 'Konsultasi Akademik',
-    'service_3_desc' => 'Dukungan dari tutor ahli untuk membantu mengatasi kesulitan dalam pembelajaran.',
+    'service_3_desc' => 'Tanyakan kesulitan belajarmu langsung ke tutor yang siap membantu.',
     'service_4_title' => 'Sertifikasi',
-    'service_4_desc' => 'Sertifikat kompetensi yang dapat digunakan untuk meningkatkan nilai akademik dan profesional.',
+    'service_4_desc' => 'Dapatkan sertifikat setelah menyelesaikan kelas sebagai bukti kompetensimu.',
     'service_5_title' => 'Progress Tracking',
-    'service_5_desc' => 'Pemantauan perkembangan pembelajaran secara real-time dengan dashboard yang informatif.',
+    'service_5_desc' => 'Pantau materi yang sudah dan belum kamu selesaikan lewat dashboard progres.',
     'service_6_title' => 'Quiz & Assessment',
-    'service_6_desc' => 'Berbagai jenis evaluasi untuk mengukur pemahaman dan penguasaan materi.',
-    'service_7_title' => 'Flexible Learning',
-    'service_7_desc' => 'Pembelajaran yang dapat diakses kapan saja dan di mana saja sesuai dengan kebutuhan Anda.',
+    'service_6_desc' => 'Uji pemahamanmu lewat kuis di setiap akhir materi.',
+    'service_7_title' => 'Belajar Fleksibel',
+    'service_7_desc' => 'Akses materi kapan saja dan di mana saja lewat perangkat apapun.',
     'service_8_title' => 'Personalisasi',
-    'service_8_desc' => 'Pengalaman belajar yang disesuaikan dengan gaya belajar dan kebutuhan individual.',
+    'service_8_desc' => 'Rekomendasi materi disesuaikan dengan level dan kecepatan belajarmu.',
     
     // Video Section
     'watch_our_story' => 'Tonton Cerita Kami',
-    'video_platform' => 'Youtube / Vimeo',
+    'video_platform' => 'Kenalan lebih dekat dengan MindMap lewat video ini',
     
     // Portfolio Section
     'portfolio_title' => 'Portfolio',
@@ -204,7 +204,7 @@ return [
     
     // What We Do
     'what_we_do_title' => 'Apa Yang Kami Lakukan',
-    'what_we_do_desc' => 'Kami menciptakan platform pembelajaran digital yang inovatif. Pengembangan alur pembelajaran, desain materi interaktif, manajemen konten, perencanaan strategis, dan pengujian usability untuk pengalaman belajar terbaik.',
+    'what_we_do_desc' => 'Kami membangun platform belajar yang mengubah materi pelajaran jadi mind map interaktif. Mulai dari menyusun alur belajar, membuat materi visual, sampai menyediakan quiz dan pelacakan progres — semua dirancang supaya proses belajar terasa lebih mudah dan terarah.',
     'mindmap_team' => 'Tim MindMap',
     
     // Team Section
@@ -216,7 +216,7 @@ return [
     'team_biz_dev' => 'Business Development',
     
     // Quote Section
-    'quote_text' => 'Pembelajaran Adalah Perjalanan Tanpa Akhir. Teruslah Bergerak Maju untuk Meraih Kesuksesan.',
+    'quote_text' => 'Belajar Adalah Perjalanan Tanpa Akhir. Teruslah Bergerak Maju untuk Meraih Kesuksesan.',
     
     // Pricing
     'pricing_title' => 'Harga',
@@ -242,15 +242,15 @@ return [
     'pricing_custom' => 'CUSTOM',
     
     // Facts
-    'facts_completed' => 'Proyek Selesai',
-    'facts_themes' => 'Tema Dirilis',
-    'facts_customers' => 'Pelanggan Bahagia',
-    'facts_awards' => 'Penghargaan Dimenangkan',
+    'facts_completed' => 'Materi Tersedia',
+    'facts_themes' => 'Mind Map Dibuat',
+    'facts_customers' => 'Siswa Aktif Belajar',
+    'facts_awards' => 'Kelas Tersedia',
     
     // CTA Section
     'cta_title' => 'Mulai Sekarang',
-    'cta_desc' => 'MindMap adalah platform pembelajaran sempurna untuk kesuksesan akademik Anda! Saatnya meningkatkan pembelajaran Anda.',
-    'cta_button' => 'Info Lebih Lanjut',
+    'cta_desc' => 'Yuk mulai belajar dengan cara yang lebih mudah dipahami bersama MindMap.',
+    'cta_button' => 'Daftar Sekarang',
     
     // Contact
     'contact_phone' => '1-800-CONCEPT',
@@ -261,12 +261,12 @@ return [
     
     // Footer
     'footer_platform' => 'Platform MindMap',
-    'footer_platform_desc' => 'Platform pembelajaran modern dengan alur pembelajaran terstruktur dan materi interaktif untuk meningkatkan pemahaman konsep Anda.',
+    'footer_platform_desc' => 'Belajar lebih mudah lewat mind map interaktif dan alur pembelajaran bertahap yang bisa kamu pantau progresnya.',
     'footer_feature_1' => 'MindMap Interaktif',
     'footer_feature_2' => 'AI Assistant',
     'footer_feature_3' => 'Progress Tracking',
     'footer_about' => 'Tentang Kami',
-    'footer_about_desc' => 'MindMap adalah platform pembelajaran inovatif yang dirancang untuk membantu Anda memahami konsep-konsep kompleks dengan cara yang lebih mudah dan menyenangkan. Dengan sistem alur pembelajaran yang terstruktur dan materi yang interaktif, kami berkomitmen untuk meningkatkan kualitas pembelajaran Anda.',
+    'footer_about_desc' => 'MindMap membantu kamu memahami materi pelajaran lewat mind map interaktif dan alur belajar bertahap, dari SD hingga SMA.',
     'footer_stats' => 'Statistik Kami',
     'footer_stats_desc' => 'Terima kasih telah mempercayai MindMap untuk perjalanan pembelajaran Anda!',
     'footer_active_users' => 'Pengguna Aktif',
@@ -275,7 +275,7 @@ return [
     'footer_tagline' => 'Platform Pembelajaran Digital',
     'footer_tagline_desc' => 'Membangun generasi pembelajar yang lebih cerdas dan kreatif melalui teknologi pendidikan modern.',
     'footer_contact' => 'Hubungi Kami',
-    'footer_email' => 'info@mindmap.id',
+    'footer_email' => 'mindmapeducation1997@gmail.com',
     'footer_phone' => '+62 85802733781',
     'footer_location' => 'Malang, Indonesia',
     
@@ -297,15 +297,15 @@ return [
     
     // About Page
     'about_page_title' => 'Tentang Kami',
-    'about_page_subtitle' => 'Siapa kami?',
-    'about_what_we_do' => 'Apa Yang Kami Lakukan',
-    'about_what_we_do_desc' => 'MindMap adalah platform pembelajaran digital yang membantu siswa memahami konsep kompleks melalui peta konsep interaktif, alur pembelajaran terstruktur, dan materi multimedia. Kami memadukan teknologi modern dengan metode pembelajaran yang efektif untuk menciptakan pengalaman belajar yang lebih mudah, menyenangkan, dan dapat dipantau progresnya.',
-    'about_team' => 'Tim MindMap',
+    'about_page_subtitle' => 'Kenali MindMap Lebih Dekat',
+    'about_what_we_do' => 'Mengapa MindMap?',
+    'about_what_we_do_desc' => 'MindMap hadir karena banyak siswa kesulitan memahami materi hanya lewat teks dan hafalan. Kami mengubah materi pelajaran menjadi mind map interaktif dengan alur belajar bertahap, dilengkapi quiz dan pelacakan progres, supaya belajar terasa lebih mudah, terarah, dan bisa dipantau perkembangannya.',
+    'about_page_team' => 'Tim MindMap',
     
     // Contact Page
     'contact_page_title' => 'Kontak',
     'contact_page_subtitle' => 'Hubungi kami untuk pertanyaan atau bantuan',
-    'contact_phone_number' => '085802733781 - Irfan',
+    'contact_phone_number' => 'Hubungi Kami',
 
     // Backend Common
     'backend_home' => 'Beranda',

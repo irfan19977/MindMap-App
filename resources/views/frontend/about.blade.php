@@ -16,7 +16,7 @@
           <div class="col-lg-5">
             <h2>{{ __('messages.about_what_we_do') }}</h2>
             <p>{{ __('messages.about_what_we_do_desc') }}</p>
-            <div class="classic">{{ __('messages.about_team') }}</div>
+            <div class="classic">{{ __('messages.about_page_team') }}</div>
           </div>
           <div class="col-lg-7 carousel-item wow zoomIn" data-wow-duration="2s" data-wow-delay=".2s">
             <div class="carousel slide carousel-fade" id="carousel-light2">
