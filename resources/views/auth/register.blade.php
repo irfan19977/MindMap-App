@@ -127,32 +127,33 @@
                                 <p class="fs-12 fw-medium text-muted mb-4">Pilih role yang sesuai dengan Anda</p>
 
                                 <input type="hidden" name="user_type" id="user_type" value="{{ old('user_type', '') }}">
+                                <div id="client-error-user_type" class="client-error text-danger small mb-2 d-none"></div>
                                 @error('user_type')
                                     <div class="text-danger small mb-2">{{ $message }}</div>
                                 @enderror
 
-                                <div class="row mb-4">
-                                    <div class="col-4">
+                                <div class="row mb-12">
+                                    <div class="col-6">
                                         <div class="role-card {{ old('user_type') == 'student' ? 'selected' : '' }}" onclick="selectRole('student')">
                                             <i class="feather feather-book-open"></i>
                                             <h5>Siswa</h5>
                                             <p>Belajar dan ikuti kelas</p>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <div class="role-card {{ old('user_type') == 'teacher' ? 'selected' : '' }}" onclick="selectRole('teacher')">
                                             <i class="feather feather-award"></i>
                                             <h5>Guru</h5>
                                             <p>Mengajar dan buat kelas</p>
                                         </div>
                                     </div>
-                                    <div class="col-4">
+                                    {{-- <div class="col-4">
                                         <div class="role-card {{ old('user_type') == 'umum' ? 'selected' : '' }}" onclick="selectRole('umum')">
                                             <i class="feather feather-users"></i>
                                             <h5>Umum</h5>
                                             <p>Akses konten publik</p>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
 
                                 <div class="mt-4 d-flex gap-2">
@@ -173,6 +174,7 @@
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold">Mata Pelajaran / Spesialisasi <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="specialization" placeholder="cth: Matematika & Fisika" value="{{ old('specialization') }}">
+                                        <div id="client-error-specialization" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('specialization')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
@@ -180,6 +182,7 @@
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold">Pendidikan <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" name="education" placeholder="cth: S2 Pendidikan, Universitas Indonesia" value="{{ old('education') }}">
+                                        <div id="client-error-education" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('education')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
@@ -194,6 +197,7 @@
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold">Tentang Saya <span class="text-danger">*</span></label>
                                         <textarea class="form-control" name="description" rows="3" placeholder="Ceritakan tentang diri Anda, keahlian, dan metode mengajar Anda">{{ old('description') }}</textarea>
+                                        <div id="client-error-description" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('description')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
@@ -228,14 +232,16 @@
 
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold">Asal Sekolah / Universitas</label>
-                                        <input type="text" class="form-control" name="school" placeholder="cth: SMA Negeri 1 Jakarta" value="{{ old('school') }}">
+                                        <input type="text" class="form-control" name="school" placeholder="cth: SMA Negeri 1 Jakarta" value="{{ old('school') }}" required>
+                                        <div id="client-error-school" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('school')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label small fw-bold">Jurusan</label>
-                                        <input type="text" class="form-control" name="major" placeholder="cth: IPA / IPS / Teknik Informatika" value="{{ old('major') }}">
+                                        <input type="text" class="form-control" name="major" placeholder="cth: IPA / IPS / Teknik Informatika" value="{{ old('major') }}" required>
+                                        <div id="client-error-major" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('major')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
@@ -254,6 +260,7 @@
                                                 <span class="small text-muted">Kategori belum tersedia.</span>
                                             @endforelse
                                         </div>
+                                        <div id="client-error-category_interests" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('category_interests')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
@@ -286,6 +293,7 @@
                                                 <span class="small text-muted">Kategori belum tersedia.</span>
                                             @endforelse
                                         </div>
+                                        <div id="client-error-category_interests_umum" class="client-error text-danger small mt-1 d-none"></div>
                                         @error('category_interests')
                                             <div class="text-danger small mt-1">{{ $message }}</div>
                                         @enderror
@@ -301,7 +309,7 @@
 
                                 <div class="mt-4 d-flex gap-2">
                                     <button type="button" class="btn btn-lg btn-outline-secondary w-50" onclick="prevStep()">Kembali</button>
-                                    <button type="submit" class="btn btn-lg btn-primary w-50">Buat Akun</button>
+                                    <button type="submit" class="btn btn-lg btn-primary w-50" onclick="event.preventDefault(); if (validateStep3()) document.getElementById('registerForm').submit();">Buat Akun</button>
                                 </div>
                             </div>
                         </form>
@@ -436,8 +444,104 @@
         return valid;
     }
 
+    function validateStep2() {
+        let valid = true;
+        const userType = document.getElementById('user_type').value;
+
+        if (!userType) {
+            showClientError('user_type', 'Harap pilih tipe akun (Siswa atau Guru)');
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    function validateStep3() {
+        let valid = true;
+        const userType = document.getElementById('user_type').value;
+
+        if (userType === 'teacher') {
+            const specialization = document.querySelector('input[name="specialization"]').value.trim();
+            const education = document.querySelector('input[name="education"]').value.trim();
+            const description = document.querySelector('textarea[name="description"]').value.trim();
+
+            if (!specialization) {
+                showClientError('specialization', 'Mata pelajaran / spesialisasi wajib diisi.');
+                valid = false;
+            }
+
+            if (!education) {
+                showClientError('education', 'Pendidikan wajib diisi.');
+                valid = false;
+            }
+
+            if (!description) {
+                showClientError('description', 'Tentang saya wajib diisi.');
+                valid = false;
+            }
+        }
+
+        if (userType === 'student') {
+            const school = document.querySelector('input[name="school"]').value.trim();
+            const major = document.querySelector('input[name="major"]').value.trim();
+            const categoryInterests = document.querySelectorAll('input[name="category_interests[]"]:checked');
+
+            if (!school) {
+                showClientError('school', 'Asal sekolah / universitas wajib diisi.');
+                valid = false;
+            }
+
+            if (!major) {
+                showClientError('major', 'Jurusan wajib diisi.');
+                valid = false;
+            }
+
+            if (categoryInterests.length === 0) {
+                showClientError('category_interests', 'Pilih minimal satu kategori yang ingin dipelajari.');
+                valid = false;
+            }
+        }
+
+        if (userType === 'umum') {
+            const categoryInterests = document.querySelectorAll('input[name="category_interests[]"]:checked');
+
+            if (categoryInterests.length === 0) {
+                showClientError('category_interests_umum', 'Pilih minimal satu kategori yang ingin dipelajari.');
+                valid = false;
+            }
+        }
+
+        const termsCheckbox = document.getElementById('termsCondition');
+        if (!termsCheckbox.checked) {
+            termsCheckbox.classList.add('is-invalid');
+            valid = false;
+        } else {
+            termsCheckbox.classList.remove('is-invalid');
+        }
+
+        return valid;
+    }
+
     document.querySelectorAll('#step-1 input').forEach(input => {
         input.addEventListener('input', function() {
+            clearClientError(this.name);
+        });
+    });
+
+    document.querySelectorAll('#step-2 input').forEach(input => {
+        input.addEventListener('input', function() {
+            clearClientError(this.name);
+        });
+    });
+
+    document.querySelectorAll('#step-3 input, #step-3 textarea').forEach(input => {
+        input.addEventListener('input', function() {
+            clearClientError(this.name);
+        });
+    });
+
+    document.querySelectorAll('#step-3 input[type="checkbox"]').forEach(input => {
+        input.addEventListener('change', function() {
             clearClientError(this.name);
         });
     });
@@ -452,10 +556,7 @@
         }
 
         if (currentStep === 2) {
-            if (!userType) {
-                alert('Harap pilih tipe akun (Siswa, Guru, atau Umum)');
-                return;
-            }
+            if (!validateStep2()) return;
             showRoleFields();
             goToStep(3);
             return;
