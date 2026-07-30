@@ -2,20 +2,14 @@
 
 @section('content')
     <!-- Header Section -->
-    <section class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
-        <div class="intro-body">
-            <div class="overlay"></div>
-            <div class="container text-center">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <h1 class="no-pad bold">Tim <span class="label classic">Pengajar</span><br>Profesional</h1>
-                        <p class="lead">Bergabunglah dengan tim pengajar berpengalaman kami yang berdedikasi untuk membantu Anda mencapai potensi maksimal dalam pembelajaran</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
+   <header class="intro introhalf" data-background="{{ asset('frontend/img/main/11.jpg') }}">
+    <div class="overlay"></div>
+    <div class="intro-body">
+        <h1>Tim Pengajar Profesional</h1>
+        <h4>Bergabunglah dengan tim pengajar berpengalaman kami</h4>
+    </div>
+</header>
+    
     <!-- Teachers Section -->
     <style>
         .teacher-row {
