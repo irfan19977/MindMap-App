@@ -92,23 +92,46 @@
                                             <label class="form-label">{{ __('messages.backend_role_permissions') }}</label>
                                             <div class="card">
                                                 <div class="card-body p-3">
-                                                    <div class="row">
-                                                        @foreach($permissions as $permission)
-                                                            <div class="col-md-4 mb-2">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" 
+                                                    @foreach($menus as $menu)
+                                                        @php
+                                                            $categoryPermissions = $groupedPermissions[$menu->name] ?? collect();
+                                                        @endphp
+                                                        @if($categoryPermissions->count() > 0)
+                                                        <div class="mb-4">
+                                                            <div class="d-flex align-items-center mb-3 pb-2 border-bottom">
+                                                                <div class="form-check form-switch me-3">
+                                                                    <input class="form-check-input category-toggle" 
                                                                            type="checkbox" 
-                                                                           id="permission_{{ $permission->id }}" 
-                                                                           name="permissions[]" 
-                                                                           value="{{ $permission->id }}"
-                                                                           @if(isset($rolePermissions) && in_array($permission->id, $rolePermissions)) checked @endif>
-                                                                    <label class="form-check-label" for="permission_{{ $permission->id }}">
-                                                                        {{ $permission->name }}
-                                                                    </label>
+                                                                           id="category_{{ $menu->id }}" 
+                                                                           data-category="{{ $menu->id }}"
+                                                                           @if(isset($rolePermissions) && $categoryPermissions->every(function($p) use ($rolePermissions) { return in_array($p->id, $rolePermissions); })) checked @endif>
+                                                                    <label class="form-check-label" for="category_{{ $menu->id }}"></label>
                                                                 </div>
+                                                                <h6 class="mb-0 fw-semibold">
+                                                                    <i class="{{ $menu->icon }} me-2"></i>{{ $menu->name }}
+                                                                </h6>
                                                             </div>
-                                                        @endforeach
-                                                    </div>
+                                                            <div class="row">
+                                                                @foreach($categoryPermissions as $permission)
+                                                                    <div class="col-md-4 mb-2">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input permission-checkbox" 
+                                                                                   type="checkbox" 
+                                                                                   id="permission_{{ $permission->id }}" 
+                                                                                   name="permissions[]" 
+                                                                                   value="{{ $permission->id }}"
+                                                                                   data-category="{{ $menu->id }}"
+                                                                                   @if(isset($rolePermissions) && in_array($permission->id, $rolePermissions)) checked @endif>
+                                                                            <label class="form-check-label" for="permission_{{ $permission->id }}">
+                                                                                {{ $permission->name }}
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        @endif
+                                                    @endforeach
                                                 </div>
                                             </div>
                                             @error('permissions')
@@ -146,6 +169,47 @@
     @include('backend.layouts.scriptcustom-minimal')
     
     <script>
+    // Category toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle category toggle clicks
+        document.querySelectorAll('.category-toggle').forEach(function(toggle) {
+            toggle.addEventListener('change', function() {
+                const category = this.dataset.category;
+                const isChecked = this.checked;
+                
+                // Check/uncheck all permissions in this category
+                document.querySelectorAll(`.permission-checkbox[data-category="${category}"]`).forEach(function(checkbox) {
+                    checkbox.checked = isChecked;
+                });
+            });
+        });
+        
+        // Handle individual permission checkbox changes
+        document.querySelectorAll('.permission-checkbox').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const category = this.dataset.category;
+                const categoryToggle = document.querySelector(`.category-toggle[data-category="${category}"]`);
+                const allCheckboxes = document.querySelectorAll(`.permission-checkbox[data-category="${category}"]`);
+                const checkedCount = document.querySelectorAll(`.permission-checkbox[data-category="${category}"]:checked`).length;
+                
+                // Update category toggle state
+                categoryToggle.checked = checkedCount === allCheckboxes.length;
+                categoryToggle.indeterminate = checkedCount > 0 && checkedCount < allCheckboxes.length;
+            });
+        });
+        
+        // Initialize indeterminate states
+        document.querySelectorAll('.category-toggle').forEach(function(toggle) {
+            const category = toggle.dataset.category;
+            const allCheckboxes = document.querySelectorAll(`.permission-checkbox[data-category="${category}"]`);
+            const checkedCount = document.querySelectorAll(`.permission-checkbox[data-category="${category}"]:checked`).length;
+            
+            if (checkedCount > 0 && checkedCount < allCheckboxes.length) {
+                toggle.indeterminate = true;
+            }
+        });
+    });
+
     document.querySelector('form').addEventListener('submit', function(e) {
         e.preventDefault();
 

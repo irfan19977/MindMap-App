@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Menu;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
@@ -30,7 +31,13 @@ class RoleController extends Controller
         $this->authorize('roles.create');
         $permissions = Permission::all();
         
-        return view('backend.roles.addedit', compact('permissions'));
+        // Group permissions by menu
+        $menus = Menu::where('is_active', true)->orderBy('order')->get();
+        $groupedPermissions = $menus->mapWithKeys(function ($menu) use ($permissions) {
+            return [$menu->name => $permissions->where('menu_id', $menu->id)];
+        });
+        
+        return view('backend.roles.addedit', compact('permissions', 'groupedPermissions', 'menus'));
     }
 
     /**
@@ -47,7 +54,9 @@ class RoleController extends Controller
         $role = Role::create(['name' => $validated['name']]);
 
         if (isset($validated['permissions'])) {
-            $role->syncPermissions($validated['permissions']);
+            // Convert permission IDs to permission names
+            $permissionNames = Permission::whereIn('id', $validated['permissions'])->pluck('name')->toArray();
+            $role->syncPermissions($permissionNames);
         }
 
         return redirect()->route('roles.index')
@@ -71,7 +80,13 @@ class RoleController extends Controller
         $permissions = Permission::all();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
         
-        return view('backend.roles.addedit', compact('role', 'permissions', 'rolePermissions'));
+        // Group permissions by menu
+        $menus = Menu::where('is_active', true)->orderBy('order')->get();
+        $groupedPermissions = $menus->mapWithKeys(function ($menu) use ($permissions) {
+            return [$menu->name => $permissions->where('menu_id', $menu->id)];
+        });
+        
+        return view('backend.roles.addedit', compact('role', 'permissions', 'rolePermissions', 'groupedPermissions', 'menus'));
     }
 
     /**
@@ -88,7 +103,9 @@ class RoleController extends Controller
         $role->update(['name' => $validated['name']]);
 
         if (isset($validated['permissions'])) {
-            $role->syncPermissions($validated['permissions']);
+            // Convert permission IDs to permission names
+            $permissionNames = Permission::whereIn('id', $validated['permissions'])->pluck('name')->toArray();
+            $role->syncPermissions($permissionNames);
         } else {
             $role->syncPermissions([]);
         }

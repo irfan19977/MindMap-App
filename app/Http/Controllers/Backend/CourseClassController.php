@@ -11,14 +11,17 @@ use App\Models\Mindmap;
 use App\Models\Subcategory;
 use App\Models\Teacher;
 use App\Models\TeacherCollaboration;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CourseClassController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
+        $this->authorize('classes.index');
         $query = CourseClass::with(['category', 'subcategory', 'teacher.user'])
             ->orderBy('created_at', 'desc');
 
@@ -72,6 +75,7 @@ class CourseClassController extends Controller
 
     public function create()
     {
+        $this->authorize('classes.create');
         $user = auth()->user();
 
         $categories = Category::where('created_by', $user->id)
@@ -92,6 +96,7 @@ class CourseClassController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('classes.create');
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
@@ -121,6 +126,7 @@ class CourseClassController extends Controller
 
     public function show(CourseClass $courseClass)
     {
+        $this->authorize('classes.index');
         $courseClass->load(['category', 'subcategory', 'teacher.user', 'materials', 'enrollments.student.user', 'acceptedCollaborations.teacher.user']);
 
         return view('backend.classes.show', ['class' => $courseClass]);
@@ -128,6 +134,7 @@ class CourseClassController extends Controller
 
     public function syncMaterials(CourseClass $courseClass)
     {
+        $this->authorize('classes.edit');
         if (! $this->canManage($courseClass)) {
             return redirect()->route('classes.show', $courseClass->id)
                 ->with('error', 'Anda tidak memiliki akses untuk sync materi kelas ini.');
@@ -141,6 +148,7 @@ class CourseClassController extends Controller
 
     public function edit(CourseClass $courseClass)
     {
+        $this->authorize('classes.edit');
         if (! $this->canManage($courseClass)) {
             return redirect()->route('classes.index')
                 ->with('error', 'Anda tidak memiliki akses untuk mengedit kelas ini.');
@@ -166,6 +174,7 @@ class CourseClassController extends Controller
 
     public function update(Request $request, CourseClass $courseClass)
     {
+        $this->authorize('classes.edit');
         if (! $this->canManage($courseClass)) {
             return redirect()->route('classes.index')
                 ->with('error', 'Anda tidak memiliki akses untuk memperbarui kelas ini.');
@@ -205,6 +214,7 @@ class CourseClassController extends Controller
 
     public function destroy(CourseClass $courseClass)
     {
+        $this->authorize('classes.delete');
         if (! $this->canManage($courseClass)) {
             return redirect()->route('classes.index')
                 ->with('error', 'Anda tidak memiliki akses untuk menghapus kelas ini.');

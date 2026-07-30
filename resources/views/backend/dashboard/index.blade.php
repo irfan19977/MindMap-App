@@ -88,28 +88,35 @@
             <div class="main-content">
                 <!-- Summary Stats Row -->
                 <div class="row">
-                    <!-- Total Users -->
+                    <!-- Total Users / Total Classes -->
                     <div class="col-xxl-3 col-md-6">
                         <div class="card stretch stretch-full">
                             <div class="card-body">
                                 <div class="d-flex align-items-center gap-4">
                                     <div class="avatar-text avatar-lg bg-soft-primary text-primary rounded">
-                                        <i class="feather-users fs-4"></i>
+                                        <i class="{{ $isTeacher ? 'feather-layers' : 'feather-users' }} fs-4"></i>
                                     </div>
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalUsers }}</div>
-                                        <h3 class="fs-13 fw-semibold text-muted">Total Pengguna</h3>
+                                        <h3 class="fs-13 fw-semibold text-muted">{{ $isTeacher ? 'Total Kelas' : 'Total Pengguna' }}</h3>
                                     </div>
                                 </div>
                                 <div class="pt-3">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 text-muted">Siswa: {{ $totalStudents }}</span>
-                                        <span class="fs-12 text-muted">Guru: {{ $totalTeachers }}</span>
-                                    </div>
-                                    <div class="progress mt-2 ht-3">
-                                        @php $studentPercent = $totalUsers > 0 ? round(($totalStudents / $totalUsers) * 100) : 0; @endphp
-                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $studentPercent }}%"></div>
-                                    </div>
+                                    @if($isTeacher)
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span class="fs-12 text-muted">Kelas Aktif</span>
+                                            <span class="fs-12 text-dark fw-semibold">{{ $totalUsers }} kelas</span>
+                                        </div>
+                                    @else
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span class="fs-12 text-muted">Siswa: {{ $totalStudents }}</span>
+                                            <span class="fs-12 text-muted">Guru: {{ $totalTeachers }}</span>
+                                        </div>
+                                        <div class="progress mt-2 ht-3">
+                                            @php $studentPercent = $totalUsers > 0 ? round(($totalStudents / $totalUsers) * 100) : 0; @endphp
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $studentPercent }}%"></div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -124,17 +131,24 @@
                                     </div>
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalMaterials }}</div>
-                                        <h3 class="fs-13 fw-semibold text-muted">Total Materi</h3>
+                                        <h3 class="fs-13 fw-semibold text-muted">{{ $isTeacher ? 'Total Materi' : 'Total Materi' }}</h3>
                                     </div>
                                 </div>
                                 <div class="pt-3">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 text-muted">{{ $totalCategories }} Kategori</span>
-                                        <span class="fs-12 text-muted">{{ $totalSubcategories }} Sub Kategori</span>
-                                    </div>
-                                    <div class="progress mt-2 ht-3">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
-                                    </div>
+                                    @if($isTeacher)
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span class="fs-12 text-muted">Materi Dibuat</span>
+                                            <span class="fs-12 text-dark fw-semibold">{{ $totalMaterials }} materi</span>
+                                        </div>
+                                    @else
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <span class="fs-12 text-muted">{{ $totalCategories }} Kategori</span>
+                                            <span class="fs-12 text-muted">{{ $totalSubcategories }} Sub Kategori</span>
+                                        </div>
+                                        <div class="progress mt-2 ht-3">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%"></div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -154,7 +168,7 @@
                                 </div>
                                 <div class="pt-3">
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <span class="fs-12 text-muted">Materi aktif</span>
+                                        <span class="fs-12 text-muted">{{ $isTeacher ? 'Mindmap Dibuat' : 'Materi aktif' }}</span>
                                         <span class="fs-12 text-dark fw-semibold">{{ $totalMindmaps }} mindmap</span>
                                     </div>
                                     <div class="progress mt-2 ht-3">
@@ -174,7 +188,7 @@
                                     </div>
                                     <div>
                                         <div class="fs-4 fw-bold text-dark">{{ $totalProgress }}</div>
-                                        <h3 class="fs-13 fw-semibold text-muted">Aktivitas Belajar</h3>
+                                        <h3 class="fs-13 fw-semibold text-muted">{{ $isTeacher ? 'Aktivitas Siswa' : 'Aktivitas Belajar' }}</h3>
                                     </div>
                                 </div>
                                 <div class="pt-3">
@@ -192,12 +206,12 @@
                     </div>
                 </div>
 
-                <!-- Grafik Aktivitas Platform -->
+                <!-- Grafik Aktivitas Platform / Kelas -->
                 <div class="row">
                     <div class="col-xxl-8">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Aktivitas Platform</h5>
+                                <h5 class="card-title">{{ $isTeacher ? 'Aktivitas Kelas' : 'Aktivitas Platform' }}</h5>
                             </div>
                             <div class="card-body custom-card-action p-0">
                                 <div id="platform-activity-chart"></div>
@@ -206,22 +220,24 @@
                                 <div class="row g-4">
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Kunjungan Hari Ini</div>
+                                            <div class="fs-12 text-muted mb-1">{{ $isTeacher ? 'Kunjungan Kelas Hari Ini' : 'Kunjungan Hari Ini' }}</div>
                                             <h6 class="fw-bold text-dark">{{ $todayVisits }}</h6>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
-                                            <div class="fs-12 text-muted mb-1">Kunjungan ({{ $period }} hari)</div>
+                                            <div class="fs-12 text-muted mb-1">{{ $isTeacher ? 'Total Kunjungan Kelas' : 'Kunjungan' }} ({{ $period }} hari)</div>
                                             <h6 class="fw-bold text-dark">{{ $platformChart->sum('visits') }}</h6>
                                         </div>
                                     </div>
+                                    @if(!$isTeacher)
                                     <div class="col-lg-4">
                                         <div class="p-3 border border-dashed rounded">
                                             <div class="fs-12 text-muted mb-1">Pendaftaran ({{ $period }} hari)</div>
                                             <h6 class="fw-bold text-dark">{{ $platformChart->sum('registrations') }}</h6>
                                         </div>
                                     </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -230,13 +246,13 @@
                     <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Statistik Quiz</h5>
+                                <h5 class="card-title">{{ $isTeacher ? 'Statistik Quiz Siswa' : 'Statistik Quiz' }}</h5>
                             </div>
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-4">
                                     <div class="text-center flex-fill">
                                         <div class="fs-3 fw-bold text-primary">{{ $totalQuizAttempts }}</div>
-                                        <div class="fs-12 text-muted">Total Percobaan</div>
+                                        <div class="fs-12 text-muted">{{ $isTeacher ? 'Percobaan Siswa' : 'Total Percobaan' }}</div>
                                     </div>
                                     <div class="text-center flex-fill">
                                         <div class="fs-3 fw-bold text-success">{{ $quizPassedCount }}</div>
@@ -266,7 +282,7 @@
                                 @else
                                 <div class="text-center text-muted py-3">
                                     <i class="feather-inbox fs-3 d-block mb-2"></i>
-                                    <span>Belum ada percobaan quiz</span>
+                                    <span>{{ $isTeacher ? 'Belum ada siswa mengerjakan quiz' : 'Belum ada percobaan quiz' }}</span>
                                 </div>
                                 @endif
                             </div>
@@ -343,7 +359,7 @@
                     <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
-                                <h5 class="card-title">Top Siswa</h5>
+                                <h5 class="card-title">{{ $isTeacher ? 'Top Siswa (Konten Anda)' : 'Top Siswa' }}</h5>
                             </div>
                             <div class="card-body">
                                 @forelse($topStudents as $index => $stu)
@@ -362,7 +378,7 @@
                                 @empty
                                 <div class="text-center text-muted py-3">
                                     <i class="feather-inbox fs-3 d-block mb-2"></i>
-                                    <span>Belum ada data siswa</span>
+                                    <span>{{ $isTeacher ? 'Belum ada siswa yang belajar dari konten Anda' : 'Belum ada data siswa' }}</span>
                                 </div>
                                 @endforelse
                             </div>
@@ -388,6 +404,11 @@
 
             var isRtl = document.documentElement.getAttribute('dir') === 'rtl';
 
+            @php
+                $seriesName1 = $isTeacher ? 'Kunjungan Kelas' : 'Kunjungan';
+                $seriesName2 = $isTeacher ? 'Tren' : 'Pendaftaran';
+            @endphp
+
             var options = {
                 chart: {
                     height: 380,
@@ -407,8 +428,8 @@
                 },
                 colors: ['#3454d1', '#a2acc7'],
                 series: [
-                    { name: 'Kunjungan',   type: 'bar',  data: visits },
-                    { name: 'Pendaftaran', type: 'line', data: registrations }
+                    { name: '{{ $seriesName1 }}',   type: 'bar',  data: visits },
+                    { name: '{{ $seriesName2 }}', type: 'line', data: registrations }
                 ],
                 fill: {
                     opacity: [0.85, 0.25],
