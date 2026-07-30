@@ -36,6 +36,7 @@
                 <li class="divider"></li>
                 <li><a href="{{ route('dashboard.index') }}"><i class="fa fa-tachometer fa-fw"></i>{{ __('messages.dashboard') }}</a></li>
                 <li><a href="/profile"><i class="fa fa-user fa-fw"></i>{{ __('messages.nav_profile') }}</a></li>
+                <li><a href="{{ route('leaderboard.index') }}"><i class="fa fa-trophy fa-fw"></i> Leaderboard</a></li>
                 <li class="divider"></li>
                 <li>
                   <form method="POST" action="{{ route('logout') }}">
@@ -63,6 +64,7 @@
                 <li><a href="/contact"><i class="fa fa-envelope fa-fw"></i>{{ __('messages.contact') }}</a></li>
                 <li class="divider"></li>
                 <li><a href="{{ auth()->user()->student ? route('student.profile') : '/profile' }}"><i class="fa fa-user fa-fw"></i>{{ __('messages.nav_profile') }}</a></li>
+                <li><a href="{{ route('leaderboard.index') }}"><i class="fa fa-trophy fa-fw"></i> Leaderboard</a></li>
                 <li><a href="/learning-tracking"><i class="fa fa-chart-line fa-fw"></i>{{ __('messages.nav_learning_tracking') }}</a></li>
                 <li><a href="/sertifikat"><i class="fa fa-certificate fa-fw"></i>{{ __('messages.nav_certificate') }}</a></li>
                 <li class="divider"></li>

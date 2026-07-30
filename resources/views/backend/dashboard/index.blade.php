@@ -52,6 +52,11 @@
                                     <a href="{{ route('learning-results.index') }}" class="dropdown-item">
                                         <i class="feather-activity me-2 text-danger"></i>Hasil Pembelajaran
                                     </a>
+                                    @if(auth()->user()->hasRole('admin') || auth()->user()->student)
+                                    <a href="{{ route('leaderboard.index') }}" class="dropdown-item">
+                                        <i class="feather-award me-2 text-warning"></i>Leaderboard
+                                    </a>
+                                    @endif
                                 </div>
                             </div>
                             <div class="dropdown">
@@ -205,6 +210,144 @@
                         </div>
                     </div>
                 </div>
+
+                @if(auth()->user()->hasRole('admin') || auth()->user()->student)
+                @php
+                    $currentStudent = auth()->user()?->student;
+                    $leaderboardPreview = [];
+                    if ($currentStudent) {
+                        $leaderboardPreview = \App\Models\Student::with('user')
+                            ->get()
+                            ->sortByDesc(fn($studentItem) => $studentItem->experience_points)
+                            ->values()
+                            ->take(3);
+                    } else {
+                        $leaderboardPreview = \App\Models\Student::with('user')
+                            ->get()
+                            ->sortByDesc(fn($studentItem) => $studentItem->experience_points)
+                            ->values()
+                            ->take(3);
+                    }
+
+                    $rankTiers = [
+                        ['name' => 'New Explorer', 'icon' => '🧭'],
+                        ['name' => 'Active Learner', 'icon' => '📚'],
+                        ['name' => 'Knowledge Seeker', 'icon' => '🔍'],
+                        ['name' => 'Rising Scholar', 'icon' => '🌱'],
+                        ['name' => 'Smart Achiever', 'icon' => '🏅'],
+                        ['name' => 'Expert Learner', 'icon' => '🎓'],
+                        ['name' => 'Master Mind', 'icon' => '🧠'],
+                        ['name' => 'Future Leader', 'icon' => '👑'],
+                    ];
+
+                    $currentLevel = $currentStudent?->level;
+                    $currentTierIndex = $currentLevel ? array_search($currentLevel, array_column($rankTiers, 'name')) : null;
+                @endphp
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card overflow-hidden bg-gradient-primary text-white">
+                            <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-3 p-4">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="avatar-text avatar-xl bg-white text-primary rounded-circle">
+                                        <i class="feather-award fs-4"></i>
+                                    </span>
+                                    <div>
+                                        <h4 class="mb-1 text-white">Leaderboard Champion</h4>
+                                        <p class="mb-0 opacity-85">Lihat peringkat mingguan dan season saat ini. Tantang siswa lain dengan rank edukasi terbaru.</p>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <a href="{{ route('leaderboard.index') }}" class="btn btn-light btn-lg fw-bold">
+                                        Explore Leaderboard <i class="feather-arrow-right ms-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4 g-4">
+                    <div class="col-xxl-8">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <h5 class="fw-bold mb-1">Top Learners Saat Ini</h5>
+                                        <p class="text-muted mb-0">Peringkat teratas dari leaderboard edukasi.</p>
+                                    </div>
+                                    <a href="{{ route('leaderboard.index') }}" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                                </div>
+                                <div class="row g-3">
+                                    @foreach($leaderboardPreview as $index => $item)
+                                        <div class="col-md-4">
+                                            <div class="rounded-4 p-3 border border-light-subtle h-100 shadow-sm">
+                                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                                    <span class="badge bg-primary-subtle text-primary fw-semibold">#{{ $index + 1 }}</span>
+                                                    <span class="fs-5">{{ $rankTiers[$index]['icon'] ?? '⭐' }}</span>
+                                                </div>
+                                                <h6 class="fw-bold mb-1">{{ $item->user->name }}</h6>
+                                                <p class="text-muted mb-2 small">{{ $item->level }}</p>
+                                                <div class="d-flex justify-content-between small text-muted">
+                                                    <span>{{ number_format($item->experience_points) }} XP</span>
+                                                    <span>{{ $item->passed_quiz_count }} quiz</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                @if($currentStudent)
+                                    <div class="d-flex align-items-center gap-3 mb-4">
+                                        <span class="avatar-text avatar-lg bg-soft-primary text-primary rounded-circle">
+                                            <i class="feather-award fs-4"></i>
+                                        </span>
+                                        <div>
+                                            <h5 class="fw-bold mb-1">Rank Kamu</h5>
+                                            <p class="text-muted mb-0">{{ $currentStudent->level }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="fw-semibold text-dark">Progress menuju rank berikutnya</span>
+                                            <span class="text-primary fw-bold">{{ $currentStudent->level_progress }}%</span>
+                                        </div>
+                                        <div class="progress" style="height: 10px;">
+                                            <div class="progress-bar bg-primary" role="progressbar" style="width: {{ $currentStudent->level_progress }}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2 text-center">
+                                        <div class="col-6">
+                                            <div class="p-3 rounded-3 bg-light">
+                                                <div class="fw-bold text-dark">{{ number_format($currentStudent->experience_points) }}</div>
+                                                <div class="small text-muted">XP Saat Ini</div>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="p-3 rounded-3 bg-light">
+                                                <div class="fw-bold text-dark">{{ $currentStudent->experience_to_next_level !== null ? number_format($currentStudent->experience_to_next_level) : '0' }}</div>
+                                                <div class="small text-muted">XP ke Rank Berikut</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="text-center py-4">
+                                        <div class="avatar-text avatar-xl bg-soft-primary text-primary rounded-circle mb-3">
+                                            <i class="feather-lock fs-4"></i>
+                                        </div>
+                                        <h5 class="fw-bold">Akses rank pribadi</h5>
+                                        <p class="text-muted mb-0">Masuk sebagai siswa untuk melihat rank aktif, XP, dan progress yang sedang kamu capai.</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <!-- Grafik Aktivitas Platform / Kelas -->
                 <div class="row">
