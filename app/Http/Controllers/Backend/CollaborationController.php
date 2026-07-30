@@ -8,11 +8,13 @@ use App\Models\CourseClass;
 use App\Models\Subcategory;
 use App\Models\Teacher;
 use App\Models\TeacherCollaboration;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CollaborationController extends Controller
 {
+    use AuthorizesRequests;
 
 
     /**
@@ -20,6 +22,7 @@ class CollaborationController extends Controller
      */
     public function classCollaboration(CourseClass $courseClass)
     {
+        $this->authorize('collaboration.index');
         $teachers = Teacher::with('user')->get();
         $collaborations = TeacherCollaboration::with(['admin', 'teacher.user'])
             ->where('collaboration_type', 'class')
@@ -35,6 +38,7 @@ class CollaborationController extends Controller
      */
     public function index()
     {
+        $this->authorize('collaboration.index');
         $collaborations = TeacherCollaboration::with(['admin', 'teacher.user', 'category', 'subcategory', 'class'])
             ->latest()
             ->get();
@@ -47,6 +51,7 @@ class CollaborationController extends Controller
      */
     public function create()
     {
+        $this->authorize('collaboration.create');
         $teachers = Teacher::with('user')->get();
         $categories = Category::where('status', 'publish')->get();
         $subcategories = Subcategory::where('status', 'publish')->get();
@@ -60,6 +65,7 @@ class CollaborationController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('collaboration.create');
         $request->validate([
             'teacher_id' => 'required|exists:teachers,id',
             'collaboration_type' => 'required|in:category,subcategory,class',
@@ -115,6 +121,7 @@ class CollaborationController extends Controller
      */
     public function edit(TeacherCollaboration $collaboration)
     {
+        $this->authorize('collaboration.edit');
         $teachers = Teacher::with('user')->get();
         $categories = Category::where('status', 'publish')->get();
         $subcategories = Subcategory::where('status', 'publish')->get();
@@ -128,6 +135,7 @@ class CollaborationController extends Controller
      */
     public function update(Request $request, TeacherCollaboration $collaboration)
     {
+        $this->authorize('collaboration.edit');
         $request->validate([
             'message' => 'nullable|string|max:1000',
             'permissions' => 'required|array|min:1',
@@ -148,6 +156,7 @@ class CollaborationController extends Controller
      */
     public function destroy(TeacherCollaboration $collaboration)
     {
+        $this->authorize('collaboration.delete');
         $collaboration->delete();
 
         return redirect()->route('collaborations.index')
@@ -159,6 +168,7 @@ class CollaborationController extends Controller
      */
     public function revoke(TeacherCollaboration $collaboration)
     {
+        $this->authorize('collaboration.delete');
         $collaboration->delete();
 
         return back()->with('success', 'Kolaborasi berhasil dibatalkan dan dihapus');

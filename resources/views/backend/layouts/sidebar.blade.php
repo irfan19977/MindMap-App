@@ -18,10 +18,13 @@
                             <span class="nxl-mtext">{{ __('messages.backend_dashboard') }}</span>
                         </a>
                     </li>
-                    
+
+                    @canany(['category.index', 'subcategori.index', 'materi.index', 'classes.index', 'mindmap.index'])
                     <li class="nxl-item nxl-caption">
                         <label>{{ __('messages.backend_educational_content') }}</label>
                     </li>
+                    @endcanany
+                    @can('category.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-folder"></i></span>
@@ -32,6 +35,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('categories.create') }}">{{ __('messages.backend_add_category') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('subcategori.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-layers"></i></span>
@@ -42,6 +47,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('subcategories.create') }}">{{ __('messages.backend_add_subcategory') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('materi.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-book-open"></i></span>
@@ -52,6 +59,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('materis.create') }}">{{ __('messages.backend_add_material') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('classes.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
@@ -62,12 +71,15 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('classes.create') }}">Tambah Kelas</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('mindmap.index')
                     <li class="nxl-item">
                         <a class="nxl-link" href="{{ route('mindmap.index') }}">
                             <span class="nxl-micon"><i class="feather-git-branch"></i></span>
                             <span class="nxl-mtext">{{ __('messages.backend_mindmap') }}</span>
                         </a>
                     </li>
+                    @endcan
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-activity"></i></span>
@@ -78,9 +90,12 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.quizzes') }}">Hasil Quiz</a></li>
                         </ul>
                     </li>
+                    @canany(['reports.index', 'analytics.index'])
                     <li class="nxl-item nxl-caption">
                         <label>{{ __('messages.backend_report_and_analytics') }}</label>
                     </li>
+                    @endcanany
+                    @can('reports.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-bar-chart-2"></i></span>
@@ -92,6 +107,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('reports.activities') }}">{{ __('messages.backend_report_activities') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('analytics.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-trending-up"></i></span>
@@ -104,10 +121,14 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('engagement.index') }}">{{ __('messages.backend_analytics_engagement') }}</a></li>
                         </ul>
                     </li>
-                    
+                    @endcan
+
+                    @canany(['users.index', 'roles.index', 'permissions.index'])
                     <li class="nxl-item nxl-caption">
                         <label>{{ __('messages.backend_user_management') }}</label>
                     </li>
+                    @endcanany
+                    @can('users.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
@@ -118,6 +139,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('users.create') }}">{{ __('messages.backend_add_user') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('roles.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-shield"></i></span>
@@ -128,6 +151,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('roles.create') }}">{{ __('messages.backend_add_role') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('permissions.index')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-key"></i></span>
@@ -138,6 +163,20 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('permissions.create') }}">{{ __('messages.backend_add_permission') }}</a></li>
                         </ul>
                     </li>
+                    @endcan
+                    @can('collaboration.index')
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-users"></i></span>
+                            <span class="nxl-mtext">Kolaborasi</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('collaborations.index') }}">Semua Kolaborasi</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('collaborations.create') }}">Tambah Kolaborasi</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('collaborations.my') }}">Undangan Saya</a></li>
+                        </ul>
+                    </li>
+                    @endcan
                         <li class="nxl-item nxl-caption">
                         <label>{{ __('messages.backend_help') }}</label>
                     </li>

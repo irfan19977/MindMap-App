@@ -10,17 +10,20 @@ use App\Models\SiteVisit;
 use App\Models\Subcategory;
 use App\Models\User;
 use App\Models\UserProgress;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class ReportController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Report data pengguna.
      */
     public function users(Request $request)
     {
+        $this->authorize('reports.users');
         $query = User::with('roles')
             ->orderBy('created_at', 'desc');
 
@@ -66,6 +69,7 @@ class ReportController extends Controller
      */
     public function mindmaps(Request $request)
     {
+        $this->authorize('reports.mindmap');
         $query = Mindmap::with(['creator', 'category', 'subcategory'])
             ->orderBy('created_at', 'desc');
 
@@ -103,6 +107,7 @@ class ReportController extends Controller
      */
     public function activities(Request $request)
     {
+        $this->authorize('reports.learning');
         $type = $request->get('type', 'login');
 
         $startDate = $request->filled('start_date') ? $request->start_date : now()->subDays(30)->format('Y-m-d');
@@ -172,6 +177,7 @@ class ReportController extends Controller
      */
     public function export(Request $request, string $type)
     {
+        $this->authorize('reports.index');
         $format = $request->get('format', 'csv');
         $data = collect();
         $filename = "report_{$type}_" . now()->format('Y-m-d') . '.csv';

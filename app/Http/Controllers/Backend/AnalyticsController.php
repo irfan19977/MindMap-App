@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\QuizAttempt;
 use App\Models\Quiz;
@@ -14,14 +13,18 @@ use App\Models\SiteVisit;
 use App\Models\UserProgress;
 use App\Models\PracticeAnswer;
 use Carbon\Carbon;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 class AnalyticsController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display the analytics dashboard.
      */
     public function index()
     {
+        $this->authorize('analytics.index');
         // User Statistics
         $totalUsers = User::count();
         $newUsersThisMonth = User::whereMonth('created_at', Carbon::now()->month)
@@ -143,6 +146,7 @@ class AnalyticsController extends Controller
      */
     public function getData(Request $request)
     {
+        $this->authorize('analytics.index');
         $period = $request->get('period', 'month'); // week, month, year
         
         switch($period) {

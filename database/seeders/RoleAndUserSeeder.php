@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\UmumUser;
+use App\Models\Menu;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -20,58 +21,84 @@ class RoleAndUserSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Define all permissions grouped by module
+        // Define all permissions grouped by module with menu mapping
         $permissions = [
             // Category
-            'category.index',
-            'category.create',
-            'category.edit',
-            'category.delete',
+            ['name' => 'category.index', 'menu_slug' => 'category'],
+            ['name' => 'category.create', 'menu_slug' => 'category'],
+            ['name' => 'category.edit', 'menu_slug' => 'category'],
+            ['name' => 'category.delete', 'menu_slug' => 'category'],
 
             // Subcategory
-            'subcategori.index',
-            'subcategori.create',
-            'subcategori.edit',
-            'subcategori.delete',
+            ['name' => 'subcategori.index', 'menu_slug' => 'subcategory'],
+            ['name' => 'subcategori.create', 'menu_slug' => 'subcategory'],
+            ['name' => 'subcategori.edit', 'menu_slug' => 'subcategory'],
+            ['name' => 'subcategori.delete', 'menu_slug' => 'subcategory'],
 
             // Materi
-            'materi.index',
-            'materi.create',
-            'materi.edit',
-            'materi.delete',
+            ['name' => 'materi.index', 'menu_slug' => 'materi'],
+            ['name' => 'materi.create', 'menu_slug' => 'materi'],
+            ['name' => 'materi.edit', 'menu_slug' => 'materi'],
+            ['name' => 'materi.delete', 'menu_slug' => 'materi'],
 
             // Mindmap
-            'mindmap.index',
+            ['name' => 'mindmap.index', 'menu_slug' => 'mindmap'],
+            ['name' => 'mindmap.create', 'menu_slug' => 'mindmap'],
+            ['name' => 'mindmap.edit', 'menu_slug' => 'mindmap'],
+            ['name' => 'mindmap.delete', 'menu_slug' => 'mindmap'],
+
+            // Classes
+            ['name' => 'classes.index', 'menu_slug' => 'classes'],
+            ['name' => 'classes.create', 'menu_slug' => 'classes'],
+            ['name' => 'classes.edit', 'menu_slug' => 'classes'],
+            ['name' => 'classes.delete', 'menu_slug' => 'classes'],
 
             // Roles
-            'roles.index',
-            'roles.create',
-            'roles.edit',
-            'roles.delete',
+            ['name' => 'roles.index', 'menu_slug' => 'roles'],
+            ['name' => 'roles.create', 'menu_slug' => 'roles'],
+            ['name' => 'roles.edit', 'menu_slug' => 'roles'],
+            ['name' => 'roles.delete', 'menu_slug' => 'roles'],
 
             // Permissions
-            'permissions.index',
-            'permissions.create',
-            'permissions.edit',
-            'permissions.delete',
+            ['name' => 'permissions.index', 'menu_slug' => 'permissions'],
+            ['name' => 'permissions.create', 'menu_slug' => 'permissions'],
+            ['name' => 'permissions.edit', 'menu_slug' => 'permissions'],
+            ['name' => 'permissions.delete', 'menu_slug' => 'permissions'],
 
             // Users
-            'users.index',
-            'users.create',
-            'users.edit',
-            'users.delete',
+            ['name' => 'users.index', 'menu_slug' => 'users'],
+            ['name' => 'users.create', 'menu_slug' => 'users'],
+            ['name' => 'users.edit', 'menu_slug' => 'users'],
+            ['name' => 'users.delete', 'menu_slug' => 'users'],
 
             // Collaborations
-            'collaboration.index',
-            'collaboration.create',
-            'collaboration.edit',
-            'collaboration.delete',
+            ['name' => 'collaboration.index', 'menu_slug' => 'collaboration'],
+            ['name' => 'collaboration.create', 'menu_slug' => 'collaboration'],
+            ['name' => 'collaboration.edit', 'menu_slug' => 'collaboration'],
+            ['name' => 'collaboration.delete', 'menu_slug' => 'collaboration'],
+
+            // Reports
+            ['name' => 'reports.index', 'menu_slug' => 'reports'],
+            ['name' => 'reports.users', 'menu_slug' => 'reports'],
+            ['name' => 'reports.mindmap', 'menu_slug' => 'reports'],
+            ['name' => 'reports.learning', 'menu_slug' => 'reports'],
+
+            // Analytics
+            ['name' => 'analytics.index', 'menu_slug' => 'analytics'],
         ];
 
-        // Create all permissions
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+        // Create all permissions with menu linkage
+        foreach ($permissions as $permissionData) {
+            $menu = Menu::where('slug', $permissionData['menu_slug'])->first();
+            
+            Permission::firstOrCreate(
+                ['name' => $permissionData['name']],
+                ['menu_id' => $menu ? $menu->id : null]
+            );
         }
+
+        // Extract permission names for role assignment
+        $permissionNames = array_column($permissions, 'name');
 
         // Create roles
         $adminRole   = Role::firstOrCreate(['name' => 'admin']);
@@ -80,9 +107,9 @@ class RoleAndUserSeeder extends Seeder
         $umumRole    = Role::firstOrCreate(['name' => 'umum']);
 
         // Admin: semua permissions
-        $adminRole->syncPermissions($permissions);
+        $adminRole->syncPermissions($permissionNames);
 
-        // Teacher: hanya akses category, subcategori, materi, mindmap (tidak bisa manage roles/permissions/users)
+        // Teacher: akses category, subcategori, materi, mindmap, classes, reports, analytics (tidak bisa manage roles/permissions/users)
         $teacherRole->syncPermissions([
             'category.index',
             'category.create',
@@ -97,6 +124,18 @@ class RoleAndUserSeeder extends Seeder
             'materi.edit',
             'materi.delete',
             'mindmap.index',
+            'mindmap.create',
+            'mindmap.edit',
+            'mindmap.delete',
+            'classes.index',
+            'classes.create',
+            'classes.edit',
+            'classes.delete',
+            'reports.index',
+            'reports.users',
+            'reports.mindmap',
+            'reports.learning',
+            'analytics.index',
         ]);
 
         // Student: tidak ada akses backend
