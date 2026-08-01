@@ -2,11 +2,11 @@
 
 @section('content')
     <!-- Header-->
-    <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
+    <header class="intro introhalf" data-background="img/main/30.jpg">
       <div class="overlay"></div>
       <div class="intro-body">
         <h1>{{ __('messages.contact_page_title') }}</h1>
-        <h4>{{ __('messages.contact_page_subtitle') }}</h4><a class="page-scroll" href="#contact"><span class="mouse"><span><i class="icon ion-ios-arrow-down"></i></span></span></a>
+        <h4>{{ __('messages.contact_page_subtitle') }}</h4>
       </div>
     </header>
      <!-- Contact Section-->

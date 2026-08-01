@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
+   <header class="intro introhalf" data-background="img/main/30.jpg">
       <div class="intro-body">
         <div class="overlay"></div>
         <div class="container text-left">

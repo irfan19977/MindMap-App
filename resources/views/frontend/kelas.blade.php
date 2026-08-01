@@ -2,14 +2,13 @@
 
 @section('content')
     <!-- Header-->
-    <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
-        <div class="overlay"></div>
-        <div class="intro-body">
-            <h1>Kelas Pembelajaran</h1>
-            <h4>Pilih kelas yang ingin Anda pelajari dan ikuti alur mindmap yang terstruktur</h4><a class="page-scroll" href="#kelas"><span class="mouse"><span><i class="icon ion-ios-arrow-down"></i></span></span></a>
-        </div>
+    <header class="intro introhalf" data-background="img/main/30.jpg">
+      <div class="overlay"></div>
+      <div class="intro-body">
+        <h1>Kelas Pembelajaran</h1>
+        <h4>Pilih kelas yang ingin Anda pelajari dan ikuti alur mindmap yang terstruktur</h4>
+      </div>
     </header>
-
     <!-- Kelas Block-->
     <section class="section-small" id="kelas">
         <div class="container">
