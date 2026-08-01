@@ -548,7 +548,7 @@ return [
     'backend_description_placeholder' => 'Describe this category...',
     'backend_cover_image_label' => 'Cover Image',
     'backend_current_image' => 'Current image:',
-    'backend_image_format' => 'Format: JPG, PNG, WebP. Max: 2MB',
+    'backend_image_format' => 'Format: JPG, PNG, WebP. Max: 500KB',
     'backend_featured_label' => 'Show on Homepage (Featured)',
     'backend_update_category' => 'Update Category',
     'backend_save_category' => 'Save Category',

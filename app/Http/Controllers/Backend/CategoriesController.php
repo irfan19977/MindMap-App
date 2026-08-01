@@ -42,7 +42,7 @@ class CategoriesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp, pdf|max:500',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,webp|max:500',
             'status' => 'required|in:publish,draft,inactive',
             'is_featured' => 'nullable|boolean',
         ]);
@@ -102,7 +102,7 @@ class CategoriesController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:500',
             'status' => 'required|in:publish,draft,inactive',
             'is_featured' => 'nullable|boolean',
         ]);

@@ -39,11 +39,19 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadNotifications();
         updateUnreadCount();
+<<<<<<< HEAD
 
         // Polling dinonaktifkan sementara
         // notificationInterval = setInterval(function() {
         //     updateUnreadCount();
         // }, 30000);
+=======
+        
+        // Auto-refresh notifications every 30 seconds
+        notificationInterval = setInterval(function() {
+            updateUnreadCount();
+        }, 30000);
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
     });
 
     // Load notifications

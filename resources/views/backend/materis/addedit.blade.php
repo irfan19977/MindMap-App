@@ -166,7 +166,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
-                                                    <label for="status" class="form-label">Status</label>
+                                                    <label for="status" class="form-label">Status <span class="text-danger">*</span></label>
                                                     <select class="form-control @error('status') is-invalid @enderror" 
                                                             data-select2-selector="icon" id="status" name="status">
                                                         <option value="draft" {{ (old('status') ?? (isset($materi) ? $materi->status : 'draft')) == 'draft' ? 'selected' : '' }}>

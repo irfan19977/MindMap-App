@@ -93,7 +93,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="description" class="form-label">{{ __('messages.backend_description_label') }}</label>
+                                            <label for="description" class="form-label">{{ __('messages.backend_description_label') }} <span class="text-danger">*</span></label>
                                             <textarea class="form-control @error('description') is-invalid @enderror" 
                                                       id="description" name="description" rows="4" 
                                                       placeholder="{{ __('messages.backend_description_placeholder') }}">{{ old('description') ?? $category->description ?? '' }}</textarea>
@@ -107,7 +107,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="mb-3">
-                                            <label for="cover_image" class="form-label">{{ __('messages.backend_cover_image_label') }}</label>
+                                            <label for="cover_image" class="form-label">{{ __('messages.backend_cover_image_label') }} <span class="text-danger">*</span></label>
                                             <input type="file" class="form-control @error('cover_image') is-invalid @enderror" 
                                                    id="cover_image" name="cover_image" 
                                                    accept="image/*">

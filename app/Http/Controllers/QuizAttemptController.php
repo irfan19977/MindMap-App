@@ -31,10 +31,16 @@ class QuizAttemptController extends Controller
 
         if ($existingAttempt) {
             return response()->json([
+<<<<<<< HEAD
                 'success' => true,
                 'message' => 'You already have an in-progress attempt',
                 'attempt' => $existingAttempt,
             ]);
+=======
+                'message' => 'You already have an in-progress attempt',
+                'attempt' => $existingAttempt,
+            ], 400);
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
         }
 
         // Create new attempt
@@ -48,7 +54,10 @@ class QuizAttemptController extends Controller
         ]);
 
         return response()->json([
+<<<<<<< HEAD
             'success' => true,
+=======
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
             'message' => 'Quiz attempt started',
             'attempt' => $attempt,
             'quiz' => $quiz->load('quizQuestions'),
@@ -61,24 +70,42 @@ class QuizAttemptController extends Controller
     public function submitAnswer(Request $request)
     {
         $validated = $request->validate([
+<<<<<<< HEAD
             'quiz_attempt_id' => 'required|exists:quiz_attempts,id',
             'quiz_question_id' => 'required|exists:quiz_questions,id',
             'user_answer' => 'required',
         ]);
 
         $attempt = QuizAttempt::where('id', $validated['quiz_attempt_id'])
+=======
+            'attempt_id' => 'required|exists:quiz_attempts,id',
+            'question_id' => 'required|exists:quiz_questions,id',
+            'answer' => 'required',
+        ]);
+
+        $attempt = QuizAttempt::where('id', $validated['attempt_id'])
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
             ->where('user_id', Auth::id())
             ->where('status', 'in_progress')
             ->firstOrFail();
 
+<<<<<<< HEAD
         $question = QuizQuestion::findOrFail($validated['quiz_question_id']);
 
         $existingAnswer = QuizAnswer::where('quiz_attempt_id', $attempt->id)
             ->where('quiz_question_id', $question->id)
+=======
+        $question = QuizQuestion::findOrFail($validated['question_id']);
+
+        // Check if answer already exists
+        $existingAnswer = QuizAnswer::where('attempt_id', $attempt->id)
+            ->where('question_id', $question->id)
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
             ->first();
 
         if ($existingAnswer) {
             $existingAnswer->update([
+<<<<<<< HEAD
                 'user_answer' => $validated['user_answer'],
                 'is_correct' => $this->checkAnswer($question, $validated['user_answer']),
             ]);
@@ -88,11 +115,26 @@ class QuizAttemptController extends Controller
                 'quiz_question_id' => $question->id,
                 'user_answer' => $validated['user_answer'],
                 'is_correct' => $this->checkAnswer($question, $validated['user_answer']),
+=======
+                'answer' => $validated['answer'],
+                'is_correct' => $this->checkAnswer($question, $validated['answer']),
+            ]);
+        } else {
+            QuizAnswer::create([
+                'id' => Str::uuid(),
+                'attempt_id' => $attempt->id,
+                'question_id' => $question->id,
+                'answer' => $validated['answer'],
+                'is_correct' => $this->checkAnswer($question, $validated['answer']),
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
             ]);
         }
 
         return response()->json([
+<<<<<<< HEAD
             'success' => true,
+=======
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
             'message' => 'Answer saved',
         ]);
     }
@@ -112,6 +154,7 @@ class QuizAttemptController extends Controller
             ->firstOrFail();
 
         $quiz = Quiz::with('quizQuestions')->findOrFail($attempt->quiz_id);
+<<<<<<< HEAD
 
         // Save answers from JS payload
         $submittedAnswers = $request->input('answers', []);
@@ -136,6 +179,9 @@ class QuizAttemptController extends Controller
         }
 
         $answers = QuizAnswer::where('quiz_attempt_id', $attempt->id)->get();
+=======
+        $answers = QuizAnswer::where('attempt_id', $attempt->id)->get();
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
 
         // Calculate score
         $correctCount = $answers->where('is_correct', true)->count();
@@ -153,6 +199,7 @@ class QuizAttemptController extends Controller
         ]);
 
         return response()->json([
+<<<<<<< HEAD
             'success' => true,
             'message' => 'Quiz submitted successfully',
             'attempt' => $attempt->load('quizAnswers'),
@@ -162,6 +209,12 @@ class QuizAttemptController extends Controller
             'passed' => $status === 'passed',
             'passing_score' => $quiz->passing_score,
             'saved' => true,
+=======
+            'message' => 'Quiz submitted successfully',
+            'attempt' => $attempt->load('quizAnswers'),
+            'score' => $score,
+            'status' => $status,
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
         ]);
     }
 
@@ -234,10 +287,21 @@ class QuizAttemptController extends Controller
      */
     private function checkAnswer($question, $answer)
     {
+<<<<<<< HEAD
         if ($answer === null || $answer === '') {
             return false;
         }
 
         return strtolower(trim($answer)) === strtolower(trim($question->correct_answer));
+=======
+        if ($question->type === 'multiple_choice') {
+            return $answer === $question->correct_answer;
+        } elseif ($question->type === 'essay') {
+            // Essay questions need manual grading
+            return null;
+        }
+        
+        return false;
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
     }
 }

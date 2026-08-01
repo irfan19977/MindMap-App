@@ -49,7 +49,7 @@ class SubcategoriesController extends Controller
             'grade_level' => 'required|in:sd,smp,sma,umum',
             'curriculum' => 'nullable|string|max:255',
             'status' => 'required|in:publish,draft,inactive',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:500',
             'is_featured' => 'nullable|boolean',
         ]);
 
@@ -114,7 +114,7 @@ class SubcategoriesController extends Controller
             'grade_level' => 'required|in:sd,smp,sma,umum',
             'curriculum' => 'nullable|string|max:255',
             'status' => 'required|in:publish,draft,inactive',
-            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:500',
             'is_featured' => 'nullable|boolean',
         ]);
 
