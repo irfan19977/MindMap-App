@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use App\Models\UserProgress;
 
 class Student extends Model
 {
@@ -79,9 +80,7 @@ class Student extends Model
      */
     public function getCompletedMaterialsCountAttribute(): int
     {
-        return UserProgress::where('user_id', $this->user_id)
-            ->whereNotNull('completed_at')
-            ->count();
+        return count($this->getCompletedMaterialIds());
     }
 
     /**
@@ -92,6 +91,103 @@ class Student extends Model
         return UserProgress::where('user_id', $this->user_id)
             ->whereNull('completed_at')
             ->count();
+    }
+
+    /**
+     * Get the list of unique completed material IDs.
+     */
+    public function getCompletedMaterialIds(): array
+    {
+        $quizMaterialIds = \App\Models\QuizAttempt::where('user_id', $this->user_id)
+            ->where('status', 'passed')
+            ->with('quiz:id,material_id')
+            ->get()
+            ->pluck('quiz.material_id')
+            ->filter()
+            ->unique()
+            ->values()
+            ->toArray();
+
+        $progressMaterialIds = UserProgress::where('user_id', $this->user_id)
+            ->whereNotNull('completed_at')
+            ->pluck('material_id')
+            ->unique()
+            ->values()
+            ->toArray();
+
+        return array_unique(array_merge($quizMaterialIds, $progressMaterialIds));
+    }
+
+    /**
+     * Get total experience points for the student.
+     */
+    public function getExperiencePointsAttribute(): int
+    {
+        return count($this->getCompletedMaterialIds()) * 100 + $this->passed_quiz_count * 25;
+    }
+
+    /**
+     * Get level name based on experience points.
+     */
+    public function getLevelAttribute(): string
+    {
+        $xp = $this->experience_points;
+
+        return match (true) {
+            $xp >= 10000 => 'Future Leader',
+            $xp >= 8000 => 'Master Mind',
+            $xp >= 5500 => 'Expert Learner',
+            $xp >= 3500 => 'Smart Achiever',
+            $xp >= 2000 => 'Rising Scholar',
+            $xp >= 1000 => 'Knowledge Seeker',
+            $xp >= 500 => 'Active Learner',
+            default => 'New Explorer',
+        };
+    }
+
+    /**
+     * Get current progress toward the next level.
+     */
+    public function getLevelProgressAttribute(): int
+    {
+        [$min, $max] = $this->getLevelRange();
+
+        if ($max === null) {
+            return 100;
+        }
+
+        $progress = ($this->experience_points - $min) / max(1, $max - $min);
+        return (int) floor(min(100, max(0, $progress * 100)));
+    }
+
+    /**
+     * Get how much XP is needed to reach the next level.
+     */
+    public function getExperienceToNextLevelAttribute(): ?int
+    {
+        [, $max] = $this->getLevelRange();
+
+        if ($max === null) {
+            return null;
+        }
+
+        return max(0, $max - $this->experience_points);
+    }
+
+    private function getLevelRange(): array
+    {
+        $xp = $this->experience_points;
+
+        return match (true) {
+            $xp >= 10000 => [10000, null],
+            $xp >= 8000 => [8000, 9999],
+            $xp >= 5500 => [5500, 7999],
+            $xp >= 3500 => [3500, 5499],
+            $xp >= 2000 => [2000, 3499],
+            $xp >= 1000 => [1000, 1999],
+            $xp >= 500 => [500, 999],
+            default => [0, 499],
+        };
     }
 
     /**

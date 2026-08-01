@@ -156,6 +156,28 @@
                                 <i class="fas fa-user-edit"></i> Edit Profil
                             </a>
                         </div>
+                        <div style="margin-top: 20px;">
+                            <div class="stat-card" style="padding: 20px; text-align: left;">
+                                <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Level Saat Ini</div>
+                                <div style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">{{ $student->level }}</div>
+                                <div style="background: #e9ecef; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 8px;">
+                                    <div style="width: {{ $student->level_progress }}%; background: #4f8ef7; height: 100%;"></div>
+                                </div>
+                                <div style="font-size: 13px; color: #666;">{{ $student->level_progress }}% menuju level berikutnya</div>
+                                <div style="margin-top: 12px; font-size: 14px; color: #333;">XP: {{ number_format($student->experience_points) }}</div>
+                                @if($student->experience_to_next_level !== null)
+                                <div style="font-size: 13px; color: #666; margin-top: 4px;">Butuh {{ number_format($student->experience_to_next_level) }} XP lagi untuk naik level</div>
+                                @endif
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <div class="stat-card" style="padding: 20px; text-align: left;">
+                                <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Peringkat Global</div>
+                                <div style="font-size: 22px; font-weight: 700;">#{{ $studentRank ?? '-' }}</div>
+                                <div style="font-size: 13px; color: #666;">Dari {{ $globalStudentCount ?? 0 }} siswa</div>
+                                <a href="{{ route('leaderboard.index') }}" class="btn btn-sm btn-dark-border" style="margin-top: 12px; width: 100%; display: inline-block;">Lihat Leaderboard Global</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

@@ -21,7 +21,35 @@ class StudentProfileController extends Controller
         $student = $user->student;
         $student->load('user');
 
-        return view('frontend.student-profile', compact('student'));
+        $students = Student::with('user')->get()
+            ->sortByDesc(fn ($studentItem) => $studentItem->experience_points)
+            ->values();
+
+        $studentRank = $students->search(fn ($studentItem) => $studentItem->id === $student->id);
+        $studentRank = $studentRank === false ? null : $studentRank + 1;
+        $globalStudentCount = $students->count();
+
+        return view('frontend.student-profile', compact('student', 'studentRank', 'globalStudentCount'));
+    }
+
+    public function leaderboard()
+    {
+        $user = Auth::user();
+
+        if (!$user || (!$user->student && ! $user->hasRole('admin'))) {
+            abort(403, 'Hanya siswa atau admin yang dapat mengakses halaman ini.');
+        }
+
+        $students = Student::with('user')->get()
+            ->sortByDesc(fn ($studentItem) => $studentItem->experience_points)
+            ->values();
+
+        $currentStudent = null;
+        if ($user->student) {
+            $currentStudent = $user->student->load('user');
+        }
+
+        return view('frontend.leaderboard', compact('students', 'currentStudent'));
     }
 
     public function edit()
