@@ -45,7 +45,7 @@
           <li><a href="https://twitter.com/mindmap_id" target="_blank"><i class="fab fa-twitter fa-fw fa-lg"></i></a></li>
           <li><a href="https://facebook.com/mindmap.id" target="_blank"><i class="fab fa-facebook-f fa-fw fa-lg"></i></a></li>
           <li><a href="https://youtube.com/mindmap_id" target="_blank"><i class="fab fa-youtube fa-fw fa-lg"></i></a></li>
-          <li><a href="https://instagram.com/mindmap.id" target="_blank"><i class="fab fa-instagram fa-fw fa-lg"></i></a></li>
+          <li><a href="https://www.instagram.com/official_mindmapedu?igsh=MW5xNmE3ZTBwZTIyeg==" target="_blank"><i class="fab fa-instagram fa-fw fa-lg"></i></a></li>
           <li><a href="https://linkedin.com/company/mindmap" target="_blank"><i class="fab fa-linkedin-in fa-fw fa-lg"></i></a></li>
         </ul>
       </div>

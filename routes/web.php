@@ -68,7 +68,7 @@ Route::prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/{slug}/courses', [TeacherController::class, 'courses'])->name('courses');
     
     // Teacher Collaboration (requires auth and teacher role)
-    Route::middleware(['auth', 'role:teacher', 'approved_teacher'])->group(function () {
+    Route::middleware(['auth', 'role:teacher', \App\Http\Middleware\EnsureApprovedTeacher::class])->group(function () {
         Route::get('/collaborations', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'index'])->name('collaborations.index');
         Route::post('/collaborations/{collaboration}/accept', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'accept'])->name('collaborations.accept');
         Route::post('/collaborations/{collaboration}/reject', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'reject'])->name('collaborations.reject');
@@ -104,7 +104,7 @@ Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.his
 | Backend Routes (Admin & Teacher)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin|teacher', 'approved_teacher'])->group(function () {
+Route::middleware(['auth', 'role:admin|teacher', \App\Http\Middleware\EnsureApprovedTeacher::class])->group(function () {
     Route::resource('dashboard', DashboardController::class);
 
     // Konten Edukasi
