@@ -1,6 +1,15 @@
 @extends('frontend.layouts.app')
 
 @section('content')
+    <!-- Header-->
+    <header class="intro introhalf" data-background="img/main/30.jpg">
+      <div class="overlay"></div>
+      <div class="intro-body">
+        <h1>Leaderboard</h1>
+        <h4>Tantang dirimu setiap season dan lihat siapa yang teratas</h4>
+      </div>
+    </header>
+
     <style>
         /* ==========================================================
            Layout
@@ -573,7 +582,11 @@
                         <h2>Leaderboard Global</h2>
                         <p class="text-muted">Tantang dirimu setiap season 3 bulan sekali dan lihat siapa yang teratas dalam perjalanan belajar.</p>
                     </div>
-                    <a href="{{ route('student.profile') }}" class="btn btn-primary btn-lg">Kembali ke Profil</a>
+                    @if(auth()->check())
+                        <a href="{{ route('student.profile') }}" class="btn btn-primary btn-lg">Kembali ke Profil</a>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Login untuk Lihat Rank Kamu</a>
+                    @endif
                 </div>
 
                 <div class="rank-road-wrap">

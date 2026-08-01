@@ -123,7 +123,49 @@ class Student extends Model
      */
     public function getExperiencePointsAttribute(): int
     {
-        return count($this->getCompletedMaterialIds()) * 100 + $this->passed_quiz_count * 25;
+        $completedMaterialsXP = count($this->getCompletedMaterialIds()) * 100;
+        $passedQuizXP = $this->passed_quiz_count * 25;
+        
+        // XP from practice exercises (latihan)
+        $practiceXP = \App\Models\PracticeAnswer::where('user_id', $this->user_id)
+            ->where('is_correct', true)
+            ->sum('points_earned');
+        
+        // XP from daily login streak
+        $streakXP = $this->calculateStreakXP();
+        
+        return $completedMaterialsXP + $passedQuizXP + $practiceXP + $streakXP;
+    }
+
+    /**
+     * Calculate XP from daily login streak.
+     */
+    private function calculateStreakXP(): int
+    {
+        $user = \App\Models\User::find($this->user_id);
+        if (!$user || !$user->last_login_at) {
+            return 0;
+        }
+
+        // Get the most recent login history for this user
+        $latestLogin = \App\Models\UserLoginHistory::where('user_id', $this->user_id)
+            ->orderBy('login_date', 'desc')
+            ->first();
+
+        if (!$latestLogin) {
+            return 0;
+        }
+
+        $streakDays = $latestLogin->streak_count;
+        
+        // XP reward based on streak
+        return match (true) {
+            $streakDays >= 30 => 500,  // 30+ days streak
+            $streakDays >= 14 => 300,  // 14+ days streak
+            $streakDays >= 7 => 150,   // 7+ days streak
+            $streakDays >= 3 => 75,    // 3+ days streak
+            default => 25,              // Daily login
+        };
     }
 
     /**

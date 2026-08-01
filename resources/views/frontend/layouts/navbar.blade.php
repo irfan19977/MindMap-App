@@ -11,6 +11,7 @@
             <li><a href="/">{{ __('messages.home') }}</a></li>
             <li><a href="/about">{{ __('messages.about') }}</a></li>
             <li><a href="/teacher">{{ __('messages.teachers') }}</a></li>
+            <li><a href="/leaderboard">Leaderboard</a></li>
             <li><a href="/kelas">{{ __('messages.courses') }}</a></li>
             <li><a href="/contact">{{ __('messages.contact') }}</a></li>
             @endguest

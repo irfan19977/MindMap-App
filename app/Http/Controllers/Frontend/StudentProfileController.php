@@ -36,16 +36,12 @@ class StudentProfileController extends Controller
     {
         $user = Auth::user();
 
-        if (!$user || (!$user->student && ! $user->hasRole('admin'))) {
-            abort(403, 'Hanya siswa atau admin yang dapat mengakses halaman ini.');
-        }
-
         $students = Student::with('user')->get()
             ->sortByDesc(fn ($studentItem) => $studentItem->experience_points)
             ->values();
 
         $currentStudent = null;
-        if ($user->student) {
+        if ($user && $user->student) {
             $currentStudent = $user->student->load('user');
         }
 

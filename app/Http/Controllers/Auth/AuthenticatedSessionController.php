@@ -31,6 +31,41 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
         $user->update(['last_login_at' => now()]);
 
+        // Track daily login history for students
+        if ($user->student) {
+            $today = now()->toDateString();
+            $loginHistory = \App\Models\UserLoginHistory::where('user_id', $user->id)
+                ->where('login_date', $today)
+                ->first();
+
+            if (!$loginHistory) {
+                // Check yesterday's login to calculate streak
+                $yesterday = now()->subDay()->toDateString();
+                $yesterdayLogin = \App\Models\UserLoginHistory::where('user_id', $user->id)
+                    ->where('login_date', $yesterday)
+                    ->first();
+
+                $streakCount = $yesterdayLogin ? $yesterdayLogin->streak_count + 1 : 1;
+
+                // Calculate XP based on streak
+                $xpEarned = match (true) {
+                    $streakCount >= 30 => 500,
+                    $streakCount >= 14 => 300,
+                    $streakCount >= 7 => 150,
+                    $streakCount >= 3 => 75,
+                    default => 25,
+                };
+
+                \App\Models\UserLoginHistory::create([
+                    'user_id' => $user->id,
+                    'login_date' => $today,
+                    'logged_in_at' => now(),
+                    'streak_count' => $streakCount,
+                    'xp_earned' => $xpEarned,
+                ]);
+            }
+        }
+
         if ($user->hasRole('admin') || ($user->hasRole('teacher') && $user->is_active)) {
             return redirect()->route('dashboard.index');
         }

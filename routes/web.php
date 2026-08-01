@@ -217,6 +217,8 @@ Route::middleware(['auth', 'role:admin|teacher', \App\Http\Middleware\EnsureAppr
 | Authenticated User Routes
 |--------------------------------------------------------------------------
 */
+Route::get('/leaderboard', [StudentProfileController::class, 'leaderboard'])->name('leaderboard.index');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -225,7 +227,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/student/profile', [StudentProfileController::class, 'show'])->name('student.profile');
     Route::get('/student/profile/edit', [StudentProfileController::class, 'edit'])->name('student.profile.edit');
     Route::put('/student/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
-    Route::get('/leaderboard', [StudentProfileController::class, 'leaderboard'])->name('leaderboard.index');
 
     // Quiz API Routes
     Route::prefix('api/quiz')->group(function () {
