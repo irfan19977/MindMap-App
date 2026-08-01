@@ -98,10 +98,16 @@
                             <span class="nxl-mtext">{{ __('messages.backend_analytics') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
+<<<<<<< HEAD
 
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('analytics.index') }}">{{ __('messages.backend_analytics_dashboard') }}</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">{{ __('messages.backend_analytics_learning') }}</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('engagement.index') }}">{{ __('messages.backend_analytics_engagement') }}</a></li>
+=======
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('analytics.index') }}">Dashboard Analitik</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.index') }}">Analitik Pembelajaran</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.quizzes') }}">Analitik Quiz</a></li>
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
                         </ul>
                     </li>
                     

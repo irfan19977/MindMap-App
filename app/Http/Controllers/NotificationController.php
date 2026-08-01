@@ -110,6 +110,7 @@ class NotificationController extends Controller
             'link' => $link,
         ]);
     }
+<<<<<<< HEAD
     public function show($id)
     {
         // 1. Cari data pesan di database berdasarkan ID
@@ -121,4 +122,6 @@ class NotificationController extends Controller
         // 3. Buka halaman backend/contact/show.blade.php sambil membawa data $contact
         return view('backend.contact.show', compact('contact'));
     }
+=======
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
 }

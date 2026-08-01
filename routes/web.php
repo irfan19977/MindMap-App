@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NotificationController;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Artisan;
+=======
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\CategoriesController;
@@ -14,6 +17,7 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\PermissionController;
 use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Backend\AnalyticsController;
+<<<<<<< HEAD
 use App\Http\Controllers\Frontend\KelasController;
 use App\Http\Controllers\Frontend\QuizController;
 use App\Http\Controllers\Backend\ThemeController;
@@ -36,6 +40,16 @@ Route::get('/clear', function () {
     if (request('key') !== 'gantirahasia') {
         abort(403, 'Forbidden');
     }
+=======
+use App\Http\Controllers\Backend\QuizController;
+use App\Http\Controllers\QuizAttemptController;
+use App\Http\Controllers\Frontend\KelasController;
+use App\Http\Controllers\Frontend\QuizController as FrontendQuizController;
+use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\AIController;
+use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\StudentProfileController;
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
 
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
@@ -226,6 +240,19 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/student/profile', [StudentProfileController::class, 'show'])->name('student.profile');
 
+<<<<<<< HEAD
+=======
+    // Frontend Quiz Routes
+    Route::prefix('quiz')->name('quiz.')->group(function () {
+        Route::get('/', [FrontendQuizController::class, 'index'])->name('index');
+        Route::get('/take/{quizId}', [FrontendQuizController::class, 'take'])->name('take');
+        Route::get('/result/{attemptId}', [FrontendQuizController::class, 'result'])->name('result');
+        Route::get('/history/{quizId}', [FrontendQuizController::class, 'history'])->name('history');
+        Route::get('/leaderboard/{quizId}', [FrontendQuizController::class, 'leaderboard'])->name('leaderboard');
+        Route::get('/progress', [FrontendQuizController::class, 'progress'])->name('progress');
+    });
+
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
     // Quiz API Routes
     Route::prefix('api/quiz')->group(function () {
         Route::post('/start', [QuizAttemptController::class, 'start'])->name('quiz.start');
@@ -245,7 +272,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
         Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
+<<<<<<< HEAD
         Route::get('/admin/contact/{id}', [ContactController::class, 'show'])->name('contact.show');
+=======
+>>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
     });
 });
 
