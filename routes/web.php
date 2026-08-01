@@ -26,7 +26,7 @@ use App\Http\Controllers\Backend\CourseClassController;
 use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\QuizAttemptController;
-
+use App\Http\Controllers\ContactController;
 /*
 |--------------------------------------------------------------------------
 | Temporary Cache Clear (remove after deployment)
@@ -52,7 +52,12 @@ Route::get('/clear', function () {
 */
 Route::get('/', function () { return view('frontend.index'); });
 Route::get('/about', function () { return view('frontend.about'); });
-Route::get('/contact', function () { return view('frontend.contact'); });
+Route::get('/contact', function () {
+    return view('frontend.contact');
+});
+
+Route::post('/contact', [ContactController::class, 'store'])
+    ->name('contact.store');
 Route::get('/detailk', function () { return view('frontend.kelas-detail'); });
 
 /*
@@ -240,6 +245,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
         Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
+        Route::get('/admin/contact/{id}', [ContactController::class, 'show'])->name('contact.show');
     });
 });
 

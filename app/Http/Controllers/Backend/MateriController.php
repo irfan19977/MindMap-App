@@ -320,7 +320,7 @@ class MateriController extends Controller
     public function convertPdf(Request $request)
     {
         $request->validate([
-            'pdf_file' => 'required|file|mimes:pdf|max:10240',
+            'pdf_file' => 'required|file|mimes:pdf|max:500',
         ]);
 
         try {

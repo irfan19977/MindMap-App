@@ -110,4 +110,15 @@ class NotificationController extends Controller
             'link' => $link,
         ]);
     }
+    public function show($id)
+    {
+        // 1. Cari data pesan di database berdasarkan ID
+        $contact = Contact::findOrFail($id);
+
+        // 2. Ubah status data pesan menjadi sudah dibaca
+        $contact->update(['is_read' => 1]);
+
+        // 3. Buka halaman backend/contact/show.blade.php sambil membawa data $contact
+        return view('backend.contact.show', compact('contact'));
+    }
 }

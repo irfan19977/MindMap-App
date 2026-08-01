@@ -548,7 +548,7 @@ return [
     'backend_description_placeholder' => 'Jelaskan kategori ini...',
     'backend_cover_image_label' => 'Gambar Cover',
     'backend_current_image' => 'Gambar saat ini:',
-    'backend_image_format' => 'Format: JPG, PNG, WebP. Maksimal: 2MB',
+    'backend_image_format' => 'Format: JPG, PNG, WebP. Maksimal: 500KB',
     'backend_featured_label' => 'Tampilkan di Halaman Utama (Featured)',
     'backend_update_category' => 'Update Kategori',
     'backend_save_category' => 'Simpan Kategori',

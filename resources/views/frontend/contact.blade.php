@@ -20,28 +20,34 @@
           <div class="col-md-4 alert alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h3><i class="fa fa-phone"></i> {{ __('messages.contact_phone_number') }}
             </h3>
-            <form id="contactForm" name="sentMessage" novalidate="">
-              <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                  <label class="sr-only control-label" for="name">{{ __('messages.contact_name') }}</label>
-                  <input class="form-control" id="name" type="text" placeholder="{{ __('messages.contact_name') }}" required="" data-validation-required-message="Please enter name"><span class="help-block text-danger"></span>
-                </div>
-              </div>
-              <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                  <label class="sr-only control-label" for="email">{{ __('messages.contact_email') }}</label>
-                  <input class="form-control" id="email" type="email" placeholder="{{ __('messages.contact_email') }}" required="" data-validation-required-message="Please enter email"><span class="help-block text-danger"></span>
-                </div>
-              </div>
-              <div class="control-group">
-                <div class="form-group floating-label-form-group controls">
-                  <label class="sr-only control-label" for="message">{{ __('messages.contact_message') }}</label>
-                  <textarea class="form-control" id="message" rows="2" placeholder="{{ __('messages.contact_message') }}" required="" data-validation-required-message="Please enter a message." aria-invalid="false"></textarea><span class="help-block text-danger"></span>
-                </div>
-              </div>
-              <div id="success"></div>
-              <button class="btn btn-dark" type="submit">{{ __('messages.contact_send') }}</button>
-            </form>
+           <form action="{{ route('contact.store') }}" method="POST">
+    @csrf  <div class="control-group">
+        <div class="form-group floating-label-form-group controls">
+            <label class="sr-only control-label" for="name">{{ __('messages.contact_name') }}</label>
+            <input class="form-control" id="name" name="name" type="text" placeholder="{{ __('messages.contact_name') }}" required="" data-validation-required-message="Please enter name">
+            <span class="help-block text-danger"></span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="form-group floating-label-form-group controls">
+            <label class="sr-only control-label" for="email">{{ __('messages.contact_email') }}</label>
+            <input class="form-control" id="email" name="email" type="email" placeholder="{{ __('messages.contact_email') }}" required="" data-validation-required-message="Please enter email">
+            <span class="help-block text-danger"></span>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="form-group floating-label-form-group controls">
+            <label class="sr-only control-label" for="message">{{ __('messages.contact_message') }}</label>
+            <textarea class="form-control" id="message" name="message" rows="2" placeholder="{{ __('messages.contact_message') }}" required="" data-validation-required-message="Please enter a message."></textarea>
+            <span class="help-block text-danger"></span>
+        </div>
+    </div>
+
+    <div id="success"></div>
+    <button class="btn btn-dark" type="submit">{{ __('messages.contact_send') }}</button>
+</form>
           </div>
         </div>
       </div>
