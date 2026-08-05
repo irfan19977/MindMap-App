@@ -40,6 +40,12 @@
             font-weight: 600;
             margin-bottom: 15px;
         }
+        .rank-logo {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            display: block;
+        }
         .student-info-section { margin-bottom: 30px; }
         .student-info-section h3 {
             border-bottom: 2px solid #eee;
@@ -147,6 +153,24 @@
                         @endif
                         <h2>{{ $student->name }}</h2>
                         <span class="role-badge"><i class="fas fa-user-graduate"></i> Siswa</span>
+                        
+                        <!-- Rank Logo Section -->
+                        @php
+                            $rankLogoMap = [
+                                'Future Leader' => 'future-leader.png',
+                                'Master Mind' => 'smart-achiever.png',
+                                'Expert Learner' => 'expert-learner.png',
+                                'Smart Achiever' => 'smart-achiever.png',
+                                'Rising Scholar' => 'rising-scholar.png',
+                                'Knowledge Seeker' => 'knowledge-seeker.png',
+                                'Active Learner' => 'active-learner.png',
+                                'New Explorer' => 'new-explorer.png',
+                            ];
+                            $currentLevel = $student->level;
+                            $rankLogoFile = $rankLogoMap[$currentLevel] ?? 'new-explorer.png';
+                        @endphp
+                        <img src="{{ asset('images/rank-logos/' . $rankLogoFile) }}" alt="{{ $currentLevel }}" class="rank-logo" title="{{ $currentLevel }}">
+                        
                         <div style="margin-top: 10px;">
                             <p class="text-muted"><i class="fas fa-envelope"></i> {{ $student->email }}</p>
                         </div>
