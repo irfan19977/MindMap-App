@@ -81,6 +81,30 @@
             color: #555;
         }
 
+        /* Rank badge card */
+        .rank-badge-card { text-align: center; }
+        .rank-badge-card .rank-badge-glow {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle, rgba(79,142,247,0.14) 0%, rgba(79,142,247,0) 70%);
+        }
+        .rank-badge-card .rank-badge-img {
+            width: 108px;
+            height: 108px;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 14px rgba(15, 23, 42, 0.18));
+        }
+        .rank-badge-card .rank-badge-level {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
         .courses-section { padding: 60px 0; background: #f9f9f9; }
         .course-card {
             background: #fff;
@@ -120,6 +144,21 @@
         }
     </style>
 
+    @php
+        // Maps each rank/level name to its badge artwork in public/images/ranks/
+        $rankImages = [
+            'New Explorer' => 'new-explorer.png',
+            'Active Learner' => 'active-learner.png',
+            'Knowledge Seeker' => 'knowledge-seeker.png',
+            'Rising Scholar' => 'rising-scholar.png',
+            'Smart Achiever' => 'smart-achiever.png',
+            'Expert Learner' => 'expert-learner.png',
+            'Master Mind' => 'master-mind.png',
+            'Future Leader' => 'future-leader.png',
+        ];
+        $rankBadgeFile = $rankImages[$student->level] ?? 'new-explorer.png';
+    @endphp
+
     <section class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
         <div class="intro-body">
             <div class="overlay"></div>
@@ -157,16 +196,19 @@
                             </a>
                         </div>
                         <div style="margin-top: 20px;">
-                            <div class="stat-card" style="padding: 20px; text-align: left;">
-                                <div style="font-size: 14px; color: #999; margin-bottom: 8px;">Level Saat Ini</div>
-                                <div style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">{{ $student->level }}</div>
-                                <div style="background: #e9ecef; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 8px;">
+                            <div class="stat-card rank-badge-card" style="padding: 24px;">
+                                <div class="rank-badge-glow">
+                                    <img src="{{ asset('images/ranks/' . $rankBadgeFile) }}" alt="{{ $student->level }}" class="rank-badge-img">
+                                </div>
+                                <div style="font-size: 14px; color: #999; margin-bottom: 4px;">Level Saat Ini</div>
+                                <div class="rank-badge-level">{{ $student->level }}</div>
+                                <div style="background: #e9ecef; border-radius: 10px; height: 12px; overflow: hidden; margin-bottom: 8px; text-align: left;">
                                     <div style="width: {{ $student->level_progress }}%; background: #4f8ef7; height: 100%;"></div>
                                 </div>
-                                <div style="font-size: 13px; color: #666;">{{ $student->level_progress }}% menuju level berikutnya</div>
-                                <div style="margin-top: 12px; font-size: 14px; color: #333;">XP: {{ number_format($student->experience_points) }}</div>
+                                <div style="font-size: 13px; color: #666; text-align: left;">{{ $student->level_progress }}% menuju level berikutnya</div>
+                                <div style="margin-top: 12px; font-size: 14px; color: #333; text-align: left;">XP: {{ number_format($student->experience_points) }}</div>
                                 @if($student->experience_to_next_level !== null)
-                                <div style="font-size: 13px; color: #666; margin-top: 4px;">Butuh {{ number_format($student->experience_to_next_level) }} XP lagi untuk naik level</div>
+                                <div style="font-size: 13px; color: #666; margin-top: 4px; text-align: left;">Butuh {{ number_format($student->experience_to_next_level) }} XP lagi untuk naik level</div>
                                 @endif
                             </div>
                         </div>
