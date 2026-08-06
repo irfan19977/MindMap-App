@@ -23,23 +23,30 @@ class ThemeController extends Controller
 
         $user = Auth::user();
         if ($user) {
-            $preferences = array_merge($user->theme_preferences ?? [], [
-                'theme' => $request->theme,
-                'navigation' => $request->navigation,
-                'header' => $request->header,
-                'skin' => $request->skin,
-                'font_family' => $request->font_family,
-                'updated_at' => now()->toISOString(),
-            ]);
+            try {
+                $preferences = array_merge($user->theme_preferences ?? [], [
+                    'theme' => $request->theme,
+                    'navigation' => $request->navigation,
+                    'header' => $request->header,
+                    'skin' => $request->skin,
+                    'font_family' => $request->font_family,
+                    'updated_at' => now()->toISOString(),
+                ]);
 
-            $user->theme_preferences = $preferences;
-            $user->save();
+                $user->theme_preferences = $preferences;
+                $user->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Theme preferences saved successfully',
-                'preferences' => $preferences
-            ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Theme preferences saved successfully',
+                    'preferences' => $preferences
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to save theme preferences'
+                ], 500);
+            }
         }
 
         return response()->json([
