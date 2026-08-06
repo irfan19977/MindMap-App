@@ -113,15 +113,30 @@ class CourseClassController extends Controller
         $validated['created_by'] = auth()->id();
         $validated['is_featured'] = $request->has('is_featured');
 
-        if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')->store('classes', 'public');
+        try {
+            if ($request->hasFile('cover_image')) {
+                $validated['cover_image'] = $request->file('cover_image')->store('classes', 'public');
+            }
+
+            $courseClass = CourseClass::create($validated);
+            $this->syncMaterialsFromMindmap($courseClass);
+
+            return redirect()->route('classes.index')
+                ->with('success', 'Kelas berhasil ditambahkan!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Kelas dengan nama ini sudah ada.');
+            }
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan kelas.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan kelas.');
         }
-
-        $courseClass = CourseClass::create($validated);
-        $this->syncMaterialsFromMindmap($courseClass);
-
-        return redirect()->route('classes.index')
-            ->with('success', 'Kelas berhasil ditambahkan!');
     }
 
     public function show(CourseClass $courseClass)
@@ -198,18 +213,33 @@ class CourseClassController extends Controller
 
         $validated['is_featured'] = $request->has('is_featured');
 
-        if ($request->hasFile('cover_image')) {
-            if ($courseClass->cover_image) {
-                Storage::disk('public')->delete($courseClass->cover_image);
+        try {
+            if ($request->hasFile('cover_image')) {
+                if ($courseClass->cover_image) {
+                    Storage::disk('public')->delete($courseClass->cover_image);
+                }
+                $validated['cover_image'] = $request->file('cover_image')->store('classes', 'public');
             }
-            $validated['cover_image'] = $request->file('cover_image')->store('classes', 'public');
+
+            $courseClass->update($validated);
+            $this->syncMaterialsFromMindmap($courseClass);
+
+            return redirect()->route('classes.index')
+                ->with('success', 'Kelas berhasil diperbarui!');
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] === 1062) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Kelas dengan nama ini sudah ada.');
+            }
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui kelas.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui kelas.');
         }
-
-        $courseClass->update($validated);
-        $this->syncMaterialsFromMindmap($courseClass);
-
-        return redirect()->route('classes.index')
-            ->with('success', 'Kelas berhasil diperbarui!');
     }
 
     public function destroy(CourseClass $courseClass)
@@ -220,14 +250,19 @@ class CourseClassController extends Controller
                 ->with('error', 'Anda tidak memiliki akses untuk menghapus kelas ini.');
         }
 
-        if ($courseClass->cover_image) {
-            Storage::disk('public')->delete($courseClass->cover_image);
+        try {
+            if ($courseClass->cover_image) {
+                Storage::disk('public')->delete($courseClass->cover_image);
+            }
+
+            $courseClass->delete();
+
+            return redirect()->route('classes.index')
+                ->with('success', 'Kelas berhasil dihapus!');
+        } catch (\Exception $e) {
+            return redirect()->route('classes.index')
+                ->with('error', 'Terjadi kesalahan saat menghapus kelas.');
         }
-
-        $courseClass->delete();
-
-        return redirect()->route('classes.index')
-            ->with('success', 'Kelas berhasil dihapus!');
     }
 
     public function getMaterials(Request $request)

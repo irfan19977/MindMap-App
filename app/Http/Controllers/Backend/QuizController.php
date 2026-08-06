@@ -40,18 +40,24 @@ class QuizController extends Controller
             'status' => 'required|in:publish,draft,inactive',
         ]);
 
-        $quiz = Quiz::create([
-            'id' => Str::uuid(),
-            'material_id' => null,
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'time_limit' => $validated['time_limit'],
-            'passing_score' => $validated['passing_score'],
-            'status' => $validated['status'],
-        ]);
+        try {
+            $quiz = Quiz::create([
+                'id' => Str::uuid(),
+                'material_id' => null,
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'time_limit' => $validated['time_limit'],
+                'passing_score' => $validated['passing_score'],
+                'status' => $validated['status'],
+            ]);
 
-        return redirect()->route('quizzes.index')
-            ->with('success', 'Quiz berhasil dibuat dengan passing grade ' . $validated['passing_score'] . '%');
+            return redirect()->route('quizzes.index')
+                ->with('success', 'Quiz berhasil dibuat dengan passing grade ' . $validated['passing_score'] . '%');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat membuat quiz.');
+        }
     }
 
     /**
@@ -85,11 +91,17 @@ class QuizController extends Controller
             'status' => 'required|in:publish,draft,inactive',
         ]);
 
-        $quiz = Quiz::findOrFail($id);
-        $quiz->update($validated);
+        try {
+            $quiz = Quiz::findOrFail($id);
+            $quiz->update($validated);
 
-        return redirect()->route('quizzes.index')
-            ->with('success', 'Quiz berhasil diperbarui dengan passing grade ' . $validated['passing_score'] . '%');
+            return redirect()->route('quizzes.index')
+                ->with('success', 'Quiz berhasil diperbarui dengan passing grade ' . $validated['passing_score'] . '%');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat memperbarui quiz.');
+        }
     }
 
     /**
@@ -97,15 +109,20 @@ class QuizController extends Controller
      */
     public function destroy($id)
     {
-        $quiz = Quiz::findOrFail($id);
-        
-        // Delete related quiz questions first
-        QuizQuestion::where('quiz_id', $id)->delete();
-        
-        // Delete the quiz
-        $quiz->delete();
+        try {
+            $quiz = Quiz::findOrFail($id);
 
-        return redirect()->route('quizzes.index')
-            ->with('success', 'Quiz berhasil dihapus');
+            // Delete related quiz questions first
+            QuizQuestion::where('quiz_id', $id)->delete();
+
+            // Delete the quiz
+            $quiz->delete();
+
+            return redirect()->route('quizzes.index')
+                ->with('success', 'Quiz berhasil dihapus');
+        } catch (\Exception $e) {
+            return redirect()->route('quizzes.index')
+                ->with('error', 'Terjadi kesalahan saat menghapus quiz.');
+        }
     }
 }
