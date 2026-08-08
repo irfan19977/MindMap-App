@@ -4,8 +4,7 @@
 
 @section('content')
     <!-- Header Section -->
-    <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
-        <div class="overlay"></div>
+    <header class="intro" data-background="{{ asset('frontend/img/main/header.png') }}">
         <div class="intro-body">
             <div class="container">
                 <ol class="breadcrumb">

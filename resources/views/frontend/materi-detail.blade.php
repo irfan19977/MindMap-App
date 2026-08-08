@@ -2,8 +2,7 @@
 
 @section('content')
     <!-- Header-->
-    <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
-      <div class="overlay"></div>
+    <header class="intro" data-background="{{ asset('frontend/img/main/header.png') }}">
       <div class="intro-body">
         <h1>Detail Materi</h1>
         <h4>Pelajari konsep mendalam dengan bantuan AI Assistant</h4>
@@ -1553,6 +1552,7 @@
                 // Call API to start quiz
                 const response = await fetch('/api/quiz/start', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -1714,12 +1714,13 @@
         }
         document.addEventListener('visibilitychange', quizVisibilityChange);
 
-        // Block other tabs from being clicked during quiz
+        // Block other tabs from being clicked during quiz or after failed quiz
+        let quizFailed = false;
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.materi-tabs a').forEach(function(link) {
                 if (link.id === 'quizTabLink') return;
                 link.addEventListener('click', function(e) {
-                    if (quizActive) {
+                    if (quizActive || quizFailed) {
                         e.preventDefault();
                         e.stopPropagation();
                     }
@@ -1947,11 +1948,33 @@
                 } else if (!passed) {
                     // If failed, allow retry by re-enabling submit button
                     const submitBtn = form.querySelector('.quiz-submit-btn');
-                    if (submitBtn) { 
-                        submitBtn.disabled = false; 
-                        submitBtn.style.opacity = '1'; 
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.style.opacity = '1';
                         submitBtn.style.cursor = 'pointer';
                         submitBtn.textContent = 'Coba Lagi';
+                        submitBtn.onclick = function() {
+                            window.location.reload();
+                        };
+                    }
+
+                    // Set quizFailed flag to disable tabs
+                    quizFailed = true;
+
+                    // Disable all tabs except quiz
+                    document.querySelectorAll('.materi-tabs a').forEach(function(link) {
+                        if (link.id !== 'quizTabLink') {
+                            link.style.pointerEvents = 'none';
+                            link.style.opacity = '0.5';
+                        }
+                    });
+
+                    // Disable Mulai Belajar button
+                    const mulaiBelajarBtn = document.querySelector('.materi-start-btn');
+                    if (mulaiBelajarBtn) {
+                        mulaiBelajarBtn.style.pointerEvents = 'none';
+                        mulaiBelajarBtn.style.opacity = '0.5';
+                        mulaiBelajarBtn.disabled = true;
                     }
 
                     // Scroll to result for failed quiz

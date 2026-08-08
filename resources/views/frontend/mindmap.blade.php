@@ -4,8 +4,7 @@
 
 @section('content')
     <!-- Header-->
-    <header class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
-      <div class="overlay"></div>
+    <header class="intro" data-background="{{ asset('frontend/img/main/header.png') }}">
       <div class="intro-body">
         <h1>MindMap Pembelajaran</h1>
         <h4>Visualisasikan alur pembelajaran interaktif</h4><a class="page-scroll" href="#mindmap-content"><span class="mouse"><span><i class="icon ion-ios-arrow-down"></i></span></span></a>

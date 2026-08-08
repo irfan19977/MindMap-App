@@ -2,8 +2,7 @@
 
 @section('content')
     <!-- Header-->
-    <header class="intro introhalf" data-background="img/main/30.jpg">
-      <div class="overlay"></div>
+    <header class="intro introhalf" data-background="{{ asset('frontend/img/main/header.png') }}">
       <div class="intro-body">
         <h1>Leaderboard</h1>
         <h4>Tantang dirimu setiap season dan lihat siapa yang teratas</h4>
@@ -197,6 +196,13 @@
             color: #fff;
             background: linear-gradient(135deg, #4f8ef7 0%, #8a6dff 100%);
             box-shadow: 0 14px 32px rgba(79, 142, 247, 0.25);
+            position: relative;
+            animation: podium-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes podium-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .podium-item--rank-1 .podium-rank {
@@ -204,7 +210,13 @@
             height: 64px;
             font-size: 1.3rem;
             background: linear-gradient(135deg, #f6c744 0%, #f79c42 100%);
-            box-shadow: 0 14px 32px rgba(247, 156, 66, 0.35);
+            box-shadow: 0 14px 32px rgba(247, 156, 66, 0.35), 0 0 0 4px rgba(246, 199, 68, 0.3);
+            animation: podium-gold 2s ease-in-out infinite;
+        }
+
+        @keyframes podium-gold {
+            0%, 100% { transform: scale(1); box-shadow: 0 14px 32px rgba(247, 156, 66, 0.35), 0 0 0 4px rgba(246, 199, 68, 0.3); }
+            50% { transform: scale(1.08); box-shadow: 0 20px 40px rgba(247, 156, 66, 0.45), 0 0 0 8px rgba(246, 199, 68, 0.4); }
         }
 
         .podium-badge {
@@ -296,16 +308,17 @@
         .rank-hero {
             display: flex;
             align-items: center;
-            gap: 24px;
-            padding: 26px 30px;
+            gap: 16px;
+            padding: 18px 30px;
             border-radius: 28px;
-            margin-top: 24px;
+            margin-top: 16px;
             position: relative;
             overflow: hidden;
             color: #fff;
             background:
                 radial-gradient(circle at 12% 20%, rgba(56, 189, 248, 0.28), transparent 55%),
                 linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            width: 100%;
         }
 
         .rank-hero--empty {
@@ -331,8 +344,8 @@
         .rank-hero-emblem-wrap {
             position: relative;
             flex-shrink: 0;
-            width: 96px;
-            height: 96px;
+            width: 72px;
+            height: 72px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -371,6 +384,37 @@
             gap: 4px;
             position: relative;
             z-index: 1;
+            flex: 1;
+        }
+
+        .rank-hero-stats {
+            display: flex;
+            gap: 16px;
+            margin-left: auto;
+        }
+
+        .rank-hero-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .rank-hero-stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+        }
+
+        .rank-hero-stat-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #fff;
         }
 
         .rank-hero-eyebrow {
@@ -400,6 +444,38 @@
         }
 
         .rank-hero-desc strong { color: #fff; }
+
+        .rank-hero .btn-primary {
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
+        /* ==========================================================
+           Progress Bar
+           ========================================================== */
+        .rank-progress {
+            margin-top: 12px;
+        }
+
+        .rank-progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .rank-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+            border-radius: 999px;
+            transition: width 0.5s ease;
+        }
+
+        .rank-progress-text {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
 
         /* ==========================================================
            Rank road — horizontal tier path with hexagon nodes
@@ -434,8 +510,8 @@
         }
 
         .rank-node-badge {
-            width: 62px;
-            height: 62px;
+            width: 80px;
+            height: 80px;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             display: flex;
             align-items: center;
@@ -447,20 +523,29 @@
         .rank-node-icon { font-size: 1.4rem; }
 
         .rank-node-name {
-            font-size: 0.74rem;
+            font-size: 1rem;
             font-weight: 700;
             text-align: center;
             color: #334155;
             line-height: 1.2;
         }
 
+        .rank-node-xp {
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            color: #64748b;
+        }
+
         .rank-node--locked .rank-node-badge {
             background: rgba(148, 163, 184, 0.25) !important;
-            filter: grayscale(1);
             box-shadow: none;
         }
 
-        .rank-node--locked .rank-node-icon { opacity: 0.7; }
+        .rank-node--locked .rank-node-icon img {
+            filter: grayscale(1);
+            opacity: 0.5;
+        }
         .rank-node--locked .rank-node-name { color: rgba(100, 116, 139, 0.7); }
 
         .rank-node--current .rank-node-badge {
@@ -515,6 +600,74 @@
             .leaderboard-table td:nth-child(5) { display: none; }
             .rank-hero { flex-direction: column; text-align: center; padding: 22px; }
             .rank-hero-desc { max-width: none; }
+            .rank-hero-info { flex: none; }
+            .rank-hero-stats { margin-left: 0; margin-top: 12px; width: 100%; justify-content: center; }
+
+            /* Improved rank road for mobile */
+            .rank-road-wrap {
+                padding: 16px 8px;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+
+            .rank-road {
+                padding: 8px 4px;
+            }
+
+            .rank-node {
+                width: 80px;
+                gap: 6px;
+            }
+
+            .rank-node-badge {
+                width: 56px;
+                height: 56px;
+            }
+
+            .rank-node-name {
+                font-size: 0.75rem;
+            }
+
+            .rank-node-xp {
+                font-size: 0.65rem;
+            }
+
+            .rank-node-tag {
+                font-size: 0.55rem;
+                padding: 1px 6px;
+            }
+        }
+
+        /* ==========================================================
+           Celebration animation
+           ========================================================== */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s ease-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
     </style>
 
@@ -547,30 +700,78 @@
             'Future Leader' => '👑',
         ];
 
+        $levelImages = [
+            'New Explorer' => 'new-explorer.png',
+            'Active Learner' => 'active-learner.png',
+            'Knowledge Seeker' => 'knowledge-seeker.png',
+            'Rising Scholar' => 'rising-scholar.png',
+            'Smart Achiever' => 'smart-achiever.png',
+            'Expert Learner' => 'expert-learner.png',
+            'Master Mind' => 'master-mind.png',
+            'Future Leader' => 'future-leader.png',
+        ];
+
         $rankTiers = [
-            ['name' => 'New Explorer', 'icon' => '🧭', 'subtitle' => 'Mulai menjelajah dunia belajar.'],
-            ['name' => 'Active Learner', 'icon' => '📚', 'subtitle' => 'Konsisten dan terus belajar.'],
-            ['name' => 'Knowledge Seeker', 'icon' => '🔍', 'subtitle' => 'Mencari wawasan yang lebih dalam.'],
-            ['name' => 'Rising Scholar', 'icon' => '🌱', 'subtitle' => 'Tingkatkan kebiasaan belajar.'],
-            ['name' => 'Smart Achiever', 'icon' => '🏅', 'subtitle' => 'Tampil sebagai pelajar berprestasi.'],
-            ['name' => 'Expert Learner', 'icon' => '🎓', 'subtitle' => 'Memahami konsep dengan matang.'],
-            ['name' => 'Master Mind', 'icon' => '🧠', 'subtitle' => 'Menjadi pemikir strategis.'],
-            ['name' => 'Future Leader', 'icon' => '👑', 'subtitle' => 'Siap memimpin di masa depan.'],
+            ['name' => 'New Explorer', 'icon' => '🧭', 'subtitle' => 'Mulai menjelajah dunia belajar.', 'min_xp' => 10],
+            ['name' => 'Active Learner', 'icon' => '📚', 'subtitle' => 'Konsisten dan terus belajar.', 'min_xp' => 100],
+            ['name' => 'Knowledge Seeker', 'icon' => '🔍', 'subtitle' => 'Mencari wawasan yang lebih dalam.', 'min_xp' => 300],
+            ['name' => 'Rising Scholar', 'icon' => '🌱', 'subtitle' => 'Tingkatkan kebiasaan belajar.', 'min_xp' => 600],
+            ['name' => 'Smart Achiever', 'icon' => '🏅', 'subtitle' => 'Tampil sebagai pelajar berprestasi.', 'min_xp' => 1000],
+            ['name' => 'Expert Learner', 'icon' => '🎓', 'subtitle' => 'Memahami konsep dengan matang.', 'min_xp' => 1500],
+            ['name' => 'Master Mind', 'icon' => '🧠', 'subtitle' => 'Menjadi pemikir strategis.', 'min_xp' => 2500],
+            ['name' => 'Future Leader', 'icon' => '👑', 'subtitle' => 'Siap memimpin di masa depan.', 'min_xp' => 4000],
         ];
 
         $currentLevel = $currentStudent->level ?? null;
-        // array_search returns an int index, or false when not found — never compare
-        // the result against null, since PHP treats `false` and `null` differently
-        // in loose comparisons and that previously marked every tier as "active".
-        $currentTierIndex = $currentLevel ? array_search($currentLevel, array_column($rankTiers, 'name')) : false;
+        // Determine current tier based on XP, not database level
+        $currentTierIndex = false;
+        if ($currentStudent) {
+            foreach ($rankTiers as $index => $tier) {
+                if ($currentStudent->experience_points >= $tier['min_xp']) {
+                    $currentTierIndex = $index;
+                } else {
+                    break;
+                }
+            }
+        }
+        
+        // Update currentLevel based on XP
+        if ($currentTierIndex !== false) {
+            $currentLevel = $rankTiers[$currentTierIndex]['name'];
+        }
 
         $lastTierIndex = count($rankTiers) - 1;
         $isTopTier = $currentTierIndex !== false && $currentTierIndex === $lastTierIndex;
         $nextTier = ($currentTierIndex !== false && !$isTopTier) ? $rankTiers[$currentTierIndex + 1] : null;
 
+        // Calculate progress to next rank
+        $currentTierMinXp = $currentTierIndex !== false ? $rankTiers[$currentTierIndex]['min_xp'] : 0;
+        $nextTierMinXp = $nextTier ? $nextTier['min_xp'] : $currentTierMinXp;
+        $xpProgress = 0;
+        if ($nextTier && $nextTierMinXp > $currentTierMinXp && $currentStudent->experience_points >= $currentTierMinXp) {
+            $xpProgress = min(100, round(($currentStudent->experience_points - $currentTierMinXp) / ($nextTierMinXp - $currentTierMinXp) * 100));
+        }
+
         $studentCount = $students->count();
         $topXp = $students->first()->experience_points ?? 0;
         $avgXp = $studentCount > 0 ? (int) round($students->avg('experience_points')) : 0;
+
+        // Filter students to only include those with minimum XP (10 XP for New Explorer)
+        $minXpForLeaderboard = 10;
+        $qualifiedStudents = $students->filter(function ($item) use ($minXpForLeaderboard) {
+            return $item->experience_points >= $minXpForLeaderboard;
+        });
+
+        // Calculate current student's rank from qualified students only
+        $currentStudentRank = null;
+        if ($currentStudent && $currentStudent->experience_points >= $minXpForLeaderboard) {
+            $currentStudentRank = $qualifiedStudents->search(function ($item) use ($currentStudent) {
+                return $item->user_id === $currentStudent->user_id;
+            });
+            if ($currentStudentRank !== false) {
+                $currentStudentRank = $currentStudentRank + 1;
+            }
+        }
     @endphp
 
     <section class="leaderboard-section">
@@ -599,13 +800,13 @@
                                 $nodeClass = $levelClasses[$tier['name']] ?? 'level-explorer';
                             @endphp
                             <div class="rank-node {{ $isCurrent ? 'rank-node--current' : '' }} {{ $isLocked ? 'rank-node--locked' : '' }}">
-                                @if($isCurrent)
-                                    <span class="rank-node-tag">Kamu</span>
-                                @endif
                                 <div class="rank-node-badge {{ $nodeClass }}">
-                                    <span class="rank-node-icon">{{ $isLocked ? '🔒' : $tier['icon'] }}</span>
+                                    <span class="rank-node-icon">
+                                        <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$tier['name']]) }}" alt="{{ $tier['name'] }}" style="width: 64px; height: 64px;">
+                                    </span>
                                 </div>
                                 <span class="rank-node-name">{{ $tier['name'] }}</span>
+                                <span class="rank-node-xp">{{ $tier['min_xp'] }} XP</span>
                             </div>
                             @if(!$loop->last)
                                 <div class="rank-connector {{ $isAchieved || $isCurrent ? 'rank-connector--active' : '' }}"></div>
@@ -614,13 +815,11 @@
                     </div>
                 </div>
 
-                @if($currentStudent)
+                @if($currentStudent && $currentStudent->experience_points >= $minXpForLeaderboard)
                     <div class="rank-hero">
                         <div class="rank-hero-emblem-wrap">
                             <div class="rank-hero-ring"></div>
-                            <div class="rank-hero-emblem {{ $levelClasses[$currentLevel] ?? 'level-explorer' }}">
-                                <span class="rank-hero-icon">{{ $levelIcons[$currentLevel] ?? '⭐' }}</span>
-                            </div>
+                            <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$currentLevel]) }}" alt="{{ $currentLevel }}" style="width: 72px; height: 72px;">
                         </div>
                         <div class="rank-hero-info">
                             <span class="rank-hero-eyebrow">Rank Kamu</span>
@@ -631,9 +830,35 @@
                                     Kamu sudah mencapai rank tertinggi — pertahankan posisimu! 🏆
                                 @elseif($nextTier)
                                     Terus belajar untuk naik ke <strong>{{ $nextTier['name'] }}</strong>.
+                                    <div class="rank-progress">
+                                        <div class="rank-progress-bar">
+                                            <div class="rank-progress-fill" style="width: {{ $xpProgress }}%;"></div>
+                                        </div>
+                                        <div class="rank-progress-text">{{ number_format($nextTierMinXp - $currentStudent->experience_points) }} XP lagi ke {{ $nextTier['name'] }}</div>
+                                    </div>
                                 @endif
                             </p>
                         </div>
+                        <div class="rank-hero-stats">
+                            <div class="rank-hero-stat">
+                                <span class="rank-hero-stat-label">Peringkat</span>
+                                <span class="rank-hero-stat-value">#{{ $currentStudentRank ?? '-' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                @elseif($currentStudent)
+                    <div class="rank-hero rank-hero--empty">
+                        <div class="rank-hero-emblem-wrap">
+                            <div class="rank-hero-emblem level-explorer">
+                                <span class="rank-hero-icon">🎯</span>
+                            </div>
+                        </div>
+                        <div class="rank-hero-info">
+                            <span class="rank-hero-eyebrow">Belum Qualifikasi</span>
+                            <h3 class="rank-hero-title">Rank Kamu</h3>
+                            <p class="rank-hero-desc">Kamu butuh <strong>{{ $minXpForLeaderboard }} XP</strong> untuk masuk leaderboard. Kumpulkan XP dengan menyelesaikan materi dan quiz!</p>
+                        </div>
+                        <a href="{{ route('kelas.index') }}" class="btn btn-primary">Mulai Belajar</a>
                     </div>
                 @else
                     <div class="rank-hero rank-hero--empty">
@@ -647,35 +872,20 @@
                             <h3 class="rank-hero-title">Rank Kamu</h3>
                             <p class="rank-hero-desc">Masuk sebagai siswa untuk melihat status rank dan kemajuan XP kamu.</p>
                         </div>
+                        <a href="{{ route('login') }}" class="btn btn-primary">Login Sekarang</a>
                     </div>
                 @endif
 
-                <div class="leaderboard-stats">
-                    <div class="stat-card">
-                        <div class="stat-title">Total Pemain</div>
-                        <div class="stat-value">{{ $studentCount }}</div>
-                        <div class="stat-note">Jumlah peserta yang ikut dalam leaderboard.</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">XP Tertinggi</div>
-                        <div class="stat-value">{{ number_format($topXp) }}</div>
-                        <div class="stat-note">Tingkatkan nilai kamu agar bisa melampaui skor ini.</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-title">Rata-rata XP</div>
-                        <div class="stat-value">{{ number_format($avgXp) }}</div>
-                        <div class="stat-note">Ukuran performa tim pada season ini.</div>
-                    </div>
-                </div>
-
-                @if($studentCount > 0)
-                    @if($studentCount >= 3)
+                @if($qualifiedStudents->count() > 0)
+                    @if($qualifiedStudents->count() >= 3)
                         <div class="podium-row">
-                            @foreach($students->take(3) as $index => $item)
+                            @foreach($qualifiedStudents->take(3) as $index => $item)
                                 <div class="podium-item podium-item--rank-{{ $index + 1 }}">
                                     <div class="podium-rank">{{ $index + 1 }}</div>
                                     <div class="podium-badge {{ $levelClasses[$item->level] ?? 'level-explorer' }}">
-                                        <span class="podium-icon">{{ $levelIcons[$item->level] ?? '⭐' }}</span>
+                                        <span class="podium-icon">
+                                            <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$item->level]) }}" alt="{{ $item->level }}" style="width: 24px; height: 24px;">
+                                        </span>
                                         <span>{{ $item->level }}</span>
                                     </div>
                                     <div class="podium-name">{{ $item->user->name }}</div>
@@ -693,12 +903,10 @@
                                     <th scope="col">Nama</th>
                                     <th scope="col">Level</th>
                                     <th scope="col">XP</th>
-                                    <th scope="col">Latihan Selesai</th>
-                                    <th scope="col">Quiz Lulus</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($students as $index => $item)
+                                @foreach($qualifiedStudents as $index => $item)
                                     <tr>
                                         <td><span class="rank-circle">{{ $index + 1 }}</span></td>
                                         <td>
@@ -707,12 +915,10 @@
                                         </td>
                                         <td>
                                             <span class="level-badge {{ $levelClasses[$item->level] ?? 'level-explorer' }}">
-                                                {{ $levelIcons[$item->level] ?? '⭐' }} {{ $item->level }}
+                                                <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$item->level]) }}" alt="{{ $item->level }}" style="width: 20px; height: 20px; margin-right: 4px;"> {{ $item->level }}
                                             </span>
                                         </td>
                                         <td>{{ number_format($item->experience_points) }}</td>
-                                        <td>{{ $item->completed_materials_count }}</td>
-                                        <td>{{ $item->passed_quiz_count }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -726,4 +932,39 @@
             </div>
         </div>
     </section>
+
+    <script>
+        // Celebration confetti animation when user reaches new rank
+        function triggerConfetti() {
+            const container = document.createElement('div');
+            container.className = 'confetti-container';
+            document.body.appendChild(container);
+
+            const colors = ['#f6c744', '#4f8ef7', '#8a6dff', '#38bdf8', '#0ea5e9', '#f79c42'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                container.appendChild(confetti);
+            }
+
+            setTimeout(() => {
+                container.remove();
+            }, 5000);
+        }
+
+        // Check if user just leveled up (you can customize this logic based on your backend)
+        @if($currentStudent && session('rank_upgraded'))
+            @php
+                session()->forget('rank_upgraded');
+            @endphp
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(triggerConfetti, 500);
+            });
+        @endif
+    </script>
 @endsection

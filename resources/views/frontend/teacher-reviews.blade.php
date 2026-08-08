@@ -79,9 +79,8 @@
     </style>
 
     <!-- Header Section -->
-    <section class="intro" data-background="{{ asset('frontend/img/main/11.jpg') }}">
+    <section class="intro" data-background="{{ asset('frontend/img/main/header.png') }}">
         <div class="intro-body">
-            <div class="overlay"></div>
             <div class="container text-center">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">

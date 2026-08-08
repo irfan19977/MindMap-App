@@ -123,18 +123,41 @@ class Student extends Model
      */
     public function getExperiencePointsAttribute(): int
     {
-        $completedMaterialsXP = count($this->getCompletedMaterialIds()) * 100;
-        $passedQuizXP = $this->passed_quiz_count * 25;
-        
+        // XP from quiz attempts based on score
+        $quizXP = 0;
+        $quizAttempts = \App\Models\QuizAttempt::where('user_id', $this->user_id)
+            ->where('status', '!=', 'in_progress')
+            ->with('quiz')
+            ->get();
+
+        // Group by quiz_id to get best attempt per quiz
+        $bestAttempts = $quizAttempts->groupBy('quiz_id')->map(function ($attempts) {
+            return $attempts->sortByDesc('score')->first();
+        });
+
+        foreach ($bestAttempts as $attempt) {
+            $quiz = $attempt->quiz;
+            $score = $attempt->score;
+            $passingScore = $quiz ? $quiz->passing_score : 70;
+
+            if ($score >= $passingScore) {
+                // Full XP based on score (max 15 XP)
+                $quizXP += round(15 * ($score / 100));
+            } else {
+                // Below passing: 2 XP for effort
+                $quizXP += 2;
+            }
+        }
+
         // XP from practice exercises (latihan)
         $practiceXP = \App\Models\PracticeAnswer::where('user_id', $this->user_id)
             ->where('is_correct', true)
             ->sum('points_earned');
-        
+
         // XP from daily login streak
         $streakXP = $this->calculateStreakXP();
-        
-        return $completedMaterialsXP + $passedQuizXP + $practiceXP + $streakXP;
+
+        return $quizXP + $practiceXP + $streakXP;
     }
 
     /**
@@ -156,16 +179,8 @@ class Student extends Model
             return 0;
         }
 
-        $streakDays = $latestLogin->streak_count;
-        
-        // XP reward based on streak
-        return match (true) {
-            $streakDays >= 30 => 500,  // 30+ days streak
-            $streakDays >= 14 => 300,  // 14+ days streak
-            $streakDays >= 7 => 150,   // 7+ days streak
-            $streakDays >= 3 => 75,    // 3+ days streak
-            default => 25,              // Daily login
-        };
+        // Fixed 5 XP for daily login streak
+        return 5;
     }
 
     /**

@@ -2,8 +2,7 @@
 
 @section('content')
     <!-- Header Section -->
-   <header class="intro introhalf" data-background="{{ asset('frontend/img/main/11.jpg') }}">
-    <div class="overlay"></div>
+   <header class="intro introhalf" data-background="{{ asset('frontend/img/main/header.png') }}">
     <div class="intro-body">
         <h1>Tim Pengajar Profesional</h1>
         <h4>Bergabunglah dengan tim pengajar berpengalaman kami</h4>

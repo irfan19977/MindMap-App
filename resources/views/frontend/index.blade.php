@@ -1,9 +1,8 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-   <header class="intro introhalf" data-background="img/main/30.jpg">
+   <header class="intro introhalf" data-background="{{ asset('frontend/img/main/header.png') }}">
       <div class="intro-body">
-        <div class="overlay"></div>
         <div class="container text-left">
           <div class="row">
             <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo.png') }}" alt=""></div>
@@ -44,7 +43,7 @@
             <p>{{ __('messages.about_desc_2') }}</p>
             <div class="classic">{{ __('messages.about_team') }}</div> <small>&mdash; {{ __('messages.about_subtitle') }}</small>
           </div>
-          <div class="col-lg-6"><img class="wow slideInRight center-block" src="{{ asset('frontend/img/misc/7.png') }}" alt="" data-wow-duration="2s" animation-duration="2s"></div>
+          <div class="col-lg-6"><img class="wow slideInRight center-block" src="{{ asset('frontend/img/main/tentang.png') }}" alt="" data-wow-duration="2s" animation-duration="2s" style="max-width: 200%;"></div>
         </div>
       </div>
     </section>
@@ -53,15 +52,15 @@
       <div class="container">
         <h2 class="no-pad">{{ __('messages.features_title') }}<a class="fa fa-plus-circle fa-fw gray" href="#features" title="Lihat Semua"></a></h2>
         <div class="row grid-pad">
-          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/58.jpg') }}" alt="">
+          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/fitur mindmap.png') }}" alt="" style="height: 200px; object-fit: cover; width: 100%;">
               <h4>{{ __('messages.feature_1_title') }}</h4></a>
             <p>{{ __('messages.feature_1_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
-          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/59.jpg') }}" alt="">
+          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/asisten ai.png') }}" alt="" style="height: 200px; object-fit: cover; width: 100%;">
               <h4>{{ __('messages.feature_2_title') }}</h4></a>
             <p>{{ __('messages.feature_2_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
-          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/25.jpg') }}" alt="">
+          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/evaluasi otomatis.png') }}" alt="" style="height: 200px; object-fit: cover; width: 100%;">
               <h4>{{ __('messages.feature_3_title') }}</h4></a>
             <p>{{ __('messages.feature_3_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
@@ -69,7 +68,7 @@
       </div>
     </section>
     <!-- Services Section-->
-    <section class="text-center bg-img-custom bg-white" id="services" style="background-image: url('{{ asset('frontend/img/main/31.jpg') }}');">
+    <section class="text-center bg-img-custom bg-white" id="services" style="background-image: url('{{ asset('frontend/img/main/header.png') }}');">
       <div class="overlay-white"></div>
       <div class="container text-center">
         <div class="row">

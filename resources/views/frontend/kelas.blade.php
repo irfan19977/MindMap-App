@@ -2,8 +2,7 @@
 
 @section('content')
     <!-- Header-->
-    <header class="intro introhalf" data-background="img/main/30.jpg">
-      <div class="overlay"></div>
+    <header class="intro introhalf" data-background="{{ asset('frontend/img/main/header.png') }}">
       <div class="intro-body">
         <h1>Kelas Pembelajaran</h1>
         <h4>Pilih kelas yang ingin Anda pelajari dan ikuti alur mindmap yang terstruktur</h4>
