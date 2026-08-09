@@ -28,13 +28,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Check if there's an intended URL from the form
-        $intendedUrl = $request->input('intended');
-        
-        if ($intendedUrl && !str_contains($intendedUrl, '/login') && !str_contains($intendedUrl, '/register')) {
-            return redirect()->to($intendedUrl);
-        }
-
         $user = $request->user();
         $user->update(['last_login_at' => now()]);
 
@@ -81,7 +74,8 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('teacher.pending');
         }
 
-        $intended = $request->input('intended', $request->session()->pull('url.intended', '/'));
+        // For regular users, check for intended URL
+        $intended = $request->session()->pull('url.intended', '/');
 
         $intendedHost = parse_url($intended, PHP_URL_HOST);
         if ($intendedHost !== null && $intendedHost !== $request->getHost()) {

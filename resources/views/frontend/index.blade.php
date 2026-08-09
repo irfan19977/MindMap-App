@@ -136,13 +136,12 @@
           </div>
           <div class="col-lg-7 carousel-item wow zoomIn" data-wow-duration="2s" data-wow-delay=".2s">
             <div class="carousel slide carousel-fade" id="carousel-light2">
-              <ol class="carousel-indicators">
+              {{-- <ol class="carousel-indicators">
                 <li class="active" data-target="#carousel-light2" data-slide-to="0"></li>
                 <li data-target="#carousel-light2" data-slide-to="1"></li>
-              </ol>
+              </ol> --}}
               <div class="carousel-inner" role="listbox">
-                <div class="item active"><img class="center-block" src="{{ asset('frontend/img/misc/11.png') }}" alt=""></div>
-                <div class="item"><img class="center-block" src="{{ asset('frontend/img/misc/10.png') }}" alt=""></div>
+                <div class="item active"><img class="center-block" src="{{ asset('frontend/img/main/about.png') }}" alt=""></div>
               </div>
             </div>
           </div>
@@ -208,34 +207,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-    <!-- Quotes-->
-    <section class="bg-gray showcase no-pad">
-      <div class="container-fluid text-center no-pad">
-        <div class="row v-center">
-          <div class="col-lg-6 no-pad"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/5.jpg') }}" alt=""><a class="badge price">MORE INFO</a><a class="badge price new">CONCEPT</a></div>
-          <div class="col-lg-6">
-            <div class="row">
-              <div class="col-lg-8 col-lg-offset-2"><i class="ion-ios-infinite-outline icon-big"></i>
-                <h3>{{ __('messages.quote_text') }}</h3>
-                <h4 class="classic">{{ __('messages.mindmap_team') }}</h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- Facts section-->
-    <section class="facts bg-img-custom-small" style="background-image: url('{{ asset('frontend/img/main/4.jpg') }}');">
-      <div class="overlay"></div>
-      <div class="container text-center">
-        <div class="row">
-          <div class="col-sm-3"><i class="ion-ios-stopwatch-outline icon-big"></i><span class="numscroller" data-min="0" data-max="78" data-delay="5" data-increment="1">0</span>{{ __('messages.facts_completed') }}</div>
-          <div class="col-sm-3"><i class="ion-ios-gear-outline icon-big fa-spin"></i><span class="numscroller" data-min="0" data-max="29" data-delay="5" data-increment="1">0</span>{{ __('messages.facts_themes') }}</div>
-          <div class="col-sm-3"><i class="ion-ios-body-outline icon-big"></i><span class="numscroller" data-min="0" data-max="2785" data-delay="5" data-increment="3">0</span>{{ __('messages.facts_customers') }}</div>
-          <div class="col-sm-3"><i class="ion-ios-nutrition-outline icon-big"></i><span class="numscroller" data-min="0" data-max="12" data-delay="5" data-increment="1">0</span>{{ __('messages.facts_awards') }}</div>
         </div>
       </div>
     </section>

@@ -19,13 +19,8 @@
           </div>
           <div class="col-lg-7 carousel-item wow zoomIn" data-wow-duration="2s" data-wow-delay=".2s">
             <div class="carousel slide carousel-fade" id="carousel-light2">
-              <ol class="carousel-indicators">
-                <li class="active" data-target="#carousel-light2" data-slide-to="0"></li>
-                <li data-target="#carousel-light2" data-slide-to="1"></li>
-              </ol>
               <div class="carousel-inner" role="listbox">
-                <div class="item active"><img class="center-block" src="img/misc/11.png" alt=""></div>
-                <div class="item"><img class="center-block" src="img/misc/10.png" alt=""></div>
+                <div class="item active"><img class="center-block" src="{{ asset('frontend/img/main/about.png') }}" alt=""></div>
               </div>
             </div>
           </div>

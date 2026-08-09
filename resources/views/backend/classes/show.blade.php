@@ -155,77 +155,253 @@
         <div class="row mt-3">
             <div class="col-12">
                 <div class="card stretch stretch-full">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Pendaftaran Siswa</h5>
-                        <span class="badge bg-soft-primary text-primary">
-                            Pending: {{ $class->pendingEnrollments()->count() }}
-                        </span>
+                    <div class="card-header">
+                        <ul class="nav nav-tabs" id="studentTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="enrollments-tab" data-bs-toggle="tab" data-bs-target="#enrollments" type="button" role="tab" aria-controls="enrollments" aria-selected="true">
+                                    <i class="feather-user-plus me-2"></i>Pendaftaran Siswa
+                                    <span class="badge bg-soft-warning text-warning ms-2">{{ $class->pendingEnrollments()->count() }}</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="activeStudents-tab" data-bs-toggle="tab" data-bs-target="#activeStudents" type="button" role="tab" aria-controls="activeStudents" aria-selected="false">
+                                    <i class="feather-users me-2"></i>Siswa dalam Kelas
+                                    <span class="badge bg-soft-success text-success ms-2">{{ $class->activeEnrollments()->count() }}</span>
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="quizAttempts-tab" data-bs-toggle="tab" data-bs-target="#quizAttempts" type="button" role="tab" aria-controls="quizAttempts" aria-selected="false">
+                                    <i class="feather-clipboard me-2"></i>Quiz Terbaru
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="completedStudents-tab" data-bs-toggle="tab" data-bs-target="#completedStudents" type="button" role="tab" aria-controls="completedStudents" aria-selected="false">
+                                    <i class="feather-check-circle me-2"></i>Siswa Selesai
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                     <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover" id="enrollmentList">
-                                <thead>
-                                    <tr>
-                                        <th>Nama Siswa</th>
-                                        <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Progres</th>
-                                        <th>Tanggal Daftar</th>
-                                        <th class="text-end">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($class->enrollments as $enrollment)
-                                        <tr>
-                                            <td>{{ $enrollment->student->name ?? '-' }}</td>
-                                            <td>{{ $enrollment->student->email ?? '-' }}</td>
-                                            <td>
-                                                <span class="badge bg-soft-{{ $enrollment->status === 'active' ? 'success' : ($enrollment->status === 'pending' ? 'warning' : ($enrollment->status === 'completed' ? 'info' : 'danger')) }} text-{{ $enrollment->status === 'active' ? 'success' : ($enrollment->status === 'pending' ? 'warning' : ($enrollment->status === 'completed' ? 'info' : 'danger')) }}">
-                                                    {{ ucfirst($enrollment->status) }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="progress flex-grow-1" style="height: 6px;">
-                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ $enrollment->progress_percentage }}%"></div>
-                                                    </div>
-                                                    <span class="small">{{ $enrollment->progress_percentage }}%</span>
-                                                </div>
-                                            </td>
-                                            <td>{{ $enrollment->created_at->format('d M Y H:i') }}</td>
-                                            <td class="text-end">
-                                                @if($enrollment->status === 'pending')
-                                                    <div class="d-flex gap-2 justify-content-end">
-                                                        <form method="POST" action="{{ route('classes.enrollments.approve', [$class->id, $enrollment->id]) }}" class="d-inline">
-                                                            @csrf
-                                                            @method('PATCH')
-                                                            <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(40, 199, 111, 0.15); color: #28c76f;" data-bs-toggle="tooltip" title="Terima">
-                                                                <i class="feather-check"></i>
-                                                            </button>
-                                                        </form>
+                        <div class="tab-content" id="studentTabsContent">
+                            <!-- Tab 1: Daftar Pendaftaran Siswa -->
+                            <div class="tab-pane fade show active" id="enrollments" role="tabpanel" aria-labelledby="enrollments-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="enrollmentList">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Siswa</th>
+                                                <th>Email</th>
+                                                <th>Status</th>
+                                                <th>Progres</th>
+                                                <th>Tanggal Daftar</th>
+                                                <th class="text-end">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($class->enrollments as $enrollment)
+                                                <tr>
+                                                    <td>{{ $enrollment->student->name ?? '-' }}</td>
+                                                    <td>{{ $enrollment->student->email ?? '-' }}</td>
+                                                    <td>
+                                                        <span class="badge bg-soft-{{ $enrollment->status === 'active' ? 'success' : ($enrollment->status === 'pending' ? 'warning' : ($enrollment->status === 'completed' ? 'info' : 'danger')) }} text-{{ $enrollment->status === 'active' ? 'success' : ($enrollment->status === 'pending' ? 'warning' : ($enrollment->status === 'completed' ? 'info' : 'danger')) }}">
+                                                            {{ ucfirst($enrollment->status) }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <div class="progress flex-grow-1" style="height: 6px;">
+                                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $enrollment->progress_percentage }}%"></div>
+                                                            </div>
+                                                            <span class="small">{{ $enrollment->progress_percentage }}%</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $enrollment->created_at->format('d M Y H:i') }}</td>
+                                                    <td class="text-end">
+                                                        @if($enrollment->status === 'pending')
+                                                            <div class="d-flex gap-2 justify-content-end">
+                                                                <form method="POST" action="{{ route('classes.enrollments.approve', [$class->id, $enrollment->id]) }}" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(40, 199, 111, 0.15); color: #28c76f;" data-bs-toggle="tooltip" title="Terima">
+                                                                        <i class="feather-check"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline">
+                                                                    @csrf
+                                                                    @method('PATCH')
+                                                                    <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Tolak">
+                                                                        <i class="feather-x"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        @elseif($enrollment->status === 'active')
+                                                            <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Keluarkan">
+                                                                    <i class="feather-x"></i>
+                                                                </button>
+                                                            </form>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab 2: Daftar Siswa dalam Kelas -->
+                            <div class="tab-pane fade" id="activeStudents" role="tabpanel" aria-labelledby="activeStudents-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="activeStudentsList">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Siswa</th>
+                                                <th>Email</th>
+                                                <th>Progres</th>
+                                                <th>Materi Selesai</th>
+                                                <th>Tanggal Bergabung</th>
+                                                <th class="text-end">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($class->activeEnrollments as $enrollment)
+                                                <tr>
+                                                    <td>{{ $enrollment->student->name ?? '-' }}</td>
+                                                    <td>{{ $enrollment->student->email ?? '-' }}</td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <div class="progress flex-grow-1" style="height: 6px;">
+                                                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $enrollment->progress_percentage }}%"></div>
+                                                            </div>
+                                                            <span class="small">{{ $enrollment->progress_percentage }}%</span>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{ $enrollment->completed_materials_count ?? 0 }} / {{ $class->materials->count() }}</td>
+                                                    <td>{{ $enrollment->updated_at->format('d M Y H:i') }}</td>
+                                                    <td class="text-end">
                                                         <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline">
                                                             @csrf
                                                             @method('PATCH')
-                                                            <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Tolak">
+                                                            <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Keluarkan">
                                                                 <i class="feather-x"></i>
                                                             </button>
                                                         </form>
-                                                    </div>
-                                                @elseif($enrollment->status === 'active')
-                                                    <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Keluarkan">
-                                                            <i class="feather-x"></i>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center py-4 text-muted">
+                                                        <i class="feather-inbox fs-3 d-block mb-2"></i>
+                                                        Belum ada siswa aktif di kelas ini
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Track Siswa yang Mengerjakan Quiz -->
+                            <div class="tab-pane fade" id="quizAttempts" role="tabpanel" aria-labelledby="quizAttempts-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="quizAttemptsList">
+                                        <thead>
+                                            <tr>
+                                                <th>Siswa</th>
+                                                <th>Quiz</th>
+                                                <th class="text-center">Skor</th>
+                                                <th class="text-center">Status</th>
+                                                <th>Waktu</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($classQuizAttempts ?? collect() as $attempt)
+                                                <tr>
+                                                    <td>
+                                                        <div class="d-flex align-items-center gap-3">
+                                                            <div class="avatar-text avatar-md bg-soft-primary text-primary rounded-circle">
+                                                                {{ strtoupper(substr($attempt->user->name ?? 'U', 0, 1)) }}
+                                                            </div>
+                                                            <span class="fw-semibold">{{ $attempt->user->name ?? '-' }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td><span class="text-truncate-1-line d-block" style="max-width:200px;">{{ $attempt->quiz->title ?? '-' }}</span></td>
+                                                    <td class="text-center">
+                                                        <span class="fw-bold {{ $attempt->score >= 70 ? 'text-success' : ($attempt->score >= 50 ? 'text-warning' : 'text-danger') }}">
+                                                            {{ number_format($attempt->score, 0) }}%
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if($attempt->status == 'passed')
+                                                            <span class="badge bg-soft-success text-success">Lulus</span>
+                                                        @elseif($attempt->status == 'failed')
+                                                            <span class="badge bg-soft-danger text-danger">Gagal</span>
+                                                        @else
+                                                            <span class="badge bg-soft-warning text-warning">{{ ucfirst($attempt->status) }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <span class="fs-12 text-muted">{{ $attempt->created_at->diffForHumans() }}</span>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="5" class="text-center py-4 text-muted">
+                                                        <i class="feather-inbox fs-3 d-block mb-2"></i>
+                                                        Belum ada aktivitas quiz di kelas ini
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab 4: Siswa yang Sudah Menyelesaikan Semua Materi -->
+                            <div class="tab-pane fade" id="completedStudents" role="tabpanel" aria-labelledby="completedStudents-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="completedStudentsList">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama Siswa</th>
+                                                <th>Email</th>
+                                                <th>Total Materi</th>
+                                                <th>Selesai</th>
+                                                <th>Tanggal Selesai</th>
+                                                <th class="text-end">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($completedStudents ?? collect() as $student)
+                                                <tr>
+                                                    <td>{{ $student['name'] ?? '-' }}</td>
+                                                    <td>{{ $student['email'] ?? '-' }}</td>
+                                                    <td>{{ $class->materials->count() }}</td>
+                                                    <td>
+                                                        <span class="badge bg-soft-success text-success">{{ $student['completed_count'] ?? 0 }}</span>
+                                                    </td>
+                                                    <td>{{ $student['completed_at'] ?? '-' }}</td>
+                                                    <td class="text-end">
+                                                        <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="Lihat Detail">
+                                                            <i class="feather-eye"></i>
                                                         </button>
-                                                    </form>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @empty
-                                    @endforelse
-                                </tbody>
-                            </table>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="6" class="text-center py-4 text-muted">
+                                                        <i class="feather-inbox fs-3 d-block mb-2"></i>
+                                                        Belum ada siswa yang menyelesaikan semua materi
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -262,9 +438,11 @@
             // Re-match on window resize
             window.addEventListener('resize', matchHeights);
             
-            // Initialize DataTable
-            $('#enrollmentList').DataTable({
+            // Initialize DataTables
+            const dataTableConfig = {
                 responsive: true,
+                autoWidth: false,
+                deferRender: true,
                 language: {
                     search: "Cari:",
                     lengthMenu: "Tampilkan _MENU_ data",
@@ -277,8 +455,41 @@
                     },
                     emptyTable: "Tidak ada data",
                     zeroRecords: "Data tidak ditemukan"
-                },
+                }
+            };
+
+            // Initialize DataTables for all tabs
+            $('#enrollmentList').DataTable({
+                ...dataTableConfig,
                 order: [[0, 'asc']]
+            });
+
+            // Initialize DataTables when tab is shown
+            $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+                const targetId = $(e.target).attr('data-bs-target');
+                
+                if (targetId === '#activeStudents') {
+                    if (!$.fn.DataTable.isDataTable('#activeStudentsList')) {
+                        $('#activeStudentsList').DataTable({
+                            ...dataTableConfig,
+                            order: [[0, 'asc']]
+                        });
+                    }
+                } else if (targetId === '#quizAttempts') {
+                    if (!$.fn.DataTable.isDataTable('#quizAttemptsList')) {
+                        $('#quizAttemptsList').DataTable({
+                            ...dataTableConfig,
+                            order: [[4, 'desc']]
+                        });
+                    }
+                } else if (targetId === '#completedStudents') {
+                    if (!$.fn.DataTable.isDataTable('#completedStudentsList')) {
+                        $('#completedStudentsList').DataTable({
+                            ...dataTableConfig,
+                            order: [[0, 'asc']]
+                        });
+                    }
+                }
             });
 
             // Handle revoke collaboration confirmation with SweetAlert

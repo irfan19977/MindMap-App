@@ -129,7 +129,43 @@ class CourseClassController extends Controller
         $this->authorize('classes.index');
         $courseClass->load(['category', 'subcategory', 'teacher.user', 'materials', 'enrollments.student.user', 'acceptedCollaborations.teacher.user']);
 
-        return view('backend.classes.show', ['class' => $courseClass]);
+        // Get quiz attempts for quizzes in this class's materials
+        $materialIds = $courseClass->materials->pluck('id');
+        $classQuizAttempts = \App\Models\QuizAttempt::with(['user', 'quiz.material'])
+            ->whereHas('quiz', function ($query) use ($materialIds) {
+                $query->whereIn('material_id', $materialIds);
+            })
+            ->latest()
+            ->take(10)
+            ->get();
+
+        // Get students who completed all materials in this class
+        $totalMaterials = $courseClass->materials->count();
+        $completedStudents = collect();
+        
+        if ($totalMaterials > 0) {
+            $completedStudents = \App\Models\ClassEnrollment::where('class_id', $courseClass->id)
+                ->where('status', 'active')
+                ->with('student.user')
+                ->get()
+                ->filter(function ($enrollment) use ($totalMaterials) {
+                    return ($enrollment->completed_materials_count ?? 0) >= $totalMaterials;
+                })
+                ->map(function ($enrollment) {
+                    return [
+                        'name' => $enrollment->student->user->name ?? '-',
+                        'email' => $enrollment->student->user->email ?? '-',
+                        'completed_count' => $enrollment->completed_materials_count ?? 0,
+                        'completed_at' => $enrollment->updated_at ? $enrollment->updated_at->format('d M Y H:i') : '-',
+                    ];
+                });
+        }
+
+        return view('backend.classes.show', [
+            'class' => $courseClass,
+            'classQuizAttempts' => $classQuizAttempts,
+            'completedStudents' => $completedStudents,
+        ]);
     }
 
     public function syncMaterials(CourseClass $courseClass)
