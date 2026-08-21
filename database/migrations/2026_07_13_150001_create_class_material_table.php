@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('class_material', function (Blueprint $table) {
-            $table->uuid('id')->primary();
             $table->uuid('class_id');
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
             $table->uuid('material_id');
@@ -20,7 +19,7 @@ return new class extends Migration
             $table->integer('order_number')->default(0);
             $table->timestamps();
 
-            $table->unique(['class_id', 'material_id']);
+            $table->primary(['class_id', 'material_id']);
             $table->index('class_id');
             $table->index('material_id');
         });

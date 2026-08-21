@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Model;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -26,14 +27,12 @@ class User extends Authenticatable
         'social_provider',
         'social_provider_id',
         'theme_preferences',
-        'phone',
-        'school',
-        'subject',
-        'address',
         'user_type',
         'is_active',
         'teacher_verification_status',
         'last_login_at',
+        'profile_photo',
+        'firebase_device_token',
     ];
 
     /**
@@ -94,5 +93,15 @@ class User extends Authenticatable
     public function unreadNotifications()
     {
         return $this->notifications()->unread();
+    }
+
+    public function classes()
+    {
+        return $this->hasMany(CourseClass::class, 'created_by');
+    }
+
+    public function materials()
+    {
+        return $this->hasMany(Material::class, 'created_by');
     }
 }

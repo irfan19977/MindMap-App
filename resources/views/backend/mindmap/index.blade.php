@@ -1500,7 +1500,6 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('Mindmap initialized');
 
         // Initialize drag and drop
         initializeDragDrop();
@@ -1802,19 +1801,15 @@
 
     // TODO: Implement manual node positioning
     function createNode(x, y, title, type = 'material') {
-        console.log('Create node at:', { x, y, title, type });
         // Your implementation here
     }
 
     function createConnection(fromId, toId, fromAnchor, toAnchor, style = 'solid') {
-        console.log('=== CREATE CONNECTION ===');
-        console.log('From:', fromId, 'To:', toId, 'Style:', style);
         // TODO: Implement custom connection drawing
     }
 
     // TODO: Implement save/load functionality
     function saveMindmap() {
-        console.log('Save mindmap:', { nodes, connections });
         // Your implementation here
     }
 
@@ -1874,7 +1869,6 @@
     }
 
     function loadMindmapData(categoryId) {
-        console.log('Loading mindmap for category:', categoryId);
         fetch(`/mindmap-creator/load?reference_id=${categoryId}`, {
             method: 'GET',
             headers: {
@@ -1883,16 +1877,12 @@
             }
         })
         .then(response => {
-            console.log('Load response status:', response.status);
             return response.json();
         })
         .then(data => {
-            console.log('Load response data:', data);
             if (data.success && data.data && data.data.structure) {
-                console.log('Rendering mindmap structure:', data.data.structure);
                 renderMindmap(data.data.structure);
             } else {
-                console.log('No mindmap data found or invalid structure');
                 // Clear canvas when no mindmap exists for this category
                 resetCanvas();
             }
@@ -2001,8 +1991,6 @@
 
         // Restore connections
         if (structure.connections) {
-            console.log('=== RESTORING CONNECTIONS ===');
-            console.log('Total connections in structure:', structure.connections.length);
             
             structure.connections.forEach(connData => {
                 // Check if connection already exists in connections array to prevent duplicates
@@ -2011,17 +1999,13 @@
                 );
                 
                 if (alreadyInArray) {
-                    console.log('Connection already in array, skipping:', connData);
                     return;
                 }
                 
                 // Add to connections array for data tracking
                 connections.push(connData);
-                console.log('Connection data added:', connData);
             });
             
-            console.log('=== RESTORATION COMPLETE ===');
-            console.log('Final connections array length:', connections.length);
         }
 
         updateNodeCount();
@@ -2086,14 +2070,10 @@
             .filter(node => node.materialId && node.type === 'material')
             .map(node => node.materialId);
 
-        console.log('Current nodes on canvas:', nodes);
-        console.log('Canvas material IDs:', canvasMaterialIds);
-        console.log('All materials from server:', materials);
 
         // Filter out materials that are already on the canvas
         const availableMaterials = materials.filter(material => !canvasMaterialIds.includes(material.id));
 
-        console.log('Available materials after filtering:', availableMaterials);
 
         if (countEl) countEl.textContent = availableMaterials.length;
 
@@ -2126,17 +2106,12 @@
     }
 
     function startDrag(e, materialId, title, description, nodeType = 'material') {
-        console.log('=== DRAG START ===');
-        console.log('Event type:', e.type);
-        console.log('Target:', e.target);
-        console.log('Material data:', { materialId, title, description, nodeType });
         
         try {
             e.dataTransfer.setData('materialId', materialId);
             e.dataTransfer.setData('title', title);
             e.dataTransfer.setData('description', description);
             e.dataTransfer.setData('nodeType', nodeType);
-            console.log('Data set successfully');
         } catch (error) {
             console.error('Error setting drag data:', error);
         }
@@ -2154,22 +2129,17 @@
             target.addEventListener('dragover', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('Drag over:', this.className);
             });
 
             target.addEventListener('drop', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('=== DROP EVENT ===');
-                console.log('Drop triggered on:', this.id || this.className);
-                console.log('Drop coordinates:', { clientX: e.clientX, clientY: e.clientY });
                 
                 const materialId = e.dataTransfer.getData('materialId');
                 const title = e.dataTransfer.getData('title');
                 const description = e.dataTransfer.getData('description');
                 const nodeType = e.dataTransfer.getData('nodeType') || 'material';
                 
-                console.log('Retrieved data:', { materialId, title, description, nodeType });
                 
                 if (materialId && materialId !== '') {
                     // Get canvas rect for coordinate calculation
@@ -2185,9 +2155,6 @@
                     x = snapToGrid(x);
                     y = snapToGrid(y);
                     
-                    console.log('Canvas rect:', canvasRect);
-                    console.log('Zoom level:', zoomLevel);
-                    console.log('Calculated position:', { x, y });
                     
                     addMaterialNode(materialId, title, description, x, y, nodeType);
                 } else {
@@ -2228,12 +2195,10 @@
                 toggle.classList.remove('completed');
             }
             
-            console.log('Node completion toggled:', nodeId, nodeData.completed);
         }
     }
 
     function addMaterialNode(materialId, title, description, x, y, nodeType = 'material') {
-        console.log('Adding material node:', { materialId, title, x, y, nodeType });
 
         const nodeId = 'node-' + nodeIdCounter++;
         const node = document.createElement('div');
@@ -2316,7 +2281,6 @@
             completed: false
         });
 
-        console.log('Nodes array updated:', nodes);
         
         // Refresh materials list to remove the added material from sidebar
         refreshMaterialsList();
@@ -2335,7 +2299,6 @@
                 btn.innerHTML = '<i class="feather-link me-1"></i>Mode Koneksi Aktif';
             }
             document.getElementById('mindmap-canvas').style.cursor = 'crosshair';
-            console.log('Connection mode activated');
         } else {
             if (btn) {
                 btn.classList.remove('btn-primary');
@@ -2372,7 +2335,6 @@
                 btn.innerHTML = '<i class="feather-edit-3 me-1"></i>Mode Gambar Aktif';
             }
             document.getElementById('mindmap-canvas').style.cursor = 'crosshair';
-            console.log('Manual drawing mode activated');
         } else {
             if (btn) {
                 btn.classList.remove('btn-warning');
@@ -2381,7 +2343,6 @@
             }
             document.getElementById('mindmap-canvas').style.cursor = 'default';
             cancelCurrentDrawing();
-            console.log('Manual drawing mode deactivated');
         }
     }
 
@@ -2406,7 +2367,6 @@
             startX = e.clientX;
             startY = e.clientY;
             
-            console.log('Started dragging anchor:', anchorType, 'for connection:', connectionId);
             
             // Start a new connection from the anchor point
             if (anchorType === 'source') {
@@ -2697,11 +2657,6 @@
     }
 
     function selectNode(nodeId) {
-        console.log('=== SELECT NODE ===');
-        console.log('Node ID:', nodeId);
-        console.log('Connection mode:', connectionMode);
-        console.log('Manual drawing mode:', manualDrawingMode);
-        console.log('Selected node for connection:', selectedNodeForConnection);
         
         const node = document.getElementById(nodeId);
         if (!node) {
@@ -2710,35 +2665,28 @@
         }
         
         if (manualDrawingMode) {
-            console.log('In manual drawing mode');
             // Manual drawing mode logic
             if (!drawingStartNode) {
                 // Start drawing from this node
                 drawingStartNode = nodeId;
                 currentDrawingPath = [];
                 node.classList.add('connection-source');
-                console.log('Started drawing from node:', nodeId);
             } else if (drawingStartNode !== nodeId) {
                 // End drawing at this node
                 finishManualDrawing(nodeId);
-                console.log('Finished drawing to node:', nodeId);
             } else {
                 // Clicking the same node - cancel drawing
                 cancelCurrentDrawing();
-                console.log('Drawing cancelled');
             }
         } else if (connectionMode) {
-            console.log('In connection mode');
             // Connection mode logic
             if (!selectedNodeForConnection) {
                 // First node selection
                 selectedNodeForConnection = nodeId;
                 node.classList.add('connection-source');
-                console.log('First node selected for connection:', nodeId);
             } else if (selectedNodeForConnection !== nodeId) {
                 // Second node selection - create connection
                 const selectedStyle = document.getElementById('connection-style').value;
-                console.log('Creating connection with style:', selectedStyle);
                 isManualConnection = true;
                 connectNodes(selectedNodeForConnection, nodeId, selectedStyle);
                 isManualConnection = false;
@@ -2758,17 +2706,13 @@
                 }
                 document.getElementById('mindmap-canvas').style.cursor = 'default';
                 
-                console.log('Connection created between nodes with style:', selectedStyle);
-                console.log('Connection mode auto-deactivated');
             } else {
                 // Clicking the same node - deselect
                 node.classList.remove('connection-source');
                 selectedNodeForConnection = null;
                 isManualConnection = false;
-                console.log('Connection selection cancelled');
             }
         } else {
-            console.log('In normal mode');
             // Check if clicking the same node - toggle selection
             if (selectedNode === nodeId) {
                 // Deselect the node
@@ -2873,7 +2817,6 @@
 
     function addDrawingPoint(x, y) {
         currentDrawingPath.push({ x, y });
-        console.log('Added drawing point:', { x, y });
         updateTempConnectionLine();
     }
 
@@ -2914,7 +2857,6 @@
 
     function finishManualDrawing(endNodeId) {
         if (!drawingStartNode || currentDrawingPath.length === 0) {
-            console.log('No drawing path to finish');
             return;
         }
         
@@ -2925,7 +2867,6 @@
         );
         
         if (existingConnection) {
-            console.log('Connection already exists between these nodes');
             cancelCurrentDrawing();
             return;
         }
@@ -2956,8 +2897,6 @@
         // Clean up
         cancelCurrentDrawing();
         
-        console.log('Manual connection created:', connection);
-        console.log('Manual drawing mode auto-deactivated');
     }
 
     function cancelCurrentDrawing() {
@@ -2976,7 +2915,6 @@
         drawingStartNode = null;
         currentDrawingPath = [];
         
-        console.log('Current drawing cancelled');
     }
 
     // Draw.io Tool Functions
@@ -3039,7 +2977,6 @@
             }
         }
 
-        console.log('Line type set to:', lineType);
     }
 
     function setLineStyle(style) {
@@ -3356,7 +3293,6 @@
         );
         
         if (existingConnection) {
-            console.log('Connection already exists between these nodes');
             // Optional: Update the style if different
             if (existingConnection.style !== style) {
                 existingConnection.style = style;
@@ -3382,7 +3318,6 @@
         );
 
         if (existingConnection) {
-            console.log('Connection already exists between these nodes');
             // Optional: Update the style if different
             if (existingConnection.style !== style) {
                 existingConnection.style = style;
@@ -3415,7 +3350,6 @@
             connectorType = lineTypeValue === 'straight' ? 'Straight' : ['Bezier', { curviness: 50 }];
         }
 
-        console.log('getConnectorConfig:', { style, lineType, lineTypeValue, connectorType });
 
         const arrowConfig = ['Arrow', {
             location: 0.95,
@@ -3835,7 +3769,6 @@
         // Get materialId before removing node
         const nodeData = nodes.find(n => n.id === node.id);
         const materialId = nodeData ? nodeData.materialId : null;
-        console.log('Removing node:', node.id, 'with materialId:', materialId);
 
         // Remove connections
         connections = connections.filter(conn =>
@@ -3857,7 +3790,6 @@
         updateNodeCount();
 
         // Refresh materials list to make the material available again in sidebar
-        console.log('Refreshing materials list after node removal');
         refreshMaterialsList();
     }
 
@@ -3909,10 +3841,6 @@
     }
 
     function saveMindmap() {
-        console.log('saveMindmap called');
-        console.log('selectedCategory:', selectedCategory);
-        console.log('nodes:', nodes);
-        console.log('connections:', connections);
 
         if (!selectedCategory) {
             alert('Pilih kategori terlebih dahulu');
@@ -3933,16 +3861,13 @@
             connections: connections
         };
 
-        console.log('mindmapData:', mindmapData);
 
         // Get title from selected category (no root node)
         const categoryBtn = document.querySelector(`[data-category-id="${selectedCategory}"]`);
         const title = categoryBtn ? categoryBtn.querySelector('.category-text').textContent : 'Mind Map';
 
-        console.log('title:', title);
 
         const csrfToken = document.querySelector('meta[name="csrf-token"]');
-        console.log('csrfToken:', csrfToken ? csrfToken.getAttribute('content') : 'not found');
 
         fetch('/mindmap-creator/save', {
             method: 'POST',
@@ -3957,11 +3882,9 @@
             })
         })
         .then(response => {
-            console.log('Response status:', response.status);
             return response.json();
         })
         .then(data => {
-            console.log('Response data:', data);
             if (data.success) {
                 Swal.fire({
                     title: 'Berhasil!',
@@ -3996,7 +3919,12 @@
 
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
+    <!-- Essential vendors only -->
+    <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/select2.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/select2-active.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function () {
@@ -4004,6 +3932,9 @@
             let previousSidebarState = null;
 
             function setSidebarMini(isMini) {
+                // Don't force mini on mobile screens
+                if (window.innerWidth < 992) return;
+                
                 if (isMini) {
                     $('html').addClass('minimenu');
                     $('.logo-full').hide();
@@ -4025,12 +3956,15 @@
                 menuKey: localStorage.getItem(MENU_KEY)
             };
 
-            $('html').addClass('mindmap-mini-sidebar-active');
-            setSidebarMini(true);
+            // Only set mini on desktop screens
+            if (window.innerWidth >= 992) {
+                $('html').addClass('mindmap-mini-sidebar-active');
+                setSidebarMini(true);
+            }
 
             // common-init may re-expand sidebar on wide screens; keep mini on this page
             $(window).on('resize.mindmapMiniSidebar', function () {
-                if ($('html').hasClass('mindmap-mini-sidebar-active') && !window.__mindmapSidebarExpandedByUser) {
+                if (window.innerWidth >= 992 && $('html').hasClass('mindmap-mini-sidebar-active') && !window.__mindmapSidebarExpandedByUser) {
                     setSidebarMini(true);
                 }
             });

@@ -21,7 +21,6 @@
                     </a>
                 </div>
                 <!--! [End] nxl-navigation-toggle !-->
-                                <!--! [Start] nxl-lavel-mega-menu !-->
                 <div class="nxl-drp-link nxl-lavel-mega-menu">
                     <!--! [Start] nxl-lavel-mega-menu-wrapper !-->
                     <div class="nxl-lavel-mega-menu-wrapper d-flex gap-3">
@@ -635,28 +634,16 @@
                                 </div>
                                 <div class="dropdown-divider"></div>
                                 <div class="row px-4 pt-3">
-                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'ar' ? 'active' : '' }}">
-                                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/sa.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>{{ __('messages.arabic') }}</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'en' ? 'active' : '' }}">
+                                    <div class="col-sm-6 col-6 language_select {{ app()->getLocale() == 'en' ? 'active' : '' }}">
                                         <a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}" class="d-flex align-items-center gap-2">
                                             <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/us.svg') }}" alt="" class="img-fluid" /></div>
                                             <span>{{ __('messages.english') }}</span>
                                         </a>
                                     </div>
-                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'id' ? 'active' : '' }}">
+                                    <div class="col-sm-6 col-6 language_select {{ app()->getLocale() == 'id' ? 'active' : '' }}">
                                         <a href="{{ request()->fullUrlWithQuery(['lang' => 'id']) }}" class="d-flex align-items-center gap-2">
                                             <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/id.svg') }}" alt="" class="img-fluid" /></div>
                                             <span>{{ __('messages.indonesian') }}</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select {{ app()->getLocale() == 'es' ? 'active' : '' }}">
-                                        <a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('backend/assets/vendors/img/flags/1x1/es.svg') }}" alt="" class="img-fluid" /></div>
-                                            <span>{{ __('messages.spanish') }}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -768,16 +755,28 @@
                     @include('components.notification-dropdown')
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
-                            <div class="avatar-text bg-primary text-white user-avtar me-0 d-flex align-items-center justify-content-center fw-bold" style="width:36px;height:36px;border-radius:50%;font-size:1rem;">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </div>
+                            @if(Auth::user()->profile_photo)
+                                <div class="avatar-image user-avtar me-0" style="width:36px;height:36px;border-radius:50%;">
+                                    <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="{{ Auth::user()->name }}" class="img-fluid">
+                                </div>
+                            @else
+                                <div class="avatar-text bg-primary text-white user-avtar me-0 d-flex align-items-center justify-content-center fw-bold" style="width:36px;height:36px;border-radius:50%;font-size:1rem;">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                            @endif
                         </a>
                         <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
                             <div class="dropdown-header">
                                 <div class="d-flex align-items-center">
-                                    <div class="avatar-text bg-primary text-white user-avtar d-flex align-items-center justify-content-center fw-bold me-2" style="width:36px;height:36px;border-radius:50%;font-size:1rem;">
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                    </div>
+                                    @if(Auth::user()->profile_photo)
+                                        <div class="avatar-image user-avtar me-2" style="width:36px;height:36px;border-radius:50%;">
+                                            <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="{{ Auth::user()->name }}" class="img-fluid">
+                                        </div>
+                                    @else
+                                        <div class="avatar-text bg-primary text-white user-avtar d-flex align-items-center justify-content-center fw-bold me-2" style="width:36px;height:36px;border-radius:50%;font-size:1rem;">
+                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                        </div>
+                                    @endif
                                     <div>
                                         <h6 class="text-dark mb-0">{{ Auth::user()->name }}</h6>
                                         <span class="fs-12 fw-medium text-muted">{{ Auth::user()->email }}</span>
@@ -883,7 +882,6 @@
                             </div>
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('backend.profile.show') }}" class="dropdown-item">
-                                <i class="feather-user"></i>
                                 <span>Profil Saya</span>
                             </a>
                             <a href="javascript:void(0);" class="dropdown-item">

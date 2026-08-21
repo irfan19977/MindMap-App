@@ -15,8 +15,18 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('profile_photo')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->json('theme_preferences')->nullable();
+            $table->timestamp('last_login_at')->nullable();
+            $table->string('user_type')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->string('teacher_verification_status')->nullable();
             $table->string('password');
+            $table->string('social_provider')->nullable();
+            $table->string('social_provider_id')->nullable();
+            $table->unique(['social_provider', 'social_provider_id']);
+            $table->text('firebase_device_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

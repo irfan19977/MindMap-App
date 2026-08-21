@@ -8,11 +8,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Customers</h5>
+                        <h5 class="m-b-10">Profile</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item">View</li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard.index') }}">{{ __('messages.backend_dashboard') }}</a></li>
+                        <li class="breadcrumb-item">Profile</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -41,7 +41,7 @@
                                 <div class="mb-4 text-center">
                                     <div class="wd-150 ht-150 mx-auto mb-3 position-relative">
                                         <div class="avatar-image wd-150 ht-150 border border-5 border-gray-3">
-                                            <img src="{{ asset('backend/assets/images/avatar/1.png') }}" alt="" class="img-fluid">
+                                            <img src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : asset('backend/assets/images/avatar/1.png') }}" alt="" class="img-fluid">
                                         </div>
                                         <div class="wd-10 ht-10 text-success rounded-circle position-absolute translate-middle" style="top: 76%; right: 10px">
                                             <i class="bi bi-patch-check-fill"></i>
@@ -53,12 +53,12 @@
                                     </div>
                                     <div class="fs-12 fw-normal text-muted text-center d-flex flex-wrap gap-3 mb-4">
                                         <div class="flex-fill py-3 px-4 rounded-1 d-none d-sm-block border border-dashed border-gray-5">
-                                            <h6 class="fs-15 fw-bolder">28.65K</h6>
-                                            <p class="fs-12 text-muted mb-0">Followers</p>
+                                            <h6 class="fs-15 fw-bolder">{{ $user->classes->count() }}</h6>
+                                            <p class="fs-12 text-muted mb-0">Kelas</p>
                                         </div>
                                         <div class="flex-fill py-3 px-4 rounded-1 d-none d-sm-block border border-dashed border-gray-5">
-                                            <h6 class="fs-15 fw-bolder">38.85K</h6>
-                                            <p class="fs-12 text-muted mb-0">Following</p>
+                                            <h6 class="fs-15 fw-bolder">{{ $user->materials->count() }}</h6>
+                                            <p class="fs-12 text-muted mb-0">Materi</p>
                                         </div>
                                         <div class="flex-fill py-3 px-4 rounded-1 d-none d-sm-block border border-dashed border-gray-5">
                                             <h6 class="fs-15 fw-bolder">43.67K</h6>
@@ -190,7 +190,7 @@
                                     <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link active" data-bs-toggle="tab" data-bs-target="#overviewTab" role="tab">Overview</a>
                                     </li>
-                                    <li class="nav-item flex-fill border-top" role="presentation">
+                                    {{-- <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab" data-bs-target="#billingTab" role="tab">Billing</a>
                                     </li>
                                     <li class="nav-item flex-fill border-top" role="presentation">
@@ -204,7 +204,7 @@
                                     </li>
                                     <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab" data-bs-target="#securityTab" role="tab">Security</a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </div>
                             <div class="tab-content">
@@ -1492,11 +1492,31 @@
 @push('scripts')
     @include('backend.layouts.scriptcustom-minimal')
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profilePhotoInput = document.getElementById('editProfilePhoto');
+            const profilePhotoPreview = document.getElementById('profilePhotoPreview');
+
+            if (profilePhotoInput && profilePhotoPreview) {
+                profilePhotoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            profilePhotoPreview.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
+
     <!-- Edit Profile Modal -->
     <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <form action="{{ route('backend.profile.update') }}" method="POST">
+                <form action="{{ route('backend.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="modal-header">
@@ -1505,6 +1525,21 @@
                     </div>
                     <div class="modal-body">
                         <div class="row g-3">
+                            <div class="col-12">
+                                <label for="editProfilePhoto" class="form-label">Profile Photo</label>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="wd-100 ht-100 border border-2 border-gray-3 rounded-circle overflow-hidden">
+                                        <img src="{{ $user->profile_photo ? asset('storage/' . $user->profile_photo) : asset('backend/assets/images/avatar/1.png') }}" 
+                                             alt="Profile Photo" 
+                                             class="img-fluid w-100 h-100 object-fit-cover"
+                                             id="profilePhotoPreview">
+                                    </div>
+                                    <div>
+                                        <input type="file" class="form-control" id="editProfilePhoto" name="profile_photo" accept="image/*">
+                                        <small class="text-muted">Max file size: 2MB. Allowed: JPG, PNG, GIF.</small>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <label for="editName" class="form-label">Full Name</label>
                                 <input type="text" class="form-control" id="editName" name="name" value="{{ old('name', $user->name ?? '') }}" required>
@@ -1512,22 +1547,6 @@
                             <div class="col-md-6">
                                 <label for="editEmail" class="form-label">Email Address</label>
                                 <input type="email" class="form-control" id="editEmail" name="email" value="{{ old('email', $user->email ?? '') }}" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editPhone" class="form-label">Phone</label>
-                                <input type="text" class="form-control" id="editPhone" name="phone" value="{{ old('phone', $user->phone ?? '') }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editSchool" class="form-label">School</label>
-                                <input type="text" class="form-control" id="editSchool" name="school" value="{{ old('school', $user->school ?? '') }}">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="editSubject" class="form-label">Subject</label>
-                                <input type="text" class="form-control" id="editSubject" name="subject" value="{{ old('subject', $user->subject ?? '') }}">
-                            </div>
-                            <div class="col-md-12">
-                                <label for="editAddress" class="form-label">Address</label>
-                                <textarea class="form-control" id="editAddress" name="address" rows="3">{{ old('address', $user->address ?? '') }}</textarea>
                             </div>
                         </div>
                     </div>

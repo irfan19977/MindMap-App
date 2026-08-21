@@ -36,7 +36,20 @@
 
                         <form method="POST" action="{{ route('login') }}" class="w-100 mt-4 pt-2">
                             @csrf
-                            <input type="hidden" name="intended" value="{{ old('intended', session()->get('url.intended', url()->previous())) }}">
+                            @php
+                                $intendedUrl = old('intended', session()->get('url.intended'));
+                                // Fallback to previous URL if it's not the login page itself
+                                if (!$intendedUrl || $intendedUrl === url()->current()) {
+                                    $previousUrl = url()->previous();
+                                    // Don't use login/register pages as intended
+                                    if (!str_contains($previousUrl, '/login') && !str_contains($previousUrl, '/register')) {
+                                        $intendedUrl = $previousUrl;
+                                    } else {
+                                        $intendedUrl = '/';
+                                    }
+                                }
+                            @endphp
+                            <input type="hidden" name="intended" value="{{ $intendedUrl }}">
                             
                             <div class="mb-4">
                                 <input type="email" class="form-control" name="email" placeholder="{{ __('messages.auth_email_username') }}" value="{{ old('email') }}" required autofocus autocomplete="username">

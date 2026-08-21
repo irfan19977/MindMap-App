@@ -94,7 +94,7 @@ class DashboardController extends Controller
                     'registrations' => 0, // Not used for teachers
                 ]);
             }
-            $todayVisits = ClassEnrollment::whereIn('class_id', 
+            $todayVisits = ClassEnrollment::whereIn('class_id',
                 CourseClass::where('teacher_id', $teacher->id)->pluck('id'))
                 ->whereDate('enrolled_at', now()->toDateString())
                 ->count();

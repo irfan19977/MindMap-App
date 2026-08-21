@@ -64,10 +64,21 @@
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Kelas</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">Kelas</span>
+                            @if(isset($pendingEnrollments) && $pendingEnrollments > 0)
+                                <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">{{ $pendingEnrollments }}</span>
+                            @endif
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('classes.index') }}">Semua Kelas</a></li>
+                            <li class="nxl-item">
+                                <a class="nxl-link" href="{{ route('classes.index') }}">
+                                    Semua Kelas
+                                    @if(isset($pendingEnrollments) && $pendingEnrollments > 0)
+                                        <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">{{ $pendingEnrollments }}</span>
+                                    @endif
+                                </a>
+                            </li>
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('classes.create') }}">Tambah Kelas</a></li>
                         </ul>
                     </li>
@@ -115,16 +126,10 @@
                             <span class="nxl-mtext">{{ __('messages.backend_analytics') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-<<<<<<< HEAD
 
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('analytics.index') }}">{{ __('messages.backend_analytics_dashboard') }}</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="analytics-learning.html">{{ __('messages.backend_analytics_learning') }}</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('engagement.index') }}">{{ __('messages.backend_analytics_engagement') }}</a></li>
-=======
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('analytics.index') }}">Dashboard Analitik</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.index') }}">Analitik Pembelajaran</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('learning-results.quizzes') }}">Analitik Quiz</a></li>
->>>>>>> 4d7e59633992fa91ebf04ba76ce867967173b9f5
                         </ul>
                     </li>
                     @endcan
@@ -138,10 +143,21 @@
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">{{ __('messages.backend_user_management_menu') }}</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">{{ __('messages.backend_user_management_menu') }}</span>
+                            @if(isset($pendingTeachers) && $pendingTeachers > 0)
+                                <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">{{ $pendingTeachers }}</span>
+                            @endif
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('users.index') }}">{{ __('messages.backend_all_users') }}</a></li>
+                            <li class="nxl-item">
+                                <a class="nxl-link" href="{{ route('users.index') }}">
+                                    {{ __('messages.backend_all_users') }}
+                                    @if(isset($pendingTeachers) && $pendingTeachers > 0)
+                                        <span class="badge bg-primary rounded-pill ms-2" style="font-size: 0.7rem; padding: 0.25rem 0.5rem;">{{ $pendingTeachers }}</span>
+                                    @endif
+                                </a>
+                            </li>
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('users.create') }}">{{ __('messages.backend_add_user') }}</a></li>
                         </ul>
                     </li>

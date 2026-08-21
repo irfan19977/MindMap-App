@@ -127,8 +127,8 @@ return [
     'nav_accounting' => 'Accounting',
     
     // Homepage Hero
-    'hero_title' => 'MindMap Interactive Learning',
-    'hero_subtitle' => 'Modern learning platform with structured learning flow and interactive materials to improve your concept understanding',
+    'hero_title' => 'MindMap <span class="label classic">Education</span><br>Understand More <span class="light">Easily</span>',
+    'hero_subtitle' => 'Learn various materials through structured, interactive, and easy-to-understand visual concept maps.',
     
     // Homepage Teaser
     'teaser_1_title' => 'Learning Flow',

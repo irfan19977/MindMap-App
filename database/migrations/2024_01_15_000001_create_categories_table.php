@@ -14,15 +14,17 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->text('description')->nullable();
             $table->string('cover_image')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
             $table->boolean('is_featured')->default(false);
-            $table->string('created_by')->nullable();
+            $table->uuid('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
             
             // Indexes untuk performance
+            $table->unique(['slug', 'created_by']);
             $table->index('slug');
             $table->index('status');
         });

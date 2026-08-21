@@ -17,9 +17,13 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('school')->nullable();
             $table->string('grade')->nullable();
+            $table->string('major')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
+            $table->string('avatar')->nullable();
+            $table->text('learning_interest')->nullable();
+            $table->json('category_interests')->nullable();
             $table->timestamps();
         });
 
@@ -30,6 +34,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('occupation')->nullable();
             $table->text('address')->nullable();
+            $table->text('learning_interest')->nullable();
+            $table->json('category_interests')->nullable();
             $table->timestamps();
         });
     }

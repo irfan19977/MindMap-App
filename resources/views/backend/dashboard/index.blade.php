@@ -351,7 +351,14 @@
 @endsection
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
+    <!-- Essential vendors -->
+    <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/daterangepicker.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/circle-progress.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var labels  = @json($platformChart->pluck('date'));

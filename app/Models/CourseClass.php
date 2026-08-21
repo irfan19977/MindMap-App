@@ -178,6 +178,6 @@ class CourseClass extends Model
     {
         return $this->cover_image
             ? asset('storage/' . $this->cover_image)
-            : asset('backend/assets/images/default-cover.jpg');
+            : 'https://via.placeholder.com/400x300/3454d1/ffffff?text=No+Image';
     }
 }

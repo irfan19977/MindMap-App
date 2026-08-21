@@ -16,16 +16,18 @@ return new class extends Migration
             $table->uuid('category_id');
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('name');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->enum('grade_level', ['sd', 'smp', 'sma', 'umum']);
             $table->longText('curriculum')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
             $table->string('cover_image')->nullable();
             $table->boolean('is_featured')->default(false);
-            $table->string('created_by')->nullable();
+            $table->uuid('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
             
             // Indexes untuk performance
+            $table->unique(['slug', 'created_by']);
             $table->index('slug');
             $table->index('category_id');
             $table->index('status');

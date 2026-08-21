@@ -1,8 +1,8 @@
  <nav class="navbar navbar-Concept navbar-custom navbar-fixed-top @yield('navbar_class')">
       <div class="container">
         <div class="navbar-header">
-          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand page-scroll" href="/">
-            <!-- Text or Image logo--><img class="logo" src="{{ asset('frontend/img/logo.png') }}" alt="Logo"><img class="logodark" src="{{ asset('frontend/img/logodark.png') }}" alt="Logo"></a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse" aria-label="Toggle navigation"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand page-scroll" href="/">
+            <!-- Text or Image logo--><img class="logo" src="{{ asset('frontend/img/logo.png') }}" alt="MindMap Logo"><img class="logodark" src="{{ asset('frontend/img/logodark.png') }}" alt="MindMap Logo"></a>
         </div>
         <div class="collapse navbar-collapse navbar-main-collapse">
           <ul class="nav navbar-nav navbar-left">
@@ -23,7 +23,13 @@
             @if(auth()->user()->hasRole('admin') || (auth()->user()->hasRole('teacher') && auth()->user()->is_active))
             <li class="dropdown">
               <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#4f8ef7;color:#fff;font-weight:700;font-size:12px;vertical-align:middle;margin-right:4px;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                @if(auth()->user()->student && auth()->user()->student->avatar)
+                  <img src="{{ asset('storage/' . auth()->user()->student->avatar) }}" alt="{{ auth()->user()->name }}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;margin-top:-10px;">
+                @elseif(auth()->user()->profile_photo)
+                  <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;margin-top:-10px;">
+                @else
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:45px;height:45px;border-radius:50%;background:#4f8ef7;color:#fff;font-weight:700;font-size:18px;vertical-align:middle;margin-right:4px;margin-top:-10px;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                @endif
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
@@ -52,7 +58,13 @@
             @else
             <li class="dropdown">
               <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-                <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#4f8ef7;color:#fff;font-weight:700;font-size:12px;vertical-align:middle;margin-right:4px;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                @if(auth()->user()->student && auth()->user()->student->avatar)
+                  <img src="{{ asset('storage/' . auth()->user()->student->avatar) }}" alt="{{ auth()->user()->name }}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;margin-top:-10px;">
+                @elseif(auth()->user()->profile_photo)
+                  <img src="{{ asset('storage/' . auth()->user()->profile_photo) }}" alt="{{ auth()->user()->name }}" style="width:45px;height:45px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:4px;margin-top:-10px;">
+                @else
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:45px;height:45px;border-radius:50%;background:#4f8ef7;color:#fff;font-weight:700;font-size:18px;vertical-align:middle;margin-right:4px;margin-top:-10px;">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                @endif
                 <span class="caret"></span>
               </a>
               <ul class="dropdown-menu">
@@ -80,7 +92,7 @@
             </li>
             @endif
             @else
-            <li><a href="{{ route('login') }}">{{ __('messages.login') }}</a></li>
+            <li><a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}">{{ __('messages.login') }}</a></li>
             @endauth
             <li class="visible-lg">&nbsp;</li>
             <li class="dropdown">
@@ -91,8 +103,6 @@
               <ul class="dropdown-menu">
                 <li><a href="{{ request()->fullUrlWithQuery(['lang' => 'id']) }}">🇮🇩 Bahasa Indonesia</a></li>
                 <li><a href="{{ request()->fullUrlWithQuery(['lang' => 'en']) }}">🇺🇸 English</a></li>
-                <li><a href="{{ request()->fullUrlWithQuery(['lang' => 'es']) }}">🇪🇸 Español</a></li>
-                <li><a href="{{ request()->fullUrlWithQuery(['lang' => 'ar']) }}">🸀 العربية</a></li>
               </ul>
             </li>
           </ul>

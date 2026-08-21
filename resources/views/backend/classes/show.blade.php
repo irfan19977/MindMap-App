@@ -198,7 +198,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @forelse($class->enrollments as $enrollment)
+                                            @forelse($class->pendingEnrollments as $enrollment)
                                                 <tr>
                                                     <td>{{ $enrollment->student->name ?? '-' }}</td>
                                                     <td>{{ $enrollment->student->email ?? '-' }}</td>
@@ -235,7 +235,7 @@
                                                                 </form>
                                                             </div>
                                                         @elseif($enrollment->status === 'active')
-                                                            <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline">
+                                                            <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline reject-enrollment-form" data-student-name="{{ $enrollment->student->name ?? 'siswa ini' }}">
                                                                 @csrf
                                                                 @method('PATCH')
                                                                 <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Keluarkan">
@@ -269,7 +269,7 @@
                                         <tbody>
                                             @forelse($class->activeEnrollments as $enrollment)
                                                 <tr>
-                                                    <td>{{ $enrollment->student->name ?? '-' }}</td>
+                                                    <td><a href="{{ route('classes.student.detail', [$class->id, $enrollment->student->id]) }}" class="text-primary fw-semibold text-decoration-none">{{ $enrollment->student->name ?? '-' }}</a></td>
                                                     <td>{{ $enrollment->student->email ?? '-' }}</td>
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
@@ -282,7 +282,7 @@
                                                     <td>{{ $enrollment->completed_materials_count ?? 0 }} / {{ $class->materials->count() }}</td>
                                                     <td>{{ $enrollment->updated_at->format('d M Y H:i') }}</td>
                                                     <td class="text-end">
-                                                        <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline">
+                                                        <form method="POST" action="{{ route('classes.enrollments.reject', [$class->id, $enrollment->id]) }}" class="d-inline reject-enrollment-form" data-student-name="{{ $enrollment->student->name ?? 'siswa ini' }}">
                                                             @csrf
                                                             @method('PATCH')
                                                             <button type="submit" class="avatar-text avatar-md border-0" style="background-color: rgba(234, 84, 85, 0.15); color: #ea5455;" data-bs-toggle="tooltip" title="Keluarkan">
@@ -504,6 +504,29 @@
                         icon: 'warning',
                         showCancelButton: true,
                         confirmButtonText: 'Ya, batalkan!',
+                        cancelButtonText: 'Tidak, kembali',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+
+            // Handle reject enrollment confirmation with SweetAlert
+            document.querySelectorAll('.reject-enrollment-form').forEach(function (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    const studentName = form.dataset.studentName;
+
+                    Swal.fire({
+                        title: 'Keluarkan Siswa?',
+                        text: 'Yakin ingin mengeluarkan "' + studentName + '" dari kelas ini?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, keluarkan!',
                         cancelButtonText: 'Tidak, kembali',
                         confirmButtonColor: '#d33',
                         cancelButtonColor: '#3085d6'

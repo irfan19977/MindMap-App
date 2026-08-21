@@ -355,6 +355,106 @@ class CourseClassController extends Controller
         return redirect()->back()->with('success', 'Permintaan siswa ditolak.');
     }
 
+    public function studentDetail(CourseClass $courseClass, $studentId)
+    {
+        $this->authorize('classes.index');
+        
+        $student = \App\Models\Student::with('user')->findOrFail($studentId);
+        $enrollment = ClassEnrollment::where('class_id', $courseClass->id)
+            ->where('student_id', $studentId)
+            ->firstOrFail();
+
+        // Get mindmap for the class's subcategory
+        $mindmap = Mindmap::where('reference_id', $courseClass->subcategory_id)
+            ->where(function ($query) {
+                $query->where('reference_type', 'subcategory')
+                    ->orWhereNull('reference_type');
+            })
+            ->published()
+            ->first();
+
+        // Get completed materials for this student in this class
+        $materialIds = $courseClass->materials()->pluck('materials.id');
+        $completedMaterialIds = [];
+        
+        if (!$materialIds->isEmpty()) {
+            // Get materials completed through UserProgress
+            $progressCompleted = \App\Models\UserProgress::where('user_id', $student->user_id)
+                ->whereIn('material_id', $materialIds)
+                ->whereNotNull('completed_at')
+                ->pluck('material_id')
+                ->toArray();
+
+            // Get materials completed through passed quizzes
+            $quizCompleted = \App\Models\QuizAttempt::where('user_id', $student->user_id)
+                ->where('status', 'passed')
+                ->with('quiz:id,material_id')
+                ->get()
+                ->pluck('quiz.material_id')
+                ->filter()
+                ->unique()
+                ->values()
+                ->toArray();
+
+            // Merge both completion methods and ensure uniqueness
+            $completedMaterialIds = array_unique(array_merge($progressCompleted, $quizCompleted));
+        }
+
+        return view('backend.classes.student-detail', [
+            'class' => $courseClass,
+            'student' => $student,
+            'enrollment' => $enrollment,
+            'mindmap' => $mindmap,
+            'completedMaterialIds' => $completedMaterialIds,
+        ]);
+    }
+
+    public function getStudentQuizAnswers(Request $request, CourseClass $courseClass, $studentId, $materialId)
+    {
+        $this->authorize('classes.index');
+        
+        $student = \App\Models\Student::with('user')->findOrFail($studentId);
+        
+        // Get quiz attempts for this student and material
+        $quizAttempts = \App\Models\QuizAttempt::with(['quiz', 'quizAnswers.quizQuestion'])
+            ->where('user_id', $student->user_id)
+            ->whereHas('quiz', function ($query) use ($materialId) {
+                $query->where('material_id', $materialId);
+            })
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // Group answers by attempt
+        $attemptsData = [];
+        foreach ($quizAttempts as $index => $attempt) {
+            $answers = [];
+            foreach ($attempt->quizAnswers as $answer) {
+                $answers[] = [
+                    'question' => $answer->quizQuestion->question ?? '-',
+                    'user_answer' => $answer->user_answer ?? '-',
+                    'is_correct' => $answer->is_correct,
+                    'points_earned' => $answer->points_earned,
+                    'explanation' => $answer->quizQuestion->explanation ?? '-',
+                ];
+            }
+            
+            $attemptsData[] = [
+                'attempt_number' => $index + 1,
+                'attempt_id' => $attempt->id,
+                'score' => $attempt->score,
+                'status' => $attempt->status,
+                'attempt_date' => $attempt->created_at->format('d M Y H:i'),
+                'answers' => $answers,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'attempts' => $attemptsData,
+            'total_attempts' => $quizAttempts->count(),
+        ]);
+    }
+
     protected function syncMaterialsFromMindmap(CourseClass $courseClass)
     {
         $materialIds = $this->extractMaterialIdsFromMindmap($courseClass->subcategory_id);

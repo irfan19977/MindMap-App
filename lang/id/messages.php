@@ -127,8 +127,8 @@ return [
     'nav_accounting' => 'Akuntansi',
     
     // Homepage Hero
-    'hero_title' => 'MindMap <span class="label classic">Belajar</span><br>Lebih <span class="light">Terarah</span>',
-    'hero_subtitle' => 'Ubah materi yang rumit jadi peta konsep yang mudah dipahami, dengan alur belajar bertahap dari SD hingga SMA',
+    'hero_title' => 'MindMap <span class="label classic">Education</span><br>Pahami Lebih <span class="light">Mudah</span>',
+    'hero_subtitle' => 'Pelajari berbagai materi melalui peta konsep visual yang terstruktur, interaktif, dan mudah dipahami.',
     
     // Homepage Teaser
     'teaser_1_title' => 'Peta Konsep Visual',

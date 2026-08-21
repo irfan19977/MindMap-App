@@ -105,7 +105,7 @@
                                     </form>
                                 @endif
                             @else
-                                <a href="{{ route('login') }}" class="btn btn-primary btn-lg btn-block">
+                                <a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}" class="btn btn-primary btn-lg btn-block">
                                     <i class="fa fa-sign-in"></i> Login untuk Gabung
                                 </a>
                             @endauth

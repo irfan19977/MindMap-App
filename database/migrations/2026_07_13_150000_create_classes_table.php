@@ -25,8 +25,6 @@ return new class extends Migration
             $table->string('cover_image')->nullable();
             $table->enum('status', ['publish', 'draft', 'inactive'])->default('draft');
             $table->integer('capacity')->nullable();
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
             $table->boolean('is_featured')->default(false);
             $table->uuid('created_by')->nullable();
             $table->timestamps();

@@ -154,4 +154,12 @@ class Material extends Model
     {
         return $this->cover_image ? asset('storage/' . $this->cover_image) : asset('backend/assets/images/default-materi.jpg');
     }
+    
+    /**
+     * Get the user that owns the material.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

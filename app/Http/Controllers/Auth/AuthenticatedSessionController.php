@@ -16,6 +16,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        // Store intended URL from query parameter to session
+        if ($intended = request()->query('intended')) {
+            session()->put('url.intended', $intended);
+        }
+
         return view('auth.login');
     }
 
@@ -26,7 +31,18 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
 
+        // Store intended URL before session regenerate
+        // Priority: input field > query parameter > session > previous URL
+        $intended = $request->input('intended')
+            ?: $request->query('intended')
+            ?: $request->session()->get('url.intended', '/');
+
         $request->session()->regenerate();
+
+        // Restore intended URL after session regenerate
+        if ($intended && $intended !== '/') {
+            $request->session()->put('url.intended', $intended);
+        }
 
         $user = $request->user();
         $user->update(['last_login_at' => now()]);

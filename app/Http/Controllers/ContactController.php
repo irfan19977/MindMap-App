@@ -38,11 +38,4 @@ class ContactController extends Controller
 
         return back()->with('success', 'Pesan berhasil dikirim.');
     }
-
-    public function show($id)
-    {
-        $contact = Contact::findOrFail($id);
-        $contact->update(['is_read' => 1]);
-        return view('backend.contact.show', compact('contact'));
-    }
 }

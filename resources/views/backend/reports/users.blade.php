@@ -195,7 +195,11 @@
 @endsection
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
+    <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/dataTables.bs5.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
     <script>
         $(document).ready(function() {
             $('#usersReportTable').DataTable({

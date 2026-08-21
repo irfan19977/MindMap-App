@@ -144,6 +144,7 @@ class Category extends Model
             return asset('storage/' . $this->cover_image);
         }
         
-        return asset('backend/assets/images/default-cover.jpg');
+        // Use placeholder image as fallback
+        return 'https://via.placeholder.com/400x300/3454d1/ffffff?text=No+Image';
     }
 }

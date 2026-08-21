@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AIController extends Controller
 {
@@ -78,7 +79,7 @@ class AIController extends Controller
                 'Content-Type' => 'application/json',
             ])->post('https://api.groq.com/openai/v1/chat/completions', [
                 'messages' => $messages,
-                'model' => 'llama-3.3-70b-versatile',
+                'model' => 'openai/gpt-oss-20b',
                 'temperature' => 0.7,
                 'max_tokens' => 2048,
             ]);
@@ -92,7 +93,7 @@ class AIController extends Controller
                 ]);
             } else {
                 $errorData = $response->json();
-                \Log::error('Groq API Error: ' . $response->body());
+                Log::error('Groq API Error: ' . $response->body());
 
                 // Handle rate limit error specifically
                 if (isset($errorData['error']['code']) && $errorData['error']['code'] === 'rate_limit_exceeded') {
@@ -104,7 +105,7 @@ class AIController extends Controller
                 return response()->json(['error' => 'Failed to get AI response: ' . ($errorData['error']['message'] ?? 'Unknown error')], 500);
             }
         } catch (\Exception $e) {
-            \Log::error('AI Chat Error: ' . $e->getMessage());
+            Log::error('AI Chat Error: ' . $e->getMessage());
             return response()->json(['error' => 'An error occurred'], 500);
         }
     }
@@ -151,7 +152,7 @@ class AIController extends Controller
                     ['role' => 'system', 'content' => 'Kamu adalah guru yang mengoreksi jawaban essay. Selalu jawab dalam format JSON yang diminta.'],
                     ['role' => 'user', 'content' => $prompt],
                 ],
-                'model'       => 'llama-3.3-70b-versatile',
+                'model'       => 'openai/gpt-oss-20b',
                 'temperature' => 0.3,
                 'max_tokens'  => 512,
             ]);
@@ -170,7 +171,7 @@ class AIController extends Controller
 
             return response()->json(['success' => false, 'error' => 'Gagal menghubungi AI'], 500);
         } catch (\Exception $e) {
-            \Log::error('Grade Essay Error: ' . $e->getMessage());
+            Log::error('Grade Essay Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'error' => 'Terjadi kesalahan'], 500);
         }
     }

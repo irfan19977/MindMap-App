@@ -42,11 +42,7 @@
       <div class="col-lg-3">
         <h5 class="no-pad">{{ __('messages.footer_follow_us') }}</h5>
         <ul class="list-inline no-pad">
-          <li><a href="https://twitter.com/mindmap_id" target="_blank"><i class="fab fa-twitter fa-fw fa-lg"></i></a></li>
-          <li><a href="https://facebook.com/mindmap.id" target="_blank"><i class="fab fa-facebook-f fa-fw fa-lg"></i></a></li>
-          <li><a href="https://youtube.com/mindmap_id" target="_blank"><i class="fab fa-youtube fa-fw fa-lg"></i></a></li>
           <li><a href="https://www.instagram.com/official_mindmapedu?igsh=MW5xNmE3ZTBwZTIyeg==" target="_blank"><i class="fab fa-instagram fa-fw fa-lg"></i></a></li>
-          <li><a href="https://linkedin.com/company/mindmap" target="_blank"><i class="fab fa-linkedin-in fa-fw fa-lg"></i></a></li>
         </ul>
       </div>
       <div class="col-lg-4 col-lg-offset-1">

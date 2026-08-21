@@ -61,9 +61,15 @@
                                                 <td class="text-center">{{ $index + 1 }}</td>
                                                 <td>
                                                     <div class="d-flex align-items-center gap-3">
-                                                        <div class="avatar-text avatar-md bg-primary rounded">
-                                                            {{ strtoupper(substr($user->name, 0, 1)) }}
-                                                        </div>
+                                                        @if($user->profile_photo)
+                                                            <div class="avatar-image avatar-md rounded-circle">
+                                                                <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="{{ $user->name }}" class="img-fluid" />
+                                                            </div>
+                                                        @else
+                                                            <div class="avatar-text avatar-md bg-primary rounded-circle">
+                                                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                                                            </div>
+                                                        @endif
                                                         <div>
                                                             <span class="fw-bold d-block">{{ $user->name }}</span>
                                                         </div>

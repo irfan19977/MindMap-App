@@ -69,7 +69,7 @@
                 </li>
                 <li role="presentation">
                   @guest
-                  <a href="{{ route('login') }}" id="quizTabLink">Quiz <span class="label label-default" style="font-size:9px;vertical-align:middle">Login</span></a>
+                  <a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}" id="quizTabLink">Quiz <span class="label label-default" style="font-size:9px;vertical-align:middle">Login</span></a>
                   @else
                   <a href="#quiz" aria-controls="quiz" role="tab" id="quizTabLink" @if(!$passedQuizAttempt) onclick="handleQuizTabClick(event)" @else data-toggle="tab" @endif>Quiz</a>
                   @endguest
@@ -224,8 +224,12 @@
                     @if($material->practiceQuestions->count() > 0)
                       <div class="exercise-list">
                         @foreach($material->practiceQuestions as $index => $latihan)
-                          @php $type = $latihan->question_type ?? 'essay'; @endphp
-                          <div class="exercise-card" id="exercise-{{ $index }}">
+                          @php
+                            $type = $latihan->question_type ?? 'essay';
+                            $existingAnswer = $practiceAnswers[$latihan->id] ?? null;
+                            $isAnswered = !is_null($existingAnswer);
+                          @endphp
+                          <div class="exercise-card" id="exercise-{{ $index }}" data-question-id="{{ $latihan->id }}">
                             <div class="exercise-card-num">{{ $index + 1 }}</div>
                             <div class="exercise-card-body">
                               <p class="exercise-question">{{ $latihan->question }}</p>
@@ -236,20 +240,51 @@
                                 @endif
                               </div>
 
-                              {{-- Input jawaban --}}
-                              <div class="exercise-input-wrap">
-                                @if($type === 'essay')
-                                  <textarea class="exercise-textarea" id="ans-{{ $index }}" placeholder="Tulis jawaban kamu di sini..." rows="1" oninput="autoResize(this)"></textarea>
+                              {{-- Show existing answer if already answered --}}
+                              @if($isAnswered)
+                                <div class="exercise-answer">
+                                  <span class="answer-label">Jawaban Kamu:</span>
+                                  <span class="answer-value">{{ $existingAnswer->user_answer }}</span>
+                                </div>
+                                @if($existingAnswer->is_correct)
+                                  <div class="exercise-feedback correct" style="display:block">
+                                    <strong>✅ Jawaban kamu benar!</strong>
+                                    @if($latihan->explanation)
+                                      <div class="feedback-answer">{{ $latihan->explanation }}</div>
+                                    @endif
+                                  </div>
+                                @elseif($type === 'essay')
+                                  <div class="exercise-feedback essay-done" style="display:block">
+                                    <strong>📝 Jawaban sudah dikumpulkan.</strong>
+                                    @if($latihan->correct_answer)
+                                      <div class="feedback-answer"><strong>Kunci:</strong> {{ $latihan->correct_answer }}</div>
+                                    @endif
+                                  </div>
                                 @else
-                                  <input type="text" class="exercise-input" id="ans-{{ $index }}" placeholder="Tulis jawaban singkat kamu...">
+                                  <div class="exercise-feedback essay-done" style="display:block">
+                                    <strong>❌ Jawaban sudah dikumpulkan.</strong>
+                                    <div class="feedback-answer"><strong>Jawaban yang benar:</strong> {{ $latihan->correct_answer }}</div>
+                                    @if($latihan->explanation)
+                                      <div class="feedback-answer" style="margin-top:6px"><strong>Penjelasan:</strong> {{ $latihan->explanation }}</div>
+                                    @endif
+                                  </div>
                                 @endif
-                                <button class="exercise-check-btn" onclick="checkExercise({{ $index }}, '{{ addslashes($latihan->correct_answer ?? '') }}', '{{ addslashes($latihan->explanation ?? '') }}', '{{ addslashes($latihan->question ?? '') }}')">
-                                  <i class="ion-ios-checkmark-outline"></i> Cek Jawaban
-                                </button>
-                              </div>
+                              @else
+                                {{-- Input jawaban --}}
+                                <div class="exercise-input-wrap">
+                                  @if($type === 'essay')
+                                    <textarea class="exercise-textarea" id="ans-{{ $index }}" placeholder="Tulis jawaban kamu di sini..." rows="1" oninput="autoResize(this)"></textarea>
+                                  @else
+                                    <input type="text" class="exercise-input" id="ans-{{ $index }}" placeholder="Tulis jawaban singkat kamu...">
+                                  @endif
+                                  <button class="exercise-check-btn" onclick="checkExercise({{ $index }}, '{{ addslashes($latihan->correct_answer ?? '') }}', '{{ addslashes($latihan->explanation ?? '') }}', '{{ addslashes($latihan->question ?? '') }}', '{{ $latihan->id }}')">
+                                    <i class="ion-ios-checkmark-outline"></i> Cek Jawaban
+                                  </button>
+                                </div>
 
-                              {{-- Feedback (hidden) --}}
-                              <div class="exercise-feedback" id="feedback-{{ $index }}" style="display:none"></div>
+                                {{-- Feedback (hidden) --}}
+                                <div class="exercise-feedback" id="feedback-{{ $index }}" style="display:none"></div>
+                              @endif
                             </div>
                           </div>
                         @endforeach
@@ -1605,7 +1640,7 @@
                 if (error instanceof SyntaxError) {
                     // Likely got HTML redirect (unauthenticated)
                     alert('Kamu harus login terlebih dahulu untuk mengerjakan quiz.');
-                    window.location.href = '{{ route("login") }}';
+                    window.location.href = '{{ route("login") }}?intended={{ urlencode(request()->fullUrl()) }}';
                 } else {
                     alert('Terjadi kesalahan saat memulai quiz. Silakan coba lagi.');
                 }
@@ -1738,10 +1773,11 @@
         }
 
         // Check exercise answer
-        async function checkExercise(index, correctAnswer, explanation, question) {
+        async function checkExercise(index, correctAnswer, explanation, question, questionId) {
             const input = document.getElementById('ans-' + index);
             const feedback = document.getElementById('feedback-' + index);
             const btn = document.querySelector('#exercise-' + index + ' .exercise-check-btn');
+            const exerciseCard = document.getElementById('exercise-' + index);
 
             if (!input || !feedback) return;
 
@@ -1757,6 +1793,8 @@
             if (btn) { btn.disabled = true; btn.innerHTML = '<i class="ion-ios-loading"></i> Mengoreksi...'; }
 
             const isEssay = input.tagName === 'TEXTAREA';
+            let isCorrect = false;
+            let score = 0;
 
             if (isEssay) {
                 feedback.className = 'exercise-feedback essay-done';
@@ -1781,10 +1819,11 @@
 
                     if (data.success && data.result) {
                         const r = data.result;
-                        const score = r.score ?? 0;
+                        score = r.score ?? 0;
                         const verdict = r.verdict ?? '';
                         const verdictColor = verdict === 'Benar' ? '#16a34a' : verdict === 'Sebagian Benar' ? '#d97706' : '#dc2626';
                         const verdictIcon = verdict === 'Benar' ? '✅' : verdict === 'Sebagian Benar' ? '⚠️' : '❌';
+                        isCorrect = verdict === 'Benar';
 
                         feedback.className = 'exercise-feedback ' + (verdict === 'Benar' ? 'correct' : 'essay-done');
                         feedback.innerHTML = `
@@ -1806,7 +1845,7 @@
                 if (btn) btn.innerHTML = '<i class="ion-ios-checkmark-outline"></i> Selesai';
             } else {
                 // Short answer: bandingkan (case-insensitive)
-                const isCorrect = answer.toLowerCase() === correctAnswer.toLowerCase();
+                isCorrect = answer.toLowerCase() === correctAnswer.toLowerCase();
                 feedback.className = 'exercise-feedback ' + (isCorrect ? 'correct' : 'essay-done');
                 if (isCorrect) {
                     feedback.innerHTML = `<strong>✅ Jawaban kamu benar!</strong>${explanation ? '<div class="feedback-answer">' + explanation + '</div>' : ''}`;
@@ -1820,6 +1859,49 @@
             }
 
             feedback.style.display = 'block';
+
+            // Save answer to database
+            try {
+                const saveResponse = await fetch('/api/practice/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        practice_question_id: questionId,
+                        user_answer: answer,
+                        is_correct: isCorrect,
+                        points_earned: isEssay ? score : (isCorrect ? 100 : 0)
+                    })
+                });
+
+                const saveData = await saveResponse.json();
+
+                if (!saveData.success) {
+                    console.warn('Failed to save answer:', saveData.message);
+                    // If already answered, show message
+                    if (saveData.message && saveData.message.includes('sudah menjawab')) {
+                        feedback.innerHTML += `<div class="feedback-answer" style="margin-top:8px;color:#f59e0b"><strong>⚠️ ${saveData.message}</strong></div>`;
+                    }
+                }
+            } catch (e) {
+                console.error('Error saving answer:', e);
+            }
+
+            // Replace input with saved answer display
+            if (input && feedback) {
+                const inputWrap = input.closest('.exercise-input-wrap');
+                if (inputWrap) {
+                    const answerDisplay = document.createElement('div');
+                    answerDisplay.className = 'exercise-answer';
+                    answerDisplay.innerHTML = `
+                        <span class="answer-label">Jawaban Kamu:</span>
+                        <span class="answer-value">${answer}</span>
+                    `;
+                    inputWrap.replaceWith(answerDisplay);
+                }
+            }
         }
 
         // Submit Quiz & show result

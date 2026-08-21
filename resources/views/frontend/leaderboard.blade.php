@@ -786,7 +786,7 @@
                     @if(auth()->check())
                         <a href="{{ route('student.profile') }}" class="btn btn-primary btn-lg">Kembali ke Profil</a>
                     @else
-                        <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Login untuk Lihat Rank Kamu</a>
+                        <a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}" class="btn btn-primary btn-lg">Login untuk Lihat Rank Kamu</a>
                     @endif
                 </div>
 
@@ -872,7 +872,7 @@
                             <h3 class="rank-hero-title">Rank Kamu</h3>
                             <p class="rank-hero-desc">Masuk sebagai siswa untuk melihat status rank dan kemajuan XP kamu.</p>
                         </div>
-                        <a href="{{ route('login') }}" class="btn btn-primary">Login Sekarang</a>
+                        <a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}" class="btn btn-primary">Login Sekarang</a>
                     </div>
                 @endif
 

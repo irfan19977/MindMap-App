@@ -27,6 +27,7 @@ use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\FirebaseNotificationController;
 /*
 |--------------------------------------------------------------------------
 | Temporary Cache Clear (remove after deployment)
@@ -103,6 +104,8 @@ Route::get('/api/user-progress', [KelasController::class, 'getUserProgress'])->n
 Route::post('/api/ai/chat', [AIController::class, 'chat'])->name('ai.chat');
 Route::post('/api/ai/grade-essay', [AIController::class, 'gradeEssay'])->name('ai.grade-essay');
 Route::get('/api/ai/history', [AIController::class, 'getHistory'])->name('ai.history');
+Route::post('/api/practice/save', [KelasController::class, 'savePracticeAnswer'])->name('api.practice.save');
+Route::get('/api/practice/answers', [KelasController::class, 'getPracticeAnswers'])->name('api.practice.answers');
 
 /*
 |--------------------------------------------------------------------------
@@ -162,6 +165,8 @@ Route::middleware(['auth', 'role:admin|teacher', \App\Http\Middleware\EnsureAppr
     Route::post('/classes/{courseClass}/sync-materials', [CourseClassController::class, 'syncMaterials'])->name('classes.sync-materials');
     Route::patch('/classes/{courseClass}/enrollments/{enrollment}/approve', [CourseClassController::class, 'approveEnrollment'])->name('classes.enrollments.approve');
     Route::patch('/classes/{courseClass}/enrollments/{enrollment}/reject', [CourseClassController::class, 'rejectEnrollment'])->name('classes.enrollments.reject');
+    Route::get('/classes/{courseClass}/students/{student}', [CourseClassController::class, 'studentDetail'])->name('classes.student.detail');
+    Route::get('/classes/{courseClass}/students/{student}/quiz-answers/{material}', [CourseClassController::class, 'getStudentQuizAnswers'])->name('classes.student.quiz-answers');
     Route::resource('classes', CourseClassController::class)->parameters([
         'classes' => 'courseClass',
     ]);
@@ -252,6 +257,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
         Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
+    });
+
+    // Firebase Notification Routes
+    Route::prefix('firebase')->name('firebase.')->group(function () {
+        Route::post('/register-device', [FirebaseNotificationController::class, 'registerDeviceToken'])->name('register-device');
+        Route::post('/send-chat', [FirebaseNotificationController::class, 'sendChatNotification'])->name('send-chat');
+        Route::post('/send-group-chat', [FirebaseNotificationController::class, 'sendGroupChatNotification'])->name('send-group-chat');
+        Route::post('/subscribe-topic', [FirebaseNotificationController::class, 'subscribeToChatTopic'])->name('subscribe-topic');
     });
 
     // Contact Routes

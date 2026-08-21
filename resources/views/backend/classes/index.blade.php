@@ -113,6 +113,7 @@
                                         <th class="text-center">Tipe</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Siswa</th>
+                                        <th class="text-center">Perlu Approve</th>
                                         <th class="text-end">Aksi</th>
                                     </tr>
                                 </thead>
@@ -162,22 +163,50 @@
                                                     {{ $class->activeEnrollments()->count() }} / {{ $class->capacity ?? '&infin;' }}
                                                 </span>
                                             </td>
+                                            <td class="text-center">
+                                                @if($class->pendingEnrollments()->count() > 0)
+                                                    <span class="badge bg-primary text-white rounded-pill ms-2">
+                                                        {{ $class->pendingEnrollments()->count() }}
+                                                    </span>
+                                                @else
+                                                    <span class="text-muted">-</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 <div class="hstack gap-2 justify-content-end">
-                                                    <a href="{{ route('classes.show', $class->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Detail">
-                                                        <i class="feather-eye"></i>
-                                                    </a>
-                                                    @if(!in_array($class->id, $collaborationClassIds))
-                                                    <a href="{{ route('classes.edit', $class->id) }}" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Edit">
-                                                        <i class="feather-edit-3"></i>
-                                                    </a>
-                                                    <a href="{{ route('classes.collaboration', $class->id) }}" class="avatar-text avatar-md text-info" data-bs-toggle="tooltip" title="Ajak Kolaborasi">
-                                                        <i class="feather-users"></i>
-                                                    </a>
-                                                    <a href="javascript:void(0)" class="avatar-text avatar-md text-danger" onclick="deleteClass('{{ $class->id }}', '{{ $class->name }}')" data-bs-toggle="tooltip" title="Hapus">
-                                                        <i class="feather-trash-2"></i>
-                                                    </a>
-                                                    @endif
+                                                    <div class="dropdown">
+                                                        <a href="javascript:void(0)" class="avatar-text avatar-md" data-bs-toggle="dropdown" data-bs-offset="0,21">
+                                                            <i class="feather feather-more-horizontal"></i>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a class="dropdown-item" href="{{ route('classes.show', $class->id) }}">
+                                                                    <i class="feather feather-eye me-3"></i>
+                                                                    <span>Detail</span>
+                                                                </a>
+                                                            </li>
+                                                            @if(!in_array($class->id, $collaborationClassIds))
+                                                            <li>
+                                                                <a class="dropdown-item" href="{{ route('classes.edit', $class->id) }}">
+                                                                    <i class="feather feather-edit-3 me-3"></i>
+                                                                    <span>Edit</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item" href="{{ route('classes.collaboration', $class->id) }}">
+                                                                    <i class="feather feather-users me-3"></i>
+                                                                    <span>Ajak Kolaborasi</span>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteClass('{{ $class->id }}', '{{ $class->name }}')">
+                                                                    <i class="feather feather-trash-2 me-3"></i>
+                                                                    <span>Hapus</span>
+                                                                </a>
+                                                            </li>
+                                                            @endif
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -205,9 +234,7 @@
     <script>
         // Define functions globally before DOM ready
         window.acceptCollaboration = function(id, className) {
-            console.log('acceptCollaboration called with id:', id, 'className:', className);
             if (typeof Swal === 'undefined') {
-                console.error('SweetAlert2 is not loaded!');
                 alert('SweetAlert2 tidak ter-load. Silakan refresh halaman.');
                 return;
             }
@@ -221,34 +248,20 @@
                 confirmButtonColor: '#28c76f',
                 cancelButtonColor: '#3085d6'
             }).then((result) => {
-                console.log('SweetAlert result:', result);
-                // Check both isConfirmed and value for compatibility
                 const isConfirmed = result.isConfirmed || result.value === true;
-                console.log('Is confirmed:', isConfirmed);
-                
                 if (isConfirmed) {
-                    console.log('User confirmed, submitting accept form for id:', id);
                     const form = document.getElementById('accept-collab-' + id);
-                    console.log('Form element:', form);
                     if (form) {
-                        console.log('Form action:', form.action);
-                        console.log('Form method:', form.method);
-                        console.log('Form submitting...');
                         form.submit();
                     } else {
-                        console.error('Form not found: accept-collab-' + id);
                         Swal.fire('Error!', 'Form tidak ditemukan', 'error');
                     }
-                } else {
-                    console.log('User cancelled or dismissed');
                 }
             });
         };
 
         window.rejectCollaboration = function(id, className) {
-            console.log('rejectCollaboration called with id:', id, 'className:', className);
             if (typeof Swal === 'undefined') {
-                console.error('SweetAlert2 is not loaded!');
                 alert('SweetAlert2 tidak ter-load. Silakan refresh halaman.');
                 return;
             }
@@ -262,33 +275,20 @@
                 confirmButtonColor: '#d33',
                 cancelButtonColor: '#3085d6'
             }).then((result) => {
-                console.log('SweetAlert result:', result);
-                // Check both isConfirmed and value for compatibility
                 const isConfirmed = result.isConfirmed || result.value === true;
-                console.log('Is confirmed:', isConfirmed);
-                
                 if (isConfirmed) {
-                    console.log('User confirmed, submitting reject form for id:', id);
                     const form = document.getElementById('reject-collab-' + id);
-                    console.log('Form element:', form);
                     if (form) {
-                        console.log('Form action:', form.action);
-                        console.log('Form method:', form.method);
-                        console.log('Form submitting...');
                         form.submit();
                     } else {
-                        console.error('Form not found: reject-collab-' + id);
                         Swal.fire('Error!', 'Form tidak ditemukan', 'error');
                     }
-                } else {
-                    console.log('User cancelled or dismissed');
                 }
             });
         };
 
         window.deleteClass = function(id, name) {
             if (typeof Swal === 'undefined') {
-                console.error('SweetAlert2 is not loaded!');
                 alert('SweetAlert2 tidak ter-load. Silakan refresh halaman.');
                 return;
             }
@@ -320,7 +320,6 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
                         Swal.fire('Gagal!', 'Terjadi kesalahan.', 'error');
                     });
                 }
@@ -328,13 +327,7 @@
         };
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Classes script loaded, DOM ready');
-            
-            if (typeof $ === 'undefined') {
-                console.error('jQuery is not loaded!');
-            } else {
-                console.log('jQuery is loaded');
-                
+            if (typeof $ !== 'undefined') {
                 $('#classList').DataTable({
                     responsive: true,
                     language: {

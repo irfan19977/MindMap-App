@@ -5,7 +5,7 @@
       <div class="intro-body">
         <div class="container text-left">
           <div class="row">
-            <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo.png') }}" alt=""></div>
+            <div class="col-md-2 col-lg-offset-3 text-center"><img class="logolanding" src="{{ asset('frontend/img/logo.png') }}" alt="MindMap Logo"></div>
             <div class="col-md-6">
               <h1 class="no-pad bold">{!! __('messages.hero_title') !!}</h1>
               <p class="lead">{{ __('messages.hero_subtitle') }}</p><a class="page-scroll" href="#about"><span class="mouse"><span><i class="ion-ios-arrow-thin-down"></i></span></span></a>
@@ -43,7 +43,7 @@
             <p>{{ __('messages.about_desc_2') }}</p>
             <div class="classic">{{ __('messages.about_team') }}</div> <small>&mdash; {{ __('messages.about_subtitle') }}</small>
           </div>
-          <div class="col-lg-6"><img class="wow slideInRight center-block" src="{{ asset('frontend/img/main/tentang.png') }}" alt="" data-wow-duration="2s" animation-duration="2s" style="max-width: 200%;"></div>
+          <div class="col-lg-6"><img class="wow slideInRight center-block" src="{{ asset('frontend/img/main/tentang.png') }}" alt="{{ __('messages.about_title') }}" loading="lazy" data-wow-duration="2s" animation-duration="2s" style="max-width: 200%;"></div>
         </div>
       </div>
     </section>
@@ -52,15 +52,15 @@
       <div class="container">
         <h2 class="no-pad">{{ __('messages.features_title') }}<a class="fa fa-plus-circle fa-fw gray" href="#features" title="Lihat Semua"></a></h2>
         <div class="row grid-pad">
-          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/fitur mindmap.png') }}" alt="" style="height: 200px; object-fit: cover; width: 100%;">
+          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/fitur mindmap.png') }}" alt="{{ __('messages.feature_1_title') }}" loading="lazy" style="height: 200px; object-fit: cover; width: 100%;">
               <h4>{{ __('messages.feature_1_title') }}</h4></a>
             <p>{{ __('messages.feature_1_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
-          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/asisten ai.png') }}" alt="" style="height: 200px; object-fit: cover; width: 100%;">
+          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/asisten ai.png') }}" alt="{{ __('messages.feature_2_title') }}" loading="lazy" style="height: 200px; object-fit: cover; width: 100%;">
               <h4>{{ __('messages.feature_2_title') }}</h4></a>
             <p>{{ __('messages.feature_2_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
-          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/evaluasi otomatis.png') }}" alt="" style="height: 200px; object-fit: cover; width: 100%;">
+          <div class="col-sm-4"><a href="#features"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/evaluasi otomatis.png') }}" alt="{{ __('messages.feature_3_title') }}" loading="lazy" style="height: 200px; object-fit: cover; width: 100%;">
               <h4>{{ __('messages.feature_3_title') }}</h4></a>
             <p>{{ __('messages.feature_3_desc') }}</p><a class="btn btn-dark-border" href="#features">{{ __('messages.learn_more') }}</a>
           </div>
@@ -118,8 +118,8 @@
     <!-- Action video-->
     <div class="container text-center box-shadow offcet showcase">
       <div class="row v-center">
-        <div class="col-lg-6 no-pad"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/3.jpg') }}" alt=""></div>
-        <div class="col-lg-6"><a class="swipebox-video" href="" data-rel="video2"><i class="ion-ios-play-outline icon-big text-gradient-gray"></i></a>
+        <div class="col-lg-6 no-pad"><img class="img-responsive center-block" src="{{ asset('frontend/img/main/3.jpg') }}" alt="{{ __('messages.watch_our_story') }}" loading="lazy"></div>
+        <div class="col-lg-6"><a class="swipebox-video" href="" data-rel="video2" aria-label="{{ __('messages.watch_our_story') }}"><i class="ion-ios-play-outline icon-big text-gradient-gray"></i></a>
           <h2>{{ __('messages.watch_our_story') }}</h2>
           <h5 class="no-pad">{{ __('messages.video_platform') }}</h5>
         </div>
@@ -141,7 +141,7 @@
                 <li data-target="#carousel-light2" data-slide-to="1"></li>
               </ol> --}}
               <div class="carousel-inner" role="listbox">
-                <div class="item active"><img class="center-block" src="{{ asset('frontend/img/main/about.png') }}" alt=""></div>
+                <div class="item active"><img class="center-block" src="{{ asset('frontend/img/main/about.png') }}" alt="{{ __('messages.what_we_do_title') }}" loading="lazy"></div>
               </div>
             </div>
           </div>
@@ -153,54 +153,49 @@
       <div class="container text-center">
         <h2>{{ __('messages.team_title') }}</h2>
         <div class="row">
-          <div class="col-md-6 shadow"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/irfan.jpeg') }}" alt="">
+          <div class="col-md-6 shadow"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/irfan.jpeg') }}" alt="Irfan Adi Prastyo - Project Manager & Web Developer" loading="lazy">
             <h5>
               <ul class="list-inline">
-                <li><a href="/"><i class="fab fa-twitter fa-2x"></i></a></li>
-                <li><a href="/"><i class="fab fa-facebook-f fa-2x"></i></a></li>
-                <li><a href="https://github.com/irfan19977" target="_blank"><i class="fab fa-github fa-2x"></i></a></li>
+                <li><a href="https://www.instagram.com/mas_irf34?igsh=c2t3Y3NoNXYydHYy" target="_blank" aria-label="Instagram Irfan Adi Prastyo"><i class="fab fa-instagram fa-2x"></i></a></li>
+                <li><a href="https://github.com/irfan19977" target="_blank" aria-label="GitHub Irfan Adi Prastyo"><i class="fab fa-github fa-2x"></i></a></li>
               </ul>Irfan Adi Prastyo
               <div class="small">Project Manager & Web Developer</div>
             </h5>
           </div>
           <div class="col-md-6">
             <div class="row">
-              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bili.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
+              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bili.jpeg') }}" alt="Muhammad Fadhli Robbi Elhami - Web Developer" loading="lazy" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
-                    <li><a href="/"><i class="fab fa-twitter"></i></a></li>
-                    <li><a href="/"><i class="fab fa-youtube"></i></a></li>
-                    <li><a href="https://github.com/BielCre4tive" target="_blank"><i class="fab fa-github"></i></a></li>
+                    <li><a href="https://www.instagram.com/moe_frel?igsh=ejJxbjdwaWt2aWd1" target="_blank" aria-label="Instagram Muhammad Fadhli Robbi Elhami"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://github.com/BielCre4tive" target="_blank" aria-label="GitHub Muhammad Fadhli Robbi Elhami"><i class="fab fa-github"></i></a></li>
                   </ul>Muhammad Fadhli Robbi Elhami
                   <div class="small">Web Developer</div>
                 </h5>
               </div>
-              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bisma.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
+              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/bisma.jpeg') }}" alt="Faishal Danurweda Bisma - Web Developer" loading="lazy" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
-                    <li><a href="/"><i class="fab fa-facebook-f"></i></a></li>
-                    <li><a href="/"><i class="fab fa-twitter"></i></a></li>
-                    <li><a href="https://github.com/ajaajasada03-cmyk" target="_blank"><i class="fab fa-github"></i></a></li>
+                    <li><a href="https://www.instagram.com/bismasa_muda16?igsh=NGU0Y2JzdTc1ODIw" target="_blank" aria-label="Instagram Faishal Danurweda Bisma"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://github.com/ajaajasada03-cmyk" target="_blank" aria-label="GitHub Faishal Danurweda Bisma"><i class="fab fa-github"></i></a></li>
                   </ul>Faishal Danurweda Bisma
                   <div class="small">Web Developer</div>
                 </h5>
               </div>
-              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/arkan.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
+              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/arkan.jpeg') }}" alt="Arkan Thaariq Asadullah - Web Developer" loading="lazy" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
-                    <li><a href="/"><i class="fab fa-twitter"></i></a></li>
-                    <li><a href="https://github.com/thooreqkerjo-star" target="_blank"><i class="fab fa-github"></i></a></li>
-                    <li><a href="/"><i class="fab fa-pinterest"></i></a></li>
+                    <li><a href="https://www.instagram.com/arkanthaariq?igsh=eDdidHR6bm14eWZq" target="_blank" aria-label="Instagram Arkan Thaariq Asadullah"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://github.com/thooreqkerjo-star" target="_blank" aria-label="GitHub Arkan Thaariq Asadullah"><i class="fab fa-github"></i></a></li>
                   </ul>Arkan Thaariq Asadullah
                   <div class="small">Web Developer</div>
                 </h5>
               </div>
-              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/mishaal.jpeg') }}" alt="" style="width:100%;height:350px;object-fit:cover;object-position:top;">
+              <div class="col-sm-6 shadow" style="padding:5px;"><img class="img-responsive center-block" src="{{ asset('frontend/img/team/mishaal.jpeg') }}" alt="Muhammad Mishaal - Web Developer" loading="lazy" style="width:100%;height:350px;object-fit:cover;object-position:top;">
                 <h5 style="font-size:13px;">
                   <ul class="list-inline">
-                    <li><a href="/"><i class="fab fa-facebook-f"></i></a></li>
-                    <li><a href="https://github.com/muhammadmishaal2204-del" target="_blank"><i class="fab fa-github"></i></a></li>
-                    <li><a href="/"><i class="fab fa-linkedin"></i></a></li>
+                    <li><a href="https://www.instagram.com/m.mishaal_?igsh=dmIzazZyZ2xpZXFx" target="_blank" aria-label="Instagram Muhammad Mishaal"><i class="fab fa-instagram"></i></a></li>
+                    <li><a href="https://github.com/muhammadmishaal2204-del" target="_blank" aria-label="GitHub Muhammad Mishaal"><i class="fab fa-github"></i></a></li>
                   </ul>Muhammad Mishaal
                   <div class="small">Web Developer</div>
                 </h5>
@@ -220,7 +215,7 @@
           <div class="col-md-4 col-md-offset-1">
             <p class="no-pad">{{ __('messages.cta_desc') }}</p>
           </div>
-          <div class="col-md-2 col-md-offset-1"><a class="btn btn-lg btn-dark" href="/">{{ __('messages.cta_button') }}</a></div>
+          <div class="col-md-2 col-md-offset-1"><a class="btn btn-lg btn-dark" href="/" aria-label="{{ __('messages.cta_button') }}">{{ __('messages.cta_button') }}</a></div>
         </div>
       </div>
     </section>

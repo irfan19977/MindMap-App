@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('subcategory_id');
             $table->foreign('subcategory_id')->references('id')->on('subcategories')->onDelete('cascade');
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->text('description')->nullable();
             $table->text('learning_objectives')->nullable();
             $table->longText('content')->nullable();
@@ -25,10 +25,12 @@ return new class extends Migration
             $table->json('latihan_data')->nullable();
             $table->json('quiz_data')->nullable();
             $table->integer('order_number')->default(0);
-            $table->string('created_by')->nullable();
+            $table->uuid('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
             
             // Indexes untuk performance
+            $table->unique(['slug', 'created_by']);
             $table->index('slug');
             $table->index('subcategory_id');
             $table->index('status');
