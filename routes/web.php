@@ -27,7 +27,6 @@ use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\FirebaseNotificationController;
 /*
 |--------------------------------------------------------------------------
 | Temporary Cache Clear (remove after deployment)
@@ -257,14 +256,6 @@ Route::middleware('auth')->group(function () {
         Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
         Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
         Route::delete('/clear-read', [NotificationController::class, 'clearRead'])->name('clear-read');
-    });
-
-    // Firebase Notification Routes
-    Route::prefix('firebase')->name('firebase.')->group(function () {
-        Route::post('/register-device', [FirebaseNotificationController::class, 'registerDeviceToken'])->name('register-device');
-        Route::post('/send-chat', [FirebaseNotificationController::class, 'sendChatNotification'])->name('send-chat');
-        Route::post('/send-group-chat', [FirebaseNotificationController::class, 'sendGroupChatNotification'])->name('send-group-chat');
-        Route::post('/subscribe-topic', [FirebaseNotificationController::class, 'subscribeToChatTopic'])->name('subscribe-topic');
     });
 
     // Contact Routes
