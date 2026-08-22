@@ -2,7 +2,7 @@
     <a href="javascript:void(0);" class="nxl-head-link" id="notificationDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
         <div class="position-relative">
             <i class="feather-message-square"></i>
-            <span id="notificationBadge" class="badge bg-danger nxl-h-badge" style="display: none; position: absolute; top: -8px; left: -8px;">0</span>
+            <span id="notificationBadge" class="badge bg-danger nxl-h-badge" style="display: none; position: absolute; top: -12px; left: -12px;">0</span>
         </div>
     </a>
     <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu" aria-labelledby="notificationDropdown">
