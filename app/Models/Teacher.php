@@ -16,17 +16,24 @@ class Teacher extends Model
     protected $fillable = [
         'user_id',
         'slug',
+        'description',
+        'phone',
         'specialization',
         'category',
-        'description',
         'education',
         'experience',
+        'company',
+        'date_of_birth',
+        'country',
+        'city',
         'image_url',
         'rating',
         'review_count',
         'linkedin_url',
-        'twitter_url',
+        'youtube_url',
         'github_url',
+        'instagram',
+        'facebook',
     ];
 
     protected $casts = [

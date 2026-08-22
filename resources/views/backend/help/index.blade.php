@@ -1333,4 +1333,4 @@
     }
 </script>
     @include('backend.layouts.scriptcustom-minimal')
-@endpushgit
+@endpush

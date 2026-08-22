@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\User;
 use App\Models\Teacher;
 use App\Models\Student;
@@ -144,7 +145,7 @@ class RoleAndUserSeeder extends Seeder
         // Umum: tidak ada akses backend
         $umumRole->syncPermissions([]);
 
-        // Create Admin user
+        // Create Admin user + admin profile
         $admin = User::firstOrCreate(
             ['email' => 'admin@gmail.com'],
             [
@@ -154,6 +155,17 @@ class RoleAndUserSeeder extends Seeder
             ]
         );
         $admin->syncRoles([$adminRole]);
+        Admin::updateOrCreate(
+            ['user_id' => $admin->id],
+            [
+                'slug' => 'admin-mindmap',
+                'specialization' => 'System Administration',
+                'category' => 'digital',
+                'description' => 'Admin default untuk manajemen sistem MindMap',
+                'education' => 'S1 Teknik Informatika',
+                'experience' => '3 tahun admin sistem',
+            ]
+        );
 
         // Create Teacher user + teacher profile
         $teacherUser = User::firstOrCreate(

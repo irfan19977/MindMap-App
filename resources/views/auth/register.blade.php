@@ -111,7 +111,12 @@
                                         @enderror
                                     </div>
                                     <div class="mb-4">
-                                        <input type="password" class="form-control" name="password_confirmation" placeholder="Konfirmasi Password" required autocomplete="new-password">
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi Password" required autocomplete="new-password">
+                                            <div class="input-group-text c-pointer" onclick="toggleConfirmPassword()">
+                                                <i id="confirmPasswordIcon" class="feather feather-eye"></i>
+                                            </div>
+                                        </div>
                                         <div id="client-error-password_confirmation" class="client-error text-danger small mt-1 d-none"></div>
                                     </div>
                                 @endif
@@ -343,7 +348,10 @@
         </div>
     </main>
 
-  @include('backend.layouts.scriptcustom')
+  <!-- Essential vendors only -->
+  <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+  <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+  <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
   <script>
     let currentStep = 1;
     const selectedRole = '{{ old("user_type", "") }}';
@@ -592,6 +600,21 @@
             passwordInput.type = 'password';
             passwordIcon.classList.remove('feather-eye-off');
             passwordIcon.classList.add('feather-eye');
+        }
+    }
+
+    function toggleConfirmPassword() {
+        const confirmPasswordInput = document.getElementById('password_confirmation');
+        const confirmPasswordIcon = document.getElementById('confirmPasswordIcon');
+
+        if (confirmPasswordInput.type === 'password') {
+            confirmPasswordInput.type = 'text';
+            confirmPasswordIcon.classList.remove('feather-eye');
+            confirmPasswordIcon.classList.add('feather-eye-off');
+        } else {
+            confirmPasswordInput.type = 'password';
+            confirmPasswordIcon.classList.remove('feather-eye-off');
+            confirmPasswordIcon.classList.add('feather-eye');
         }
     }
   </script>

@@ -2,6 +2,10 @@
 
 @section('title', 'Profile - Customers View')
 
+@php
+    $profile = $user->hasRole('teacher') ? $user->teacher : ($user->hasRole('admin') ? $user->admin : null);
+@endphp
+
 @section('content')
         <div class="nxl-content">
             <!-- [ page-header ] start -->
@@ -69,11 +73,21 @@
                                 <ul class="list-unstyled mb-4">
                                     <li class="hstack justify-content-between mb-4">
                                         <span class="text-muted fw-medium hstack gap-3"><i class="feather-map-pin"></i>Location</span>
-                                        <a href="javascript:void(0);" class="float-end">California, USA</a>
+                                        <a href="javascript:void(0);" class="float-end">
+                                            @if($profile->city && $profile->country)
+                                                {{ $profile->city }}, {{ $profile->country }}
+                                            @elseif($profile->city)
+                                                {{ $profile->city }}
+                                            @elseif($profile->country)
+                                                {{ $profile->country }}
+                                            @else
+                                                -
+                                            @endif
+                                        </a>
                                     </li>
                                     <li class="hstack justify-content-between mb-4">
                                         <span class="text-muted fw-medium hstack gap-3"><i class="feather-phone"></i>Phone</span>
-                                        <a href="javascript:void(0);" class="float-end">+01 (375) 2589 645</a>
+                                        <a href="javascript:void(0);" class="float-end">{{ $profile->phone ?? '-' }}</a>
                                     </li>
                                     <li class="hstack justify-content-between mb-0">
                                         <span class="text-muted fw-medium hstack gap-3"><i class="feather-mail"></i>Email</span>
@@ -145,39 +159,59 @@
                                         <i class="feather feather-facebook"></i>
                                     </div>
                                     <span class="mx-2 text-gray-300">/</span>
-                                    <a href="https://www.facebook.com/wrapcoders" target="_blank" class="text-truncate-1-line">https://www.facebook.com/<span class="text-muted">wrapcoders</span></a>
-                                </div>
-                                <div class="d-flex align-items-center mb-3">
-                                    <div class="avatar-text bg-gray-100">
-                                        <i class="feather feather-twitter"></i>
-                                    </div>
-                                    <span class="mx-2 text-gray-300">/</span>
-                                    <a href="https://www.twitter.com/wrapcoders" target="_blank" class="text-truncate-1-line">https://www.twitter.com/<span class="text-muted">wrapcoders</span></a>
+                                    @if($profile->facebook)
+                                        <a href="{{ $profile->facebook }}" target="_blank" class="text-truncate-1-line">{{ $profile->facebook }}</a>
+                                    @else
+                                        <span class="text-muted">belum ada link</span>
+                                    @endif
                                 </div>
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="avatar-text bg-gray-100">
                                         <i class="feather feather-github"></i>
                                     </div>
                                     <span class="mx-2 text-gray-300">/</span>
-                                    <a href="https://www.github.com/wrapcoders" target="_blank" class="text-truncate-1-line">https://www.github.com/<span class="text-muted">wrapcoders</span></a>
+                                    @if($profile->github_url)
+                                        <a href="{{ $profile->github_url }}" target="_blank" class="text-truncate-1-line">{{ $profile->github_url }}</a>
+                                    @else
+                                        <span class="text-muted">belum ada link</span>
+                                    @endif
                                 </div>
                                 <div class="d-flex align-items-center mb-3">
                                     <div class="avatar-text bg-gray-100">
                                         <i class="feather feather-linkedin"></i>
                                     </div>
                                     <span class="mx-2 text-gray-300">/</span>
-                                    <a href="https://www.linkedin.com/wrapcoders" target="_blank" class="text-truncate-1-line">https://www.linkedin.com/<span class="text-muted">wrapcoders</span></a>
+                                    @if($profile->linkedin_url)
+                                        <a href="{{ $profile->linkedin_url }}" target="_blank" class="text-truncate-1-line">{{ $profile->linkedin_url }}</a>
+                                    @else
+                                        <span class="text-muted">belum ada link</span>
+                                    @endif
                                 </div>
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center mb-3">
                                     <div class="avatar-text bg-gray-100">
                                         <i class="feather feather-youtube"></i>
                                     </div>
                                     <span class="mx-2 text-gray-300">/</span>
-                                    <a href="https://www.youtube.com/wrapcoders" target="_blank" class="text-truncate-1-line">https://www.youtube.com/<span class="text-muted">wrapcoders</span></a>
+                                    @if($profile->youtube_url)
+                                        <a href="{{ $profile->youtube_url }}" target="_blank" class="text-truncate-1-line">{{ $profile->youtube_url }}</a>
+                                    @else
+                                        <span class="text-muted">belum ada link</span>
+                                    @endif
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-text bg-gray-100">
+                                        <i class="feather feather-instagram"></i>
+                                    </div>
+                                    <span class="mx-2 text-gray-300">/</span>
+                                    @if($profile->instagram)
+                                        <a href="{{ $profile->instagram }}" target="_blank" class="text-truncate-1-line">{{ $profile->instagram }}</a>
+                                    @else
+                                        <span class="text-muted">belum ada link</span>
+                                    @endif
                                 </div>
                             </div>
-                            <a href="javascript:void(0);" class="ladda-button zoom-out" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Refresh Now">
-                                <span>Refresh</span>
+                            <a href="javascript:void(0);" class="ladda-button zoom-out" data-bs-toggle="modal" data-bs-target="#editSocialModal" data-bs-trigger="hover" title="Edit Social">
+                                <span>Edit Social</span>
                                 <span class="spinner"></span>
                             </a>
                         </div>
@@ -201,10 +235,10 @@
                                     </li>
                                     <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab" data-bs-target="#connectionTab" role="tab">Connection</a>
-                                    </li>
+                                    </li> --}}
                                     <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab" data-bs-target="#securityTab" role="tab">Security</a>
-                                    </li> --}}
+                                    </li>
                                 </ul>
                             </div>
                             <div class="tab-content">
@@ -212,78 +246,92 @@
                                     <div class="about-section mb-5">
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0">Profile About:</h5>
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">Updates</a>
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand" data-bs-toggle="modal" data-bs-target="#editDescriptionModal">Updates</a>
                                         </div>
-                                        <p>John Doe is a frontend developer with over 5 years of experience creating high-quality, user-friendly websites and web applications. He has a strong understanding of web development technologies and a keen eye for design.</p>
-                                        <p>John is proficient in languages such as HTML, CSS, and JavaScript, and is experienced in using popular frontend frameworks such as React and Angular. He is also well-versed in user experience design and uses his knowledge to create engaging and intuitive user interfaces.</p>
-                                        <p>Throughout his career, John has worked on a wide range of projects for clients in various industries, including e-commerce, healthcare, and education. He takes a collaborative approach to development and enjoys working closely with clients and other developers to bring their ideas to life.</p>
+                                        <p style="white-space: pre-wrap;">{{ $profile->description ?? 'No description available.' }}</p>
                                     </div>
                                     <div class="profile-details mb-5">
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0">Profile Details:</h5>
-                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+                                            <a href="javascript:void(0);" class="btn btn-sm btn-light-brand" data-bs-toggle="modal" data-bs-target="#editProfessionalModal">Edit Profile</a>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Full Name:</div>
+                                            <div class="col-sm-6 text-muted">Nama Lengkap:</div>
                                             <div class="col-sm-6 fw-semibold">{{ $user->name }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Surname:</div>
-                                            <div class="col-sm-6 fw-semibold">Della</div>
+                                            <div class="col-sm-6 text-muted">Nomor Telepon:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->phone ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Company:</div>
-                                            <div class="col-sm-6 fw-semibold">WRAPCODERS</div>
+                                            <div class="col-sm-6 text-muted">Spesialisasi:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->specialization ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Date of Birth:</div>
-                                            <div class="col-sm-6 fw-semibold">26 May, 2000</div>
+                                            <div class="col-sm-6 text-muted">Kategori:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->category ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Mobile Number:</div>
-                                            <div class="col-sm-6 fw-semibold">+01 (375) 5896 3214</div>
+                                            <div class="col-sm-6 text-muted">Pendidikan:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->education ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Email Address:</div>
-                                            <div class="col-sm-6 fw-semibold">{{ $user->email }}</div>
+                                            <div class="col-sm-6 text-muted">Pengalaman:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->experience ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Location:</div>
-                                            <div class="col-sm-6 fw-semibold">California, United States</div>
+                                            <div class="col-sm-6 text-muted">Perusahaan:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->company ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Joining Date:</div>
-                                            <div class="col-sm-6 fw-semibold">20 Dec, 2023</div>
+                                            <div class="col-sm-6 text-muted">Tanggal Lahir:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->date_of_birth ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Country:</div>
-                                            <div class="col-sm-6 fw-semibold">United States</div>
+                                            <div class="col-sm-6 text-muted">Negara:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->country ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Communication:</div>
-                                            <div class="col-sm-6 fw-semibold">Email, Phone</div>
+                                            <div class="col-sm-6 text-muted">Kota:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $profile->city ?? '-' }}</div>
                                         </div>
                                         <div class="row g-0 mb-4">
-                                            <div class="col-sm-6 text-muted">Allow Changes:</div>
-                                            <div class="col-sm-6 fw-semibold">YES</div>
-                                        </div>
-                                        <div class="row g-0">
-                                            <div class="col-sm-6 text-muted">Website:</div>
-                                            <div class="col-sm-6 fw-semibold">https://wrapcoders.com</div>
+                                            <div class="col-sm-6 text-muted">Tanggal Bergabung:</div>
+                                            <div class="col-sm-6 fw-semibold">{{ $user->created_at }}</div>
                                         </div>
                                     </div>
+                                    @php
+                                        $requiredFields = ['description', 'specialization', 'category', 'education', 'experience', 'company', 'date_of_birth', 'country', 'city'];
+                                        $isProfileComplete = true;
+                                        foreach ($requiredFields as $field) {
+                                            if (empty($profile->$field)) {
+                                                $isProfileComplete = false;
+                                                break;
+                                            }
+                                        }
+                                        $lastUpdate = $profile->updated_at ?? $user->created_at;
+                                        $daysSinceUpdate = $lastUpdate->diffInDays(now());
+                                        $needsUpdate = $daysSinceUpdate > 30; // Show alert if not updated in 30 days
+                                    @endphp
+                                    @if(!$isProfileComplete || $needsUpdate)
                                     <div class="alert alert-dismissible mb-4 p-4 d-flex alert-soft-warning-message profile-overview-alert" role="alert">
                                         <div class="me-4 d-none d-md-block">
                                             <i class="feather feather-alert-triangle fs-1"></i>
                                         </div>
                                         <div>
-                                            <p class="fw-bold mb-1 text-truncate-1-line">Your profile has not been updated yet!!!</p>
-                                            <p class="fs-10 fw-medium text-uppercase text-truncate-1-line">Last Update: <strong>26 Dec, 2023</strong></p>
-                                            <a href="javascript:void(0);" class="btn btn-sm bg-soft-warning text-warning d-inline-block">Update Now</a>
+                                            @if(!$isProfileComplete)
+                                                <p class="fw-bold mb-1 text-truncate-1-line">Please complete your profile information</p>
+                                                <p class="fs-10 fw-medium text-uppercase text-truncate-1-line">Some fields are missing</p>
+                                            @else
+                                                <p class="fw-bold mb-1 text-truncate-1-line">Your profile needs to be updated</p>
+                                                <p class="fs-10 fw-medium text-uppercase text-truncate-1-line">Last Update: <strong>{{ $lastUpdate->format('d M, Y') }}</strong></p>
+                                            @endif
+                                            <a href="javascript:void(0);" class="btn btn-sm bg-soft-warning text-warning d-inline-block" data-bs-toggle="modal" data-bs-target="#editProfessionalModal">Update Now</a>
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>
                                     </div>
-                                    <div class="project-section">
+                                    @endif
+                                    {{-- <div class="project-section">
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0">Projects Details:</h5>
                                             <a href="javascript:void(0);" class="btn btn-sm btn-light-brand">View Alls</a>
@@ -394,7 +442,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="tab-pane fade" id="billingTab" role="tabpanel">
                                     <div class="alert alert-dismissible m-4 p-4 d-flex alert-soft-teal-message" role="alert">
@@ -1548,6 +1596,18 @@
                                 <label for="editEmail" class="form-label">Email Address</label>
                                 <input type="email" class="form-control" id="editEmail" name="email" value="{{ old('email', $user->email ?? '') }}" required>
                             </div>
+                            <div class="col-md-6">
+                                <label for="editPhone" class="form-label">Phone</label>
+                                <input type="text" class="form-control" id="editPhone" name="phone" value="{{ old('phone', $profile->phone ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCountry" class="form-label">Country</label>
+                                <input type="text" class="form-control" id="editCountry" name="country" value="{{ old('country', $profile->country ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCity" class="form-label">City</label>
+                                <input type="text" class="form-control" id="editCity" name="city" value="{{ old('city', $profile->city ?? '') }}">
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -1559,4 +1619,146 @@
         </div>
     </div>
     <!-- Edit Profile Modal end -->
+
+    <!-- Edit Description Modal -->
+    <div class="modal fade" id="editDescriptionModal" tabindex="-1" aria-labelledby="editDescriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form action="{{ route('backend.profile.update') }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editDescriptionModalLabel">Edit Description</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="editDescription" name="description" rows="12">{{ old('description', $profile->description ?? '') }}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Description Modal end -->
+
+    <!-- Edit Professional Modal -->
+    <div class="modal fade" id="editProfessionalModal" tabindex="-1" aria-labelledby="editProfessionalModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form action="{{ route('backend.profile.update') }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editProfessionalModalLabel">Edit Professional Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="editName" class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" id="editName" name="name" value="{{ old('name', $user->name ?? '') }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editPhone" class="form-label">Nomor Telepon</label>
+                                <input type="text" class="form-control" id="editPhone" name="phone" value="{{ old('phone', $profile->phone ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editSpecialization" class="form-label">Spesialisasi</label>
+                                <input type="text" class="form-control" id="editSpecialization" name="specialization" value="{{ old('specialization', $profile->specialization ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCategory" class="form-label">Kategori</label>
+                                <select class="form-select" id="editCategory" name="category">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="akademik" {{ old('category', $profile->category ?? '') == 'akademik' ? 'selected' : '' }}>Akademik</option>
+                                    <option value="digital" {{ old('category', $profile->category ?? '') == 'digital' ? 'selected' : '' }}>Digital</option>
+                                    <option value="bisnis" {{ old('category', $profile->category ?? '') == 'bisnis' ? 'selected' : '' }}>Bisnis</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editEducation" class="form-label">Pendidikan</label>
+                                <input type="text" class="form-control" id="editEducation" name="education" value="{{ old('education', $profile->education ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCompany" class="form-label">Perusahaan</label>
+                                <input type="text" class="form-control" id="editCompany" name="company" value="{{ old('company', $profile->company ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editDateOfBirth" class="form-label">Tanggal Lahir</label>
+                                <input type="date" class="form-control" id="editDateOfBirth" name="date_of_birth" value="{{ old('date_of_birth', $profile->date_of_birth ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCountry" class="form-label">Negara</label>
+                                <input type="text" class="form-control" id="editCountry" name="country" value="{{ old('country', $profile->country ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editCity" class="form-label">Kota</label>
+                                <input type="text" class="form-control" id="editCity" name="city" value="{{ old('city', $profile->city ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="editExperience" class="form-label">Pengalaman</label>
+                                <input type="text" class="form-control" name="experience" value="{{ old('experience', $profile->experience ?? '') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Professional Modal end -->
+
+    <!-- Edit Social Modal -->
+    <div class="modal fade" id="editSocialModal" tabindex="-1" aria-labelledby="editSocialModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('backend.profile.update') }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSocialModalLabel">Edit Social Links</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="editFacebook" class="form-label">Facebook</label>
+                                <input type="url" class="form-control" id="editFacebook" name="facebook" value="{{ old('facebook', $profile->facebook ?? '') }}">
+                            </div>
+                            <div class="col-12">
+                                <label for="editGithub" class="form-label">GitHub</label>
+                                <input type="url" class="form-control" id="editGithub" name="github_url" value="{{ old('github_url', $profile->github_url ?? '') }}">
+                            </div>
+                            <div class="col-12">
+                                <label for="editLinkedin" class="form-label">LinkedIn</label>
+                                <input type="url" class="form-control" id="editLinkedin" name="linkedin_url" value="{{ old('linkedin_url', $profile->linkedin_url ?? '') }}">
+                            </div>
+                            <div class="col-12">
+                                <label for="editYoutube" class="form-label">YouTube</label>
+                                <input type="url" class="form-control" id="editYoutube" name="youtube_url" value="{{ old('youtube_url', $profile->youtube_url ?? '') }}">
+                            </div>
+                            <div class="col-12">
+                                <label for="editInstagram" class="form-label">Instagram</label>
+                                <input type="url" class="form-control" id="editInstagram" name="instagram" value="{{ old('instagram', $profile->instagram ?? '') }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Social Modal end -->
 @endpush

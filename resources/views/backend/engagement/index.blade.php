@@ -489,7 +489,11 @@
 @endsection
 
 @push('scripts')
-    @include('backend.layouts.scriptcustom')
+    <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/vendors/js/circle-progress.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
+    <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
     <script>
         (function() {
             // User Growth Chart — Sales Pipeline style (distributed bars, highlight max)
