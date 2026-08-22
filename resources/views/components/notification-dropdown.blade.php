@@ -1,13 +1,13 @@
 <div class="dropdown nxl-h-item">
     <a href="javascript:void(0);" class="nxl-head-link" id="notificationDropdown" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
         <div class="position-relative">
-            <i class="feather-bell"></i>
-            <span id="notificationBadge" class="badge bg-danger nxl-h-badge" style="display: none;">0</span>
+            <i class="feather-message-square"></i>
+            <span id="notificationBadge" class="badge bg-danger nxl-h-badge" style="display: none; position: absolute; top: -8px; left: -8px;">0</span>
         </div>
     </a>
     <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu" aria-labelledby="notificationDropdown">
         <div class="d-flex justify-content-between align-items-center notifications-head">
-            <h6 class="fw-bold text-dark mb-0">Notifikasi</h6>
+            <h6 class="fw-bold text-dark mb-0">Chat</h6>
             <div class="d-flex gap-2">
                 <a href="javascript:void(0);" onclick="markAllAsRead()" class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="Tandai Semua Dibaca">
                     <i class="feather-check"></i>
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="text-center notifications-footer">
-            <a href="javascript:void(0);" onclick="loadAllNotifications()" class="fs-13 fw-semibold text-dark">Lihat Semua Notifikasi</a>
+            <a href="javascript:void(0);" onclick="loadAllNotifications()" class="fs-13 fw-semibold text-dark">Lihat Semua Chat</a>
         </div>
     </div>
 </div>
@@ -80,7 +80,7 @@
             container.innerHTML = `
                 <div class="text-center py-4 text-muted">
                     <i class="feather-inbox fs-24 d-block mb-2"></i>
-                    <p>Tidak ada notifikasi</p>
+                    <p>Tidak ada pesan</p>
                 </div>
             `;
             return;
