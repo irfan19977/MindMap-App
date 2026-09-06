@@ -21,7 +21,7 @@ class KelasController extends Controller
         $classes = CourseClass::with(['category', 'subcategory', 'teacher.user', 'materials'])
             ->where('status', 'publish')
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(12);
 
         return view('frontend.kelas', compact('classes'));
     }
@@ -196,7 +196,7 @@ class KelasController extends Controller
     public function showMateri($slug)
     {
         $material = Material::where('slug', $slug)
-            ->with(['subcategory', 'subcategory.category', 'practiceQuestions' => fn($q) => $q->ordered()])
+            ->with(['subcategory.category', 'practiceQuestions' => fn($q) => $q->ordered()])
             ->firstOrFail();
 
         // Decode konten materi dari JSON (strip HTML tags if editor wrapped it)
@@ -214,16 +214,16 @@ class KelasController extends Controller
             ->limit(4)
             ->get();
 
-        // Check if user has passed this quiz
-        $passedQuizAttempt = null;
+        // Check if user has completed this quiz (passed or failed)
+        $completedQuizAttempt = null;
         if (Auth::check()) {
             $quiz = $material->quizzes()->where('status', 'publish')->first();
             if ($quiz) {
-                $passedQuizAttempt = \App\Models\QuizAttempt::where('user_id', Auth::id())
+                $completedQuizAttempt = \App\Models\QuizAttempt::where('user_id', Auth::id())
                     ->where('quiz_id', $quiz->id)
-                    ->where('status', 'passed')
+                    ->whereIn('status', ['passed', 'failed'])
                     ->with('quizAnswers.quizQuestion')
-                    ->latest()
+                    ->latest('completed_at')
                     ->first();
             }
         }
@@ -240,7 +240,7 @@ class KelasController extends Controller
                 ->keyBy('practice_question_id');
         }
 
-        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials', 'passedQuizAttempt', 'practiceAnswers'));
+        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials', 'completedQuizAttempt', 'practiceAnswers'));
     }
 
     /**
@@ -289,42 +289,92 @@ class KelasController extends Controller
      */
     public function savePracticeAnswer(Request $request)
     {
+        Log::info('savePracticeAnswer called', [
+            'user_authenticated' => Auth::check(),
+            'request_data' => $request->all()
+        ]);
+
         if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            Log::warning('Unauthorized attempt to save practice answer');
+            return response()->json(['success' => false, 'message' => 'Unauthorized - Silakan login terlebih dahulu'], 401);
         }
 
-        $validated = $request->validate([
-            'practice_question_id' => 'required|exists:practice_questions,id',
-            'user_answer' => 'required|string',
-            'is_correct' => 'nullable|boolean',
-            'points_earned' => 'nullable|integer',
-        ]);
-
-        // Check if user already answered this question
-        $existingAnswer = PracticeAnswer::where('user_id', Auth::id())
-            ->where('practice_question_id', $validated['practice_question_id'])
-            ->first();
-
-        if ($existingAnswer) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Kamu sudah menjawab soal ini sebelumnya.'
+        try {
+            $validated = $request->validate([
+                'practice_question_id' => 'required|exists:practice_questions,id',
+                'user_answer' => 'required|string',
+                'is_correct' => 'nullable|boolean',
+                'points_earned' => 'nullable|integer',
             ]);
+
+            Log::info('Validation passed', ['validated' => $validated]);
+
+            // Check if user already answered this question
+            $existingAnswer = PracticeAnswer::where('user_id', Auth::id())
+                ->where('practice_question_id', $validated['practice_question_id'])
+                ->first();
+
+            if ($existingAnswer) {
+                Log::info('User already answered this question', [
+                    'user_id' => Auth::id(),
+                    'question_id' => $validated['practice_question_id']
+                ]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kamu sudah menjawab soal ini sebelumnya.'
+                ]);
+            }
+
+            // Get the question to check points
+            $question = PracticeQuestion::find($validated['practice_question_id']);
+            if (!$question) {
+                Log::error('Question not found', ['question_id' => $validated['practice_question_id']]);
+                return response()->json(['success' => false, 'message' => 'Soal tidak ditemukan'], 404);
+            }
+
+            $maxPoints = $question->points ?? 10;
+            $pointsEarned = $validated['points_earned'] ?? 0;
+
+            // Cap points at maximum allowed for this question
+            if ($pointsEarned > $maxPoints) {
+                $pointsEarned = $maxPoints;
+                Log::warning('Points capped at maximum', [
+                    'user_id' => Auth::id(),
+                    'question_id' => $validated['practice_question_id'],
+                    'original_points' => $validated['points_earned'],
+                    'capped_points' => $maxPoints
+                ]);
+            }
+
+            // If answer is correct, give full points. If incorrect, give 0 points unless AI grading was used
+            if (isset($validated['is_correct']) && $validated['is_correct']) {
+                $pointsEarned = $maxPoints;
+            } elseif (isset($validated['is_correct']) && !$validated['is_correct']) {
+                $pointsEarned = 0;
+            }
+
+            $answer = PracticeAnswer::create([
+                'user_id' => Auth::id(),
+                'practice_question_id' => $validated['practice_question_id'],
+                'user_answer' => $validated['user_answer'],
+                'is_correct' => $validated['is_correct'] ?? false,
+                'points_earned' => $pointsEarned,
+            ]);
+
+            Log::info('Practice answer saved successfully', [
+                'answer_id' => $answer->id,
+                'points_earned' => $pointsEarned
+            ]);
+
+            return response()->json(['success' => true, 'message' => 'Jawaban berhasil disimpan']);
+
+        } catch (\Exception $e) {
+            Log::error('Error saving practice answer', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
         }
-
-        // Get the question to check points
-        $question = PracticeQuestion::find($validated['practice_question_id']);
-        $points = $validated['points_earned'] ?? ($question->points ?? 0);
-
-        PracticeAnswer::create([
-            'user_id' => Auth::id(),
-            'practice_question_id' => $validated['practice_question_id'],
-            'user_answer' => $validated['user_answer'],
-            'is_correct' => $validated['is_correct'] ?? false,
-            'points_earned' => $points,
-        ]);
-
-        return response()->json(['success' => true, 'message' => 'Jawaban berhasil disimpan']);
     }
 
     /**

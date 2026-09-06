@@ -1,226 +1,123 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <!-- Header Section -->
-   <header class="intro introhalf" data-background="{{ asset('frontend/img/main/header.png') }}">
-    <div class="intro-body">
-        <h1>Tim Pengajar Profesional</h1>
-        <h4>Bergabunglah dengan tim pengajar berpengalaman kami</h4>
-    </div>
-</header>
-    
-    <!-- Teachers Section -->
-    <style>
-        .teacher-row {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .teacher-col {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 30px;
-        }
-        .teacher-col img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        @media (max-width: 767px) {
-            .teacher-col img {
-                height: auto;
-                object-fit: contain;
-            }
-        }
-        .teacher-col .teacher-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .teacher-search-filter {
-            max-width: 600px;
-            margin: 25px auto 10px;
-        }
-        .teacher-search-filter .search-input-wrap {
-            position: relative;
-            margin-bottom: 18px;
-        }
-        .teacher-search-filter .search-input-wrap input {
-            width: 100%;
-            padding: 12px 20px 12px 45px;
-            border: 2px solid #e0e0e0;
-            border-radius: 30px;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        .teacher-search-filter .search-input-wrap input:focus {
-            border-color: #333;
-        }
-        .teacher-search-filter .search-input-wrap i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 16px;
-        }
-        .filter-buttons {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .filter-buttons .filter-btn {
-            padding: 7px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            background: #fff;
-            color: #555;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .filter-buttons .filter-btn:hover {
-            border-color: #333;
-            color: #333;
-        }
-        .filter-buttons .filter-btn.active {
-            background: #333;
-            border-color: #333;
-            color: #fff;
-        }
-        .no-results {
-            padding: 50px 0;
-            color: #999;
-        }
-        .no-results i {
-            display: block;
-            margin-bottom: 15px;
-            color: #ddd;
-        }
-    </style>
-    <section>
-        <div class="container-fluid text-center wow fadeIn">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>Pengajar Kami</h2>
-                    <p>Tim pengajar MindMap terdiri dari profesional berpengalaman di bidangnya masing-masing</p>
+            <section class="jarallax relative overflow-hidden z-1000 mt-80">
+            <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+            <div class="sw-overlay op-2"></div>
+            <div class="gradient-edge-start light w-40 start-40 op-9 z-2"></div>
+            <div class="abs w-40 h-100 bg-white top-0 start-0 op-9 z-2"></div>
+            <div class="container relative z-2">
+                <div class="row wow fadeInRight">
+                    <div class="col-lg-10">
+                        <h1 class="fs-sm-10vw mb-0">
+                            Tim Pengajar Profesional
+                        </h1>
 
-                    <div class="teacher-search-filter">
-                        <div class="search-input-wrap">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="teacherSearch" placeholder="Cari nama pengajar atau spesialisasi...">
-                        </div>
-                        <div class="filter-buttons">
-                            <button class="filter-btn active" data-category="all">Semua</button>
-                            @php
-                                $categories = $teachers->pluck('category')->unique()->filter()->sort();
-                            @endphp
-                            @foreach($categories as $cat)
-                            <button class="filter-btn" data-category="{{ $cat }}">{{ ucfirst($cat) }}</button>
-                            @endforeach
-                        </div>
+                        <ul class="crumb">
+                            <li><a href="/">Home</a></li>
+                            <li class="active">Pengajar</li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div id="teacherGrid">
-                <div class="row teacher-row">
-                    @foreach($teachers as $teacher)
-                    <div class="col-md-2 col-md-offset-0 col-sm-6 teacher-col teacher-item"
-                         data-name="{{ strtolower($teacher->name) }}"
-                         data-specialization="{{ strtolower($teacher->specialization ?? '') }}"
-                         data-category="{{ strtolower($teacher->category ?? '') }}">
-                        <img src="{{ $teacher->image_url }}" alt="{{ $teacher->name }}">
-                        <div class="teacher-content">
-                            <div>
-                                <h4>{{ $teacher->name }}</h4>
-                                <ul class="list-inline">
-                                    @if($teacher->twitter_url)
-                                    <li><a href="{{ $teacher->twitter_url }}" target="_blank"><i class="fab fa-twitter fa-2x fa-fw"></i></a></li>
-                                    @endif
-                                    @if($teacher->linkedin_url)
-                                    <li><a href="{{ $teacher->linkedin_url }}" target="_blank"><i class="fab fa-linkedin fa-2x fa-fw"></i></a></li>
-                                    @endif
-                                    @if($teacher->github_url)
-                                    <li><a href="{{ $teacher->github_url }}" target="_blank"><i class="fab fa-github fa-2x fa-fw"></i></a></li>
-                                    @endif
-                                </ul>
-                                <h4>{{ $teacher->specialization }}</h4>
-                                <p>{{ Str::limit($teacher->description, 80) }}</p>
+        <section>
+            <div class="container">
+                <div class="row mb-5">
+                    <div class="col-lg-12">
+                        <div class="relative">
+                            <input type="text" id="teacherSearch" class="form-control bg-white border-gray rounded-1 px-5 py-3" placeholder="Cari guru berdasarkan nama atau mata pelajaran..." style="font-size: 16px; height: 50px;">
+                            <div class="abs" style="left: 20px; top: 50%; transform: translateY(-50%); color: #999;">
+                                <i class="fa fa-search"></i>
                             </div>
-                            <a href="{{ route('teacher.show', $teacher->slug) }}" class="btn btn-dark-border btn-sm">Lihat Profil</a>
                         </div>
                     </div>
-                    @endforeach
+                </div>
+                <div class="row g-4" id="teacherGrid">
+                    @forelse($teachers as $teacher)
+                    <!-- teacher item begin -->
+                    <div class="col-lg-4 col-sm-6 teacher-card">
+                        <div class="hover rounded-1 overflow-hidden relative text-light text-center wow fadeInRight" data-wow-delay=".0s">
+                            <img src="{{ $teacher->image_url ? asset('storage/' . $teacher->image_url) : asset('frontend/images/services/1.webp') }}" class="hover-scale-1-1 w-100" alt="{{ $teacher->name }}">
+                            <div class="abs w-100 px-4 hover-op-1 z-4 hover-mt-40 abs-centered">
+                                <div class="mb-3">
+                                    {{ $teacher->description ?? 'Guru berpengalaman dengan metode pengajaran yang interaktif dan menyenangkan.' }}
+                                </div>
+                                <a class="btn-line" href="{{ route('teacher.show', $teacher->slug) }}">Lihat Profil</a>
+                            </div>
+                            <img src="{{ asset('frontend/images/icons-white/1.png') }}" class="abs abs-centered w-20 z-2" alt="">
+                            <div class="abs bg-color z-2 top-0 w-100 h-100 hover-op-1"></div>
+                            <div class="abs z-2 bottom-0 mb-3 w-100 text-center hover-op-0">
+                                <h3 class="hs-4 mb-3">{{ $teacher->name }}</h3>
+                                <p class="text-white-50 fs-14">{{ $teacher->specialization ?? 'Guru' }}</p>
+                            </div>
+                            <div class="gradient-edge-bottom color abs w-100 h-70 bottom-0"></div>
+                        </div>
+                    </div>
+                    <!-- teacher item end -->
+                    @empty
+                    <div class="col-lg-12 text-center py-5">
+                        <div class="bg-white border-gray rounded-1 p-5" style="max-width: 500px; margin: 0 auto;">
+                            <div class="mb-3">
+                                <i class="fa fa-user-minus fs-48 text-muted"></i>
+                            </div>
+                            <h4 class="mb-3">Belum ada guru yang tersedia</h4>
+                            <p class="text-muted mb-0">Silakan cek kembali nanti untuk guru yang terdaftar.</p>
+                        </div>
+                    </div>
+                    @endforelse
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 pt-4 text-center">
+                        {{ $teachers->links() }}
+                    </div>
+                </div>
+                <div class="row" id="noResults" style="display: none;">
+                    <div class="col-lg-12 text-center py-5">
+                        <div class="bg-white border-gray rounded-1 p-5" style="max-width: 500px; margin: 0 auto;">
+                            <div class="mb-3">
+                                <i class="fa fa-search-minus fs-48 text-muted"></i>
+                            </div>
+                            <h4 class="mb-3">Tidak ada guru yang ditemukan</h4>
+                            <p class="text-muted mb-0">Coba kata kunci lain atau periksa ejaan pencarian Anda.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div id="noResults" class="no-results" style="display:none;">
-                <i class="fas fa-user-slash fa-3x"></i>
-                <p>Tidak ada pengajar yang sesuai dengan pencarian Anda.</p>
-            </div>
-        </div>
-    </section>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('teacherSearch');
+            const teacherGrid = document.getElementById('teacherGrid');
+            const teacherCards = teacherGrid.querySelectorAll('.teacher-card');
+            const noResults = document.getElementById('noResults');
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var searchInput = document.getElementById('teacherSearch');
-        var filterBtns = document.querySelectorAll('.filter-btn');
-        var teacherItems = document.querySelectorAll('.teacher-item');
-        var noResults = document.getElementById('noResults');
-        var activeCategory = 'all';
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
 
-        function filterTeachers() {
-            var searchTerm = searchInput.value.toLowerCase().trim();
-            var visibleCount = 0;
+                teacherCards.forEach(card => {
+                    const name = card.querySelector('h3').textContent.toLowerCase();
+                    const subject = card.querySelector('p').textContent.toLowerCase();
+                    const description = card.querySelector('.mb-3').textContent.toLowerCase();
 
-            teacherItems.forEach(function(item) {
-                var name = item.getAttribute('data-name');
-                var specialization = item.getAttribute('data-specialization');
-                var category = item.getAttribute('data-category');
+                    if (name.includes(searchTerm) || subject.includes(searchTerm) || description.includes(searchTerm)) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
 
-                var matchesSearch = !searchTerm || name.indexOf(searchTerm) !== -1 || specialization.indexOf(searchTerm) !== -1;
-                var matchesCategory = activeCategory === 'all' || category === activeCategory;
-
-                if (matchesSearch && matchesCategory) {
-                    item.style.display = '';
-                    visibleCount++;
+                // Show/hide no results message
+                if (visibleCount === 0 && teacherCards.length > 0) {
+                    noResults.style.display = '';
                 } else {
-                    item.style.display = 'none';
+                    noResults.style.display = 'none';
                 }
             });
-
-            noResults.style.display = visibleCount === 0 ? 'block' : 'none';
-        }
-
-        searchInput.addEventListener('input', filterTeachers);
-
-        filterBtns.forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                filterBtns.forEach(function(b) { b.classList.remove('active'); });
-                btn.classList.add('active');
-                activeCategory = btn.getAttribute('data-category');
-                filterTeachers();
-            });
         });
-    });
-    </script>
-
-    <!-- CTA Section -->
-    <section class="bg-gray text-center">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>Bergabung Menjadi Pengajar</h2>
-                    <p>Apakah Anda memiliki keahlian yang ingin dibagikan? Bergabunglah dengan tim pengajar MindMap dan berkontribusi dalam mencerdaskan bangsa.</p>
-                    <a href="/contact" class="btn btn-dark-border">Hubungi Kami</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
+        </script>
 @endsection

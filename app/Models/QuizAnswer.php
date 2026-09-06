@@ -22,6 +22,7 @@ class QuizAnswer extends Model
     protected $casts = [
         'is_correct' => 'boolean',
         'points_earned' => 'integer',
+        'user_answer' => 'string',
     ];
 
     /**
@@ -36,6 +37,14 @@ class QuizAnswer extends Model
      * Get the quiz question that owns the answer.
      */
     public function quizQuestion(): BelongsTo
+    {
+        return $this->belongsTo(QuizQuestion::class);
+    }
+
+    /**
+     * Get the quiz question that owns the answer (alias for convenience).
+     */
+    public function question(): BelongsTo
     {
         return $this->belongsTo(QuizQuestion::class);
     }

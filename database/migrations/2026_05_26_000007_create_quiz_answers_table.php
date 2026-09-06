@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('quiz_attempt_id')->references('id')->on('quiz_attempts')->onDelete('cascade');
             $table->uuid('quiz_question_id');
             $table->foreign('quiz_question_id')->references('id')->on('quiz_questions')->onDelete('cascade');
-            $table->string('user_answer');
+            $table->string('user_answer')->nullable();
             $table->boolean('is_correct');
             $table->integer('points_earned')->default(0);
             $table->timestamps();

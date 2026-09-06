@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
-use App\Models\Material;
 use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
@@ -42,16 +40,53 @@ class QuizController extends Controller
     {
         $quiz = Quiz::with(['quizQuestions' => function($query) {
             $query->orderBy('order_number');
-        }, 'material'])
+        }, 'material.subcategory'])
+        ->where('status', 'publish')
         ->findOrFail($quizId);
 
-        // Check if user has an in-progress attempt
+        // Check if user wants to retry (from URL parameter)
+        $isRetrying = request()->query('retry') === 'true';
+
+        // Check if user has an in-progress attempt (always prioritize this)
         $currentAttempt = QuizAttempt::where('user_id', Auth::id())
             ->where('quiz_id', $quizId)
             ->where('status', 'in_progress')
             ->first();
 
-        return view('frontend.quiz.take', compact('quiz', 'currentAttempt'));
+        if ($currentAttempt) {
+            // Show active quiz
+            return view('frontend.quiz.take', [
+                'quiz' => $quiz,
+                'currentAttempt' => $currentAttempt,
+                'timeLimit' => $quiz->time_limit ?? 0
+            ]);
+        }
+
+        // Only show completed attempt if not retrying
+        if (!$isRetrying) {
+            $completedAttempt = QuizAttempt::where('user_id', Auth::id())
+                ->where('quiz_id', $quizId)
+                ->whereIn('status', ['passed', 'failed'])
+                ->with('quizAnswers.quizQuestion')
+                ->latest('completed_at')
+                ->first();
+
+            if ($completedAttempt) {
+                // Show quiz in read-only mode with user's answers
+                return view('frontend.quiz.take', [
+                    'quiz' => $quiz,
+                    'currentAttempt' => null,
+                    'completedAttempt' => $completedAttempt
+                ]);
+            }
+        }
+
+        // Show new quiz (either first attempt or retry)
+        return view('frontend.quiz.take', [
+            'quiz' => $quiz,
+            'currentAttempt' => null,
+            'timeLimit' => $quiz->time_limit ?? 0
+        ]);
     }
 
     /**

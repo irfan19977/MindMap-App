@@ -65,9 +65,9 @@ class Material extends Model
     /**
      * Get the category through subcategory.
      */
-    public function category()
+    public function getCategoryAttribute()
     {
-        return $this->subcategory->category ?? null;
+        return $this->subcategory?->category;
     }
 
     /**

@@ -237,16 +237,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/student/profile/edit', [StudentProfileController::class, 'edit'])->name('student.profile.edit');
     Route::put('/student/profile', [StudentProfileController::class, 'update'])->name('student.profile.update');
 
+    // Quiz Frontend Routes
+    Route::get('/quiz/take/{id}', [QuizController::class, 'take'])->name('quiz.take')->middleware('auth');
+
     // Quiz API Routes
     Route::prefix('api/quiz')->group(function () {
         Route::post('/start', [QuizAttemptController::class, 'start'])->name('quiz.start');
         Route::post('/submit', [QuizAttemptController::class, 'submit'])->name('quiz.submit');
         Route::post('/answer', [QuizAttemptController::class, 'submitAnswer'])->name('quiz.answer');
         Route::get('/attempt/{attemptId}', [QuizAttemptController::class, 'show'])->name('quiz.attempt.show');
+        Route::get('/{quizId}/questions', [QuizAttemptController::class, 'getQuestions'])->name('quiz.questions');
         Route::get('/{quizId}/attempts', [QuizAttemptController::class, 'getAttemptsByQuiz'])->name('quiz.attempts');
         Route::get('/statistics', [QuizAttemptController::class, 'getStatistics'])->name('quiz.statistics');
         Route::get('/{quizId}/leaderboard', [QuizAttemptController::class, 'getLeaderboard'])->name('quiz.leaderboard');
-    });
+    })->middleware('auth');
 
     // Notification Routes
     Route::prefix('notifications')->name('notifications.')->group(function () {

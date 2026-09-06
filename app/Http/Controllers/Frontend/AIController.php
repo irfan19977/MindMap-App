@@ -32,7 +32,7 @@ class AIController extends Controller
         );
 
         // Build system prompt with material context
-        $systemPrompt = 'You are a helpful AI assistant. You can answer any questions on any topic without restrictions. Be direct, accurate, and helpful. If you don\'t know something, admit it honestly. Provide comprehensive and detailed answers when appropriate. You can discuss any subject including politics, religion, science, technology, health, entertainment, and any other topic the user asks about. Always format your responses using Markdown for better readability. Use numbered lists (1., 2., 3.) for sequential steps or ordered items, and bullet points (- or *) for unordered lists. Use proper formatting like **bold**, *italic*, `code*, and headers when appropriate to make your answers clear and easy to understand.';
+        $systemPrompt = 'You are a helpful AI assistant for a learning platform. Your primary role is to help students understand and learn the material they are studying. Be direct, accurate, and helpful. If you don\'t know something, admit it honestly. Provide comprehensive and detailed answers when appropriate. Always format your responses using Markdown for better readability. Use numbered lists (1., 2., 3.) for sequential steps or ordered items, and bullet points (- or *) for unordered lists. Use proper formatting like **bold**, *italic*, `code*, and headers when appropriate to make your answers clear and easy to understand. Always respond in Indonesian.';
 
         // Add student-specific instruction to refuse summaries/shortcuts
         if ($isStudent) {
@@ -41,7 +41,7 @@ class AIController extends Controller
 
         // Add material context if provided
         if ($materialContent) {
-            $systemPrompt .= "\n\n--- MATERIAL CONTEXT START ---\n" . $materialContent . "\n--- MATERIAL CONTEXT END ---\n\nCRITICAL INSTRUCTION: You are an AI assistant for a learning platform. The user is studying the material within the MATERIAL CONTEXT above. Your FIRST task is to evaluate if the user's question is DIRECTLY related to the material in the context.\n\nIf the question is NOT directly related to the material content, you MUST start your response with EXACTLY this warning (in Indonesian):\n\n⚠️ **Peringatan:** Pertanyaan Anda di luar materi yang sedang dipelajari.\n\nAfter displaying this warning, continue to answer the user's question normally and helpfully.\n\nIf the question IS directly related to the material, answer normally WITHOUT the warning.\n\nThis warning check is MANDATORY. You must perform this evaluation for EVERY question when material context is provided.";
+            $systemPrompt .= "\n\n--- MATERIAL CONTEXT START ---\n" . $materialContent . "\n--- MATERIAL CONTEXT END ---\n\nCRITICAL INSTRUCTION: You are an AI assistant for a learning platform. The user is studying the material within the MATERIAL CONTEXT above. Your FIRST task is to evaluate the user's question.\n\n1. If the user asks general questions like 'apakah kamu bisa membantu saya', 'bisa bantu saya', 'siap membantu', 'apa yang bisa kamu lakukan', or similar greetings/offers to help, respond with: 'Halo! Saya siap membantu Anda belajar materi ini. Apa yang ingin Anda tanyakan atau yang membingungkan Anda dari materi [judul materi]?'\n\n2. If the question is NOT directly related to the material content, you MUST respond with EXACTLY this warning (in Indonesian) and NOTHING ELSE:\n\n⚠️ **Peringatan:** Pertanyaan Anda di luar materi yang sedang dipelajari. Silakan tanyakan sesuatu yang terkait dengan materi ini agar saya bisa membantu Anda dengan lebih baik.\n\nDo NOT answer the question if it's outside the material. Only provide the warning.\n\n3. If the question IS directly related to the material, answer normally and helpfully.\n\nThis evaluation is MANDATORY. You must perform this check for EVERY question when material context is provided.";
         }
 
         // Build messages array for API
@@ -119,6 +119,7 @@ class AIController extends Controller
             'question'       => 'required|string',
             'user_answer'    => 'required|string',
             'correct_answer' => 'nullable|string',
+            'max_points'     => 'nullable|integer',
         ]);
 
         $apiKey = env('GROQ_API_KEY');
@@ -129,19 +130,27 @@ class AIController extends Controller
         $question      = $request->input('question');
         $userAnswer    = $request->input('user_answer');
         $correctAnswer = $request->input('correct_answer', '');
+        $maxPoints     = $request->input('max_points', 10); // Default 10 points if not specified
 
-        $prompt = "Kamu adalah guru yang bijak dan adil dalam mengoreksi jawaban essay siswa. Berikan penilaian dalam Bahasa Indonesia.\n\n";
+        $prompt = "Kamu adalah guru yang bijak dan adil dalam mengoreksi jawaban essay siswa untuk level SD (sekolah dasar). Berikan penilaian dalam Bahasa Indonesia.\n\n";
         $prompt .= "**Soal:** {$question}\n\n";
         $prompt .= "**Jawaban Siswa:** {$userAnswer}\n\n";
         if ($correctAnswer) {
             $prompt .= "**Referensi Jawaban (dari guru):** {$correctAnswer}\n\n";
         }
-        $prompt .= "PENTING: Nilai jawaban siswa berdasarkan **pemahaman konsep**, bukan kecocokan kata per kata.\n";
-        $prompt .= "- Jika siswa memahami inti konsep meskipun dengan kata-kata berbeda → **Benar** (85-100)\n";
-        $prompt .= "- Jika siswa memahami sebagian konsep → **Sebagian Benar** (50-84)\n";
-        $prompt .= "- Jika jawaban tidak relevan atau salah konsep → **Kurang Tepat** (0-49)\n";
-        $prompt .= "- Jangan kurangi nilai hanya karena penyampaian berbeda dari referensi\n\n";
-        $prompt .= "Format response WAJIB dalam JSON:\n{\"score\": <angka 0-100>, \"verdict\": \"Benar|Sebagian Benar|Kurang Tepat\", \"feedback\": \"<penjelasan singkat>\", \"suggestion\": \"<saran atau null>\"}";
+        $prompt .= "PENTING: Poin maksimal untuk soal ini adalah **{$maxPoints} poin**.\n";
+        $prompt .= "Kamu harus memberikan nilai dalam skala 0-{$maxPoints}, bukan 0-100.\n\n";
+        $prompt .= "KRITERIA PENILAIAN (Level SD):\n";
+        $prompt .= "- **Jika soal meminta kalimat:** Jawaban harus berupa kalimat lengkap dengan subjek dan predikat. Kalimat pendek seperti 'aku bersih' tidak cukup untuk mendapat nilai penuh.\n";
+        $prompt .= "- **Jika soal meminta definisi/arti kata:** Jawaban yang menjelaskan konsep dengan benar sudah cukup untuk nilai penuh atau hampir penuh. Jangan terlalu ketat untuk jawaban definisi level SD.\n";
+        $prompt .= "- **Poin penuh ({$maxPoints}):** Untuk definisi: jika jawaban benar secara konsep dan wajar untuk level SD. Untuk kalimat: jika jawaban lengkap dan tepat.\n";
+        $prompt .= "- **Sebagian Benar ({$maxPoints}-2 atau {$maxPoints}-3):** Jika jawaban benar secara konsep tapi bisa diperbaiki atau ditambah detail.\n";
+        $prompt .= "- **Kurang Tepat ({$maxPoints}/3 atau kurang):** Jika jawaban salah konsep, terlalu pendek, atau tidak relevan.\n\n";
+        $prompt .= "Contoh penilaian (Level SD):\n";
+        $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan tidak berlebihan' → **Benar** ({$maxPoints} poin) - definisi yang tepat untuk level SD\n";
+        $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'aku bersih' → **Kurang Tepat** (3-4 poin) - bukan kalimat lengkap\n";
+        $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'Aku membersihkan kamar setiap hari' → **Benar** ({$maxPoints} poin) - kalimat lengkap\n\n";
+        $prompt .= "Format response WAJIB dalam JSON:\n{\"score\": <angka 0-{$maxPoints}>, \"verdict\": \"Benar|Sebagian Benar|Kurang Tepat\", \"feedback\": \"<penjelasan singkat>\", \"suggestion\": \"<saran atau null>\"}";
 
         try {
             $response = Http::withHeaders([
@@ -164,7 +173,17 @@ class AIController extends Controller
                 $result = $matches ? json_decode($matches[0], true) : null;
 
                 if ($result) {
-                    return response()->json(['success' => true, 'result' => $result]);
+                    // If AI still gives score in 0-100 scale, convert to max_points scale
+                    if (isset($result['score']) && $result['score'] > $maxPoints) {
+                        $result['score'] = round(($result['score'] / 100) * $maxPoints);
+                    }
+
+                    // Ensure score doesn't exceed max_points
+                    if (isset($result['score']) && $result['score'] > $maxPoints) {
+                        $result['score'] = $maxPoints;
+                    }
+
+                    return response()->json(['success' => true, 'result' => $result, 'max_points' => $maxPoints]);
                 }
                 return response()->json(['success' => false, 'error' => 'Gagal memparse respons AI']);
             }

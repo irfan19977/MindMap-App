@@ -10,7 +10,9 @@ class TeacherController extends Controller
 {
     public function index()
     {
-        $teachers = Teacher::with('user')->get();
+        $teachers = Teacher::with('user')->whereHas('user', function($query) {
+            $query->where('is_active', true);
+        })->paginate(9);
         return view('frontend.teacher', compact('teachers'));
     }
 
