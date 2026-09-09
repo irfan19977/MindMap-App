@@ -102,6 +102,7 @@ class StudentProfileController extends Controller
 
     public function update(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if (!$user || !$user->student) {
