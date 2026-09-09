@@ -121,7 +121,22 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label for="grade_level" class="form-label">Jenjang <span class="text-danger">*</span></label>
+                                        <select class="form-control @error('grade_level') is-invalid @enderror" id="grade_level" name="grade_level" required>
+                                            <option value="">Pilih Jenjang</option>
+                                            <option value="sd" {{ (old('grade_level', $class->grade_level ?? '') == 'sd') ? 'selected' : '' }}>SD (Sekolah Dasar)</option>
+                                            <option value="smp" {{ (old('grade_level', $class->grade_level ?? '') == 'smp') ? 'selected' : '' }}>SMP (Sekolah Menengah Pertama)</option>
+                                            <option value="sma" {{ (old('grade_level', $class->grade_level ?? '') == 'sma') ? 'selected' : '' }}>SMA (Sekolah Menengah Atas)</option>
+                                            <option value="umum" {{ (old('grade_level', $class->grade_level ?? '') == 'umum') ? 'selected' : '' }}>Umum</option>
+                                        </select>
+                                        @error('grade_level')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
                                     <div class="mb-3">
                                         <label for="capacity" class="form-label">Kapasitas Siswa</label>
                                         <input type="number" class="form-control @error('capacity') is-invalid @enderror" id="capacity" name="capacity" value="{{ old('capacity', $class->capacity ?? '') }}" placeholder="Kosongkan untuk tidak terbatas" min="0">
@@ -129,6 +144,12 @@
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                
+                                <div class="col-md-6">
                                 </div>
                             </div>
 
@@ -215,7 +236,7 @@
     <script>
         $(document).ready(function() {
             // Initialize select2
-            $('#category_id, #subcategory_id, #teacher_id, #status').select2();
+            $('#category_id, #subcategory_id, #teacher_id, #status, #grade_level').select2();
 
             // Filter subcategory by category
             const categorySelect = document.getElementById('category_id');

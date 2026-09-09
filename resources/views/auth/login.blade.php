@@ -1,136 +1,348 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 
-@include('backend.layouts.head')
+<head>
+    <title>Login - MindMap</title>
+    <link rel="icon" href="{{ asset('frontend/images/icon.webp') }}" type="image/gif" sizes="16x16">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="MindMap - Platform Pembelajaran Interaktif" name="description">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- CSS Files -->
+    <link href="{{ asset('frontend/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('frontend/css/plugins.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('frontend/css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('frontend/css/coloring.css') }}" rel="stylesheet" type="text/css">
+    <link id="colors" href="{{ asset('frontend/css/colors/scheme-01.css') }}" rel="stylesheet" type="text/css">
+    
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            background-image: url('{{ asset('frontend/images/background/1.webp') }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 20px;
+        }
+        
+        .login-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(245, 245, 245, 0.85);
+            z-index: 1;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .login-title {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .login-subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .form-control:focus {
+            border-color: #8B9A46;
+            box-shadow: 0 0 0 0.2rem rgba(139, 154, 70, 0.25);
+        }
+        
+        .btn-login {
+            background: #8B9A46;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        
+        .btn-login:hover {
+            background: #7A8739;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            z-index: 10;
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        .form-check-label {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .remember-forgot a {
+            color: #8B9A46;
+            text-decoration: none;
+        }
+        
+        .remember-forgot a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-login {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .social-login .divider {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #999;
+            font-size: 13px;
+        }
+        
+        .social-login .divider::before,
+        .social-login .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        
+        .social-login .divider span {
+            padding: 0 15px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: #666;
+        }
+        
+        .social-btn:hover {
+            border-color: #8B9A46;
+            color: #8B9A46;
+            transform: translateY(-2px);
+        }
+        
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .register-link a {
+            color: #8B9A46;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
 
 <body>
-    <!--! ================================================================ !-->
-    <!--! [Start] Main Content !-->
-    <!--! ================================================================ !-->
-    <main class="auth-minimal-wrapper">
-        <div class="auth-minimal-inner">
-            <div class="minimal-card-wrapper">
-                <div class="card mb-4 mt-5 mx-4 mx-sm-0 position-relative">
-                    <div class="wd-50 bg-white p-2 rounded-circle shadow-lg position-absolute translate-middle top-0 start-50">
-                        <a href="{{ old('intended', session()->get('url.intended', '/')) }}">
-                            <img src="{{ asset('backend/assets/images/logo-abbr.png') }}" alt="" class="img-fluid">
-                        </a>
-                    </div>
-                    <div class="card-body p-sm-5">
-                        <h2 class="fs-20 fw-bolder mb-4">{{ __('messages.auth_login_title') }}</h2>
-                        <h4 class="fs-13 fw-bold mb-2">{{ __('messages.auth_login_subtitle') }}</h4>
-                        <p class="fs-12 fw-medium text-muted">{{ __('messages.auth_login_desc') }}</p>
-                        
-                        <!-- Session Status -->
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="{{ asset('frontend/images/logo.webp') }}" alt="MindMap Logo">
+            </div>
+            
+            <h2 class="login-title">Selamat Datang Kembali</h2>
+            <p class="login-subtitle">Masuk ke akun MindMap Anda</p>
+            
+            <!-- Session Status -->
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
 
-                        @if (session('error'))
-                            <div class="alert alert-danger" role="alert">
-                                {{ session('error') }}
-                            </div>
-                        @endif
+            @if (session('error'))
+                <div class="alert alert-danger" role="alert">
+                    {{ session('error') }}
+                </div>
+            @endif
 
-                        <form method="POST" action="{{ route('login') }}" class="w-100 mt-4 pt-2">
-                            @csrf
-                            @php
-                                $intendedUrl = old('intended', session()->get('url.intended'));
-                                // Fallback to previous URL if it's not the login page itself
-                                if (!$intendedUrl || $intendedUrl === url()->current()) {
-                                    $previousUrl = url()->previous();
-                                    // Don't use login/register pages as intended
-                                    if (!str_contains($previousUrl, '/login') && !str_contains($previousUrl, '/register')) {
-                                        $intendedUrl = $previousUrl;
-                                    } else {
-                                        $intendedUrl = '/';
-                                    }
-                                }
-                            @endphp
-                            <input type="hidden" name="intended" value="{{ $intendedUrl }}">
-                            
-                            <div class="mb-4">
-                                <input type="email" class="form-control" name="email" placeholder="{{ __('messages.auth_email_username') }}" value="{{ old('email') }}" required autofocus autocomplete="username">
-                                @error('email')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="{{ __('messages.auth_password') }}" required autocomplete="current-password">
-                                    <div class="input-group-text c-pointer" onclick="togglePassword()">
-                                        <i id="passwordIcon" class="feather feather-eye"></i>
-                                    </div>
-                                </div>
-                                @error('password')
-                                    <div class="text-danger small mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="rememberMe" name="remember" {{ old('remember') ? 'checked' : '' }}>
-                                        <label class="custom-control-label c-pointer" for="rememberMe">{{ __('messages.auth_remember_me') }}</label>
-                                    </div>
-                                </div>
-                                <div>
-                                    @if (Route::has('password.request'))
-                                        <a href="{{ route('password.request') }}" class="fs-11 text-primary">{{ __('messages.auth_forget_password') }}</a>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="mt-5">
-                                <button type="submit" class="btn btn-lg btn-primary w-100">{{ __('messages.auth_login_btn') }}</button>
-                            </div>
-                        </form>
-                        <div class="w-100 mt-5 text-center mx-auto">
-                            <div class="mb-4 border-bottom position-relative"><span class="small py-1 px-3 text-uppercase text-muted bg-white position-absolute translate-middle">{{ __('messages.auth_or') }}</span></div>
-                            <div class="d-flex align-items-center justify-content-center gap-2">
-                                <a href="{{ route('social.redirect', 'facebook') }}" class="btn btn-light-brand flex-fill" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Facebook">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-                                </a>
-                                <a href="{{ route('social.redirect', 'google') }}" class="btn btn-light-brand flex-fill" data-bs-toggle="tooltip" data-bs-trigger="hover" title="Google">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.283 10.356h-8.327v3.451h4.792c-.446 2.193-2.313 3.453-4.792 3.453a5.27 5.27 0 0 1-5.279-5.28 5.27 5.27 0 0 1 5.279-5.279c1.259 0 2.397.447 3.29 1.178l2.6-2.599c-1.584-1.381-3.615-2.233-5.89-2.233a8.908 8.908 0 0 0-8.934 8.934 8.907 8.907 0 0 0 8.934 8.934c4.467 0 7.474-3.037 7.474-7.181 0-.474-.054-.935-.155-1.368z"/></svg>
-                                </a>
-                                <a href="{{ route('social.redirect', 'github') }}" class="btn btn-light-brand flex-fill" data-bs-toggle="tooltip" data-bs-trigger="hover" title="GitHub">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="mt-5 text-muted">
-                            <span>{{ __('messages.auth_no_account') }}</span>
-                            <a href="{{ route('register') }}" class="fw-bold">{{ __('messages.auth_create_account') }}</a>
-                        </div>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                @php
+                    $intendedUrl = old('intended', session()->get('url.intended'));
+                    if (!$intendedUrl || $intendedUrl === url()->current()) {
+                        $previousUrl = url()->previous();
+                        if (!str_contains($previousUrl, '/login') && !str_contains($previousUrl, '/register')) {
+                            $intendedUrl = $previousUrl;
+                        } else {
+                            $intendedUrl = '/';
+                        }
+                    }
+                @endphp
+                <input type="hidden" name="intended" value="{{ $intendedUrl }}">
+                
+                <div class="mb-3">
+                    <label for="email" class="form-label" style="font-weight: 600; color: #333; font-size: 14px;">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email Anda" value="{{ old('email') }}" required autofocus autocomplete="username">
+                    @error('email')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label" style="font-weight: 600; color: #333; font-size: 14px;">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required autocomplete="current-password">
+                        <i class="fa-solid fa-eye password-toggle" onclick="togglePassword()" id="passwordIcon"></i>
                     </div>
+                    @error('password')
+                        <div class="text-danger small mt-1">{{ $message }}</div>
+                    @enderror
+                </div>
+                
+                <div class="remember-forgot">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                        <label class="form-check-label" for="rememberMe" style="color: #666;">Ingat saya</label>
+                    </div>
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}">Lupa password?</a>
+                    @endif
+                </div>
+                
+                <button type="submit" class="btn btn-login">Masuk</button>
+            </form>
+            
+            <div class="social-login">
+                <div class="divider">
+                    <span>atau masuk dengan</span>
+                </div>
+                <div class="social-buttons">
+                    <a href="{{ route('social.redirect', 'facebook') }}" class="social-btn" title="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="{{ route('social.redirect', 'google') }}" class="social-btn" title="Google">
+                        <i class="fa-brands fa-google"></i>
+                    </a>
+                    <a href="{{ route('social.redirect', 'github') }}" class="social-btn" title="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
                 </div>
             </div>
+            
+            <div class="register-link">
+                Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
+            </div>
         </div>
-    </main>
-    <!--! ================================================================ !-->
-    <!--! [End] Main Content !-->
-    <!--! ================================================================ !-->
-  <!-- Essential vendors only -->
-  <script src="{{ asset('backend/assets/vendors/js/vendors.min.js') }}"></script>
-  <script src="{{ asset('backend/assets/js/common-init.min.js') }}"></script>
-  <script src="{{ asset('backend/assets/js/theme-customizer-init.min.js') }}"></script>
-  <script>
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const passwordIcon = document.getElementById('passwordIcon');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            passwordIcon.classList.remove('feather-eye');
-            passwordIcon.classList.add('feather-eye-off');
-        } else {
-            passwordInput.type = 'password';
-            passwordIcon.classList.remove('feather-eye-off');
-            passwordIcon.classList.add('feather-eye');
+    </div>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('passwordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
         }
-    }
-  </script>
+    </script>
 </body>
 
 </html>

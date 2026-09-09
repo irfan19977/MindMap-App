@@ -20,6 +20,7 @@ class CourseClass extends Model
         'name',
         'slug',
         'description',
+        'grade_level',
         'cover_image',
         'status',
         'capacity',
@@ -30,6 +31,17 @@ class CourseClass extends Model
     protected $casts = [
         'is_featured' => 'boolean',
     ];
+
+    /**
+     * Get grade level from class or fallback to subcategory
+     */
+    public function getEffectiveGradeLevelAttribute(): string
+    {
+        if ($this->grade_level) {
+            return strtoupper($this->grade_level);
+        }
+        return strtoupper($this->subcategory->grade_level ?? 'sd');
+    }
 
     protected static function boot()
     {

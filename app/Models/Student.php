@@ -123,12 +123,33 @@ class Student extends Model
      */
     public function getExperiencePointsAttribute(): int
     {
+        return $this->getExperiencePointsByPeriod('all');
+    }
+
+    /**
+     * Get experience points for a specific time period.
+     */
+    public function getExperiencePointsByPeriod(string $period = 'all'): int
+    {
+        $now = now();
+        $startDate = match($period) {
+            'weekly' => $now->subWeek(),
+            'monthly' => $now->subMonth(),
+            'yearly' => $now->subYear(),
+            default => null,
+        };
+
         // XP from quiz attempts based on score
         $quizXP = 0;
-        $quizAttempts = \App\Models\QuizAttempt::where('user_id', $this->user_id)
+        $quizAttemptsQuery = \App\Models\QuizAttempt::where('user_id', $this->user_id)
             ->where('status', '!=', 'in_progress')
-            ->with('quiz')
-            ->get();
+            ->with('quiz');
+
+        if ($startDate) {
+            $quizAttemptsQuery->where('created_at', '>=', $startDate);
+        }
+
+        $quizAttempts = $quizAttemptsQuery->get();
 
         // Group by quiz_id to get best attempt per quiz
         $bestAttempts = $quizAttempts->groupBy('quiz_id')->map(function ($attempts) {
@@ -150,12 +171,18 @@ class Student extends Model
         }
 
         // XP from practice exercises (latihan)
-        $practiceXP = \App\Models\PracticeAnswer::where('user_id', $this->user_id)
-            ->where('is_correct', true)
-            ->sum('points_earned');
+        // Include all points from AI grading (including partial points)
+        $practiceXPQuery = \App\Models\PracticeAnswer::where('user_id', $this->user_id)
+            ->where('points_earned', '>', 0);
 
-        // XP from daily login streak
-        $streakXP = $this->calculateStreakXP();
+        if ($startDate) {
+            $practiceXPQuery->where('created_at', '>=', $startDate);
+        }
+
+        $practiceXP = $practiceXPQuery->sum('points_earned');
+
+        // XP from daily login streak (only for 'all' period)
+        $streakXP = $period === 'all' ? $this->calculateStreakXP() : 0;
 
         return $quizXP + $practiceXP + $streakXP;
     }
@@ -179,8 +206,8 @@ class Student extends Model
             return 0;
         }
 
-        // Fixed 5 XP for daily login streak
-        return 5;
+        // Fixed 1 XP for daily login streak
+        return 1;
     }
 
     /**

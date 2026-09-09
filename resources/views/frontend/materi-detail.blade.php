@@ -1,6 +1,18 @@
 @extends('frontend.layouts.app')
 
 @section('content')
+<style>
+    /* Ensure page can scroll properly */
+    main {
+        overflow: visible !important;
+        height: auto !important;
+        min-height: auto !important;
+    }
+    body {
+        overflow: auto !important;
+        height: auto !important;
+    }
+</style>
             <section class="jarallax relative overflow-hidden z-1000 mt-80">
             <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
             <div class="sw-overlay op-2"></div>
@@ -122,6 +134,7 @@
                                     <!-- Store kontenMateri as JSON for JavaScript -->
                                     <script>
                                         window.kontenMateri = @json($kontenMateri);
+                                        window.gradeLevel = '{{ $gradeLevel ?? 'SD' }}';
                                     </script>
                                 @else
                                     <div class="bg-light rounded-1 p-40 mb-5 wow fadeInUp">
@@ -504,7 +517,8 @@
                         question: question,
                         user_answer: userAnswer,
                         correct_answer: correctAnswer,
-                        max_points: questionPoints || 10
+                        max_points: questionPoints || 10,
+                        level: window.gradeLevel || 'SD'
                     })
                 });
 
@@ -575,7 +589,7 @@
                     inputElement.style.backgroundColor = '#ffffff';
                     inputElement.style.cursor = 'not-allowed';
 
-                    const checkBtn = document.querySelector('button[onclick="checkExercise(' + index + ', ');
+                    const checkBtn = document.querySelector('button[onclick*="checkExercise(' + index + '"]');
                     if (checkBtn) {
                         checkBtn.disabled = true;
                         checkBtn.style.opacity = '0.5';
@@ -685,7 +699,7 @@
                     inputElement.style.backgroundColor = '#ffffff';
                     inputElement.style.cursor = 'not-allowed';
 
-                    const checkBtn = document.querySelector('button[onclick="checkExercise(' + index + ', ');
+                    const checkBtn = document.querySelector('button[onclick*="checkExercise(' + index + '"]');
                     if (checkBtn) {
                         checkBtn.disabled = true;
                         checkBtn.style.opacity = '0.5';

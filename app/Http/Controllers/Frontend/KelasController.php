@@ -21,7 +21,7 @@ class KelasController extends Controller
         $classes = CourseClass::with(['category', 'subcategory', 'teacher.user', 'materials'])
             ->where('status', 'publish')
             ->orderBy('created_at', 'desc')
-            ->paginate(12);
+            ->paginate(1);
 
         return view('frontend.kelas', compact('classes'));
     }
@@ -72,6 +72,23 @@ class KelasController extends Controller
 
     public function showMindmap($slug)
     {
+        // Get class_id from query parameter if exists
+        $classId = request()->query('class_id');
+
+        // If no class_id provided, try to get active class for authenticated user
+        if (!$classId && Auth::check()) {
+            $student = Auth::user()->student;
+            if ($student) {
+                $activeEnrollment = \App\Models\ClassEnrollment::where('student_id', $student->id)
+                    ->where('status', 'active')
+                    ->with('class')
+                    ->first();
+                if ($activeEnrollment && $activeEnrollment->class) {
+                    $classId = $activeEnrollment->class->id;
+                }
+            }
+        }
+
         // Cek apakah slug ada di subcategories
         $subcategory = \App\Models\Subcategory::where('slug', $slug)
             ->with('category')
@@ -105,10 +122,11 @@ class KelasController extends Controller
                 'subcategory_id' => $subcategory->id,
                 'subcategory_name' => $subcategory->name,
                 'mindmap_found' => $mindmap ? true : false,
-                'mindmap_id' => $mindmap ? $mindmap->id : null
+                'mindmap_id' => $mindmap ? $mindmap->id : null,
+                'class_id' => $classId
             ]);
 
-            return view('frontend.mindmap', compact('subcategory', 'mindmap', 'relatedClasses', 'enrollments'));
+            return view('frontend.mindmap', compact('subcategory', 'mindmap', 'relatedClasses', 'enrollments', 'classId'));
         }
 
         // Jika tidak ada di subcategories, cek di categories
@@ -144,10 +162,11 @@ class KelasController extends Controller
             'category_id' => $category->id,
             'category_name' => $category->name,
             'mindmap_found' => $mindmap ? true : false,
-            'mindmap_id' => $mindmap ? $mindmap->id : null
+            'mindmap_id' => $mindmap ? $mindmap->id : null,
+            'class_id' => $classId
         ]);
 
-        return view('frontend.mindmap', compact('category', 'mindmap', 'relatedClasses', 'enrollments'));
+        return view('frontend.mindmap', compact('category', 'mindmap', 'relatedClasses', 'enrollments', 'classId'));
     }
 
     /**
@@ -240,7 +259,18 @@ class KelasController extends Controller
                 ->keyBy('practice_question_id');
         }
 
-        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials', 'completedQuizAttempt', 'practiceAnswers'));
+        // Get grade level from class if accessed from class context, otherwise from subcategory
+        $gradeLevel = strtoupper($material->subcategory->grade_level ?? 'sd');
+
+        // Check if material is accessed from a specific class
+        if ($classId = request()->query('class_id')) {
+            $class = CourseClass::find($classId);
+            if ($class && $class->grade_level) {
+                $gradeLevel = strtoupper($class->grade_level);
+            }
+        }
+
+        return view('frontend.materi-detail', compact('material', 'kontenMateri', 'relatedMaterials', 'completedQuizAttempt', 'practiceAnswers', 'gradeLevel'));
     }
 
     /**
@@ -346,12 +376,12 @@ class KelasController extends Controller
                 ]);
             }
 
-            // If answer is correct, give full points. If incorrect, give 0 points unless AI grading was used
+            // If answer is correct, give full points. For AI grading, use the points_earned from AI
             if (isset($validated['is_correct']) && $validated['is_correct']) {
                 $pointsEarned = $maxPoints;
-            } elseif (isset($validated['is_correct']) && !$validated['is_correct']) {
-                $pointsEarned = 0;
             }
+            // For AI grading (is_correct can be true for "Sebagian Benar"), use the points_earned from AI
+            // Don't override points_earned if it was explicitly set by AI grading
 
             $answer = PracticeAnswer::create([
                 'user_id' => Auth::id(),

@@ -38,17 +38,20 @@
                     @forelse($classes as $index => $class)
                     <div class="col-md-4 class-card">
                         <div class="hover rounded-1 overflow-hidden relative mb-4">
-                            <a href="{{ route('kelas.show', $class->slug) }}">
+                            <a href="{{ route('mindmap.show', $class->subcategory->slug ?? $class->category->slug) }}?class_id={{ $class->id }}">
                                 <h3 class="abs bg-color m-3 text-white rounded-1 fs-32 lh-1 p-4 z-3 hover-move-up-100">{{ str_pad(($classes->currentPage() - 1) * 12 + $index + 1, 2, '0', STR_PAD_LEFT) }}</h3>
                                 <div class="sw-overlay z-2 op-3"></div>
                                 <img src="{{ $class->cover_image ? asset('storage/' . $class->cover_image) : asset('frontend/images/services/1.webp') }}" class="w-100 hover-scale-1-2" alt="{{ $class->name }}">
                             </a>
                         </div>
 
-                        <h3><a href="{{ route('kelas.show', $class->slug) }}" class="text-decoration-none">{{ $class->name }}</a></h3>
-                        <p class="mb-0">
+                        <h3><a href="{{ route('mindmap.show', $class->subcategory->slug ?? $class->category->slug) }}?class_id={{ $class->id }}" class="text-decoration-none">{{ $class->name }}</a></h3>
+                        <p class="mb-2">
                             {{ $class->description ?? 'Kelas pembelajaran interaktif dengan materi berkualitas untuk membantu Anda mencapai tujuan belajar.' }}
                         </p>
+                        @if($class->grade_level)
+                        <span class="badge bg-primary">{{ strtoupper($class->grade_level) }}</span>
+                        @endif
                     </div>
                     @empty
                     <div class="col-lg-12 text-center py-5">
@@ -64,7 +67,66 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 pt-4 text-center">
-                        {{ $classes->links() }}
+                        @if($classes->hasPages())
+                        <div class="d-inline-block">
+                            <nav aria-label="Page navigation example">
+                              <ul class="pagination">
+                                @if($classes->onFirstPage())
+                                <li class="page-item disabled">
+                                  <span class="page-link"><i class="fa fa-chevron-left"></i></span>
+                                </li>
+                                @else
+                                <li class="page-item">
+                                  <a class="page-link" href="{{ $classes->previousPageUrl() }}" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="fa fa-chevron-left"></i></span>
+                                  </a>
+                                </li>
+                                @endif
+
+                                <?php
+                                $currentPage = $classes->currentPage();
+                                $lastPage = $classes->lastPage();
+                                $startPage = max(1, $currentPage - 2);
+                                $endPage = min($lastPage, $currentPage + 2);
+
+                                if ($startPage > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="' . $classes->url(1) . '">1</a></li>';
+                                    if ($startPage > 2) {
+                                        echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                    }
+                                }
+
+                                for ($i = $startPage; $i <= $endPage; $i++) {
+                                    if ($i == $currentPage) {
+                                        echo '<li class="page-item active" aria-current="page"><span class="page-link">' . $i . '</span></li>';
+                                    } else {
+                                        echo '<li class="page-item"><a class="page-link" href="' . $classes->url($i) . '">' . $i . '</a></li>';
+                                    }
+                                }
+
+                                if ($endPage < $lastPage) {
+                                    if ($endPage < $lastPage - 1) {
+                                        echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                    }
+                                    echo '<li class="page-item"><a class="page-link" href="' . $classes->url($lastPage) . '">' . $lastPage . '</a></li>';
+                                }
+                                ?>
+
+                                @if($classes->hasMorePages())
+                                <li class="page-item">
+                                  <a class="page-link" href="{{ $classes->nextPageUrl() }}" aria-label="Next">
+                                    <span aria-hidden="true"><i class="fa fa-chevron-right"></i></span>
+                                  </a>
+                                </li>
+                                @else
+                                <li class="page-item disabled">
+                                  <span class="page-link"><i class="fa fa-chevron-right"></i></span>
+                                </li>
+                                @endif
+                              </ul>
+                            </nav>
+                        </div>
+                        @endif
                     </div>
                 </div>
                 <div class="row" id="noResults" style="display: none;">

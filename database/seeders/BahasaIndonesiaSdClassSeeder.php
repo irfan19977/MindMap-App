@@ -31,6 +31,7 @@ class BahasaIndonesiaSdClassSeeder extends Seeder
                 'teacher_id' => $teacher?->id,
                 'name' => 'Bahasa Indonesia SD',
                 'description' => 'Kelas Bahasa Indonesia SD untuk membangun kemampuan membaca, menulis, berbicara, dan menyimak melalui materi yang dekat dengan keseharian siswa.',
+                'grade_level' => 'sd',
                 'status' => 'publish',
                 'capacity' => 30,
                 'is_featured' => true,

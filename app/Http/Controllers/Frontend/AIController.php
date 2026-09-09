@@ -115,15 +115,21 @@ class AIController extends Controller
      */
     public function gradeEssay(Request $request)
     {
+        Log::info('gradeEssay called', [
+            'request_data' => $request->all()
+        ]);
+
         $request->validate([
             'question'       => 'required|string',
             'user_answer'    => 'required|string',
             'correct_answer' => 'nullable|string',
             'max_points'     => 'nullable|integer',
+            'level'          => 'nullable|string', // SD or SMP
         ]);
 
         $apiKey = env('GROQ_API_KEY');
         if (!$apiKey) {
+            Log::error('API key not configured');
             return response()->json(['error' => 'API key not configured'], 500);
         }
 
@@ -131,26 +137,79 @@ class AIController extends Controller
         $userAnswer    = $request->input('user_answer');
         $correctAnswer = $request->input('correct_answer', '');
         $maxPoints     = $request->input('max_points', 10); // Default 10 points if not specified
+        $level         = $request->input('level', 'SD'); // Default SD
 
-        $prompt = "Kamu adalah guru yang bijak dan adil dalam mengoreksi jawaban essay siswa untuk level SD (sekolah dasar). Berikan penilaian dalam Bahasa Indonesia.\n\n";
-        $prompt .= "**Soal:** {$question}\n\n";
-        $prompt .= "**Jawaban Siswa:** {$userAnswer}\n\n";
-        if ($correctAnswer) {
-            $prompt .= "**Referensi Jawaban (dari guru):** {$correctAnswer}\n\n";
+        Log::info('gradeEssay parameters', [
+            'level' => $level,
+            'max_points' => $maxPoints
+        ]);
+
+        // Adjust grading criteria based on level
+        if ($level === 'SMA') {
+            $prompt = "Kamu adalah guru yang bijak dan adil dalam mengoreksi jawaban essay siswa untuk level SMA (sekolah menengah atas). Berikan penilaian dalam Bahasa Indonesia.\n\n";
+            $prompt .= "**Soal:** {$question}\n\n";
+            $prompt .= "**Jawaban Siswa:** {$userAnswer}\n\n";
+            if ($correctAnswer) {
+                $prompt .= "**Referensi Jawaban (dari guru):** {$correctAnswer}\n\n";
+            }
+            $prompt .= "PENTING: Poin maksimal untuk soal ini adalah **{$maxPoints} poin**.\n";
+            $prompt .= "Kamu harus memberikan nilai dalam skala 0-{$maxPoints}, bukan 0-100.\n\n";
+            $prompt .= "KRITERIA PENILAIAN (Level SMA):\n";
+            $prompt .= "- **Jika soal meminta kalimat:** Jawaban harus berupa kalimat lengkap dengan struktur yang baik. Gunakan bahasa baku dan tepat.\n";
+            $prompt .= "- **Jika soal meminta definisi/arti kata:** Jawaban harus akurat dan mencakup konteks penggunaan yang tepat. Definisi yang komprehensif dengan contoh penggunaan akan mendapat nilai penuh.\n";
+            $prompt .= "- **Poin penuh ({$maxPoints}):** Jawaban akurat, lengkap, menggunakan bahasa baku, dan mencakup konteks yang tepat.\n";
+            $prompt .= "- **Sebagian Benar ({$maxPoints}-2 atau {$maxPoints}-3):** Konsep benar tapi kurang lengkap atau kurang presisi.\n";
+            $prompt .= "- **Kurang Tepat ({$maxPoints}/3 atau kurang):** Konsep salah, tidak lengkap, atau menggunakan kata yang tidak tepat.\n\n";
+            $prompt .= "Contoh penilaian (Level SMA):\n";
+            $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan tidak berlebihan' → **Sebagian Benar** ({$maxPoints}-2 poin) - definisi benar tapi kurang lengkap\n";
+            $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan pelit' → **Kurang Tepat** (3-4 poin) - 'pelit' dan 'hemat' berbeda nuansa\n";
+            $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan bijaksana dan tidak boros, baik uang maupun waktu' → **Benar** ({$maxPoints} poin) - definisi komprehensif dan akurat\n";
+            $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'aku bersih' → **Kurang Tepat** (2-3 poin) - bukan kalimat lengkap\n";
+            $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'Saya membersihkan kamar setiap hari agar tetap bersih' → **Benar** ({$maxPoints} poin) - kalimat lengkap dan baku\n\n";
+        } elseif ($level === 'SMP') {
+            $prompt = "Kamu adalah guru yang bijak dan adil dalam mengoreksi jawaban essay siswa untuk level SMP (sekolah menengah pertama). Berikan penilaian dalam Bahasa Indonesia.\n\n";
+            $prompt .= "**Soal:** {$question}\n\n";
+            $prompt .= "**Jawaban Siswa:** {$userAnswer}\n\n";
+            if ($correctAnswer) {
+                $prompt .= "**Referensi Jawaban (dari guru):** {$correctAnswer}\n\n";
+            }
+            $prompt .= "PENTING: Poin maksimal untuk soal ini adalah **{$maxPoints} poin**.\n";
+            $prompt .= "Kamu harus memberikan nilai dalam skala 0-{$maxPoints}, bukan 0-100.\n\n";
+            $prompt .= "KRITERIA PENILAIAN (Level SMP - Lebih Ketat):\n";
+            $prompt .= "- **Jika soal meminta kalimat:** Jawaban harus berupa kalimat lengkap dengan struktur yang baik (subjek, predikat, objek jika diperlukan). Gunakan bahasa yang baku dan tepat.\n";
+            $prompt .= "- **Jika soal meminta definisi/arti kata:** Jawaban harus akurat dan mencakup nuansa yang tepat. Bedakan antara sinonim yang memiliki makna berbeda (misal: 'hemat' vs 'pelit').\n";
+            $prompt .= "- **Poin penuh ({$maxPoints}):** Jawaban akurat, lengkap, menggunakan bahasa baku, dan mencakup nuansa yang tepat.\n";
+            $prompt .= "- **Sebagian Benar ({$maxPoints}-2 atau {$maxPoints}-3):** Konsep benar tapi kurang lengkap, kurang presisi, atau tidak menggunakan bahasa baku.\n";
+            $prompt .= "- **Kurang Tepat ({$maxPoints}/3 atau kurang):** Konsep salah, tidak lengkap, atau menggunakan kata yang tidak tepat.\n\n";
+            $prompt .= "Contoh penilaian (Level SMP):\n";
+            $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan tidak berlebihan' → **Benar** ({$maxPoints} poin) - definisi akurat\n";
+            $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan pelit' → **Kurang Tepat** (3-4 poin) - 'pelit' dan 'hemat' berbeda nuansa\n";
+            $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'aku bersih' → **Kurang Tepat** (2-3 poin) - bukan kalimat lengkap\n";
+            $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'Saya membersihkan kamar setiap hari agar tetap bersih' → **Benar** ({$maxPoints} poin) - kalimat lengkap dan baku\n\n";
+        } else {
+            $prompt = "Kamu adalah guru yang bijak dan adil dalam mengoreksi jawaban essay siswa untuk level SD (sekolah dasar). Berikan penilaian dalam Bahasa Indonesia.\n\n";
+            $prompt .= "**Soal:** {$question}\n\n";
+            $prompt .= "**Jawaban Siswa:** {$userAnswer}\n\n";
+            if ($correctAnswer) {
+                $prompt .= "**Referensi Jawaban (dari guru):** {$correctAnswer}\n\n";
+            }
+            $prompt .= "PENTING: Poin maksimal untuk soal ini adalah **{$maxPoints} poin**.\n";
+            $prompt .= "Kamu harus memberikan nilai dalam skala 0-{$maxPoints}, bukan 0-100.\n\n";
+            $prompt .= "KRITERIA PENILAIAN (Level SD):\n";
+            $prompt .= "- **Jika soal meminta kalimat:** Jawaban harus berupa kalimat lengkap dengan subjek dan predikat. Kalimat pendek seperti 'aku bersih' tidak cukup untuk mendapat nilai penuh.\n";
+            $prompt .= "- **Jika soal meminta definisi/arti kata:** Jawaban yang menjelaskan konsep dengan benar sudah cukup untuk nilai penuh atau hampir penuh. Jangan terlalu ketat untuk jawaban definisi level SD.\n";
+            $prompt .= "- **Poin penuh ({$maxPoints}):** Untuk definisi: jika jawaban benar secara konsep dan wajar untuk level SD. Untuk kalimat: jika jawaban lengkap dan tepat.\n";
+            $prompt .= "- **Sebagian Benar ({$maxPoints}-2 atau {$maxPoints}-3):** Jika jawaban benar secara konsep tapi bisa diperbaiki atau ditambah detail.\n";
+            $prompt .= "- **Kurang Tepat ({$maxPoints}/3 atau kurang):** Jika jawaban salah konsep, terlalu pendek, atau tidak relevan.\n\n";
+            $prompt .= "Contoh penilaian (Level SD):\n";
+            $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan tidak berlebihan' → **Benar** ({$maxPoints} poin) - definisi yang tepat untuk level SD\n";
+            $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'aku bersih' → **Kurang Tepat** (3-4 poin) - bukan kalimat lengkap\n";
+            $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'Aku membersihkan kamar setiap hari' → **Benar** ({$maxPoints} poin) - kalimat lengkap\n\n";
         }
-        $prompt .= "PENTING: Poin maksimal untuk soal ini adalah **{$maxPoints} poin**.\n";
-        $prompt .= "Kamu harus memberikan nilai dalam skala 0-{$maxPoints}, bukan 0-100.\n\n";
-        $prompt .= "KRITERIA PENILAIAN (Level SD):\n";
-        $prompt .= "- **Jika soal meminta kalimat:** Jawaban harus berupa kalimat lengkap dengan subjek dan predikat. Kalimat pendek seperti 'aku bersih' tidak cukup untuk mendapat nilai penuh.\n";
-        $prompt .= "- **Jika soal meminta definisi/arti kata:** Jawaban yang menjelaskan konsep dengan benar sudah cukup untuk nilai penuh atau hampir penuh. Jangan terlalu ketat untuk jawaban definisi level SD.\n";
-        $prompt .= "- **Poin penuh ({$maxPoints}):** Untuk definisi: jika jawaban benar secara konsep dan wajar untuk level SD. Untuk kalimat: jika jawaban lengkap dan tepat.\n";
-        $prompt .= "- **Sebagian Benar ({$maxPoints}-2 atau {$maxPoints}-3):** Jika jawaban benar secara konsep tapi bisa diperbaiki atau ditambah detail.\n";
-        $prompt .= "- **Kurang Tepat ({$maxPoints}/3 atau kurang):** Jika jawaban salah konsep, terlalu pendek, atau tidak relevan.\n\n";
-        $prompt .= "Contoh penilaian (Level SD):\n";
-        $prompt .= "- Soal: 'Apa arti kata hemat?' → Jawaban: 'menggunakan sesuatu dengan tidak berlebihan' → **Benar** ({$maxPoints} poin) - definisi yang tepat untuk level SD\n";
-        $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'aku bersih' → **Kurang Tepat** (3-4 poin) - bukan kalimat lengkap\n";
-        $prompt .= "- Soal: 'Buat kalimat menggunakan kata bersih' → Jawaban: 'Aku membersihkan kamar setiap hari' → **Benar** ({$maxPoints} poin) - kalimat lengkap\n\n";
+
         $prompt .= "Format response WAJIB dalam JSON:\n{\"score\": <angka 0-{$maxPoints}>, \"verdict\": \"Benar|Sebagian Benar|Kurang Tepat\", \"feedback\": \"<penjelasan singkat>\", \"suggestion\": \"<saran atau null>\"}";
+
+        Log::info('About to call Groq API', ['level' => $level]);
 
         try {
             $response = Http::withHeaders([
@@ -163,14 +222,20 @@ class AIController extends Controller
                 ],
                 'model'       => 'openai/gpt-oss-20b',
                 'temperature' => 0.3,
-                'max_tokens'  => 512,
+                'max_tokens'  => 1024,
             ]);
+
+            Log::info('Groq API response status', ['status' => $response->status()]);
 
             if ($response->successful()) {
                 $content = $response->json()['choices'][0]['message']['content'];
+                Log::info('Groq API response content', ['content' => $content]);
+
                 // Extract JSON from response
                 preg_match('/\{.*\}/s', $content, $matches);
                 $result = $matches ? json_decode($matches[0], true) : null;
+
+                Log::info('Parsed result', ['result' => $result]);
 
                 if ($result) {
                     // If AI still gives score in 0-100 scale, convert to max_points scale

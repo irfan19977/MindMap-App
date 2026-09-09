@@ -46,6 +46,7 @@ class RegisteredUserController extends Controller
             'user_type' => ['required', 'in:student,teacher,umum'],
             'category_interests' => ['nullable', 'array'],
             'category_interests.*' => ['uuid', 'exists:categories,id'],
+            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:200'],
         ];
 
         if (! $socialRegistration) {
@@ -75,6 +76,12 @@ class RegisteredUserController extends Controller
 
         $request->validate($rules);
 
+        // Handle avatar upload
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
+
         $isPendingTeacher = $request->user_type === 'teacher';
 
         $user = User::create([
@@ -101,6 +108,7 @@ class RegisteredUserController extends Controller
                 'linkedin_url' => $request->linkedin_url,
                 'github_url' => $request->github_url,
                 'twitter_url' => $request->twitter_url,
+                'avatar' => $avatarPath,
             ]);
             $user->assignRole('teacher');
         }
@@ -112,6 +120,7 @@ class RegisteredUserController extends Controller
                 'major' => $request->major,
                 'learning_interest' => $request->learning_interest,
                 'category_interests' => $request->input('category_interests', []),
+                'avatar' => $avatarPath,
             ]);
             $user->assignRole('student');
         }
@@ -122,6 +131,7 @@ class RegisteredUserController extends Controller
                 'occupation' => $request->occupation,
                 'learning_interest' => $request->learning_interest,
                 'category_interests' => $request->input('category_interests', []),
+                'avatar' => $avatarPath,
             ]);
             $user->assignRole('umum');
         }

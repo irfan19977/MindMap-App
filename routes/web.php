@@ -27,29 +27,13 @@ use App\Http\Controllers\Backend\ProfileController as BackendProfileController;
 use App\Http\Controllers\Backend\ReportController;
 use App\Http\Controllers\QuizAttemptController;
 use App\Http\Controllers\ContactController;
-/*
-|--------------------------------------------------------------------------
-| Temporary Cache Clear (remove after deployment)
-|--------------------------------------------------------------------------
-*/
-Route::get('/clear', function () {
-    if (request('key') !== 'gantirahasia') {
-        abort(403, 'Forbidden');
-    }
-
-    Artisan::call('config:clear');
-    Artisan::call('cache:clear');
-    Artisan::call('view:clear');
-    Artisan::call('route:clear');
-
-    return 'Cache cleared successfully';
-});
 
 /*
 |--------------------------------------------------------------------------
 | Halaman Statis (Frontend)
 |--------------------------------------------------------------------------
 */
+Route::get('/certificate', function () { return view('frontend.certificate-template'); });
 Route::get('/', function () { return view('frontend.index'); });
 Route::get('/about', function () { return view('frontend.about'); });
 Route::get('/contact', function () {
@@ -71,7 +55,7 @@ Route::prefix('teacher')->name('teacher.')->group(function () {
     Route::get('/{slug}', [TeacherController::class, 'show'])->name('show');
     Route::get('/{slug}/reviews', [TeacherController::class, 'reviews'])->name('reviews');
     Route::get('/{slug}/courses', [TeacherController::class, 'courses'])->name('courses');
-    
+
     // Teacher Collaboration (requires auth and teacher role)
     Route::middleware(['auth', 'role:teacher', \App\Http\Middleware\EnsureApprovedTeacher::class])->group(function () {
         Route::get('/collaborations', [\App\Http\Controllers\Frontend\TeacherCollaborationController::class, 'index'])->name('collaborations.index');

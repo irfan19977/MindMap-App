@@ -1,970 +1,1013 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <!-- Header-->
-    <header class="intro introhalf" data-background="{{ asset('frontend/img/main/header.png') }}">
-      <div class="intro-body">
-        <h1>Leaderboard</h1>
-        <h4>Tantang dirimu setiap season dan lihat siapa yang teratas</h4>
-      </div>
-    </header>
-
     <style>
-        /* ==========================================================
-           Layout
-           ========================================================== */
-        .leaderboard-section { padding: 60px 0; }
-
-        .leaderboard-card {
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 28px;
-            box-shadow: 0 25px 80px rgba(15, 23, 42, 0.12);
-            padding: 36px;
+        :root {
+            --olive: #7C815D;
+            --olive-dark: #656A49;
+            --olive-light: #EEF0E6;
+            --text: #22231C;
+            --muted: #8B8D7E;
+            --border: #ECECE4;
+            --gold: #FFD700;
+            --silver: #C0C0C0;
+            --bronze: #CD7F32;
+        }
+        
+        .leaderboard-section {
+            padding: 50px 0 80px;
+            background: #F7F7F3;
+        }
+        
+        .sidebar-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(18px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.03);
         }
-
-        .leaderboard-card--glass {
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid rgba(255, 255, 255, 0.65);
-            box-shadow: 0 18px 60px rgba(15, 23, 42, 0.14);
-        }
-
-        .leaderboard-card h2 {
+        
+        .sidebar-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
             margin-bottom: 12px;
-            font-size: 2.3rem;
-            letter-spacing: -0.04em;
         }
-
-        /* Header row: title/description on the left, CTA on the right */
-        .leaderboard-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-        }
-
-        .leaderboard-header .btn-primary {
-            flex-shrink: 0;
-        }
-
-        .season-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.55rem 1rem;
-            border-radius: 999px;
-            background: linear-gradient(135deg, rgba(79, 142, 247, 0.14), rgba(132, 76, 247, 0.12));
-            color: #2a4365;
+        
+        .sidebar-card h5 {
+            margin: 0 0 4px;
+            font-size: 16px;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-size: 0.82rem;
-            margin-bottom: 14px;
+        }
+        
+        .sidebar-card span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            background: white;
+            color: var(--text);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .sidebar-link:hover {
+            color: var(--olive);
+        }
+        
+        .sidebar-link.active {
+            background: var(--olive);
+            color: white;
+        }
+        
+        .sidebar-link i {
+            width: 18px;
+            text-align: center;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            padding: 36px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .content-card h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .content-card h4 i {
+            color: var(--olive);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .filter-select {
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: white;
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--olive);
+        }
+        
+        /* Podium Card Styles */
+        .podium-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+            margin-top: 60px;
+        }
+        
+        .podium-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .podium-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+        
+        .podium-card.podium-gold {
+            border: 2px solid var(--gold);
+            margin-top: -50px;
+        }
+        
+        .podium-card.podium-silver {
+            border: 2px solid var(--silver);
+        }
+        
+        .podium-card.podium-bronze {
+            border: 2px solid var(--bronze);
+        }
+        
+        .podium-rank {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 auto 15px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .podium-gold .podium-rank {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFA500 100%);
+        }
+        
+        .podium-silver .podium-rank {
+            background: linear-gradient(135deg, var(--silver) 0%, #A8A8A8 100%);
+        }
+        
+        .podium-bronze .podium-rank {
+            background: linear-gradient(135deg, var(--bronze) 0%, #B87333 100%);
+        }
+        
+        .podium-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 12px;
+            border: 3px solid var(--border);
         }
 
-        /* ==========================================================
-           Table
-           ========================================================== */
+        .podium-avatar-placeholder {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            border: 3px solid var(--border);
+            background: var(--olive-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--olive);
+        }
+        
+        .podium-gold .podium-avatar {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .podium-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 4px;
+            color: var(--text);
+        }
+        
+        .podium-username {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0 0 8px;
+        }
+        
+        .podium-points {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--olive);
+        }
+        
+        .podium-points small {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+        
+        /* Leaderboard Table */
         .leaderboard-table {
             width: 100%;
             border-collapse: collapse;
-            background: transparent;
         }
-
-        .leaderboard-table th,
-        .leaderboard-table td {
-            padding: 18px 16px;
-            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+        
+        .leaderboard-table thead th {
             text-align: left;
+            padding: 16px;
+            border-bottom: 2px solid var(--border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .leaderboard-table tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.2s;
+        }
+        
+        .leaderboard-table tbody tr:hover {
+            background-color: var(--olive-light);
+        }
+        
+        .leaderboard-table tbody td {
+            padding: 16px;
             vertical-align: middle;
         }
-
-        .leaderboard-table th {
-            color: #334155;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-size: 0.85rem;
-        }
-
-        .leaderboard-table tbody tr {
-            transition: transform 0.2s ease, background 0.2s ease;
-        }
-
-        .leaderboard-table tbody tr:hover {
-            background: rgba(79, 142, 247, 0.08);
-            transform: translateX(4px);
-        }
-
-        .rank-circle {
+        
+        .rank-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background: rgba(15, 23, 42, 0.06);
-            color: #334155;
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-weight: bold;
+            font-size: 16px;
         }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 16px;
-            color: #64748b;
+        
+        .rank-1, .rank-2, .rank-3 {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFA500 100%);
+            color: white;
         }
-
-        /* ==========================================================
-           Level badges
-           ========================================================== */
-        .level-badge {
-            display: inline-flex;
+        
+        .rank-4, .rank-5, .rank-6 {
+            background: var(--olive-light);
+            color: var(--olive-dark);
+        }
+        
+        .rank-other {
+            background: #f5f5f5;
+            color: var(--muted);
+        }
+        
+        .student-info {
+            display: flex;
             align-items: center;
-            gap: 0.45rem;
-            padding: 0.65rem 0.85rem;
-            border-radius: 999px;
-            font-size: 0.78rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-            color: #fff;
-            transition: transform 0.2s ease;
-            white-space: nowrap;
+            gap: 12px;
         }
-
-        .level-badge:hover { transform: translateY(-2px); }
-
-        .level-explorer { background: linear-gradient(135deg, #8ec5fc 0%, #e0c3fc 100%); }
-        .level-active   { background: linear-gradient(135deg, #68d391 0%, #34d399 100%); }
-        .level-seeker   { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
-        .level-rising   { background: linear-gradient(135deg, #a3bded 0%, #6991c7 100%); }
-        .level-smart    { background: linear-gradient(135deg, #ffd86f 0%, #fc9d9a 100%); }
-        .level-expert   { background: linear-gradient(135deg, #8fd3f4 0%, #84fab0 100%); }
-        .level-master   { background: linear-gradient(135deg, #c1c8e4 0%, #8e9eab 100%); }
-        .level-future   { background: linear-gradient(135deg, #fbda61 0%, #ff5acd 100%); }
-
-        /* ==========================================================
-           Podium (top 3), true 2nd / 1st / 3rd order via `order`
-           ========================================================== */
-        .podium-row {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            align-items: end;
-            gap: 18px;
-            margin-bottom: 34px;
-        }
-
-        .podium-item {
-            background: rgba(255, 255, 255, 0.78);
-            border-radius: 24px;
-            padding: 22px;
-            text-align: center;
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.09);
-            border: 1px solid rgba(255, 255, 255, 0.75);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .podium-item::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top, rgba(79, 142, 247, 0.12), transparent 55%);
-            pointer-events: none;
-        }
-
-        /* visual order: 2nd - 1st - 3rd, 1st stands taller */
-        .podium-item--rank-1 { order: 2; padding: 32px 22px; transform: translateY(-14px); }
-        .podium-item--rank-2 { order: 1; }
-        .podium-item--rank-3 { order: 3; }
-
-        .podium-rank {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 16px;
+        
+        .student-avatar {
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: #fff;
-            background: linear-gradient(135deg, #4f8ef7 0%, #8a6dff 100%);
-            box-shadow: 0 14px 32px rgba(79, 142, 247, 0.25);
-            position: relative;
-            animation: podium-pulse 2s ease-in-out infinite;
+            object-fit: cover;
         }
-
-        @keyframes podium-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        
+        .student-details h6 {
+            margin: 0 0 2px;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
         }
-
-        .podium-item--rank-1 .podium-rank {
-            width: 64px;
-            height: 64px;
-            font-size: 1.3rem;
-            background: linear-gradient(135deg, #f6c744 0%, #f79c42 100%);
-            box-shadow: 0 14px 32px rgba(247, 156, 66, 0.35), 0 0 0 4px rgba(246, 199, 68, 0.3);
-            animation: podium-gold 2s ease-in-out infinite;
+        
+        .student-details small {
+            font-size: 12px;
+            color: var(--muted);
         }
-
-        @keyframes podium-gold {
-            0%, 100% { transform: scale(1); box-shadow: 0 14px 32px rgba(247, 156, 66, 0.35), 0 0 0 4px rgba(246, 199, 68, 0.3); }
-            50% { transform: scale(1.08); box-shadow: 0 20px 40px rgba(247, 156, 66, 0.45), 0 0 0 8px rgba(246, 199, 68, 0.4); }
-        }
-
-        .podium-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 999px;
-            font-size: 0.9rem;
+        
+        .points-cell {
             font-weight: 700;
-            color: #fff;
-            margin-bottom: 14px;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+            color: var(--olive);
+            font-size: 16px;
         }
-
-        .podium-icon {
-            display: inline-flex;
-            width: 30px;
-            height: 30px;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .podium-name {
-            font-size: 1.05rem;
-            font-weight: 800;
-            margin-bottom: 6px;
-            color: #1e293b;
-        }
-
-        .podium-meta {
-            font-size: 0.92rem;
-            color: #4b5563;
-        }
-
-        .btn-primary {
-            border-radius: 999px;
-            padding: 0.95rem 1.6rem;
-            font-weight: 700;
-            box-shadow: 0 18px 36px rgba(79, 142, 247, 0.16);
-        }
-
-        /* ==========================================================
-           Stat cards
-           ========================================================== */
-        .leaderboard-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 18px;
-            margin: 20px 0 32px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 22px;
-            padding: 20px 22px;
-            border: 1px solid rgba(148, 163, 184, 0.12);
-            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
-        }
-
-        .stat-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #64748b;
-            margin-bottom: 6px;
-        }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #0f172a;
-            letter-spacing: -0.03em;
-        }
-
-        .stat-note {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-top: 4px;
-        }
-
-        /* ==========================================================
-           Rank hero — big emblem showcase, game-style (ML-inspired)
-           ========================================================== */
-        .rank-hero {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 18px 30px;
-            border-radius: 28px;
-            margin-top: 16px;
-            position: relative;
-            overflow: hidden;
-            color: #fff;
-            background:
-                radial-gradient(circle at 12% 20%, rgba(56, 189, 248, 0.28), transparent 55%),
-                linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            width: 100%;
-        }
-
-        .rank-hero--empty {
-            background:
-                radial-gradient(circle at 12% 20%, rgba(148, 163, 184, 0.25), transparent 55%),
-                linear-gradient(135deg, #334155 0%, #475569 100%);
-        }
-
-        .rank-hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.09) 45%, transparent 60%);
-            transform: translateX(-120%);
-            animation: rank-hero-shine 5s ease-in-out infinite;
-        }
-
-        @keyframes rank-hero-shine {
-            0% { transform: translateX(-120%); }
-            55%, 100% { transform: translateX(120%); }
-        }
-
-        .rank-hero-emblem-wrap {
-            position: relative;
-            flex-shrink: 0;
-            width: 72px;
-            height: 72px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .rank-hero-ring {
-            position: absolute;
-            inset: -8px;
-            border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.28);
-            animation: rank-ring-pulse 2.4s ease-in-out infinite;
-        }
-
-        @keyframes rank-ring-pulse {
-            0%, 100% { transform: scale(1); opacity: 0.75; }
-            50% { transform: scale(1.1); opacity: 0.2; }
-        }
-
-        .rank-hero-emblem {
-            width: 88px;
-            height: 88px;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.16), 0 14px 30px rgba(0, 0, 0, 0.35);
-        }
-
-        .rank-hero-icon {
-            font-size: 2.3rem;
-            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
-        }
-
-        .rank-hero-info {
-            display: grid;
-            gap: 4px;
-            position: relative;
-            z-index: 1;
-            flex: 1;
-        }
-
-        .rank-hero-stats {
-            display: flex;
-            gap: 16px;
-            margin-left: auto;
-        }
-
-        .rank-hero-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 8px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-        }
-
-        .rank-hero-stat-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255, 255, 255, 0.6);
+        
+        .streak-badge {
+            background: linear-gradient(135deg, var(--olive) 0%, var(--olive-dark) 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
         }
-
-        .rank-hero-stat-value {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #fff;
+        
+        /* User Rank Card */
+        .user-rank-card {
+            background: linear-gradient(135deg, var(--olive) 0%, var(--olive-dark) 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(124, 129, 93, 0.3);
         }
-
-        .rank-hero-eyebrow {
-            font-size: 0.74rem;
-            text-transform: uppercase;
-            letter-spacing: 0.14em;
-            color: rgba(255, 255, 255, 0.6);
+        
+        .user-rank-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-rank-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-rank-info h5 {
+            margin: 0 0 4px;
+            font-size: 18px;
             font-weight: 700;
         }
-
-        .rank-hero-title {
-            font-size: 1.7rem;
-            font-weight: 900;
+        
+        .user-rank-info p {
             margin: 0;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: 14px;
+            opacity: 0.9;
         }
-
-        .rank-hero-desc {
-            color: rgba(255, 255, 255, 0.78);
-            font-size: 0.92rem;
-            margin: 2px 0 0;
-            max-width: 560px;
-        }
-
-        .rank-hero-desc strong { color: #fff; }
-
-        .rank-hero .btn-primary {
+        
+        .user-rank-stats {
+            display: flex;
+            gap: 30px;
             margin-left: auto;
-            flex-shrink: 0;
         }
-
-        /* ==========================================================
-           Progress Bar
-           ========================================================== */
-        .rank-progress {
-            margin-top: 12px;
+        
+        .stat-item {
+            text-align: center;
         }
-
-        .rank-progress-bar {
-            height: 8px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 999px;
-            overflow: hidden;
-            margin-bottom: 8px;
+        
+        .user-row {
+            background: linear-gradient(135deg, var(--olive-light) 0%, rgba(124, 129, 93, 0.1) 100%) !important;
+            border-left: 4px solid var(--olive);
         }
-
-        .rank-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
-            border-radius: 999px;
-            transition: width 0.5s ease;
+        
+        .user-row .student-details h6 {
+            color: var(--olive);
         }
-
-        .rank-progress-text {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        /* ==========================================================
-           Rank road — horizontal tier path with hexagon nodes
-           ========================================================== */
-        .rank-road-wrap {
-            margin-top: 22px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-        }
-
-        .rank-road-wrap::-webkit-scrollbar { height: 6px; }
-        .rank-road-wrap::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.4);
-            border-radius: 999px;
-        }
-
-        .rank-road {
-            display: flex;
-            align-items: flex-start;
-            min-width: max-content;
-            padding: 14px 4px 4px;
-        }
-
-        .rank-node {
-            display: flex;
-            flex-direction: column;
+        
+        .jump-to-rank-btn {
+            background: var(--olive);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            width: 96px;
-            flex-shrink: 0;
-            position: relative;
+            gap: 6px;
         }
-
-        .rank-node-badge {
-            width: 80px;
-            height: 80px;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        
+        .jump-to-rank-btn:hover {
+            background: var(--olive-dark);
+        }
+        
+        .rank-beyond-50 {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        /* Pagination */
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .pagination-custom {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .pagination-custom a,
+        .pagination-custom span {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 22px rgba(15, 23, 42, 0.14);
-            transition: transform 0.2s ease;
-        }
-
-        .rank-node-icon { font-size: 1.4rem; }
-
-        .rank-node-name {
-            font-size: 1rem;
-            font-weight: 700;
-            text-align: center;
-            color: #334155;
-            line-height: 1.2;
-        }
-
-        .rank-node-xp {
-            font-size: 0.95rem;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 14px;
             font-weight: 600;
-            text-align: center;
-            color: #64748b;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text);
+            border: none;
         }
-
-        .rank-node--locked .rank-node-badge {
-            background: rgba(148, 163, 184, 0.25) !important;
-            box-shadow: none;
+        
+        .pagination-custom a:hover {
+            background: var(--olive-light);
+            color: var(--olive);
         }
-
-        .rank-node--locked .rank-node-icon img {
-            filter: grayscale(1);
-            opacity: 0.5;
+        
+        .pagination-custom span.active {
+            background: var(--olive);
+            color: white;
         }
-        .rank-node--locked .rank-node-name { color: rgba(100, 116, 139, 0.7); }
-
-        .rank-node--current .rank-node-badge {
-            transform: scale(1.16);
-            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.35), 0 16px 30px rgba(56, 189, 248, 0.35);
+        
+        .pagination-custom span.disabled {
+            color: var(--muted);
+            background: transparent;
+            cursor: not-allowed;
         }
-
-        .rank-node--current .rank-node-name {
-            color: #0369a1;
-            font-weight: 800;
-        }
-
-        .rank-node-tag {
-            position: absolute;
-            top: -10px;
-            padding: 2px 9px;
-            border-radius: 999px;
-            background: #0ea5e9;
-            color: #fff;
-            font-size: 0.62rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            box-shadow: 0 6px 14px rgba(14, 165, 233, 0.4);
-        }
-
-        .rank-connector {
-            flex: 1 0 28px;
-            min-width: 24px;
-            height: 4px;
-            margin-top: 33px;
-            border-radius: 2px;
-            background: rgba(148, 163, 184, 0.25);
-        }
-
-        .rank-connector--active {
-            background: linear-gradient(90deg, #38bdf8, #0ea5e9);
-        }
-
-        /* ==========================================================
-           Responsive
-           ========================================================== */
-        @media (max-width: 768px) {
-            .leaderboard-card { padding: 24px; }
-            .leaderboard-header { flex-direction: column; align-items: stretch; }
-            .leaderboard-header .btn-primary { text-align: center; }
-            .podium-row { grid-template-columns: 1fr; }
-            .podium-item--rank-1,
-            .podium-item--rank-2,
-            .podium-item--rank-3 { order: 0; transform: none; }
-            .leaderboard-table th:nth-child(5),
-            .leaderboard-table td:nth-child(5) { display: none; }
-            .rank-hero { flex-direction: column; text-align: center; padding: 22px; }
-            .rank-hero-desc { max-width: none; }
-            .rank-hero-info { flex: none; }
-            .rank-hero-stats { margin-left: 0; margin-top: 12px; width: 100%; justify-content: center; }
-
-            /* Improved rank road for mobile */
-            .rank-road-wrap {
-                padding: 16px 8px;
-                -webkit-overflow-scrolling: touch;
-                scroll-behavior: smooth;
+        
+        @media (max-width: 900px) {
+            .podium-section {
+                display: none;
             }
 
-            .rank-road {
-                padding: 8px 4px;
+            .mobile-only {
+                display: block !important;
             }
 
-            .rank-node {
-                width: 80px;
-                gap: 6px;
+            .desktop-only {
+                display: none !important;
             }
 
-            .rank-node-badge {
-                width: 56px;
-                height: 56px;
+            /* Fix circular elements on mobile */
+            .rank-badge {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 14px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
             }
 
-            .rank-node-name {
-                font-size: 0.75rem;
+            .student-avatar {
+                width: 36px !important;
+                height: 36px !important;
+                flex-shrink: 0;
             }
 
-            .rank-node-xp {
-                font-size: 0.65rem;
+            .student-info {
+                gap: 8px !important;
             }
 
-            .rank-node-tag {
-                font-size: 0.55rem;
-                padding: 1px 6px;
+            .student-details h6 {
+                font-size: 13px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 120px;
+            }
+
+            .student-details small {
+                font-size: 11px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 120px;
+            }
+
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 10px 8px !important;
+                font-size: 13px;
+            }
+
+            .points-cell {
+                font-size: 13px !important;
             }
         }
 
-        /* ==========================================================
-           Celebration animation
-           ========================================================== */
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: hidden;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            animation: confetti-fall 3s ease-out forwards;
-        }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
+        @media (min-width: 901px) {
+            .mobile-only {
+                display: none !important;
             }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
+
+            .desktop-only {
+                display: block !important;
+            }
+        }
+        }
+            
+            .user-rank-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-rank-stats {
+                margin-left: 0;
+                margin-top: 20px;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
             }
         }
     </style>
 
-    @php
-        $month = now()->month;
-        $quarter = (int) ceil($month / 3);
-        $seasonNames = ['Discovery', 'Momentum', 'Growth', 'Legacy'];
-        $seasonName = $seasonNames[$quarter - 1] ?? 'Discovery';
-        $seasonLabel = "Season {$seasonName} • Q{$quarter} " . now()->year;
+    <!-- Hero Section -->
+    <section class="jarallax relative overflow-hidden z-1000 mt-80">
+        <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+        <div class="sw-overlay op-2"></div>
+        <div class="gradient-edge-start light w-40 start-40 op-9 z-2"></div>
+        <div class="abs w-40 h-100 bg-white top-0 start-0 op-9 z-2"></div>
+        <div class="container relative z-2">
+            <div class="row wow fadeInRight">
+                <div class="col-lg-10">
+                    <h1 class="fs-sm-10vw mb-0">Leaderboard</h1>
+                    <ul class="crumb">
+                        <li><a href="/">Home</a></li>
+                        <li class="active">Leaderboard</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
-        $levelClasses = [
-            'New Explorer' => 'level-explorer',
-            'Active Learner' => 'level-active',
-            'Knowledge Seeker' => 'level-seeker',
-            'Rising Scholar' => 'level-rising',
-            'Smart Achiever' => 'level-smart',
-            'Expert Learner' => 'level-expert',
-            'Master Mind' => 'level-master',
-            'Future Leader' => 'level-future',
-        ];
-
-        $levelIcons = [
-            'New Explorer' => '🧭',
-            'Active Learner' => '📚',
-            'Knowledge Seeker' => '🔍',
-            'Rising Scholar' => '🌱',
-            'Smart Achiever' => '🏅',
-            'Expert Learner' => '🎓',
-            'Master Mind' => '🧠',
-            'Future Leader' => '👑',
-        ];
-
-        $levelImages = [
-            'New Explorer' => 'new-explorer.png',
-            'Active Learner' => 'active-learner.png',
-            'Knowledge Seeker' => 'knowledge-seeker.png',
-            'Rising Scholar' => 'rising-scholar.png',
-            'Smart Achiever' => 'smart-achiever.png',
-            'Expert Learner' => 'expert-learner.png',
-            'Master Mind' => 'master-mind.png',
-            'Future Leader' => 'future-leader.png',
-        ];
-
-        $rankTiers = [
-            ['name' => 'New Explorer', 'icon' => '🧭', 'subtitle' => 'Mulai menjelajah dunia belajar.', 'min_xp' => 10],
-            ['name' => 'Active Learner', 'icon' => '📚', 'subtitle' => 'Konsisten dan terus belajar.', 'min_xp' => 100],
-            ['name' => 'Knowledge Seeker', 'icon' => '🔍', 'subtitle' => 'Mencari wawasan yang lebih dalam.', 'min_xp' => 300],
-            ['name' => 'Rising Scholar', 'icon' => '🌱', 'subtitle' => 'Tingkatkan kebiasaan belajar.', 'min_xp' => 600],
-            ['name' => 'Smart Achiever', 'icon' => '🏅', 'subtitle' => 'Tampil sebagai pelajar berprestasi.', 'min_xp' => 1000],
-            ['name' => 'Expert Learner', 'icon' => '🎓', 'subtitle' => 'Memahami konsep dengan matang.', 'min_xp' => 1500],
-            ['name' => 'Master Mind', 'icon' => '🧠', 'subtitle' => 'Menjadi pemikir strategis.', 'min_xp' => 2500],
-            ['name' => 'Future Leader', 'icon' => '👑', 'subtitle' => 'Siap memimpin di masa depan.', 'min_xp' => 4000],
-        ];
-
-        $currentLevel = $currentStudent->level ?? null;
-        // Determine current tier based on XP, not database level
-        $currentTierIndex = false;
-        if ($currentStudent) {
-            foreach ($rankTiers as $index => $tier) {
-                if ($currentStudent->experience_points >= $tier['min_xp']) {
-                    $currentTierIndex = $index;
-                } else {
-                    break;
-                }
-            }
-        }
-        
-        // Update currentLevel based on XP
-        if ($currentTierIndex !== false) {
-            $currentLevel = $rankTiers[$currentTierIndex]['name'];
-        }
-
-        $lastTierIndex = count($rankTiers) - 1;
-        $isTopTier = $currentTierIndex !== false && $currentTierIndex === $lastTierIndex;
-        $nextTier = ($currentTierIndex !== false && !$isTopTier) ? $rankTiers[$currentTierIndex + 1] : null;
-
-        // Calculate progress to next rank
-        $currentTierMinXp = $currentTierIndex !== false ? $rankTiers[$currentTierIndex]['min_xp'] : 0;
-        $nextTierMinXp = $nextTier ? $nextTier['min_xp'] : $currentTierMinXp;
-        $xpProgress = 0;
-        if ($nextTier && $nextTierMinXp > $currentTierMinXp && $currentStudent->experience_points >= $currentTierMinXp) {
-            $xpProgress = min(100, round(($currentStudent->experience_points - $currentTierMinXp) / ($nextTierMinXp - $currentTierMinXp) * 100));
-        }
-
-        $studentCount = $students->count();
-        $topXp = $students->first()->experience_points ?? 0;
-        $avgXp = $studentCount > 0 ? (int) round($students->avg('experience_points')) : 0;
-
-        // Filter students to only include those with minimum XP (10 XP for New Explorer)
-        $minXpForLeaderboard = 10;
-        $qualifiedStudents = $students->filter(function ($item) use ($minXpForLeaderboard) {
-            return $item->experience_points >= $minXpForLeaderboard;
-        });
-
-        // Calculate current student's rank from qualified students only
-        $currentStudentRank = null;
-        if ($currentStudent && $currentStudent->experience_points >= $minXpForLeaderboard) {
-            $currentStudentRank = $qualifiedStudents->search(function ($item) use ($currentStudent) {
-                return $item->user_id === $currentStudent->user_id;
-            });
-            if ($currentStudentRank !== false) {
-                $currentStudentRank = $currentStudentRank + 1;
-            }
-        }
-    @endphp
-
+    <!-- Main Content -->
     <section class="leaderboard-section">
         <div class="container">
-            <div class="leaderboard-card leaderboard-card--glass">
-                <div class="leaderboard-header">
-                    <div>
-                        <small class="season-label">{{ $seasonLabel }}</small>
-                        <h2>Leaderboard Global</h2>
-                        <p class="text-muted">Tantang dirimu setiap season 3 bulan sekali dan lihat siapa yang teratas dalam perjalanan belajar.</p>
+            <div class="row">
+                
+                <!-- Sidebar -->
+                <div class="col-lg-3">
+                    <div class="sidebar-card">
+                        <div style="width: 70px; height: 70px; border-radius: 50%; background: var(--olive); color: white; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; margin: 0 auto 12px;">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h5>Leaderboard</h5>
+                        <span>Papan Peringkat</span>
                     </div>
-                    @if(auth()->check())
-                        <a href="{{ route('student.profile') }}" class="btn btn-primary btn-lg">Kembali ke Profil</a>
-                    @else
-                        <a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}" class="btn btn-primary btn-lg">Login untuk Lihat Rank Kamu</a>
-                    @endif
+
+                    <!-- Statistics Card -->
+                    <div class="sidebar-card">
+                        <div style="text-align: left; margin-bottom: 16px;">
+                            <h5 style="display: flex; align-items: center; gap: 8px; margin: 0 0 12px;">
+                                <i class="fa-solid fa-chart-line" style="color: var(--olive);"></i> Statistik
+                            </h5>
+                        </div>
+                        <div style="text-align: left;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                <span style="color: var(--muted); font-size: 13px;">Total Siswa</span>
+                                <span style="font-weight: 600; font-size: 14px;">1,234</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                <span style="color: var(--muted); font-size: 13px;">Top 50 Ditampilkan</span>
+                                <span style="font-weight: 600; font-size: 14px;">50</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                <span style="color: var(--muted); font-size: 13px;">Total Poin</span>
+                                <span style="font-weight: 600; font-size: 14px;">5.2M</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);">
+                                <span style="color: var(--muted); font-size: 13px;">Materi Selesai</span>
+                                <span style="font-weight: 600; font-size: 14px;">8,456</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: var(--muted); font-size: 13px;">Rata-rata Streak</span>
+                                <span style="font-weight: 600; font-size: 14px;">12 hari</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tips Card -->
+                    <div class="sidebar-card" style="background: linear-gradient(135deg, var(--olive-light) 0%, rgba(124, 129, 93, 0.1) 100%);">
+                        <div style="text-align: left;">
+                            <h5 style="display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: var(--olive-dark);">
+                                <i class="fa-solid fa-lightbulb"></i> Tips Naik Peringkat
+                            </h5>
+                            <ul style="margin: 0; padding-left: 16px; font-size: 13px; color: var(--text);">
+                                <li style="margin-bottom: 8px;">Selesaikan materi setiap hari</li>
+                                <li style="margin-bottom: 8px;">Pertahankan streak belajar</li>
+                                <li style="margin-bottom: 8px;">Ikuti kuis dan ujian</li>
+                                <li style="margin-bottom: 0;">Bantu teman belajar</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="rank-road-wrap">
-                    <div class="rank-road">
-                        @foreach($rankTiers as $tierIndex => $tier)
+                <!-- Content -->
+                <div class="col-lg-9">
+                    
+                    <!-- Main Leaderboard -->
+                    <div class="content-card">
+                        <div class="card-header-row">
+                            <h4><i class="fa-solid fa-trophy"></i> Papan Peringkat Siswa</h4>
+                            <div class="filter-group">
+                                @auth
+                                <button onclick="jumpToMyRank()" class="jump-to-rank-btn">
+                                    <i class="fa-solid fa-crosshairs"></i> Lihat Peringkat Saya
+                                </button>
+                                @endauth
+                            </div>
+                        </div>
+
+                        <!-- Top 3 Podium Cards -->
+                        <div class="podium-section">
                             @php
-                                $isAchieved = $currentTierIndex !== false && $tierIndex < $currentTierIndex;
-                                $isCurrent = $currentTierIndex === $tierIndex;
-                                $isLocked = !($isAchieved || $isCurrent);
-                                $nodeClass = $levelClasses[$tier['name']] ?? 'level-explorer';
+                                $top3 = $allStudents->take(3);
+                                $silver = $top3->get(1);
+                                $gold = $top3->get(0);
+                                $bronze = $top3->get(2);
                             @endphp
-                            <div class="rank-node {{ $isCurrent ? 'rank-node--current' : '' }} {{ $isLocked ? 'rank-node--locked' : '' }}">
-                                <div class="rank-node-badge {{ $nodeClass }}">
-                                    <span class="rank-node-icon">
-                                        <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$tier['name']]) }}" alt="{{ $tier['name'] }}" style="width: 64px; height: 64px;">
-                                    </span>
-                                </div>
-                                <span class="rank-node-name">{{ $tier['name'] }}</span>
-                                <span class="rank-node-xp">{{ $tier['min_xp'] }} XP</span>
+                            <div class="podium-card podium-silver">
+                                @if($silver)
+                                    <div class="podium-rank">2</div>
+                                    <img src="{{ $silver->avatar_url ?? asset('frontend/images/avatar-placeholder.webp') }}" class="podium-avatar" alt="2nd Place">
+                                    <h5 class="podium-name">{{ $silver->user->name ?? 'Siswa Silver' }}</h5>
+                                    <div class="podium-points">{{ number_format($silver->experience_points ?? 0) }} <small>poin</small></div>
+                                @else
+                                    <div class="podium-rank">2</div>
+                                    <div class="podium-avatar-placeholder">
+                                        <i class="fa-solid fa-user-slash"></i>
+                                    </div>
+                                    <h5 class="podium-name">Podium Kosong</h5>
+                                    <div class="podium-points">- <small>poin</small></div>
+                                @endif
                             </div>
-                            @if(!$loop->last)
-                                <div class="rank-connector {{ $isAchieved || $isCurrent ? 'rank-connector--active' : '' }}"></div>
-                            @endif
-                        @endforeach
+                            <div class="podium-card podium-gold">
+                                @if($gold)
+                                    <div class="podium-rank">1</div>
+                                    <img src="{{ $gold->avatar_url ?? asset('frontend/images/avatar-placeholder.webp') }}" class="podium-avatar" alt="1st Place">
+                                    <h5 class="podium-name">{{ $gold->user->name ?? 'Siswa Gold' }}</h5>
+                                    <div class="podium-points">{{ number_format($gold->experience_points ?? 0) }} <small>poin</small></div>
+                                @else
+                                    <div class="podium-rank">1</div>
+                                    <div class="podium-avatar-placeholder">
+                                        <i class="fa-solid fa-user-slash"></i>
+                                    </div>
+                                    <h5 class="podium-name">Podium Kosong</h5>
+                                    <div class="podium-points">- <small>poin</small></div>
+                                @endif
+                            </div>
+                            <div class="podium-card podium-bronze">
+                                @if($bronze)
+                                    <div class="podium-rank">3</div>
+                                    <img src="{{ $bronze->avatar_url ?? asset('frontend/images/avatar-placeholder.webp') }}" class="podium-avatar" alt="3rd Place">
+                                    <h5 class="podium-name">{{ $bronze->user->name ?? 'Siswa Bronze' }}</h5>
+                                    <div class="podium-points">{{ number_format($bronze->experience_points ?? 0) }} <small>poin</small></div>
+                                @else
+                                    <div class="podium-rank">3</div>
+                                    <div class="podium-avatar-placeholder">
+                                        <i class="fa-solid fa-user-slash"></i>
+                                    </div>
+                                    <h5 class="podium-name">Podium Kosong</h5>
+                                    <div class="podium-points">- <small>poin</small></div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Leaderboard Table -->
+                        <!-- Mobile: Show table with all students starting from rank 1 -->
+                        <div class="table-responsive mobile-only" style="display: none;">
+                            <table class="leaderboard-table">
+                                <thead>
+                                    <tr>
+                                        <th width="80">Peringkat</th>
+                                        <th>Siswa</th>
+                                        <th>Poin</th>
+                                        <th>Materi Selesai</th>
+                                        <th>Bergabung</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboardBodyMobile">
+                                    @php
+                                        $currentPage = $mobileStudents->currentPage();
+                                        $perPage = $mobileStudents->perPage();
+                                        $rankOffset = ($currentPage - 1) * $perPage + 1;
+                                    @endphp
+
+                                    @foreach($mobileStudents as $student)
+                                    @php
+                                        $globalRank = $rankOffset + $loop->index;
+                                    @endphp
+                                    <tr>
+                                        <td><span class="rank-badge rank-other">{{ $globalRank }}</span></td>
+                                        <td>
+                                            <div class="student-info">
+                                                <img src="{{ $student->avatar_url ?? asset('frontend/images/avatar-placeholder.webp') }}" class="student-avatar" alt="">
+                                                <div class="student-details">
+                                                    <h6>{{ $student->user->name ?? 'Unknown' }}</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="points-cell">{{ number_format($student->experience_points ?? 0) }}</span></td>
+                                        <td>{{ $student->completed_materials_count ?? 0 }}</td>
+                                        <td>{{ $student->created_at ? $student->created_at->format('M Y') : '-' }}</td>
+                                    </tr>
+                                    @endforeach
+
+                                    @auth
+                                    @if($currentStudent)
+                                    @php
+                                        $userRank = $allStudents->search(fn($s) => $s->id === $currentStudent->id);
+                                        $userRank = $userRank !== false ? $userRank + 1 : null;
+                                        $isBeyond50 = $userRank > 50;
+                                    @endphp
+                                    <tr class="user-row" id="myRankRow">
+                                        <td><span class="rank-badge {{ $isBeyond50 ? 'rank-beyond-50' : 'rank-other' }}">{{ $isBeyond50 ? '-' : $userRank }}</span></td>
+                                        <td>
+                                            <div class="student-info">
+                                                @if($currentStudent->avatar_url)
+                                                    <img src="{{ $currentStudent->avatar_url }}" class="student-avatar" alt="{{ $currentStudent->user->name }}">
+                                                @else
+                                                    <div style="width: 45px; height: 45px; border-radius: 50%; background: var(--olive); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold;">
+                                                        {{ strtoupper(substr($currentStudent->user->name ?? 'A', 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                                <div class="student-details">
+                                                    <h6>{{ $currentStudent->user->name }} <span style="background: var(--olive); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px;">Anda</span></h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="points-cell">{{ number_format($currentStudent->experience_points ?? 0) }}</span></td>
+                                        <td>{{ $currentStudent->completed_materials_count ?? 0 }}</td>
+                                        <td>{{ $currentStudent->created_at ? $currentStudent->created_at->format('M Y') : '-' }}</td>
+                                    </tr>
+                                    @endif
+                                    @endauth
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Desktop: Show table starting from rank 4 (podium shows 1-3) -->
+                        @if($allStudents->count() > 3)
+                        <div class="table-responsive desktop-only">
+                            <table class="leaderboard-table">
+                                <thead>
+                                    <tr>
+                                        <th width="80">Peringkat</th>
+                                        <th>Siswa</th>
+                                        <th>Poin</th>
+                                        <th>Materi Selesai</th>
+                                        <th>Bergabung</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboardBody">
+                                    @php
+                                        $currentPage = $desktopStudents->currentPage();
+                                        $perPage = $desktopStudents->perPage();
+                                        $rankOffset = ($currentPage - 1) * $perPage + 4; // Start from rank 4
+                                    @endphp
+
+                                    @foreach($desktopStudents as $student)
+                                    @php
+                                        $globalRank = $rankOffset + $loop->index;
+                                    @endphp
+                                    <tr>
+                                        <td><span class="rank-badge rank-other">{{ $globalRank }}</span></td>
+                                        <td>
+                                            <div class="student-info">
+                                                <img src="{{ $student->avatar_url ?? asset('frontend/images/avatar-placeholder.webp') }}" class="student-avatar" alt="">
+                                                <div class="student-details">
+                                                    <h6>{{ $student->user->name ?? 'Unknown' }}</h6>
+                                                    <small>@{{ $student->user->name ?? 'unknown' }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="points-cell">{{ number_format($student->experience_points ?? 0) }}</span></td>
+                                        <td>{{ $student->completed_materials_count ?? 0 }}</td>
+                                        <td>{{ $student->created_at ? $student->created_at->format('M Y') : '-' }}</td>
+                                    </tr>
+                                    @endforeach
+                                    
+                                    @auth
+                                    @if($currentStudent)
+                                    @php
+                                        $userRank = $allStudents->search(fn($s) => $s->id === $currentStudent->id);
+                                        $userRank = $userRank !== false ? $userRank + 1 : null;
+                                        $isBeyond50 = $userRank > 50;
+                                    @endphp
+                                    <tr class="user-row" id="myRankRow">
+                                        <td><span class="rank-badge {{ $isBeyond50 ? 'rank-beyond-50' : 'rank-other' }}">{{ $isBeyond50 ? '-' : $userRank }}</span></td>
+                                        <td>
+                                            <div class="student-info">
+                                                @if($currentStudent->avatar_url)
+                                                    <img src="{{ $currentStudent->avatar_url }}" class="student-avatar" alt="{{ $currentStudent->user->name }}">
+                                                @else
+                                                    <div style="width: 45px; height: 45px; border-radius: 50%; background: var(--olive); color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold;">
+                                                        {{ strtoupper(substr($currentStudent->user->name ?? 'A', 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                                <div class="student-details">
+                                                    <h6>{{ $currentStudent->user->name }} <span style="background: var(--olive); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px;">Anda</span></h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="points-cell">{{ number_format($currentStudent->experience_points ?? 0) }}</span></td>
+                                        <td>{{ $currentStudent->completed_materials_count ?? 0 }}</td>
+                                        <td>{{ $currentStudent->created_at ? $currentStudent->created_at->format('M Y') : '-' }}</td>
+                                    </tr>
+                                    @endif
+                                    @endauth
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
+
+                        <!-- Pagination Mobile -->
+                        @if($mobileStudents->hasPages())
+                        <div class="pagination-wrapper mobile-only" style="display: none;">
+                            <div class="pagination-custom">
+                                @if($mobileStudents->onFirstPage())
+                                    <span class="disabled"><i class="fa-solid fa-chevron-left"></i></span>
+                                @else
+                                    <a href="{{ $mobileStudents->previousPageUrl() }}"><i class="fa-solid fa-chevron-left"></i></a>
+                                @endif
+
+                                @php
+                                    $currentPage = $mobileStudents->currentPage();
+                                    $lastPage = $mobileStudents->lastPage();
+                                    $startPage = max(1, $currentPage - 2);
+                                    $endPage = min($lastPage, $currentPage + 2);
+
+                                    if ($startPage > 1) {
+                                        echo '<a href="' . $mobileStudents->url(1) . '">1</a>';
+                                        if ($startPage > 2) {
+                                            echo '<span class="disabled">...</span>';
+                                        }
+                                    }
+
+                                    for ($i = $startPage; $i <= $endPage; $i++) {
+                                        if ($i == $currentPage) {
+                                            echo '<span class="active">' . $i . '</span>';
+                                        } else {
+                                            echo '<a href="' . $mobileStudents->url($i) . '">' . $i . '</a>';
+                                        }
+                                    }
+
+                                    if ($endPage < $lastPage) {
+                                        if ($endPage < $lastPage - 1) {
+                                            echo '<span class="disabled">...</span>';
+                                        }
+                                        echo '<a href="' . $mobileStudents->url($lastPage) . '">' . $lastPage . '</a>';
+                                    }
+                                @endphp
+
+                                @if($mobileStudents->hasMorePages())
+                                    <a href="{{ $mobileStudents->nextPageUrl() }}"><i class="fa-solid fa-chevron-right"></i></a>
+                                @else
+                                    <span class="disabled"><i class="fa-solid fa-chevron-right"></i></span>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Pagination Desktop -->
+                        @if($desktopStudents->hasPages())
+                        <div class="pagination-wrapper desktop-only">
+                            <div class="pagination-custom">
+                                @if($desktopStudents->onFirstPage())
+                                    <span class="disabled"><i class="fa-solid fa-chevron-left"></i></span>
+                                @else
+                                    <a href="{{ $desktopStudents->previousPageUrl() }}"><i class="fa-solid fa-chevron-left"></i></a>
+                                @endif
+
+                                @php
+                                    $currentPage = $desktopStudents->currentPage();
+                                    $lastPage = $desktopStudents->lastPage();
+                                    $startPage = max(1, $currentPage - 2);
+                                    $endPage = min($lastPage, $currentPage + 2);
+
+                                    if ($startPage > 1) {
+                                        echo '<a href="' . $desktopStudents->url(1) . '">1</a>';
+                                        if ($startPage > 2) {
+                                            echo '<span class="disabled">...</span>';
+                                        }
+                                    }
+
+                                    for ($i = $startPage; $i <= $endPage; $i++) {
+                                        if ($i == $currentPage) {
+                                            echo '<span class="active">' . $i . '</span>';
+                                        } else {
+                                            echo '<a href="' . $desktopStudents->url($i) . '">' . $i . '</a>';
+                                        }
+                                    }
+
+                                    if ($endPage < $lastPage) {
+                                        if ($endPage < $lastPage - 1) {
+                                            echo '<span class="disabled">...</span>';
+                                        }
+                                        echo '<a href="' . $desktopStudents->url($lastPage) . '">' . $lastPage . '</a>';
+                                    }
+                                @endphp
+
+                                @if($desktopStudents->hasMorePages())
+                                    <a href="{{ $desktopStudents->nextPageUrl() }}"><i class="fa-solid fa-chevron-right"></i></a>
+                                @else
+                                    <span class="disabled"><i class="fa-solid fa-chevron-right"></i></span>
+                                @endif
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
-
-                @if($currentStudent && $currentStudent->experience_points >= $minXpForLeaderboard)
-                    <div class="rank-hero">
-                        <div class="rank-hero-emblem-wrap">
-                            <div class="rank-hero-ring"></div>
-                            <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$currentLevel]) }}" alt="{{ $currentLevel }}" style="width: 72px; height: 72px;">
-                        </div>
-                        <div class="rank-hero-info">
-                            <span class="rank-hero-eyebrow">Rank Kamu</span>
-                            <h3 class="rank-hero-title">{{ $currentLevel }}</h3>
-                            <p class="rank-hero-desc">
-                                <strong>{{ number_format($currentStudent->experience_points) }} XP</strong> terkumpul.
-                                @if($isTopTier)
-                                    Kamu sudah mencapai rank tertinggi — pertahankan posisimu! 🏆
-                                @elseif($nextTier)
-                                    Terus belajar untuk naik ke <strong>{{ $nextTier['name'] }}</strong>.
-                                    <div class="rank-progress">
-                                        <div class="rank-progress-bar">
-                                            <div class="rank-progress-fill" style="width: {{ $xpProgress }}%;"></div>
-                                        </div>
-                                        <div class="rank-progress-text">{{ number_format($nextTierMinXp - $currentStudent->experience_points) }} XP lagi ke {{ $nextTier['name'] }}</div>
-                                    </div>
-                                @endif
-                            </p>
-                        </div>
-                        <div class="rank-hero-stats">
-                            <div class="rank-hero-stat">
-                                <span class="rank-hero-stat-label">Peringkat</span>
-                                <span class="rank-hero-stat-value">#{{ $currentStudentRank ?? '-' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                @elseif($currentStudent)
-                    <div class="rank-hero rank-hero--empty">
-                        <div class="rank-hero-emblem-wrap">
-                            <div class="rank-hero-emblem level-explorer">
-                                <span class="rank-hero-icon">🎯</span>
-                            </div>
-                        </div>
-                        <div class="rank-hero-info">
-                            <span class="rank-hero-eyebrow">Belum Qualifikasi</span>
-                            <h3 class="rank-hero-title">Rank Kamu</h3>
-                            <p class="rank-hero-desc">Kamu butuh <strong>{{ $minXpForLeaderboard }} XP</strong> untuk masuk leaderboard. Kumpulkan XP dengan menyelesaikan materi dan quiz!</p>
-                        </div>
-                        <a href="{{ route('kelas.index') }}" class="btn btn-primary">Mulai Belajar</a>
-                    </div>
-                @else
-                    <div class="rank-hero rank-hero--empty">
-                        <div class="rank-hero-emblem-wrap">
-                            <div class="rank-hero-emblem level-explorer">
-                                <span class="rank-hero-icon">🎯</span>
-                            </div>
-                        </div>
-                        <div class="rank-hero-info">
-                            <span class="rank-hero-eyebrow">Belum ada data</span>
-                            <h3 class="rank-hero-title">Rank Kamu</h3>
-                            <p class="rank-hero-desc">Masuk sebagai siswa untuk melihat status rank dan kemajuan XP kamu.</p>
-                        </div>
-                        <a href="{{ route('login') }}?intended={{ urlencode(request()->fullUrl()) }}" class="btn btn-primary">Login Sekarang</a>
-                    </div>
-                @endif
-
-                @if($qualifiedStudents->count() > 0)
-                    @if($qualifiedStudents->count() >= 3)
-                        <div class="podium-row">
-                            @foreach($qualifiedStudents->take(3) as $index => $item)
-                                <div class="podium-item podium-item--rank-{{ $index + 1 }}">
-                                    <div class="podium-rank">{{ $index + 1 }}</div>
-                                    <div class="podium-badge {{ $levelClasses[$item->level] ?? 'level-explorer' }}">
-                                        <span class="podium-icon">
-                                            <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$item->level]) }}" alt="{{ $item->level }}" style="width: 24px; height: 24px;">
-                                        </span>
-                                        <span>{{ $item->level }}</span>
-                                    </div>
-                                    <div class="podium-name">{{ $item->user->name }}</div>
-                                    <div class="podium-meta">{{ number_format($item->experience_points) }} XP • {{ $item->passed_quiz_count }} Quiz</div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-
-                    <div class="table-responsive">
-                        <table class="leaderboard-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nama</th>
-                                    <th scope="col">Level</th>
-                                    <th scope="col">XP</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($qualifiedStudents as $index => $item)
-                                    <tr>
-                                        <td><span class="rank-circle">{{ $index + 1 }}</span></td>
-                                        <td>
-                                            <div><strong>{{ $item->user->name }}</strong></div>
-                                            <div class="text-muted small">{{ $item->user->email }}</div>
-                                        </td>
-                                        <td>
-                                            <span class="level-badge {{ $levelClasses[$item->level] ?? 'level-explorer' }}">
-                                                <img src="{{ asset('frontend/img/leaderboard/' . $levelImages[$item->level]) }}" alt="{{ $item->level }}" style="width: 20px; height: 20px; margin-right: 4px;"> {{ $item->level }}
-                                            </span>
-                                        </td>
-                                        <td>{{ number_format($item->experience_points) }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                @else
-                    <div class="empty-state">
-                        <p>Belum ada peserta di leaderboard untuk season ini.</p>
-                    </div>
-                @endif
             </div>
         </div>
     </section>
 
     <script>
-        // Celebration confetti animation when user reaches new rank
-        function triggerConfetti() {
-            const container = document.createElement('div');
-            container.className = 'confetti-container';
-            document.body.appendChild(container);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter functionality
+        const categoryFilter = document.getElementById('categoryFilter');
 
-            const colors = ['#f6c744', '#4f8ef7', '#8a6dff', '#38bdf8', '#0ea5e9', '#f79c42'];
+        categoryFilter.addEventListener('change', function() {
+            // Add your filtering logic here
+            console.log('Category filter changed:', this.value);
+        });
+    });
+
+    function showLeaderboardSection(section) {
+        // Remove active class from all links
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Add active class to clicked link
+        document.getElementById('link-' + section).classList.add('active');
+        
+        // Add your section switching logic here
+        console.log('Showing section:', section);
+    }
+
+    function jumpToMyRank() {
+        const myRankRow = document.getElementById('myRankRow');
+        if (myRankRow) {
+            // Scroll to the user's rank row
+            myRankRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDelay = Math.random() * 2 + 's';
-                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                container.appendChild(confetti);
-            }
-
+            // Add highlight animation
+            myRankRow.style.transition = 'background-color 0.3s ease';
+            myRankRow.style.backgroundColor = 'rgba(124, 129, 93, 0.5)';
+            
+            // Remove highlight after animation
             setTimeout(() => {
-                container.remove();
-            }, 5000);
+                myRankRow.style.backgroundColor = '';
+            }, 2000);
         }
-
-        // Check if user just leveled up (you can customize this logic based on your backend)
-        @if($currentStudent && session('rank_upgraded'))
-            @php
-                session()->forget('rank_upgraded');
-            @endphp
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(triggerConfetti, 500);
-            });
-        @endif
+    }
     </script>
 @endsection

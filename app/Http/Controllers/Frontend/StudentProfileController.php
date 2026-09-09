@@ -36,7 +36,10 @@ class StudentProfileController extends Controller
     {
         $user = Auth::user();
 
-        $students = Student::with('user')->get()
+        $page = request()->get('page', 1);
+        $perPage = 50;
+
+        $allStudents = Student::with('user')->get()
             ->sortByDesc(fn ($studentItem) => $studentItem->experience_points)
             ->values();
 
@@ -45,7 +48,42 @@ class StudentProfileController extends Controller
             $currentStudent = $user->student->load('user');
         }
 
-        return view('frontend.leaderboard', compact('students', 'currentStudent'));
+        // For mobile: paginate all students (including top 3)
+        $mobilePaginatedList = $allStudents;
+        if ($currentStudent) {
+            $mobilePaginatedList = $allStudents->reject(fn($s) => $s->id === $currentStudent->id)->values();
+        }
+
+        $mobileStudents = new \Illuminate\Pagination\LengthAwarePaginator(
+            $mobilePaginatedList->forPage($page, $perPage),
+            $mobilePaginatedList->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        // For desktop: exclude top 3 students (podium) and current student from paginated list
+        $top3Ids = $allStudents->take(3)->pluck('id')->toArray();
+        $desktopPaginatedList = $allStudents->reject(fn($s) => in_array($s->id, $top3Ids))->values();
+
+        if ($currentStudent) {
+            $desktopPaginatedList = $desktopPaginatedList->reject(fn($s) => $s->id === $currentStudent->id)->values();
+        }
+
+        $desktopStudents = new \Illuminate\Pagination\LengthAwarePaginator(
+            $desktopPaginatedList->forPage($page, $perPage),
+            $desktopPaginatedList->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('frontend.leaderboard', [
+            'mobileStudents' => $mobileStudents,
+            'desktopStudents' => $desktopStudents,
+            'allStudents' => $allStudents,
+            'currentStudent' => $currentStudent
+        ]);
     }
 
     public function edit()

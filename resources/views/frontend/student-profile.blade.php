@@ -272,6 +272,63 @@
             font-size: 13px;
         }
         
+        .certificate-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .certificate-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .certificate-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .certificate-info {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .certificate-info h5 {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 0 0 8px;
+            color: var(--text);
+        }
+        
+        .certificate-date {
+            font-size: 13px;
+            color: var(--muted);
+            margin: 0 0 16px;
+        }
+        
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--olive);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        
+        .btn-download:hover {
+            background: var(--olive-dark);
+            color: white;
+        }
+        
         @media (max-width: 900px) {
             .profile-top {
                 flex-direction: column;
@@ -332,11 +389,8 @@
                     <a href="#" onclick="showSection('classes'); return false;" class="sidebar-link" id="link-classes">
                         <i class="fa-solid fa-book"></i> Kelas Saya
                     </a>
-                    <a href="/nilai-quiz" class="sidebar-link">
-                        <i class="fa-solid fa-clipboard-list"></i> Nilai & Quiz
-                    </a>
-                    <a href="#" class="sidebar-link">
-                        <i class="fa-solid fa-gear"></i> Pengaturan
+                    <a href="#" onclick="showSection('certificates'); return false;" class="sidebar-link" id="link-certificates">
+                        <i class="fa-solid fa-certificate"></i> Sertifikat
                     </a>
                 </div>
 
@@ -347,9 +401,9 @@
                     <div id="section-profile">
                     <!-- Ringkasan Profil -->
                     <div class="content-card">
-                        <a href="{{ route('student.profile.edit') }}" class="btn-pill" style="position: absolute; top: 36px; right: 36px;">
+                        <button onclick="openEditProfileModal()" class="btn-pill" style="position: absolute; top: 36px; right: 36px;">
                             <i class="fa-solid fa-pen"></i> Ubah Profil
-                        </a>
+                        </button>
 
                         <div class="profile-top">
                             <div class="avatar-wrap">
@@ -524,7 +578,7 @@
                                                 </div>
                                                 <p class="small">{{ $completedMaterials }}/{{ $totalMaterials }} materi • {{ $progressPercent }}% selesai</p>
                                             </div>
-                                            <a class="btn-line" href="{{ route('mindmap.show', $course->subcategory->slug) }}">Lanjutkan Belajar</a>
+                                            <a class="btn-line" href="{{ route('mindmap.show', $course->subcategory->slug) }}?class_id={{ $course->id }}">Lanjutkan Belajar</a>
                                         </div>
                                         <img src="{{ asset('frontend/images/icons-white/1.png') }}" class="abs abs-centered w-20 z-2" alt="">
                                         <div class="abs bg-color z-2 top-0 w-100 h-100 hover-op-1"></div>
@@ -552,24 +606,252 @@
                         </div>
                     </div>
 
+                    <!-- Certificates Section -->
+                    <div id="section-certificates" style="display: none;">
+                        <h4 style="margin-bottom: 24px; font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-certificate" style="color: var(--olive);"></i> Sertifikat Saya
+                        </h4>
+                        
+                        <!-- Search -->
+                        <div class="row mb-4">
+                            <div class="col-lg-12">
+                                <div class="relative">
+                                    <input type="text" id="certificateSearch" class="form-control bg-white border-gray rounded-1 px-5 py-3" placeholder="Cari sertifikat berdasarkan judul atau tanggal..." style="font-size: 16px; height: 50px;">
+                                    <div class="abs" style="left: 20px; top: 50%; transform: translateY(-50%); color: #999;">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-4" id="certificateGrid">
+                            <!-- Sertifikat Sementara -->
+                            <div class="col-lg-4 col-sm-6 certificate-card-item">
+                                <div class="certificate-card">
+                                    <img src="{{ asset('frontend/images/services/1.webp') }}" class="certificate-image" alt="Sertifikat Kelas Dasar">
+                                    <div class="certificate-info">
+                                        <h5>Sertifikat Kelas Dasar</h5>
+                                        <p class="certificate-date">20 Januari 2026</p>
+                                        <a href="#" class="btn-download" target="_blank">
+                                            <i class="fa-solid fa-download"></i> Download
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- No Results Message -->
+                        <div class="row" id="noCertificateResults" style="display: none;">
+                            <div class="col-lg-12 text-center py-5">
+                                <div class="bg-white border-gray rounded-1 p-5" style="max-width: 500px; margin: 0 auto;">
+                                    <div class="mb-3">
+                                        <i class="fa fa-search-minus fs-48 text-muted"></i>
+                                    </div>
+                                    <h4 class="mb-3">Tidak ada sertifikat yang ditemukan</h4>
+                                    <p class="text-muted mb-0">Coba kata kunci lain atau periksa ejaan pencarian Anda.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+        <div style="background:#fff;padding:40px;border-radius:16px;max-width:600px;width:100%;max-height:calc(100vh - 40px);overflow-y:auto;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);position:relative;-webkit-overflow-scrolling:touch;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;">
+                <h3 style="margin:0;color:#22231C;font-size:24px;font-weight:700;">Ubah Profil</h3>
+                <button onclick="closeEditProfileModal()" style="background:none;border:none;font-size:24px;cursor:pointer;color:#8B8D7E;padding:0;">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            
+            <form action="{{ route('student.profile.update') }}" method="POST" enctype="multipart/form-data" style="text-align:left;">
+                @csrf
+                @method('PUT')
+                
+                <!-- Avatar Upload -->
+                <div style="margin-bottom:24px;text-align:center;">
+                    <div style="position:relative;display:inline-block;">
+                        @if($student->avatar_url)
+                            <img src="{{ $student->avatar_url }}" id="avatarPreview" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #7C815D;" alt="Avatar">
+                        @else
+                            <div id="avatarPreview" style="width:100px;height:100px;border-radius:50%;background:#7C815D;color:white;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:bold;border:3px solid #7C815D;">
+                                {{ strtoupper(substr($student->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        <label for="avatar" style="position:absolute;bottom:0;right:0;background:#7C815D;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;border:2px solid white;">
+                            <i class="fa-solid fa-camera" style="font-size:14px;"></i>
+                        </label>
+                        <input type="file" id="avatar" name="avatar" accept="image/*" style="display:none;" onchange="previewAvatar(this)">
+                    </div>
+                    <p style="margin-top:10px;font-size:13px;color:#8B8D7E;">Format: JPG, PNG, WEBP (Max 2MB)</p>
+                </div>
+                
+                <!-- Form Fields -->
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Nama Lengkap</label>
+                    <input type="text" name="name" value="{{ $student->name }}" required style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Email</label>
+                    <input type="email" name="email" value="{{ $student->email }}" required style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">NIS</label>
+                    <input type="text" name="nis" value="{{ $student->nis ?? '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Kelas</label>
+                    <input type="text" name="grade" value="{{ $student->grade ?? '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Sekolah</label>
+                    <input type="text" name="school" value="{{ $student->school ?? '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Jurusan</label>
+                    <input type="text" name="major" value="{{ $student->major ?? '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">No. Telepon</label>
+                    <input type="text" name="phone" value="{{ $student->phone ?? '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Alamat</label>
+                    <textarea name="address" rows="3" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;resize:vertical;">{{ $student->address ?? '' }}</textarea>
+                </div>
+                
+                <div style="margin-bottom:20px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Tanggal Lahir</label>
+                    <input type="date" name="birth_date" value="{{ $student->birth_date ? $student->birth_date->format('Y-m-d') : '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <div style="margin-bottom:30px;">
+                    <label style="display:block;margin-bottom:8px;font-weight:600;font-size:14px;color:#22231C;">Minat Belajar</label>
+                    <input type="text" name="learning_interest" value="{{ $student->learning_interest ?? '' }}" style="width:100%;padding:12px 16px;border:1px solid #ECECE4;border-radius:8px;font-size:15px;background:#F7F7F3;">
+                </div>
+                
+                <!-- Buttons -->
+                <div style="display:flex;gap:15px;justify-content:center;">
+                    <button type="button" onclick="closeEditProfileModal()" style="background:white;color:#22231C;padding:12px 30px;border:1px solid #ECECE4;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;">
+                        Batal
+                    </button>
+                    <button type="submit" style="background:#7C815D;color:white;padding:12px 30px;border:none;border-radius:8px;cursor:pointer;font-size:16px;font-weight:600;">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        function openEditProfileModal() {
+            const modal = document.getElementById('editProfileModal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.top = `-${window.scrollY}px`;
+        }
+
+        function closeEditProfileModal() {
+            const modal = document.getElementById('editProfileModal');
+            const scrollY = document.body.style.top;
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        }
+
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('avatarPreview');
+                    if (preview.tagName === 'IMG') {
+                        preview.src = e.target.result;
+                    } else {
+                        // Replace div with img
+                        const img = document.createElement('img');
+                        img.id = 'avatarPreview';
+                        img.src = e.target.result;
+                        img.style.cssText = 'width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #7C815D;';
+                        preview.parentNode.replaceChild(img, preview);
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         function showSection(section) {
             // Hide all sections
             document.getElementById('section-profile').style.display = 'none';
             document.getElementById('section-classes').style.display = 'none';
+            document.getElementById('section-certificates').style.display = 'none';
             
             // Remove active class from all links
             document.getElementById('link-profile').classList.remove('active');
             document.getElementById('link-classes').classList.remove('active');
+            document.getElementById('link-certificates').classList.remove('active');
             
             // Show selected section and activate link
             document.getElementById('section-' + section).style.display = 'block';
             document.getElementById('link-' + section).classList.add('active');
         }
+
+        // Certificate Search Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('certificateSearch');
+            const certificateGrid = document.getElementById('certificateGrid');
+            const certificateCards = certificateGrid.querySelectorAll('.certificate-card-item');
+            const noResults = document.getElementById('noCertificateResults');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                certificateCards.forEach(card => {
+                    const title = card.querySelector('h5').textContent.toLowerCase();
+                    const date = card.querySelector('.certificate-date').textContent.toLowerCase();
+
+                    if (title.includes(searchTerm) || date.includes(searchTerm)) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show/hide no results message
+                if (visibleCount === 0 && certificateCards.length > 0) {
+                    noResults.style.display = '';
+                } else {
+                    noResults.style.display = 'none';
+                }
+            });
+
+            // Close modal when clicking outside
+            const editProfileModal = document.getElementById('editProfileModal');
+            if (editProfileModal) {
+                editProfileModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeEditProfileModal();
+                    }
+                });
+            }
+        });
     </script>
 @endsection

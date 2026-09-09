@@ -120,9 +120,9 @@
                                                     <i class="fa fa-clock"></i> Menunggu
                                                 </button>
                                             @elseif($enrollments[$class->id] === 'active' || $enrollments[$class->id] === 'completed')
-                                                <button class="btn btn-sm btn-success w-100" disabled>
-                                                    <i class="fa fa-check"></i> Sudah Bergabung
-                                                </button>
+                                                <a href="{{ route('mindmap.show', $subcategory->slug ?? $category->slug) }}?class_id={{ $class->id }}" class="btn btn-sm btn-success w-100 text-decoration-none">
+                                                    <i class="fa fa-book-open"></i> Buka Kelas
+                                                </a>
                                             @else
                                                 <form method="POST" action="{{ route('kelas.join', $class->slug) }}">
                                                     @csrf
@@ -791,6 +791,7 @@
     let dragOffset = { x: 0, y: 0 };
     let userCompletedMaterials = [];
     let lockedNodes = new Set();
+    let activeClassId = '{{ $classId ?? '' }}';
 
     // Draw.io features
     let currentTool = 'pan';
@@ -960,14 +961,21 @@
                     }
 
                     if (nodeData.materialSlug) {
-                        window.location.href = '/materi/' + nodeData.materialSlug;
+                        // Use activeClassId from mindmap, fallback to URL parameter
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const classId = activeClassId || urlParams.get('class_id');
+                        const materialUrl = classId ? '/materi/' + nodeData.materialSlug + '?class_id=' + classId : '/materi/' + nodeData.materialSlug;
+                        window.location.href = materialUrl;
                     } else if (nodeData.materialId) {
                         // If slug is not available, try to get it via AJAX
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const classId = activeClassId || urlParams.get('class_id');
                         fetch(`/api/materials/${nodeData.materialId}/slug`)
                             .then(response => response.json())
                             .then(data => {
                                 if (data.slug) {
-                                    window.location.href = '/materi/' + data.slug;
+                                    const materialUrl = classId ? '/materi/' + data.slug + '?class_id=' + classId : '/materi/' + data.slug;
+                                    window.location.href = materialUrl;
                                 }
                             })
                             .catch(error => console.error('Error fetching material slug:', error));

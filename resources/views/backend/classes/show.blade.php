@@ -124,7 +124,11 @@
                                     @forelse($class->materials as $index => $material)
                                         <tr>
                                             <td class="text-center">{{ $index + 1 }}</td>
-                                            <td>{{ $material->title }}</td>
+                                            <td>
+                                                <a href="{{ route('materi.show', $material->slug) }}?class_id={{ $class->id }}" target="_blank" class="text-decoration-none fw-bold">
+                                                    {{ $material->title }}
+                                                </a>
+                                            </td>
                                             <td>
                                                 <span class="badge bg-soft-{{ $material->status === 'publish' ? 'success' : ($material->status === 'draft' ? 'secondary' : 'warning') }} text-{{ $material->status === 'publish' ? 'success' : ($material->status === 'draft' ? 'secondary' : 'warning') }}">
                                                     {{ $material->formatted_status }}

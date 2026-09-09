@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Teacher;
-use Illuminate\Http\Request;
+use App\Models\CourseClass;
 
 class TeacherController extends Controller
 {
@@ -12,7 +12,7 @@ class TeacherController extends Controller
     {
         $teachers = Teacher::with('user')->whereHas('user', function($query) {
             $query->where('is_active', true);
-        })->paginate(9);
+        })->paginate(1);
         return view('frontend.teacher', compact('teachers'));
     }
 
@@ -30,7 +30,14 @@ class TeacherController extends Controller
     public function show($slug)
     {
         $teacher = Teacher::with('user')->where('slug', $slug)->firstOrFail();
-        return view('frontend.teacher-detail', compact('teacher'));
+
+        $publishedCourses = CourseClass::where('teacher_id', $teacher->id)
+            ->where('status', 'publish')
+            ->with(['category', 'subcategory', 'materials'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(1);
+
+        return view('frontend.teacher-detail', compact('teacher', 'publishedCourses'));
     }
 
     public function reviews($slug)

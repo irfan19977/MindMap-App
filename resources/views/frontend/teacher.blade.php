@@ -70,7 +70,66 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12 pt-4 text-center">
-                        {{ $teachers->links() }}
+                        @if($teachers->hasPages())
+                        <div class="d-inline-block">
+                            <nav aria-label="Page navigation example">
+                              <ul class="pagination">
+                                @if($teachers->onFirstPage())
+                                <li class="page-item disabled">
+                                  <span class="page-link"><i class="fa fa-chevron-left"></i></span>
+                                </li>
+                                @else
+                                <li class="page-item">
+                                  <a class="page-link" href="{{ $teachers->previousPageUrl() }}" aria-label="Previous">
+                                    <span aria-hidden="true"><i class="fa fa-chevron-left"></i></span>
+                                  </a>
+                                </li>
+                                @endif
+
+                                <?php
+                                $currentPage = $teachers->currentPage();
+                                $lastPage = $teachers->lastPage();
+                                $startPage = max(1, $currentPage - 2);
+                                $endPage = min($lastPage, $currentPage + 2);
+
+                                if ($startPage > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="' . $teachers->url(1) . '">1</a></li>';
+                                    if ($startPage > 2) {
+                                        echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                    }
+                                }
+
+                                for ($i = $startPage; $i <= $endPage; $i++) {
+                                    if ($i == $currentPage) {
+                                        echo '<li class="page-item active" aria-current="page"><span class="page-link">' . $i . '</span></li>';
+                                    } else {
+                                        echo '<li class="page-item"><a class="page-link" href="' . $teachers->url($i) . '">' . $i . '</a></li>';
+                                    }
+                                }
+
+                                if ($endPage < $lastPage) {
+                                    if ($endPage < $lastPage - 1) {
+                                        echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                                    }
+                                    echo '<li class="page-item"><a class="page-link" href="' . $teachers->url($lastPage) . '">' . $lastPage . '</a></li>';
+                                }
+                                ?>
+
+                                @if($teachers->hasMorePages())
+                                <li class="page-item">
+                                  <a class="page-link" href="{{ $teachers->nextPageUrl() }}" aria-label="Next">
+                                    <span aria-hidden="true"><i class="fa fa-chevron-right"></i></span>
+                                  </a>
+                                </li>
+                                @else
+                                <li class="page-item disabled">
+                                  <span class="page-link"><i class="fa fa-chevron-right"></i></span>
+                                </li>
+                                @endif
+                              </ul>
+                            </nav>
+                        </div>
+                        @endif
                     </div>
                 </div>
                 <div class="row" id="noResults" style="display: none;">

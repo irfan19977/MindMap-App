@@ -141,7 +141,7 @@
                                                 <span class="badge bg-soft-primary text-primary">{{ $class->category->name ?? '-' }}</span>
                                             </td>
                                             <td class="text-center">
-                                                <span class="badge bg-soft-info text-info">{{ $class->subcategory->formatted_grade_level ?? '-' }}</span>
+                                                <span class="badge bg-soft-info text-info">{{ $class->effective_grade_level ?? '-' }}</span>
                                             </td>
                                             <td class="text-center">
                                                 {{ $class->teacher->name ?? '-' }}
