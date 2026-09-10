@@ -38,7 +38,6 @@
 
                     <div class="spacer-double sm-hide"></div>
                 </div>
-                <div class="abs w-100 bottom-0 z-2 pb-4 sm-hide">
                     <div class="container">
                     <div class="row g-4 text-center">
                             <div class="col-md-3 col-sm-6">
@@ -94,14 +93,14 @@
                   <div class="swiper-wrapper">
                     <!-- Slides -->
                     <div class="swiper-slide">
-                        <div class="swiper-inner" data-bgimage="url({{ asset('frontend/images/slider/1.webp') }})">
+                        <div class="swiper-inner" data-bgimage="url({{ asset('frontend/images/slider/1.png') }})">
                             <div class="sw-overlay op-5"></div>
                         </div>
                     </div>
                     <!-- Slides -->
                     <!-- Slides -->
                     <div class="swiper-slide">
-                        <div class="swiper-inner" data-bgimage="url({{ asset('frontend/images/slider/2.webp') }})">
+                        <div class="swiper-inner" data-bgimage="url({{ asset('frontend/images/slider/2.png') }})">
                             <div class="sw-overlay op-5"></div>
                         </div>
                     </div>                        
@@ -128,14 +127,13 @@
                     <!-- service item begin -->
                     <div class="col-lg-4 col-sm-6">
                         <div class="hover rounded-1 overflow-hidden relative text-light text-center wow fadeInRight" data-wow-delay=".0s">
-                            <img src="{{ asset('frontend/images/services/1.webp') }}" class="hover-scale-1-1 w-100" alt="">
+                            <img src="{{ asset('frontend/images/services/1.jpeg') }}" class="hover-scale-1-1 w-100" alt="">
                             <div class="abs w-100 px-4 hover-op-1 z-4 hover-mt-40 abs-centered">
                                 <div class="mb-3">
                                     Pelajari materi pelajaran dengan mindmap interaktif yang membantu memahami konsep dengan cara visual dan menyenangkan.
                                 </div>
                                 <a class="btn-line" href="#">Mulai Belajar</a>
                             </div>
-                            <img src="{{ asset('frontend/images/icons-white/1.png') }}" class="abs abs-centered w-20 z-2" alt="">
                             <div class="abs bg-color z-2 top-0 w-100 h-100 hover-op-1"></div>
                             <div class="abs z-2 bottom-0 mb-3 w-100 text-center hover-op-0">
                                 <h3 class="hs-4 mb-3">MindMap Interaktif</h3>
@@ -147,14 +145,13 @@
                     <!-- service item begin -->
                     <div class="col-lg-4 col-sm-6">
                         <div class="hover rounded-1 overflow-hidden relative text-light text-center wow fadeInRight" data-wow-delay=".3s">
-                            <img src="{{ asset('frontend/images/services/2.webp') }}" class="hover-scale-1-1 w-100" alt="">
+                            <img src="{{ asset('frontend/images/services/2.jpeg') }}" class="hover-scale-1-1 w-100" alt="">
                             <div class="abs w-100 px-4 hover-op-1 z-4 hover-mt-40 abs-centered">
                                 <div class="mb-3">
                                     Latih pemahaman dengan kuis interaktif yang memberikan umpan balik instan dan penilaian otomatis.
                                 </div>
                                 <a class="btn-line" href="#">Ikuti Kuis</a>
                             </div>
-                            <img src="{{ asset('frontend/images/icons-white/2.png') }}" class="abs abs-centered w-20 z-2" alt="">
                             <div class="abs bg-color z-2 top-0 w-100 h-100 hover-op-1"></div>
                             <div class="abs z-2 bottom-0 mb-3 w-100 text-center hover-op-0">
                                 <h3 class="hs-4 mb-3">Kuis Interaktif</h3>
@@ -166,14 +163,13 @@
                     <!-- service item begin -->
                     <div class="col-lg-4 col-sm-6">
                         <div class="hover rounded-1 overflow-hidden relative text-light text-center wow fadeInRight" data-wow-delay=".6s">
-                            <img src="{{ asset('frontend/images/services/3.webp') }}" class="hover-scale-1-1 w-100" alt="">
+                            <img src="{{ asset('frontend/images/services/3.jpeg') }}" class="hover-scale-1-1 w-100" alt="">
                             <div class="abs w-100 px-4 hover-op-1 z-4 hover-mt-40 abs-centered">
                                 <div class="mb-3">
                                     Dapatkan bantuan belajar dari AI assistant yang siap menjawab pertanyaan dan memberikan penjelasan materi.
                                 </div>
                                 <a class="btn-line" href="#">Tanya AI</a>
                             </div>
-                            <img src="{{ asset('frontend/images/icons-white/3.png') }}" class="abs abs-centered w-20 z-2" alt="">
                             <div class="abs bg-color z-2 top-0 w-100 h-100 hover-op-1"></div>
                             <div class="abs z-2 bottom-0 mb-3 w-100 text-center hover-op-0">
                                 <h3 class="hs-4 mb-3">AI Assistant</h3>
@@ -238,7 +234,7 @@
         </section>
 
         <section class="jarallax bg-dark-1 text-light">
-            <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+            <img src="{{ asset('frontend/images/background/1.png') }}" class="jarallax-img" alt="">
             <div class="sw-overlay"></div>
 
             <div class="container">
@@ -501,9 +497,9 @@
                     <div class="col-lg-6">
                         <div class="relative">
                             <div class="w-100 pe-5 pb-5 wow scaleIn">
-                                <img src="{{ asset('frontend/images/misc/l1.webp') }}" class="w-100 rounded-1" alt="">
+                                <img src="{{ asset('frontend/images/misc/1.jpeg') }}" class="w-100 rounded-1" alt="">
                             </div>
-                            <img src="{{ asset('frontend/images/misc/s1.webp') }}" class="w-40 rounded-1 abs end-0 bottom-0 z-2 soft-shadow wow scaleIn" data-wow-delay=".2s" alt="">
+                            <img src="{{ asset('frontend/images/misc/2.jpeg') }}" class="w-40 rounded-1 abs end-0 bottom-0 z-2 soft-shadow wow scaleIn" data-wow-delay=".2s" alt="">
                         </div>
                     </div>
 
@@ -617,8 +613,8 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="twentytwenty-container rounded-1 wow fadeInUp">
-                            <img src="{{ asset('frontend/images/before-after/1b.webp') }}" alt="" class="img-responsive">
-                            <img src="{{ asset('frontend/images/before-after/1a.webp') }}" alt="" class="img-responsive">
+                            <img src="{{ asset('frontend/images/before-after/2.jpeg') }}" alt="" class="img-responsive">
+                            <img src="{{ asset('frontend/images/before-after/1.png') }}" alt="" class="img-responsive">
                         </div>
                     </div>
                 </div>

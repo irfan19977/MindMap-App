@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Verifikasi Email - MindMap</title>
+    <title>Terjadi Kesalahan - MindMap</title>
     <link rel="icon" href="{{ asset('frontend/images/logo/logodark.png') }}" type="image/gif" sizes="16x16">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -16,7 +16,7 @@
     <link id="colors" href="{{ asset('frontend/css/colors/scheme-01.css') }}" rel="stylesheet" type="text/css">
     
     <style>
-        .login-container {
+        .error-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -29,7 +29,7 @@
             padding: 20px;
         }
         
-        .login-container::before {
+        .error-container::before {
             content: '';
             position: fixed;
             top: 0;
@@ -40,115 +40,99 @@
             z-index: 1;
         }
         
-        .login-card {
+        .error-card {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            max-width: 450px;
+            max-width: 500px;
             width: 100%;
-            padding: 40px;
+            padding: 50px 40px;
             position: relative;
             z-index: 2;
+            text-align: center;
         }
         
-        .login-logo {
-            text-align: center;
+        .error-logo {
             margin-bottom: 30px;
         }
         
-        .login-logo img {
-            max-width: 120px;
+        .error-logo img {
+            max-width: 100px;
             height: auto;
         }
         
-        .login-title {
-            text-align: center;
-            margin-bottom: 10px;
-            color: #333;
-            font-size: 28px;
-            font-weight: 700;
+        .error-code {
+            font-size: 120px;
+            font-weight: 800;
+            color: #ffc107;
+            line-height: 1;
+            margin-bottom: 20px;
         }
         
-        .login-subtitle {
-            text-align: center;
-            margin-bottom: 30px;
+        .error-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .error-message {
             color: #666;
-            font-size: 14px;
+            font-size: 16px;
+            margin-bottom: 30px;
             line-height: 1.6;
         }
         
-        .btn-login {
+        .btn-home {
             background: #8B9A46;
             border: none;
             border-radius: 10px;
-            padding: 12px;
+            padding: 12px 30px;
             font-size: 16px;
             font-weight: 600;
             color: white;
-            width: 100%;
             transition: all 0.2s;
-            margin-bottom: 12px;
+            text-decoration: none;
+            display: inline-block;
         }
         
-        .btn-login:hover {
+        .btn-home:hover {
             background: #7A8739;
             color: white;
             transform: translateY(-2px);
+            text-decoration: none;
         }
         
-        .btn-secondary {
-            background: #6c757d;
-            border: none;
-            border-radius: 10px;
-            padding: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            width: 100%;
-            transition: all 0.2s;
-        }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
-            color: white;
-            transform: translateY(-2px);
-        }
-        
-        .alert {
-            border-radius: 10px;
-            padding: 12px 15px;
+        .error-icon {
+            font-size: 80px;
+            color: #e0e0e0;
             margin-bottom: 20px;
-            font-size: 14px;
         }
     </style>
 </head>
 
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-logo">
-                <img src="{{ asset('frontend/images/logo/logodark.png') }}" alt="MindMap Logo" style="width: 60px;">
+    <div class="error-container">
+        <div class="error-card">
+            <div class="error-logo">
+                <img src="{{ asset('frontend/images/logo/logodark.png') }}" alt="MindMap Logo">
             </div>
             
-            <h2 class="login-title">Verifikasi Email</h2>
-            <p class="login-subtitle">Terima kasih telah mendaftar! Sebelum memulai, silakan verifikasi alamat email Anda dengan mengklik link yang baru saja kami kirimkan ke email Anda.</p>
-            
-            @if (session('status') == 'verification-link-sent')
-                <div class="alert alert-success" role="alert">
-                    Link verifikasi baru telah dikirim ke email Anda.
-                </div>
-            @endif
-
-            <div class="mt-4">
-                <form method="POST" action="{{ route('verification.send') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-login">Kirim Ulang Email Verifikasi</button>
-                </form>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn-secondary">Logout</button>
-                </form>
+            <div class="error-icon">
+                <i class="fa-solid fa-bug"></i>
             </div>
+            
+            <div class="error-code">{{ $exception->getStatusCode() ?? 'Error' }}</div>
+            
+            <h1 class="error-title">Terjadi Kesalahan</h1>
+            
+            <p class="error-message">
+                Maaf, terjadi kesalahan saat memproses permintaan Anda. Silakan coba lagi atau hubungi tim support kami jika masalah berlanjut.
+            </p>
+            
+            <a href="{{ url('/') }}" class="btn-home">
+                <i class="fa-solid fa-home me-2"></i>Kembali ke Beranda
+            </a>
         </div>
     </div>
     

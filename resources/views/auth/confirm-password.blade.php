@@ -3,7 +3,7 @@
 
 <head>
     <title>Konfirmasi Password - MindMap</title>
-    <link rel="icon" href="{{ asset('frontend/images/icon.webp') }}" type="image/gif" sizes="16x16">
+    <link rel="icon" href="{{ asset('frontend/images/logo/logodark.png') }}" type="image/gif" sizes="16x16">
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="MindMap - Platform Pembelajaran Interaktif" name="description">
@@ -22,7 +22,7 @@
             align-items: center;
             justify-content: center;
             background: #f5f5f5;
-            background-image: url('{{ asset('frontend/images/background/1.webp') }}');
+            background-image: url('{{ asset('frontend/images/slider/1.png') }}');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -154,7 +154,7 @@
     <div class="login-container">
         <div class="login-card">
             <div class="login-logo">
-                <img src="{{ asset('frontend/images/logo.webp') }}" alt="MindMap Logo">
+                <img src="{{ asset('frontend/images/logo/logodark.png') }}" alt="MindMap Logo" style="width: 60px;">
             </div>
             
             <h2 class="login-title">Konfirmasi Password</h2>

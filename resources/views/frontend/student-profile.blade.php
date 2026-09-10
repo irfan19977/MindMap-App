@@ -346,7 +346,7 @@
 
     <!-- Hero Section -->
     <section class="jarallax relative overflow-hidden z-1000 mt-80">
-        <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+        <img src="{{ asset('frontend/images/slider/2.png') }}" class="jarallax-img" alt="">
         <div class="sw-overlay op-2"></div>
         <div class="gradient-edge-start light w-40 start-40 op-9 z-2"></div>
         <div class="abs w-40 h-100 bg-white top-0 start-0 op-9 z-2"></div>
@@ -383,13 +383,13 @@
                         <span>Siswa</span>
                     </div>
 
-                    <a href="#" onclick="showSection('profile'); return false;" class="sidebar-link active" id="link-profile">
+                    <a href="#profile" onclick="showSection('profile'); return false;" class="sidebar-link active" id="link-profile">
                         <i class="fa-solid fa-user"></i> Profil Saya
                     </a>
-                    <a href="#" onclick="showSection('classes'); return false;" class="sidebar-link" id="link-classes">
+                    <a href="#classes" onclick="showSection('classes'); return false;" class="sidebar-link" id="link-classes">
                         <i class="fa-solid fa-book"></i> Kelas Saya
                     </a>
-                    <a href="#" onclick="showSection('certificates'); return false;" class="sidebar-link" id="link-certificates">
+                    <a href="#certificates" onclick="showSection('certificates'); return false;" class="sidebar-link" id="link-certificates">
                         <i class="fa-solid fa-certificate"></i> Sertifikat
                     </a>
                 </div>
@@ -801,19 +801,38 @@
             document.getElementById('section-profile').style.display = 'none';
             document.getElementById('section-classes').style.display = 'none';
             document.getElementById('section-certificates').style.display = 'none';
-            
+
             // Remove active class from all links
             document.getElementById('link-profile').classList.remove('active');
             document.getElementById('link-classes').classList.remove('active');
             document.getElementById('link-certificates').classList.remove('active');
-            
+
             // Show selected section and activate link
             document.getElementById('section-' + section).style.display = 'block';
             document.getElementById('link-' + section).classList.add('active');
+
+            // Update URL hash without scrolling
+            history.pushState(null, null, '#' + section);
         }
 
         // Certificate Search Functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // Check for hash in URL to show correct section
+            function checkHash() {
+                const hash = window.location.hash.replace('#', '');
+                console.log('Current hash:', hash);
+                if (hash === 'classes' || hash === 'certificates') {
+                    console.log('Showing section:', hash);
+                    showSection(hash);
+                }
+            }
+
+            // Check on load
+            setTimeout(checkHash, 100);
+
+            // Also check on hash change
+            window.addEventListener('hashchange', checkHash);
+
             const searchInput = document.getElementById('certificateSearch');
             const certificateGrid = document.getElementById('certificateGrid');
             const certificateCards = certificateGrid.querySelectorAll('.certificate-card-item');

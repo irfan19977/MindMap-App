@@ -32,4 +32,18 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             abort(403, $e->getMessage());
         });
+        
+        // Custom error pages
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
+            return response()->view('errors.404', [], 404);
+        });
+        
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, $request) {
+            if ($e->getStatusCode() == 500) {
+                return response()->view('errors.500', [], 500);
+            }
+            if ($e->getStatusCode() == 403) {
+                return response()->view('errors.403', [], 403);
+            }
+        });
     })->create();

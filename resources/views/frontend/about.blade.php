@@ -2,7 +2,7 @@
 
 @section('content')
             <section class="jarallax relative overflow-hidden z-1000 mt-80">
-            <img src="{{ asset('frontend/images/background/3.webp') }}" class="jarallax-img" alt="">
+            <img src="{{ asset('frontend/images/slider/2.png') }}" class="jarallax-img" alt="">
             <div class="sw-overlay op-2"></div>
             <div class="gradient-edge-start light w-40 start-40 op-9 z-2"></div>
             <div class="abs w-40 h-100 bg-white top-0 start-0 op-9 z-2"></div>
@@ -28,9 +28,9 @@
                     <div class="col-lg-6">
                         <div class="relative">
                             <div class="w-100 pe-5 pb-5 wow scaleIn">
-                                <img src="{{ asset('frontend/images/misc/l1.webp') }}" class="w-100 rounded-1" alt="">
+                                <img src="{{ asset('frontend/images/misc/1.jpeg') }}" class="w-100 rounded-1" alt="">
                             </div>
-                            <img src="{{ asset('frontend/images/misc/s1.webp') }}" class="w-40 rounded-1 abs end-0 bottom-0 z-2 soft-shadow wow scaleIn" data-wow-delay=".2s" alt="">
+                            <img src="{{ asset('frontend/images/misc/2.jpeg') }}" class="w-40 rounded-1 abs end-0 bottom-0 z-2 soft-shadow wow scaleIn" data-wow-delay=".2s" alt="">
                         </div>
                     </div>
 
@@ -105,7 +105,7 @@
         </section>
 
         <section class="jarallax bg-dark-1 text-light">
-            <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+            <img src="{{ asset('frontend/images/slider/1.png') }}" class="jarallax-img" alt="">
             <div class="sw-overlay"></div>
 
             <div class="container">
@@ -216,74 +216,87 @@
                     </div>
                 </div>
                 <div class="row g-4">
-                    <div class="col-lg-3 text-center">
+                    <div class="col-lg-3 text-center" style="flex: 0 0 20%; max-width: 20%;">
                         <div class="bg-white relative border-gray rounded-1 overflow-hidden">
-                            <img src="{{ asset('frontend/images/team/1.webp') }}" class="w-100" alt="">
+                            <img src="{{ asset('frontend/images/team/irfan.jpeg') }}" class="w-100" style="height: 300px; object-fit: cover;" alt="">
                             <div class="abs w-100 start-0 bottom-0 z-3">
                                 <div class="p-40 text-light relative z-2">
-                                    <h3 class="mb-0 text-uppercase lh-1-2">Andi<br>Pratama</h3>
+                                    <h3 class="mb-0 text-uppercase lh-1-2">Irfan Adi <br>Prastyo</h3>
                                 </div>
                                 <div class="gradient-edge-bottom color h-100"></div>
                             </div>
                         </div>
-                        <h4 class="mt-3">Founder & CEO</h4>
+                        <h4 class="mt-3">Project Manager</h4>
                         <div class="social-icons">
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-facebook-f"></i></a>
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-x-twitter"></i></a>
+                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-github"></i></a>
                             <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-instagram"></i></a>
                         </div>
                     </div>
 
-                    <div class="col-lg-3 text-center">
+                    <div class="col-lg-3 text-center" style="flex: 0 0 20%; max-width: 20%;">
                         <div class="bg-white relative border-gray rounded-1 overflow-hidden">
-                            <img src="{{ asset('frontend/images/team/2.webp') }}" class="w-100" alt="">
+                            <img src="{{ asset('frontend/images/team/bisma.jpeg') }}" class="w-100" style="height: 300px; object-fit: cover;" alt="">
                             <div class="abs w-100 start-0 bottom-0 z-3">
                                 <div class="p-40 text-light relative z-2">
-                                    <h3 class="mb-0 text-uppercase lh-1-2">Siti<br>Rahayu</h3>
+                                    <h3 class="mb-0 text-uppercase lh-1-2">Faishal Danurweda <br>Bisma Wibowo</h3>
                                 </div>
                                 <div class="gradient-edge-bottom color h-100"></div>
                             </div>
                         </div>
-                        <h4 class="mt-3">Head of Education</h4>
+                        <h4 class="mt-3">Web Developer</h4>
                         <div class="social-icons">
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-facebook-f"></i></a>
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-x-twitter"></i></a>
+                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-github"></i></a>
                             <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-instagram"></i></a>
                         </div>
                     </div>
 
-                    <div class="col-lg-3 text-center">
+                    <div class="col-lg-3 text-center" style="flex: 0 0 20%; max-width: 20%;">
                         <div class="bg-white relative border-gray rounded-1 overflow-hidden">
-                            <img src="{{ asset('frontend/images/team/3.webp') }}" class="w-100" alt="">
+                            <img src="{{ asset('frontend/images/team/bili.jpeg') }}" class="w-100" style="height: 300px; object-fit: cover;" alt="">
                             <div class="abs w-100 start-0 bottom-0 z-3">
                                 <div class="p-40 text-light relative z-2">
-                                    <h3 class="mb-0 text-uppercase lh-1-2">Budi<br>Santoso</h3>
+                                    <h3 class="mb-0 text-uppercase lh-1-2">Muhammad Fadhil Robbi <br> Elhami</h3>
                                 </div>
                                 <div class="gradient-edge-bottom color h-100"></div>
                             </div>
                         </div>
-                        <h4 class="mt-3">Lead Developer</h4>
+                        <h4 class="mt-3">Web Developer</h4>
                         <div class="social-icons">
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-facebook-f"></i></a>
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-x-twitter"></i></a>
+                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-github"></i></a>
                             <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-instagram"></i></a>
                         </div>
                     </div>
 
-                    <div class="col-lg-3 text-center">
+                    <div class="col-lg-3 text-center" style="flex: 0 0 20%; max-width: 20%;">
                         <div class="bg-white relative border-gray rounded-1 overflow-hidden">
-                            <img src="{{ asset('frontend/images/team/4.webp') }}" class="w-100" alt="">
+                            <img src="{{ asset('frontend/images/team/arkan.jpeg') }}" class="w-100" style="height: 300px; object-fit: cover;" alt="">
                             <div class="abs w-100 start-0 bottom-0 z-3">
                                 <div class="p-40 text-light relative z-2">
-                                    <h3 class="mb-0 text-uppercase lh-1-2">Dewi<br>Kartika</h3>
+                                    <h3 class="mb-0 text-uppercase lh-1-2">Arkan Thaariq <br>Asadullah</h3>
                                 </div>
                                 <div class="gradient-edge-bottom color h-100"></div>
                             </div>
                         </div>
-                        <h4 class="mt-3">Content Creator</h4>
+                        <h4 class="mt-3">Web Developer</h4>
                         <div class="social-icons">
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-facebook-f"></i></a>
-                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-x-twitter"></i></a>
+                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-github"></i></a>
+                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 text-center" style="flex: 0 0 20%; max-width: 20%;">
+                        <div class="bg-white relative border-gray rounded-1 overflow-hidden">
+                            <img src="{{ asset('frontend/images/team/mishaal.jpeg') }}" class="w-100" style="height: 300px; object-fit: cover;" alt="">
+                            <div class="abs w-100 start-0 bottom-0 z-3">
+                                <div class="p-40 text-light relative z-2">
+                                    <h3 class="mb-0 text-uppercase lh-1-2">Muhammad Mishaal</h3>
+                                </div>
+                                <div class="gradient-edge-bottom color h-100"></div>
+                            </div>
+                        </div>
+                        <h4 class="mt-3">Web Developer</h4>
+                        <div class="social-icons">
+                            <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-github"></i></a>
                             <a href="#"><i class="bg-color-op-2 id-color bg-hover-2 text-hover-white fa-brands fa-instagram"></i></a>
                         </div>
                     </div>

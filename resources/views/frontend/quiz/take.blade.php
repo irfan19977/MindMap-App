@@ -60,7 +60,7 @@
 </style>
 
 <section class="jarallax relative overflow-hidden z-1000 mt-80">
-    <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+    <img src="{{ asset('frontend/images/slider/2.png') }}" class="jarallax-img" alt="">
     <div class="sw-overlay op-2"></div>
     <div class="gradient-edge-start light w-40 start-40 op-9 z-2"></div>
     <div class="abs w-40 h-100 bg-white top-0 start-0 op-9 z-2"></div>
@@ -217,18 +217,14 @@
                             @endforeach
                         </div>
                         
-                        <div class="border-top pt-3">
+                        <div class="border-top pt-3" id="nav-legend">
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <div class="rounded-circle" style="width: 16px; height: 16px; background-color: #7C815D;"></div>
                                 <small class="text-muted">Sudah dijawab</small>
                             </div>
                             <div class="d-flex align-items-center gap-2 mb-2">
                                 <div class="rounded-circle border-2" style="width: 16px; height: 16px; border-color: #7C815D; background-color: #e9ecef;"></div>
-                                <small class="text-muted">Sudah dikunjungi</small>
-                            </div>
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <div class="rounded-circle border-2" style="width: 16px; height: 16px; border-color: #dee2e6; background-color: white;"></div>
-                                <small class="text-muted">Belum dikunjungi</small>
+                                <small class="text-muted">Belum dijawab</small>
                             </div>
                         </div>
                     </div>
@@ -480,17 +476,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (prevBtn) {
                     prevBtn.addEventListener('click', function() {
-                        // Check if desktop mode (window width >= 768px)
-                        if (window.innerWidth >= 768) {
-                            // Desktop: go back to material
-                            window.location.href = '/materi/{{ $quiz->material->slug ?? '#' }}';
-                        } else {
-                            // Mobile: go to previous question
-                            if (currentQuestion > 0) {
-                                currentQuestion--;
-                                updateQuestionDisplay();
-                            }
-                        }
+                        // Always go back to material in read-only mode
+                        window.location.href = '/materi/{{ $quiz->material->slug ?? '#' }}';
                     });
                 }
 
@@ -553,6 +540,21 @@ document.addEventListener('DOMContentLoaded', function() {
                         updateQuestionDisplay();
                     });
                 });
+
+                // Update legend for read-only mode
+                const legendDiv = document.getElementById('nav-legend');
+                if (legendDiv) {
+                    legendDiv.innerHTML = `
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="rounded-circle" style="width: 16px; height: 16px; background-color: #7C815D;"></div>
+                            <small class="text-muted">Benar</small>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="rounded-circle" style="width: 16px; height: 16px; background-color: #dc3545;"></div>
+                            <small class="text-muted">Salah</small>
+                        </div>
+                    `;
+                }
 
                 // Disable quiz lockdown for read-only mode
                 quizActive = false;
@@ -1065,7 +1067,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             if (prevBtn) {
                 prevBtn.style.display = 'inline-block';
-                prevBtn.disabled = currentQuestion === 0;
+                prevBtn.disabled = false; // Always enabled in read-only mode to go back to material
             }
 
             if (nextBtn) {

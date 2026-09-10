@@ -570,7 +570,7 @@
 
     <!-- Hero Section -->
     <section class="jarallax relative overflow-hidden z-1000 mt-80">
-        <img src="{{ asset('frontend/images/background/1.webp') }}" class="jarallax-img" alt="">
+        <img src="{{ asset('frontend/images//slider/2.png') }}" class="jarallax-img" alt="">
         <div class="sw-overlay op-2"></div>
         <div class="gradient-edge-start light w-40 start-40 op-9 z-2"></div>
         <div class="abs w-40 h-100 bg-white top-0 start-0 op-9 z-2"></div>

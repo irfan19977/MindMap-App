@@ -3,7 +3,7 @@
 
 
 @section('content')
-    <section style="min-height: calc(100vh - 54px); display: flex; align-items: center; margin-top: 54px; padding: 32px 0; background: linear-gradient(rgba(245, 245, 245, 0.85), rgba(245, 245, 245, 0.85)), url('{{ asset('frontend/images/background/1.webp') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
+    <section style="min-height: calc(100vh - 54px); display: flex; align-items: center; margin-top: 54px; padding: 32px 0; background: linear-gradient(rgba(245, 245, 245, 0.85), rgba(245, 245, 245, 0.85)), url('{{ asset('frontend/images/slider/1.png') }}'); background-size: cover; background-position: center; background-attachment: fixed;">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 offset-md-2">
